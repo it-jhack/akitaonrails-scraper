@@ -1,0 +1,183 @@
+
+Em Agosto de 2010, o grande Felipe Coury perguntou se eu não estaria interessado em hospedar meu blog no WebbyNode, um serviço que ele fundou.
+Porém foi justamente em Agosto quando ingressei na Gonow e desde então ando bastante sobrecarregado. Com isso acabei deixando esta tarefa de lado por algum tempo. Finalmente arranjei um respiro para fazer isso com calma – agora, no Natal!
+
+
+Eu já havia também atualizado meu blog para Edge Rails 3 Beta na época. Fiz vários novos ajustes para adequá-lo ao Rails 3.0.3. Vou explicar um pouco sobre o processo de atualização em outro post. Mas as partes que me preocupavam mais eram relacionadas ao recebimento de confirmação de pagamentos do Pagseguro e Paypal. O Paypal tem um sandbox e pelo menos por lá  consegui enviar um POST de confirmação e meu sistema respondeu bem. Já o Pagseguro falta ter um sandbox e, para piorar, ele manda tudo em Latin-1 em vez de UTF-8 (#megafail) e eu temo que ainda possa existir algum bug por causa disso. Pelo menos nos meus testes locais parece que está tudo ok, vamos ver.
+Tirando isso, a configuração do WebbyNode em si, foi muito simples. Para quem ainda não tinha ouvido falar, sugiro assistir ao screencast que o Gregg Pollack fez em colaboração com eles:
+
+Esse vídeo é meio antigo e hoje existem várias opções que você pode escolher. No menu de “Redeploy” você tem 3 opções:
+A primeira é o RAPP é a forma mais automatizada. Também chamada de “Rapid Application Development stack” ela não só configura todo seu servidor como fornece ferramentas para que você consiga fazer deployments rápidos. O Webbynode tem uma Rubygem própria que, uma vez com o ambiente configurado, você pode fazer uma coisa parecida com o Heroku:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+# 1 - instalar a gem
+gem install webbynode
+
+# 2 - trabalhar na sua aplicação Rails com Git
+rails new my_cool_app
+cd my_cool_app
+git init .
+# work work work ...
+git commit -m "finished"
+
+# 3 - configurar o webbynode e fazer o deployment
+wn init my_cool_app # vai configurar um my_cool_app.webbyapp.com
+wn push
+
+
+Eu mesmo não cheguei a explorar essa opção e recomendo ler o excelente guia que eles tem para entender como funciona.
+A segunda opção são os ReadyStacks. Ela cria uma instância de Linux, instala e configura tudo que você precisa dependendo do tipo de stack que escolher. Se escolher Rails pode escolher as versões, se vai usar Apache ou Nginx, se quer MySQL ou PostgreSQL e assim por diante. Quando ela termina de instalar, sua máquina já está pré-configurada com os componentes básicos. A partir daí basta você finalizar via SSH. Eu preferi essa opção porque gosto de configurar minha máquina do blog manualmente (passatempo). Se fosse um sistema de cliente provavelmente eu usaria o RAPP para facilitar.
+A terceira opção é uma instalação bare bone, ou seja, vazia. Você escolhe qual sistema operacional e que versão quer e ele fará uma instalação simples. A partir daí você precisa instalar tudo do zero.
+Escolhendo qualquer uma dessas opções, a instalação em si demora poucos minutos e rapidamente você tem acesso à sua máquina sem quaisquer problemas. Meu Webby é uma máquina de 512MB de RAM, 25GB de storage e 300Gb de banda e está localizada num datacenter em Dallas, TX. Outro datacenter que sei que eles tem é em Miami, FL. O custo seria de USD 19.99/mês, o que é bem competitivo. Veja a tabela completa de preço deles. Você pode pagar diretamente com seu cartão de crédito internacional ou com sua conta de Paypal.
+Configuração do ReadyStack
+Eu escolhi a opção de ReadyStack de Ubuntu 7.04 para Ruby 1.9.2, Rails 3.0.3 com Nginx + Passenger 3.0.2, e MySQL. Gostei que o sistema deles oferece stacks bem atualizados. No fundo eu vou configurar o equivalente a um dos RAPPs deles, só que manualmente. Vou documentar o processo porque mesmo que você use um RAPP, é importante entender o que acontece por baixo.
+
+Depois da instalação eu fiz login via SSH e coloquei minha chave pública no authorized_keys. Dentre os pacotes extra que precisei instalar estão:
+1
+
+apt-get install memcached libmemcached-dev libsasl2-dev imagemagick
+
+
+Não foi preciso muita coisa, porque o resto já veio todo instalado. Normalmente acho que não precisa mas só para me garantir também subi minha configuração de iptables. Eu costumo deixar em /etc/iptables.rules e subo com iptables-restore /etc/iptables.rules. Isso deve me manter razoavelmente bem protegido.
+O MySQL já veio pré-instalado e, só como anotação – porque eu sempre esqueço como fazer isso -, para mudar a senha eu faço:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+/etc/init.d/mysql stop
+mysqld_safe --skip-grant-tables &
+mysql -u root
+
+# de dentro do shell do mysql:
+> update user set password=PASSWORD("minha_nova_senha") where user='root';
+> flush privileges;
+> create database meu_banco_de_dados CHARACTER SET utf8 COLLATE utf8_general_ci;
+> quit
+
+/etc/init.d/mysql restart
+
+
+Isso sobe o MySQL em modo de segurança, permitindo atualizar minha senha de root. Daí eu já aproveito e crio meu banco de dados da aplicação (não esquecendo de configurar como UTF-8), e finalmente reiniciando o banco. A partir daqui é uma questão de usar de SCP e Rsync para baixar todos os dados que preciso do meu servidor antigo do Linode para o WebbyNode. Isso foi fácil.
+Eu já costumo deixar um cron job que faz um dump na própria máquina do meu banco de dados. Com crontab -e, eu adiciono:
+1
+
+* 0,6,12,18 * * * /root/bin/db_backup.sh
+
+
+Esse script simplesmente tem:
+1
+2
+3
+4
+5
+
+#!/bin/sh
+cd /root
+mysqldump -u root -proot enki_production > dump.sql
+tar cvfz dump.tar.gz dump.sql
+rm dump.sql
+
+
+Isso fará um dump do meu MySQL à meia-noite, 6h, 8h, 12h, 18h, todos os dias. Daí eu configuro outros cron jobs no meu desktop de casa, que fica ligado o tempo todo:
+1
+2
+3
+
+* 1,7,13,19 * * * scp root@akitaonrails.com:~/dump.tar.gz /Users/akitaonrails/Backups/
+* 3,9,15,21 * * * rsync -avz -e ssh root@akitaonrails.com:/var/webapps/uploads/ /Users/akitaonrails/Backups/uploads/
+* 3,9,15,21 * * * rsync -avz -e ssh root@akitaonrails.com:/var/webapps/files/ /Users/akitaonrails/Backups/files/
+
+
+Ou seja, eu baixo um backup do meu banco de dados e outros arquivos, como upload de imagnes, todos os dias, em diversos horários. Acho que é prudente fazer algo parecido. O código da aplicação não precisa baixar desse jeito porque já tenho uma cópia no meu Git local.
+Tendo o dump do mysql é simples fazer restore dele com:
+1
+
+mysql -u root -pminha_senha meu_banco_de_dados < dump.sql
+
+
+
+Para completar, eu costumo criar um repositório git diretamente no meu servidor, assim:
+1
+2
+3
+
+mkdir /root/akitaonrails.git
+cd /root/akitaonrails.git
+git init . --bare
+
+
+Daí no meu projeto local eu faço:
+1
+
+git remote add origin root@akitaonrails.com:akitaonrails.git
+
+
+No servidor, eu configurei o ReadyStacks de forma a criar uma aplicação Rails “dummy” em /var/webapps/akitaonrails apenas para deixar tudo configurado. Agora posso apagar com rm -Rf /var/webapps/akitaonrails e fazer um clone desse repositório local:
+1
+2
+3
+4
+5
+6
+
+cd /var/webapps # você pode configurar outro diretório no painel de Redeploy de ReadyStacks
+git clone /root/akitaonrails.git 
+cd akitaonrails
+gem install bundler
+bundle install
+touch tmp/restart.txt
+
+
+Se o config/database.yml estiver correto, o aplicativo já deve estar no ar e funcionando normalmente com o Passenger. Tente acessar, se existir erros o Passenger irá dizer o que falta. Para automatizar esse processo a partir daqui, gosto de configurar um hook de post-receive no git. Editando o arquivo /root/akitaonrails.git/hooks/post-receive com:
+1
+2
+3
+4
+5
+6
+7
+8
+
+#!/bin/sh
+cd /var/webapps/akitaonrails/
+env -i git pull --rebase origin master
+env -i /usr/local/bin/bundle install
+env -i rake db:migrate RAILS_ENV=production
+env -i chown -R www-data:root .
+env -i touch tmp/restart.txt
+env -i /usr/local/bin/rails runner "Rails.cache.clear" RAILS_ENV=production
+
+
+Não esqueça de dar permissão de execução a esse script com:
+1
+
+chmod +x /root/akitaonrails.git/hooks/post-receive
+
+
+Agora, da minha máquina local, toda vez que eu fizer git push origin master, esse hook será executado e atualizará minha aplicação corretamente.
+
+Depois disso, basta configurar os registros A e MX no DNS pelo painel do WebbyNode, trocar os NS no seu registrar (no meu caso, na GoDaddy e Registro.br), colocando ns1.dnswebby.com, ns2.dnswebby.com e ns3.dnswebby.com no lugar dos antigos que você tinha (no meu caso, da Linode), e esperar a propagação. Em poucas horas meu domínio já estava apontando para o lugar certo.
+Lembrando que eu não estava insatisfeito com a Linode, mas queria aproveitar a oportunidade para experimentar outro hosting e o WebbyNode oferece boas opções, preços competitivos, bom suporte, e facilidade para fazer o que preciso.
+Minha migração, em termos da infraestrutura, foi bem confortável e simples. O Webbynode tem o que eu preciso. Recomendo como uma ótima opção especialmente se você tiver aplicações Rails para colocar em produção de maneira simples e rápida. Além disso é mais uma boa empresa investindo em tecnologias relacionadas a Ruby e criando um bom ambiente para Railers.
+tags: obsolete blog
+

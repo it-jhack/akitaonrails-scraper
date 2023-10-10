@@ -1,0 +1,512 @@
+
+Upgrade 05/02: o Rails 3 Beta está oficialmente lançado! Leia o post do DHH e a restrospectiva do Yehuda. Agora já dá para instalar via gems:
+1
+2
+3
+
+gem uninstall bundler # => precisa desinstalar os bundlers abaixo da versão 0.9.2
+gem install tzinfo builder memcache-client rack rack-test rack-mount erubis mail text-format thor bundler i18n
+gem install rails --pre
+
+
+Upgrade 04/02: o David atualizou as anotações. Acabei de retraduzir o principal.
+O Rails 3.0 é pôneis e arco-iris! Ele vai te cozinhar o jantar e lavar sua roupa. Você vai se perguntar como era possível viver antes dele chegar. É a Melhor Versão do Rails Já Feito!
+Mas falando sério, é realmente coisa boa. Estão todas as boas idéias trazidas quando a equipe do Merb se juntou à festa e trouxe um foco de agnosticismo de frameworks, partes internas mais leves e rápidas, e várias ótimas APIs. Se você está vindo para o Rails 3.0 a partir do Merb 1.x, vai reconhecer muito disso. Se você está vindo do Rails 2.x, vai adorar também.
+Mesmo que você não dê a mínima para nada disso das limpezas internas, Rails 3.0 vai agradar. Temos várias novas funcionalidades e APIs melhoradas. Nunca houve um momento melhor para ser um desenvolvedor Rails. Algumas das coisas principais são:
+
+Novo roteador com ênfase em declarações RESTful
+Nova API de Action Mailer modelada com base no Action Controller (e agora sem a parte agonizante para enviar mensagens multipart!)
+Nova linguagem de query encadeável para Active Record construída sobre Álgebra Relacional
+Helpers para Javascript Não-Obstrusivo com drivers para Prototype, jQuery e mais chegando (é o fim do JS inline)
+Gerenciamento explícito de dependências com Bundler
+
+Em cima disso tudo tentamos nosso melhor para deprecar as APIs antigas com avisos. Isso significa que você pode mover sua aplicação existente para Rails 3 sem imediatamente reescrever todo seu código antigo para as últimas boas práticas.
+Estas anotações de lançamento cobre todas as principais atualizações, mas não incluem cada uma das pequenas correções de bug e mudanças. Rails 3.0 consiste de quase 4 mil commits por mais de 250 autores! Se quiser ver tudo, veja a Lista de Commits no repositório principal do Rails no Github.
+
+
+AVISO: O Rails 3.0 está atualmente em beta. Isso significa que provavelmente existem bugs e que você deve reportá-los se encontrá-los. Você provavelmente não vai querer rodar a aplicação de lançamento nuclear NORAD de uma versão beta. Mas se está iniciando o desenvolvimento de uma nova aplicação e não se incomoda com um pouco de vento na cabeça, por favor embarque!
+Atualizando para Rails 3
+Como sempre, tendo uma ampla cobertura, passar por uma suite de testes é a melhor forma de atualizar. Você também deve primeiro fazer a atualização para Rails 2.3.5 e garantir que sua aplicação ainda roda antes de tentar atualizar para o Rails 3.0. No geral, a atualização do Rails 2.x para 3.0 centraliza ao redor de 3 grandes mudanças:
+Rails 3 requer Ruby 1.8.7+
+Rails só roda na versão 1.8.7 ou mais recente do Ruby. Suporte a versões anteriores do Ruby foi oficialmente cortada e você deve atualizar o mais cedo possível. Rails 3.0 também é compatível com Ruby 1.9.2.
+Objeto de Aplicação Rails
+Como parte do trabalho de suportar a execução de múltiplas aplicações Rails no mesmo processo, o Rails 3 introduz o conceito de um objeto de Aplicação. Ela segura todas as configurações específicas da aplicação e é muito similar en natureza com o config/environment.rb de versões anteriores do Rails.
+Cada aplicação Rails agora deve ter um objeto de aplicação correspondente. Ele é definido em config/application.rb. Se estiver atualizando uma aplicação existente para Rails 3, você deve adicionar esse arquivo e mover as configurações apropriadas do config/environment.rb para o config/application.rb.
+script/* substituído por script/rails
+O novo script/rails substitui todos os scripts que costumavam ficar no diretório script. Mas você não executa script/rails diretamente, o comando rails detecta que ele está sendo invocado a partir da raíz de uma aplicação Rails e roda o script para você. O uso intencionado é:
+1
+2
+
+rails console                      # => ./script/console
+rails g scaffold post title:string # => ./script/generate scaffold post title:string
+
+
+Rode rails —help para listar todas as opções
+Dependências e config.gem
+O método config.gem foi retirado e substituído pelo uso do bundler e um arquivo Gemfile, veja Vendorizando Gems abaixo.
+Processo de Atualização
+Para ajudar no processo de atualização, um plugin chamado de Rails Upgrade foi criado para automatizar algumas partes.
+Simplesmente instale o plugin, então rode rake rails:upgrade:check para checar sua aplicação por locais que precisam ser atualizadas (com links para informações sobre como atualizá-las). Ele também oferece uma tarefa para gerar o Gemfile baseado nas suas chamadas atuais a config.gem e uma tarefa para gerar um novo arquivo de rotas a partir do seu atual. Para pegar o plugin, simplesmente rode o seguinte:
+1
+
+rails plugin install git://github.com/rails/rails_upgrade.git
+
+
+Você pode ver um exemplo de como isso funciona em Rails Upgrade agora é um Plugin Oficial
+Além da ferramenta de atualização, se precisar de mais ajuda, existem pessoas no canal de IRC rubyonrails-talk que estão provavelmente fazendo a mesma coisa, possivelmente pegando os mesmos problemas. Blogue suas experiências ao atualizar para que outros possam se beneficiar de seus conhecimentos!
+Mais informações – O Caminho para o Rails 3: Atualizando
+Criando uma aplicação Rails 3.0
+A nova sequência de instalação do rails (para o beta) é:
+1
+2
+3
+
+$ gem install rails --prerelease
+$ rails myapp
+$ cd myapp
+
+
+Vendorizando Gems
+Rails agora usa um arquivo Gemfile na raíz da aplicação para determinar as gems requeridas para sua aplicação iniciar. Esse Gemfile é então lido e executado pela nova gem Bundler que então vendoriza todas as suas gems no diretório vendor, tornando sua aplicação Rails isolada das gems do sistema.
+Mais informações: – Usando bundler
+Morando no Edge
+Bundler e Gemfile torna muito fácil congelar sua aplicação Rails com o novo comando dedicado bundle, então rake freeze não é mais relevante e foi retirado.
+Se quiser criar um bundle diretamente do repositório Git, você pode passar o flag de edge:
+1
+
+$ rails myapp --edge
+
+
+Mais informações:
+
+Iniciando uma nova aplicação Rails
+Rails 3 e Passenger
+
+Mudanças Arquiteturais no Rails
+Existem seis grandes mudanças arquiteturais no Rails.
+Railties Refeito
+O Railties foi atualizado para fornecer uma API de plugin consistente para todo o framework Rails assim como uma total reescrita dos geradores e ligamentos Rails, o resultado é que desenvolvedores agora podem se ligar a qualquer estágio significativo dos geradores e framework de aplicação de uma forma consistente e definida.
+Todos os componentes núcleo do Rails estão desacoplados
+Com a mesclagem do Merb e Rails, um dos grandes trabalhos foi remover os acoplamentos entre os componentes núcleo do Rails. Isso foi atingido, e todos os componentes núcleo do Rails agora usam as mesmas APIs que você pode usar para desenvolver plugins. Isso significa que qualquer plugin que fizer, ou qualquer substituição de um componente núcleo (como DataMapper ou Sequel) podem acessar todas as funcionalidades que os componentes núcleo do Rails tem acesso, estender e melhorá-los.
+Mais informações: – O Grande Desacoplamento
+Abstração Active Model
+Parte do desacoplamento dos componentes núcleo foi extrair todos os relacionamentos ao Active Record do Action Pack. Isso foi completado. Todos os novos plugins de ORM agora só precisam implementar as interfaces do Active Model para funcionar sem problemas com o Action Pack.
+Mais informações: – Faça Qualquer Objeto Ruby se Sentir como Active Record
+Abstração de Controller
+Outra grande parte do desacoplamento dos componentes núcleo foi criar uma superclasse de base que é separada das noções de HTTP com o objetivo de ser capaz de renderizar views, etc. Essa criação do AbstractController permitiu o ActionController e ActionMailer se serem simplificados com código comum removido de todas essas bibliotecas e colocadas no Abstract Controller.
+Mais informações: – Arquitetura do Rails Edge
+Integração com Arel
+Arel (ou Active Relation) foi usado como fundação do Active Record e agora é requerido pelo Rails (ele é instalado quando você faz gem bundle). Arel fornece uma abstração de SQL que simplifica o Active Record e fornece as fundações para a funcionalidade de relacionamentos no Active Record.
+Mais informações: – Por que escrevi  Arel.
+Extração de Mail
+O Action Mailer, desde o começo, era composto de monkey patches, pré-parsers e mesmo agentes de entrega e recebimento, tudo isso além de ter o TMail vendorizado na sua árvore de código. A versão 3 muda isso com todas as funcionalidades relacionadas e email abstraídas para a gem Mail. Novamente isso reduz duplicação de código e ajuda a criar limites definidos entre o Action Mailer e o parser de email.
+Mais informações: – Nova API de Action Mailer no Rails 3
+Documentação
+A documentação na árvore do Rails está sendo atualizada com todas as mudanças de API, em adição, o Rails Edge guides está sendo atualizado para refletir as mudanças no Rails 3.0. Entretanto os guias em guides.rubyonrails.org continuarão a conter somente a versão estável do Rails (neste ponto, a versão 2.3.5, até o lançamento da 3.0).
+Mais informações: – Projetos de Documentação do Rails.
+Internacionalização
+Uma grande quantidade de trabalho foi feito com o suporte a I18n no Rails 3, incluindo a gem mais recente I18n dando muitas melhorias.
+
+I18n para qualquer objeto – o comportamento I18n pode ser adicionado a qualquer objeto incluindo ActiveModel::Translation e ActiveModel::Validations. Também existe um errors.messages padrão para traduções.
+Atributos podem ter traduções padrão
+Tags de Submit de Formulários automaticamente pegam o status correto (Criar ou Atualizar) dependendo do status do objeto, e daí pegam a tradução correta.
+Etiquetas com I18n também agora funcionam apenas passando o nome do atributo.
+
+Mais Informações: – Mudanças I18n no Rails 3
+Railties
+Com o desacoplamento dos principais frameworks do Rails, o Railties recebeu uma grande revisão de forma a ligar frameworks, engines e plugins algo o menos doloroso e extensível quanto possível:
+
+Cada aplicação agora tem seu próprio namespace, ela é iniciada com SuaApp.boot por exemplo, tornando a interação com outras aplicações muito mais fácil.
+Qualquer coisa sob Rails.root/app agora é adicionada ao caminho de carga, de forma que você pode fazer um app/observers/user_observer.rb e o Rails irá carregá-lo sem modificações.
+Rails 3.0 agora fornece um objeto Rails.config, que fornece um repositório central para todos os tipos de opções gerais de configuração do Rails.
+
+A geração de Aplicação recebeu flags extras, permitindo que você pule a instalação de test-unit, Active Record, Prototype e Git. Também um novo flag —dev foi adicionado, o que faz o Gemfile apontar para sua cópia do Rails (que é determinada pelo caminho do binário rails). Veja rails —help para mais informações.
+Geradores do Railties receberam uma enorme atenção no Rails 3.0, basicamente:
+
+Geradores foram completamente reescritos e são incompatíveis com versões anteriores.
+As APIs de Rails templates e geradores foram mesclados (eles são os mesmos de antes).
+Os geradores não são mais carregados de caminhos especiais, eles são encontrados apenas no caminho de carga do Ruby, então chamar rails generate foo irá procurar por generators/foo_generator.
+Os novos geradores fornecem ganchos, para que qualquer engine de template, ORM, framework de teste possa ser facilmente enganchada.
+Novos geradores permitem que você sobrescreva os templates colocando uma cópia em  RAILS_ROOT/lib/templates.
+Rails::Generators::TestCase também é fornecido para que você possa criar seus próprios geradores e testá-los.
+
+As views geradas pelos geradores do Railties também receberam grande revisão:
+
+As views agora usam tags div em vez de p.
+Os scaffolds gerados agora usam a partial _form, em vez de duplicar código nas views edit e new.
+Formulários de Scaffold agora usam f.submit que retorna “Criar NomeDoModel” ou “Atualizar NomeDoModel” dependendo do estado que o objeto é passado.
+
+Finalmente algumas melhorias que adicionamos a tarefas de rake:
+
+rake db:forward foi adicionaro, permitindo rolar migrações à frente individualmente ou em grupos.
+rake routes CONTROLLER=x foi adicionado permitindo ver as rotas de apenas um controller
+
+Railties deprecou:
+
+RAILS_ROOT em favor do Rails.root,
+RAILS_ENV em favor do Rails.env, and
+RAILS_DEFAULT_LOGGER e favor do Rails.logger.
+
+PLUGIN/rails/tasks, e PLUGIN/tasks não são mais carregados e todas as tarefas devem ficar em PLUGIN/lib/tasks.
+Mais informações:
+
+Descobrindo os geradores do Rails 3
+Fazendo Geradores para o Rails 3 com Thor
+
+Action Pack
+Aconteceram mudanças internas e externas significativas no Action Pack.
+Abstract Controller
+O Abstract Controller coloca as partes genéricas do Action Controller em um módulo reusável que qualquer biblioteca pode usar para renderizar templates, partials, helpers, traduções, log, qualquer parte do ciclo de requisição e resposta. Essa abstração permitiu ao ActionMailer::Base somente herdar a partir de AbstractController e adicionar uma DSL Rails para a gem Mail.
+Também deu uma oportunidade de limpar o Action Controller, abstraindo o que fosse possível para simplificar o código.
+Note, entretanto, que o Abstract Controller não é uma API para usuários, você não deve esbarrar nele no seu uso do dia-a-dia com Rails.
+Mais informações: – Arquitetura do Rails Edge
+Action Controller
+
+application_controller.rb agora tem protect_from_forgery ligado por padrão.
+O cookie_verifier_secret foi movido para initializers/cookie_verification_secret.rb.
+A configuração do session_store foi movido para initializers/session_store.rb.
+cookies.secure permite que você gere valores encriptados no cookie com cookie.secure[:key] => value.
+cookies.permanent permite que você gere valores permanentes no hash de cookie cookie.permanent[:key] => value que lançam exceções em valores marcados se as verificações falham.
+Você pode passar :notice => ‘This is a flash message’ ou :alert => ‘Something went wrong’ à chamada format dentro de um bloco respond_to.  O hash flash[] ainda funciona como antes.
+O método respond_with foi adicionado aos seus controllers, simplificando os veneráveis blocos format.
+ActionController::Responder foi adicionado, permitindo flexibilidade em como suas respostas são geradas.
+
+Deprecado:
+
+filter_parameter_logging foi deprecado em favor de config.filter_parameters << :password.
+
+Mais informações:
+
+Opções de Renderização no Rails 3
+Três Razões para Amar ActionController::Responder
+
+Action Dispatch
+Action Dispatch é novo no Rails 3.0 e fornece uma nova, mais limpa implementação para roteamento.
+
+Enorme limpeza e reescrita do roteador, o roteador do Rails agora é um rack_mount com uma DSL Rails em cima, e é um pedaço independente de software.
+Rotas definidas por cada aplicação agora tem namespace dentro do módulo da sua Aplicação, que é:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+# Em vez de:
+
+ActionController::Routing::Routes.draw do
+  map.resources :posts
+end
+
+# Você faz:
+
+AppName::Application.routes do
+  resources :posts
+end
+
+
+
+Adicionado o método match ao roteador, você também pode passar qualquer aplicação Rack à rota encontrada.
+Adicionado o método constraints ao roteador, permitindo que você defenda rotas com restrições definidas.
+Adicionaro o método scope ao roteador, permitindo que você crie namespaces de rotas para diferentes línguas ou diferentes ações, por exemplo:
+
+1
+2
+3
+4
+5
+
+scope 'pt' do
+  resources :projects, :path_names => { :edit => 'modificar' }, :as => 'projeto' }
+end
+
+# Lhe dá a ação de editar como /pt/projeto/1/modificar
+
+
+
+Adicionaro o método root ao roteador como atalho para match ‘/’, :to => path.
+Você pode passar segmentos opcionais à procura, por exemplo match “/:controller(/:action(/:id))(.:format)”, onde cada segmento entre parênteses é opcional.
+Rotas podem ser expressadas via blocos, por exemplo você pode chamar controller :home { match ‘/:action’ }.
+
+NOTA. O estilo antigo de comandos map ainda funcionam como antes com a camada de compatibilidade, entretando isso será removido no lançamento da versão 3.1.
+Deprecado
+
+A toda que pegava tudo em aplicações não-REST (/:controller/:action/:id) agora está comentado.
+Rotas :path_prefix não existem mais e :name_prefix agora automaticamente adiciona “_” ao final do valor passado.
+
+Mais informações:
+
+O Roteador do Rails 3: Rack it Up
+Rotas Refeitas no Rails 3
+Ações Genéricas no Rails 3
+
+Action View
+Grandes reescritas foram feitas nos helpers do Action View, implementando ganchos Javascript Não-Obstrusivo (UJS) e removendo todos os comandos Ajax em linha. Isso permite ao Rails usar qualquer driver compatível com seu UJS para implementar ganchos UJS nos helpers.
+O que isso significa é que qualquer helper remote_ anterior foi removido do núcleo do Rails e colocado no Helper Legado do Prototype. Para colocar ganchos UJS no seu HTML, você agora passa :remote => true.  Por examplo:
+1
+
+form_for @post, :remote => true
+
+
+Produz:
+1
+2
+3
+
+<html>
+<form action="https://host.com" id="create-post" method="post" data-remote="true">
+</html>
+
+
+
+Você não precisa mais chamar h(string) para escapar a saída HTML, isso está ligado por padrão em todos os templates de views. Se quiser desescapar uma string, chame  raw(string).
+Os Helpers geram HTML 5 por padrão.
+Etiquetas de Formulário agora puxam valores do I18n com um simples valor, então f.label :name puxará a tradução :name.
+A etiqueta de select no I18n agora deve ser :en.helpers.select em vez de :en.support.select.
+Você não precisa mais colocar um sinal de menos ao final de uma interpolação de ruby dentro do template ERB para remover a quebra de linha extra na saída do HTML.
+Adicionado o helper grouped_collection_select à Action View.
+Action View agora sobe exceções se stylesheets CSS e arquivos javascript listados pelos helpers javascript_include_tag e stylesheet_include_tag estão faltando.
+content_for? foi adicionado permitindo checar pela existência do conteúdo de uma view antes de renderizá-la.
+
+Active Model
+O Active Model é novo no Rails 3.0. Ele fornece uma camada de abstração que qualquer biblioteca ORM pode usar para interagir com o Rails implementando uma interface Active Model.
+Abstração de ORM e Interface do Action Pack
+Parte do desacoplamento dos componentes núcleo foi extrair todas as ligações do Active Record do Action Pack. Isso foi completado. Todos os novos plugins de ORM agora só precisam implementar as interfaces do Active Model para funcionar sem problemas com o Action Pack.
+Mais informações: – Faça Qualquer Objeto Ruby se Sentir como ActiveRecord
+Validações
+As validações foram movidas do Active Record para o Active Model, fornecendo uma interface para validações que funcionam em qualquer ORM no Rails 3.
+
+Agora existe um método de atalho validates :attribute, options_hash que permite passar opções para todas as classes de métodos de validações, e você pode passar mais de uma opção para um método de validação..
+O método validates tem as seguintes opções:
+:acceptance => Boolean.
+:confirmation => Boolean.
+:exclusion => { :in => Ennumerable }.
+:inclusion => { :in => Ennumerable }.
+:format => { :with => Regexp, :on => :create }.
+:length => { :maximum => Fixnum }.
+:numericality => Boolean.
+:presence => Boolean.
+:uniqueness => Boolean.
+
+NOTA: Todos os métodos de validação no estilo do Rails 2.3 ainda são suportados no Rails 3.0, o novo método de validação é projetado como uma ajuda adicional nas validações do seu model, não como um substituto para a API existente.
+Você também pode passar um objeto validador, que pode ser reusado entre objetos que usam Active Model:
+1
+2
+3
+4
+5
+6
+7
+8
+
+class TitleValidator < ActiveModel::EachValidator
+  Titles = ['Mr.', 'Mrs.', 'Dr.']
+  def validate_each(record, attribute, value)
+    unless Titles.include?(value)
+      record.errors[attribute] << 'must be a valid title'
+    end
+  end
+end
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+class Person
+  include ActiveModel::Validations
+  attr_accessor :title
+  validates :title, :presence => true, :title => true
+end
+
+# Ou para Active Record
+
+class Person < ActiveRecord::Base
+  validates :title, :presence => true, :title => true
+end
+
+
+Mais informações:
+
+Validações Sexy no Rails 3
+Validadores no Rails 3, Explicado
+
+Active Record
+O Active Record recebeu muita atenção no Rails 3.0, incluindo abstração no Active Model, uma completa atualização para a interface de Query usando Arel, atualizações de validações e muitas melhorias e consertos. Todas as APIs do Rails 2.x serão usáveis a partir de uma camada de compatibilidade que será suportada até a versão 3.1.
+Interface de Query
+O Active Record, através do uso do Arel, agora retorna relações nos seus métodos principais. A API existente no Rails 2.3.x ainda é suportada e não será deprecada até o Rails 3.1 e não será removida até o Rails 3.2, entretanto, as novas APIs fornecem os seguintes novos métodos, onde todos retornam relações que permitem que sejam encadeadas entre si:
+
+where – fornece condições a uma relação, o que será devolvido.
+select – escolhe quais atributos do model você quer que sejam retornadas do banco de dados.
+group – agrupa a relação aos atributos fornecidos.
+having – fornece uma expressão limitando o agrupamento (restrições de GROUP BY).
+joins – junta a relação a outra.
+clause – fornece uma expressão limitando relações de join (restrições de JOIN).
+includes – inclui outras relações pré-carregadas.
+order – ordena a relação baseada na expressão fornecida.
+limit – limita a relação ao número de registros especificados.
+lock – trava os registros retornados da tabela.
+readonly – retorna uma cópia somente de leitura dos dados.
+from – fornece uma maneira de selecionar relacionamentos de mais de uma tabela.
+scope – (anteriormente named_scope) retorna relações e podem ser encadeadas juntas com outros métodos de relação.
+with_scope – e with_exclusive_scope agora também retornam relações e por isso podem ser encadeadas.
+default_scope – também funciona com relações.
+
+Mais informações:
+
+Interface de Query do Active Record
+Faça seu SQL Rugir no Rails 3
+
+Melhorias
+
+Adicionado :destroyed? a objetos Active Record
+Adicinado :inverse_of para associações Active Record permitindo pegar a instância de uma associação já carregada sem bater no banco de dados.
+
+Patches e Deprecações
+Adicionalmente, muitas correções no branch do Active Record:
+
+Suporte ao SQLite 2 foi retirado em favor do SQLite 3.
+Suporte no MySQL para ordenamento de coluna.
+Adaptador PostgreSQL teve seu suporte a TIME ZONE corrigido de forma que não insere mais valores incorretos.
+Suporte a múltiplos schemas em nomes de tabelas para PostgreSQL
+Suporte no PostgreSQL para colunas com tipo de dados XML.
+table_name agora é cacheado.
+Uma grande quantidade de trabalho feito no adaptador Oracle assim como correções de bugs.
+
+Assim como as seguintes deprecações:
+
+named_scope numa classe Active Record está deprecado e foi renomeado como somente scope.
+Em métodos scope, você deve começar a usar métodos de relação, em vez de :conditions => {} métodos finder, por exemplo scope :since, lambda {|time| where(“created_at > ?”, time) }.
+save(false) está deprecado em favor de save(:validate => false).
+Mensagens de erro I18n para ActiveRecord devem ser mudados de :en.activerecord.errors.template para :en.errors.template.
+model.errors.on está deprecado em favor de model.errors[]
+validates_presence_of => validates… :presence => true
+ActiveRecord::Base.colorize_logging e config.active_record.colorize_logging foram deprecados em favor de Rails::Subscriber.colorize_logging ou config.colorize_logging
+
+NOTA: Embora uma implementação de Máquina de Estado tenha existido no Active Record Edge por alguns meses, ele foi removido do lançamento do Rails 3.0.
+Active Resource
+O Active Resource também foi extraído do Active Model permitindo que você use objetos Active Resource com Action Pack sem problemas.
+
+Adicionado validações através do Active Model.
+Adicionado ganchos de observação.
+Suporte a proxy HTTP.
+Adicionado suporte a autenticação digest.
+Nomeamento de model movido para dentro do Active Model.
+Atributos do Active Resource modificados para uma Hash com acesso indiferente.
+Adicionado atalhos first, last e all para escopos equivalentes de find.
+find_every agora não retorna um erro ResourceNotFound error se nada for retornado.
+Adicionado save! que lança ResourceInvalid a menos que o objeto seja valid?.
+update_attribute e update_attributes adicionado aos models Active Resource.
+Adicionado exists?.
+SchemaDefinition renomeado para Schema e define_schema para schema.
+Use o  format do Active Resource em vez do content-type de erros remotos para carregar erros.
+Use instance_eval para blocos de schema.
+Corrigido ActiveResource::ConnectionError#to_s quando @response não responde a #code ou #message, lida com compatibilidade a Ruby 1.9.
+Adicionado suporte para erros em formato JSON.
+Garante que load funcione com arrays numéricos.
+Reconhece uma resposta do recurso remoto como se ele tivesse sido deletado.
+Adiciona habilidade de configurar opções SSL nas conexões de Active Resource.
+Configurar timeout de conexão também afeta open_timeout do Net::HTTP.
+
+Deprecado:
+
+save(false) está deprecado em favor de save(:validate => false).
+Ruby 1.9.2: URI.parse e .decode foram deprecados e não são mais usados na biblioteca.
+
+Active Support
+Um grande esforço foi feito no Active Suporte para tornar fácil pegar apenas os pedaços que interessa, ou seja, você não precisa mais requerer toda a biblioteca Active Support para pegar apenas alguns pedaços dele. Isso permite os vários componentes do Rails serem mais magros.
+Estas são as principais mudanças no Active Support:
+
+Enorme limpeza na biblioteca, removendo partes não utilizadas.
+Active Support não fornece mais versões vendorizadas do TZInfo, Memcache Client e Builder, elas foram todas incluídas como dependências instaladas via o comando gem bundle.
+Buffers Seguros foram implementados em ActiveSupport::SafeBuffer.
+Adicionado Array.uniq_by e Array.uniq_by!.
+Corrigido bug no TimeZone.seconds_to_utc_offset que retornava valor errado.
+Adicionado o middleware ActiveSupport::Notifications.
+ActiveSupport.use_standard_json_time_format agora é padrão para true.
+ActiveSupport.escape_html_entities_in_json agora é padrão para false.
+Integer#multiple_of? aceita zero como argumento, retorna falso a menos que o recipiente seja zero.
+string.chars foi renomeado para string.mb_chars.
+ActiveSupport::OrderedHash agora pode desserializar através de YAML.
+Adicionado parser baseado em SAX para XmlMini, usando LibXML e Nokogiri.
+Adicionado Object#presence que retorna o objeto se ele está #present? caso contrário retorna nil.
+Adicionado a extensão núcleo String#exclude? que retorna o inverso de #include?.
+Adicionado to_i a DateTime em ActiveSupport para que to_yaml funcione corretamente em models com atributos DateTime.
+Adicionado Enumerable#exclude? para trazer paridade a Enumerable#include? e evitar !x.include?.
+Mudança para ter escapamento XSS ligado por padrão no rails.
+Suporta mesclagem profunda em ActiveSupport::HashWithIndifferentAccess.
+Enumerable#sum agora funcionará com todos os enumerables, mesmo que eles não respondam a :size.
+inspect em uma duração zero retorna ‘0 seconds’ em vez de um string vazio.
+Adicionado element e collection a ModelName.
+String#to_time e String#to_datetime lidam com segundos fracionados.
+Adicionado suporte a novos callbacks para objeto around filter que responde a :before e :after usados em callbacks before e after.
+O método ActiveSupport::OrderedHash#to_a retorna um conjunto ordenado de arrays. Combina com o Hash#to_a do Ruby 1.9.
+MissingSourceFile existe como uma constante mas agora é somente igual a  LoadError
+Adicionado Class#class_attribute, para se capaz de declarar um atributo em nível de classe cujo valor é herdável e sobrescrevível pelas sub-classes.
+Finalmente removido DeprecatedCallbacks em ActiveRecord::Associations.
+
+Os seguintes métodos foram removidos porque estão agora disponíveis no Ruby 1.8.7 e 1.9.
+
+Integer#even? e Integer#odd?
+String#each_char
+String#start_with? e String#end_with? (atalhos de 3a pessoa ainda mantidos)
+String#bytesize
+Object#tap
+Symbol#to_proc
+Object#instance_variable_defined?
+Enumerable#none?
+
+O patch de segurança para o REXML permanece no Active Support porque níveis de patch anteriores ao Ruby 1.8.7 ainda precisam disso. Active Support sabe quando deve aplicá-lo.
+Os seguintes métodos foram removidos porque não são mais usados no framework:
+
+Object#remove_subclasses_of, Object#subclasses_of, Object#extend_with_included_modules_from, Object#extended_by
+Class#subclasses, Class#reachable?, Class#remove_class
+Regexp#number_of_captures
+Regexp.unoptionalize, Regexp.optionalize, Regexp#number_of_captures
+
+Action Mailer
+O Action Mailer ganhou uma nova API, substituindo o TMail  pelo novo Mail como a biblioteca de Email.  O próprio Action Mailer foi praticamente todo reescrito com praticamente toda linha de código tocada. O resultado é que o Action Mailer agora simplesmente herda do Abstract Controller e encapsula a gem Mail em uma DSL Rails. Isso reduz a quantidade de código e duplicação de outras bibliotecas consideravelmente.
+
+Todos os agora ficam em app/mailers por padrão.
+Agora podem enviar email usando a nova API com três métodos: attachments, headers and mail.
+Os métodos de email do ActionMailer agora retornam objetos Mail::Message, que podem então receber a mensagem deliver para se enviar.
+Todos os métodos de envio agora foram abstraídas para a gem Mail.
+O método de envio de email pode aceitar um hash de todos os cabeçalhos válidos com seus valores.
+O método de envio de email age de forma similar ao bloco respond_to do Action Controller, e você pode explicitamente ou implicitamente renderizar templates. O Action Mailer tornará o email em um email multipart se precisar.
+Você pode passar um proc a chamadas format.mime_type dentro do bloco de mensagem e explicitamente renderizar tipos específicos de texto, ou adicionar layouts ou diferentes templates. A chamada render dentro do proc é do Abstract Controller, então todas as mesmas opções estão disponíveis como no Action Controller.
+O que eram testes unitários de mailer foram movidos para testes funcionais.
+
+Deprecado:
+
+:charset, :content_type, :mime_version, :implicit_parts_order estão todos deprecados em favor do estilo de declarações ActionMailer.default :key => value.
+Os métodos dinâmicos do Mailer create_method_name e deliver_method_name estão deprecados, apenas chame method_name o que agora retorna um objeto Mail::Message.
+ActionMailer.deliver(message) está deprecado, apenas chame message.deliver.
+template_root está deprecado, passe opções a uma chamada render dentro de um proc a partir do método format.mime_type dentro do bloco de geração mail.
+O corpo do método que define variáveis de instância está deprecado (body {:ivar => value}), apenas declare variáveis em métodos diretamente e eles estarão disponíveis na view.
+Mailers que ficavam em app/models estão deprecados, em vez disso use app/mailers.
+
+Mais informações:
+
+Nova API de Action Mailer do Rails 3
+Nova gem Mail para Ruby
+
+Créditos
+Veja a lista completa de contribuidores do Rails, para as muitas pessoas que gastaram muitas horas fazendo o Rails 3.  Parabéns a todos eles.
+As Anotações de Lançamento do Rails 3.0 foram compiladas por Mikel Lindsaar.
+tags: obsolete rails
+

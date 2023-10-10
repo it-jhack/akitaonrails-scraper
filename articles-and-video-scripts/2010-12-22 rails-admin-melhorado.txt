@@ -1,0 +1,97 @@
+
+Atualização 22/12/2010: O @sferik aceitou meus commits e agora o Rails Admin tem oficialmente suporte ao CKEditor e Paperclip. Legal!
+Recentemente foi lançado a Rails Engine Rails Admin, que permite integrar um módulo de administração dinâmico de maneira muito simples e rápida para aplicativos feitos com Rails 3. É a maneira mais fácil de criar administração para seus models, especialmente em casos onde você está trabalhando em um site institucional simples, um site de advertising/marketing, um hotsite, e não quer se preocupar em gastar tempo criando uma administração muito sofisticada.
+E para facilitar, eu fiz algumas pequenas modificaçòes que fazem sua administração ficar assim:
+
+Isso mesmo, com suporte a CKEditor 3.5 e Paperclip. Vejamos como.
+
+
+Para começar, crie uma aplicação Rails 3 com o bom e velho rails new my_app. Então crie um model como “Page” com rails g model Page title:string body:text.
+Agora vamos editar o arquivo “Gemfile” para acrescentar:
+1
+2
+3
+4
+
+gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'devise'
+gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
+gem 'paperclip'
+
+
+Note a URL do meu repositório do Github. Por enquanto as mudanças que fiz não foram aceitas no repositório principal, então você pode só apontar direto pro meu branch master. Não esqueça de rodar bundle install para instalar as gems, e para iniciar a configuração do Rails Admin, faça rails g rails_admin:install_admin.
+Para ter suporte a Paperclip, você precisa adicionar colunas especiais na tabela, por exemplo, digamos que a página tenha um imagem avatar, uma coluna “avatar”, então precisamos criar uma migração com rails g migration AddAvatarToPage e editá-lo para ficar assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+class AddAvatarColumnsToPage < ActiveRecord::Migration
+    def self.up
+      add_column :pages, :avatar_file_name,    :string
+      add_column :pages, :avatar_content_type, :string
+      add_column :pages, :avatar_file_size,    :integer
+      add_column :pages, :avatar_updated_at,   :datetime
+    end
+
+    def self.down
+      remove_column :pages, :avatar_file_name
+      remove_column :pages, :avatar_content_type
+      remove_column :pages, :avatar_file_size
+      remove_column :pages, :avatar_updated_at
+    end
+end
+
+
+Agora vamos configurar o model “Page” para acertar o Paperclip:
+1
+2
+3
+
+class Page < ActiveRecord::Base
+  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
+end
+
+
+Finalmente, vamos criar e editar o arquivo config/initializers/rails_admin.rb para ficar mais ou menos assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+RailsAdmin.config do |config|
+  config.model Page do
+    edit do
+      field :title
+      field :avatar
+      field :body do
+        ckeditor true
+      end
+    end
+  end
+end
+
+
+Os pontos importantes são: 1) adicionar a coluna “field”, que automaticamente será reconhecida como do Paperclip; e 2) adicionar a configuração do CKEditor para “true” para habilitar o editor. É só isso. E com isso ela ficará como a imagem que coloquei no começo do artigo:
+
+O Rails Admin ainda está sobre muito desenvolvimento e deve continuar evoluindo. Se tiver novas idéias, não deixe de colaborar. Não é difícil seguir os exemplos, specs, e implementar suas próprias funcionalidades. Para ter um exemplo, veja meu commit para adicionar o CKEditor e o outro separado para adicionar o Paperclip.
+tags: obsolete rails
+

@@ -1,0 +1,9 @@
+
+
+
+
+O Antonio Cangiano tem razão quando diz que tem muita pouca menção à incrível série de screencasts gratuitos da New Relic. Ela oferece um serviço pago muito legal que monitora sua aplicação Rails de produção em detalhes. Para isso você se registra no site, instala um plugin na sua aplicação e ela passa a enviar dados de volta à New Relic, que então compila esses dados e lhe dá um Raio-X do comportamento da sua aplicação. Eu uso a versão gratuita no meu blog, que me dá informações básicas mas já valiosas.
+A New Relic começou uma iniciativa chamada RailsLab com o objetivo de agregar informações sobre escalabilidade e performance de Ruby on Rails. E a primeira série é a Scaling Rails, produzida em conjunto com o Gregg Pollack, da RailsEnvy.
+Já existem 12 episódios disponíveis (usem o link de iTunes para quem quer assinar). São screencasts explicando o básico de responsibidade de páginas, muitas técnicas de caching do básico ao avançado, sobre o próprio plugin RPM da New Relic, Memcached e mais. Qualquer um que queira colocar um website em Rails no ar deve assistir. E mesmo quem não é de Rails pode tirar proveito pois essas técnicas não são específicas de Rails. Memcached é usado por sistemas em PHP, Java, Python. A implementação muda mas a técnica é a mesma. Portanto, vamos aprender!
+tags: obsolete rails
+

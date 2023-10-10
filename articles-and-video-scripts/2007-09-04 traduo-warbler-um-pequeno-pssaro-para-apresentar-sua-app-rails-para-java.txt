@@ -1,0 +1,84 @@
+
+publicado por Nick Sieger
+Esta semana eu estava trabalhando na integração dos recém-lançados JRuby 1.0.1 e Goldspike 1.3 em nosso ambiente, quando minha frustração alcançou um novo nível.
+
+
+Veja, eu sempre pensei que o lado de empacotamento de .war do Goldspike era um pouco grosseiro e não-muito-ruby, mas não via um caminho claro para consertá-lo. Eu ouvia poucas reclamações sobre ele aqui e ali: o pequeno DSL de configuração não lhe dá controle suficiente ou não era documentado bem o suficiente; o fato dele fazer download de bibliotecas pela internet durante a montagem (conveniente, mas não seguro ou reproduzível para deployments em produção).
+Também, na minha opinião, ele ia pelo caminho errado no empacotamenteo de apps. Rails em arquivos .war. Ele coloca a estrutura do diretório Rails na raíz do arquivo .war onde qualquer web server ou servidor de aplicação Java poderia errôneamente servir seu código como conteúdo estático. A especificação do arquivo .war Java tem este diretório especial chamado WEB-INF justamente para o propósito de esconder as coisas, então por que não usá-lo?
+E então, de repente o Goldspike estava empacotando todos os diretórios da app. Rails, diretórios .svn e tudo mais. Então eu decidi consertar isso de uma vez por todas.
+Então, eu apresento Warbler. Um pequeno pássaro que se coloca na tarefa de montar sua app. Rails dentro de um Java Web Archive (.war). Aqui, pegue:
+1
+2
+3
+4
+
+
+E então, na raíz do diretório da sua app. Rails:
+
+--- rubywarble
+
+Esses dois passos é tudo que precisa para criar o arquivo .war, incluindo sua aplicação e versões recentes do JRuby e Goldspike, o que o torna instalável no seu Java application server favorito.
+Existem vários pontos sobre Warbler que vale a pena mencionar.
+Faz uma coisa, direito
+Warbler apenas empacota, e não faz mais nada, por exemplo como despachar requests de servlet para Rails. Isso vai permitir mais mecanismos de ligação em runtime de servlet para tirar vantagem do Warbler no futuro.
+Rápido e Leve
+50% menos código do que o plugin de empacotamento do Goldspike, e ainda assim faz o trabalho mais rápido e mais eficiente.
+Padrões sãos
+Warbler somente empacota código que você precisa para rodar sua aplicação, omitindo migrations de bancos de dados e testes. Se sua aplicação for auto-suficiente (sem dependências externas), então a configuração padrão provavelmente funcionará para você. Public HTML/images/javascript/stylesheet vão na raíz da aplicação web, onde servidores Java esperam que estejam.
+Configuração flexível e Documentada
+Precisa customizar sua configuraçao? Rode ‘warble config’ e edit ‘config/warble.rb’. Todas as opções estão lá, comentadas e documentadas.
+Precisa mudar as versões do JRuby/Goldspike? ‘warble pluginize’ faz uma cópia do Warbler no ‘vendor/plugins’ da sua aplicação, permitindo que você mude os arquivos .jar em ‘vendor/plugins/warbler-0.9/lib’. Warbler então faz seu ninho na lista de tarefas rake do seu projeto (como ‘rake -T | grep war shows’)
+rake war            # Cria trunk.war
+rake war:app        # Copia todos os arquivos da aplicação no .war
+rake war:clean      # Limpa o arquivo .war e área de teste
+rake war:gems       # Desempacota todos os gems em WEB-INF/gems
+rake war:jar        # Roda o comando jar para criar o .war
+rake war:java_libs  # Copia todas as bibliotecas Java no .war
+rake war:public     # Copia todos os arquivos HTML públicos na raíz do .war
+rake war:webxml     # Gera um arquivo web.xml para a aplicação web
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Warbler até mesmo se omite do arquivo .war produzido quando rodando como plugin, já que você não precisa dele em runtime. São os pequenos detalhes que importam.
+
+Faça uma tentativa e me diga se ele facilita sua vida de instalar aplicações Rails com JRuby em servidores de aplicação Java!
+
+h2. ActiveRecord JDBC 0.5
+
+*publicado por* "Nick Sieger":https://blog.nicksieger.com/articles/2007/09/02/activerecord-jdbc-0-5
+
+ActiveRecord JDBC 0.5 foi lançado, então você já deve ter ouvido falar (ele saiu faz uma semana, sexta; veja "Arun" e "Tom"). A maior funcionalidade que você ganha nessa versão é um novo estilo de configuração do 'database.yml':
+
+--- rubydevelopment:
+  adapter: mysql
+  database: blog_development
+  username: root
+  password:
+
+
+Ok, ok, qual é a grande sacada? Isso é apenas a configuração padrão de banco de dados do Rails. Bem, esse é o ponto – você não precisa mais saber qualquer coisas sobre URLs JDBC, nomes de classe de drivers e tudo mais. Nós internalizamos isso pra você. Isso deve tornar mais fácil do que nunca tentar sua aplicação Rails com JRuby, já que o único pedaço de código de configuração manual que sobra pra você é este pedaço feio, específico do JRuby, que você precisa para ativar ActiveRecord-JDBC, bem abaixo do Rails::Initializer:
+
+rubyif RUBY_PLATFORM =~ /java/
+require ‘rubygems’
+gem ‘ActiveRecord-JDBC’
+require ‘jdbc_adapter’
+end
+-
+Se conseguirmos desaparecer com este último pedaço de código, e tornar fácil obter o driver necessário, me sentirei confortável de chamar essa coisa de um produto 1.0.
+tags: obsolete jruby
+

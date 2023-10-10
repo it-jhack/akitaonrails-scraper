@@ -1,0 +1,9 @@
+
+
+
+
+Ontem a noite foram encerradas as votações populares do Rails Rumble 2010. Foi uma longa semana para as equipes participantes e desde o começo 3 equipes brasileiras estavam com chances de chegar ao topo. No final, foi confirmada a vitória da aplicação Beer Checkin da equipe brasileira Indiana Coders do pessoal da Globo.com, formada pelo @muanis, @cainanunes, @gcirne, @peleteiro. Parabéns à equipe!
+Além deles 2 outros aplicativos brasileiros ficaram entre os Top 20 dentre cerca de 180 aplicações que concorreram. As aplicações Choons.fm, da equipe Nuby on Rails em 3o lugar, também equipe da Globo.com e a Call 4 Paperz, 14o lugar, da equipe Acts as Code Monkeys on Steroids, equipe mista Gonow + Plataforma Tec + Caelum.
+Parabéns a todos os participantes brasileiros pela excelente competição e vamos nos preparar para o Rails Rumble 2011!!
+tags: obsolete
+

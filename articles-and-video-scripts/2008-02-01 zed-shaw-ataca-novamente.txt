@@ -1,0 +1,21 @@
+
+
+
+
+Mike Moore, do Rubiverse, conseguiu entrevistar Zed Shaw em seu podcast.
+
+Antes, aviso, Zed adora falar palavrão :-) Eu particularmente achei engraçado, é o jeito dele.
+Algumas coisas que ele disse:
+
+Sim, o “Rant” é um “Rant”, ele quis exagerar, porque essa é a idéia de um “Rant”, mas as ofensas não eram piadas, ofensas são ofensas.
+Zed é um pragmático: ele não vai mais participar de conferências, listas, etc, mas se precisar implementar um projeto em Rails (como agora mesmo) ele vai continuar.
+As RailsConf são muito ruins. Dave Thomas é absolutamente retórico e chato de escutar. Conferências mono-culturais não tem futuro.
+“Acabem com os Vacas Douradas (Golden Cows)!” – é a mensagem. Matz – é um cara legal – mas não é invencível (Zed e MentalGuY e outros consertaram várias coisas no MRI que estavam completamente quebradas, como o fasthread).
+Apoiem o JRuby e principalmente o Rubinius: provavelmente Rubinius vai completamente substituir o MRI dentro de pouco tempo
+Segundo, o Zed, Ruby, a linguagem, é muito boa. Já Ruby, a plataforma, precisa de muita melhoria.
+Linguagem puramente funcionais “enchem o saco” – ele é um pragmático. Por isso Factor.
+Zed odeia amadores idiotas. Ele quer saber dos bons e velhos – e verdadeiros – hackers.
+
+Não, o mundo não acabou :-) Zed continua sendo um cara legal, só não se interessa mais por participar da comunidade Ruby/Rails. And life goes on.
+tags: obsolete zed
+

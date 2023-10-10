@@ -1,0 +1,106 @@
+
+Atualização 2012: 5 anos depois, veja como está a mesma lista:
+
+
+Rank
+País
+Desenvolvedores
+População
+Taxa
+
+
+1
+Estados Unidos
+6.074
+
+
+2
+Índia
+1.192
+
+
+ 3 
+ Brasil 
+ 1.109 
+
+
+4
+Reino Unido
+1.067
+
+
+5
+Alemanha
+695
+
+
+6
+Canadá
+687
+
+
+Você – desenvolvedor Rails, hobista ou profissional – já se cadastrou no site WorkingWithRails?
+
+Este é um excelente site para melhorar seu networking. A maioria dos desenvolvedores Rails do mundo todo já se cadastraram lá. Nenhum site ou instituição é capaz de dar números precisos mas vou me arriscar. Vejamos o ranking do Brasil neste site em específico que, possivelmente, reflita um pouco da realidade Rails por aqui:
+
+
+Rank
+País
+Desenvolvedores
+População
+Taxa
+
+
+1
+Estados Unidos
+1.924
+300 milhões
+0,000641%
+
+
+2
+Reino Unido
+365
+60 milhões
+0,000605%
+
+
+ 3 
+ Brasil 
+ 284 
+ 183 milhões 
+ 0,000015% 
+
+
+4
+Índia
+249
+1,12 bilhão
+0,000002%
+
+
+5
+Canadá
+241
+33 milhões
+0,000073%
+
+
+6
+Alemanha
+237
+82 milhões
+0,000028%
+
+
+
+
+Listei apenas os países com mais de 200 cadastros. Em números absolutos o Brasil está indo bem. Comparar com o total da população é um pouco mais complicado. Em qualquer dos países listados o número de desenvolvedores é bem pequeno, o que significa que esse ranking tende a mudar muito depressa.
+Mesmo assim é possível tirar algumas conclusões: a Índia, o país que já foi o temor dos americanos de TI ainda é bem pouco relevante no mundo Rails. Porém eles têm a capacidade de crescer mais depressa nesse campo. Quem atua no mercado de offshore outsourcing sabe que o Brasil é tão ou mais atraente do que a Índia. Os indianos graduados ainda são mais baratos do que nós mas compensamos em proximidade de fuso horário, qualidade do serviço, proatividade do profissional. Brasil e Índia são os dois únicos países emergentes nessa lista informal dos 6 mais.
+Este é mais um daqueles momento únicos de sair à frente e não apenas andar atrás dos outros. Apostar no futuro é um risco. Quem não arrisca não petisca. Tudo aquilo que tem pouco risco (fazer o que todos fazem) obviamente é mais seguro, porém traz menos resultados a longo prazo. Uma aposta alta antes da curva fazer seu pico pode garantir frutos muito maiores. É um dilema, investir tempo, dinheiro em algo que não se sabe no que vai dar.
+Os americanos tem espírito empreendedor por natureza: eles arriscam o tempo todo, cada vez com mais qualidade. Não lembro onde eu li que quase a metade dos americanos investem em ações (posso estar errado nesse número), por exemplo. As pessoas lá estão muito mais adaptadas a assumir riscos (e suas consequências). Uma coisa que vejo é que os brasileiros tem uma certa aversão ao risco – e não sem motivos. Isso vem mudando gradualmente, mas podemos fazer melhor!
+Assumir riscos nada tem a ver com ser imprudente. Sempre podemos minimizar os riscos. Não todos, mas pelo menos os que estão a nosso alcance. Aprendizado, educação, cultura ajuda nisso. Olhar para fora também. Aliás, espero que todos aqui pelo menos saibam onde o Brasil fica no mapa.
+Para crescer não podemos olhar apenas para o metro-quadrado onde estamos de pé agora. Visões estreitas sempre foram garantia de fracasso.
+“Preocupação não é doença, mas sinal de saúde. Se você não está preocupado, não está arriscando o bastante” – Max Gunther
+tags: obsolete
+

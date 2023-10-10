@@ -1,0 +1,336 @@
+
+Existe um padrão de desenvolvimento no mundo Ruby on Rails que ainda não foi bem ajustado: Componentes. Por exemplo, digamos que seu site seja parecido com o exemplo seguinte:
+
+
+
+Introdução
+Estamos acostumados a criar “Rails Resources”: (conjunto MVC de controllers, models, views e rotas), que no caso representa o conteúdo principal exposto pela URL do site. Na foto de tela acima, estamos na raíz do site que aponta para o seguinte:
+1
+2
+
+resources :pages
+root :to => "pages#index"
+
+
+Ou seja, um resource de Pages, páginas de conteúdos – o site de exemplo é um site simples de conteúdo. Outros links desse site apontam, por exemplo, para /pages/about, a rota encontrará PagesController, o verbo HTTP GET levará à action show que, por sua vez, terá este código:
+1
+2
+3
+
+def show
+  @page = Page.by_slug(params[:id])
+end
+
+
+Em params[:id] terá a palavra about, que veio da URL e com isso o model encontrará a página correta via seu “slug”. Feito isso, por padrão o Rails encontrará a view app/views/pages/show.html.erb que terá acesso à variável de instância @page e finalmente poderemos exibir seu conteúdo, por exemplo, assim:
+1
+
+<%= @page.body_html.empty? ? "" : raw(@page.body_html) %>
+
+
+Para acompanhar este artigo, vejam o código desse exemplo no meu Github. Mas observem bem a foto de tela acima: a URL que pedimos não trás apenas conteúdo de Pages. Para entender, vamos simplificar a estrutura para mostrar que outros conteúdos a URL traz:
+
+Se observarmos novamente o PagesController, encontraremos:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+class PagesController < ApplicationController
+  before_filter :load_sidebar
+  ...
+  private
+
+    def load_sidebar
+      @advertising = Advertising.random
+      @poll = if params[:id]
+        Poll.last
+      else
+        Poll.first
+      end
+      @links = Link.order(:id).all
+    end
+  end
+
+
+Se abrirmos o layout do site, teremos trechos de código como estes:
+1
+2
+3
+4
+5
+6
+7
+
+...
+<sidebar>
+  <%= render :partial => "advertising" %>
+  <%= render :partial => "poll" %>
+  <%= render :partial => "links" %>
+</sidebar>
+...
+
+
+E dentro de uma das partials acima, temos trechos como:
+1
+2
+3
+4
+5
+
+...
+<% for link in @links %>
+  <li><%= link_to link.name, link.url %></li>
+<% end %>
+...
+
+
+O Problema
+Mas qual o problema disso? Temos vários problemas conceituais. Antes de mais nada, estamos aumentando a quantidade de responsabilidades de cada objeto do sistema. Por exemplo, espera-se que um controller chamado PagesController se preocupe com Páginas, não com Links ou Enquetes.
+Outra coisa: estamos espalhando dependências pelo sistema na forma das variáveis de instância. As views/partials estão acopladas a essas variáveis que os controllers precisam configurar antes de chamar a renderização.
+Numa situação simples e comum como essa, temos pedaços de lógica espalhados horizontalmente em diversas partes do sistema: em controllers, em views (layouts, partials), em helpers. Tentamos manter tudo isso coeso usando testes, mas com o tempo até os testes ficam difíceis de manter.
+Existia uma “solução” para isso desde a primeira versão do Ruby on Rails: Components. Literalmente na pasta app existia uma pasta components. Ela foi depreciada na versão 2.3, mas a recomendação do próprio DHH era de não usar desde 2006.
+Components basicamente eram um mini conjunto de controllers, views, models que eram chamados por outra view, renderizavam HTML, e a view que chamou anexava o HTML de resultado. O problema é que components basicamente eram chamadas por toda a pilha do Rails, ou seja, cada render_component era como se fosse uma nova requisição à infraestrutura do Rails inteira, às vezes só para renderizar uma linha. Isso sempre foi extremamente pesado.
+Com o tempo, a “prática aceita”, foi de substituir Components por conjuntos de before_filter nos controllers, helpers e partials. Para coisas simples era suficiente, para coisas complexas era “usável”. Mas com o tempo esse problema foi cansando.
+A Solução
+Muitos já tentaram solucionar esse problema de diversas formas. Mas acredito que a que chegou mais próximo de uma verdadeira solução simples, fácil de entender, de usar e que não impacta tanto a performance, foi o trabalho de Nick Sutterer com seu Cells. Esse trabalho iniciou provavelmente a partir de 2007 e está evoluindo desde então.
+Para entender, vamos converter meu site de demonstração que mostrei anteriormente para usar Cells. Note que no meu repositório no Github existem duas branches: a “master” possui a versão já convertida com Cells, a “normal” tem a versão anterior sem Cells. Para trocar entre branches basta fazer git checkout normal, por exemplo.
+Antes de mais nada, se for uma aplicação Rails 3 utilizando Bundler, podemos adicionar as dependências adicionando o seguinte no Gemfile:
+1
+2
+3
+4
+5
+6
+
+gem "cells"
+...
+group :development, :test do
+  ...
+  gem "rspec-cells"
+end
+
+
+No meu caso, notem que adicionei também a gem rspec-cells, porque estou usando RSpec. Um bundle install vai atualizar sua aplicação.
+Agora vamos realizar uma limpeza e retirar o código de Enquete (Poll) que está espalhado. Para isso começamos usando o generator que a gem nos dá:
+1
+
+rails generate Cell Poll display
+
+
+display é o método de renderização que as views irão chamar. Podemos colocar qualquer nome e quantos renderizadores quisermos por Cell. São métodos simples de classe Ruby.
+Isso criará a seguinte estrutura:
+1
+2
+3
+4
+5
+6
+7
+8
+
+app/
+  cells/
+    poll/
+      display.html.erb
+    poll_cell.rb
+spec/
+  cells/
+    poll_cell_spec.rb
+
+
+Agora podemos começar a limpar o PagesController, retirando o before_filter e colocando a lógica no lugar certo. No caso, vamos preencher o app/cells/poll_cell.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+class PollCell < Cell::Rails
+  def display
+    @poll = if params[:id]
+      Poll.last
+    else
+      Poll.first
+    end
+    render
+  end
+end
+
+
+Agora sim, a variável de instância @poll que será usada na view de Enquete está dentro desse, digamos, “sub-controller” de Enquete. O que determina se o método dessa classe irá renderizar um HTML é a chamada final ao método render. Todo controller de Rails também chama um método render, só que no caso do Rails essa chamada é implícita e escondida, na Cell ela é explícita. Você pode criar métodos privados, ou quaisquer outros “helpers” se for necessário para organizar essa lógica.
+A view app/cells/poll/display.html.erb segue a convenção de ter o mesmo nome do método executado. Seu conteúdo é simples, praticamente uma cópia do que era a antiga partial que estávamos usando:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+<div id="poll" class="sidebar_box">
+  <h1><%= @poll.name %></h1>
+  <p><%= @poll.description %></p>
+  <%= form_for @poll, poll_path(@poll), :html => { :method => :put } do |f| %>
+  <ul>
+    <% for question in @poll.questions %>
+    <li><%= radio_button "question", "id", question.id %> <%= question.name %> (<%= question.votes %>)</li>
+    <% end %>
+  </ul>
+  <%= f.submit "Vote" %>
+  <% end %>
+</div>
+
+
+No caso da Enquete, de qualquer página que tiver a barra lateral com a Enquete, podemos realizar um voto. Note que o formulário acima envia um PUT via Javascript para a rota poll_path(@poll). Isso é uma rota e um controller comum do Rails. No caso da rota, apenas acrescentamos: resources :polls e criamos um app/controllers/polls_controller.rb com este conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+
+class PollsController < ApplicationController
+  def update
+    @poll = Poll.find(params[:id])
+    @question = @poll.questions.find(params[:question][:id])
+    @question.vote!
+    redirect_to request.referer
+  end
+end
+
+
+Como esperamos um PUT implementamos a action update. Ela contabiliza o voto no model Poll. O único “truque” é a última linha da action que tem um redirect_to request.referer que devolve o usuário à mesma página onde ele estava antes. Isso deve funcionar para a maioria das Cells que precisam realizar ações, vai depender da lógica da sua aplicação. Mas um ponto importante é que a Cell, pelo menos nesta versão, não reage como um “Componente” de verdade onde 100% da lógica está contida nela mesma. Nesse caso a única dependência externa é esse controller.
+Agora, no layout, onde antes havia uma chamada a uma partial, podemos chamar diretamente a Cell:
+1
+
+<%= render_cell :poll, :display %>
+
+
+Essa chamada render_cell tem como primeiro parâmetro o nome da Cell, depois o nome do método de renderização e, caso o método aceite parâmetros (parâmetros normais de método), você pode colocar mais argumentos. Por exemplo, no site de exemplo eu tenho um Cell de menu com o seguinte método:
+1
+2
+3
+4
+
+def display(current_page)
+  @current_page = current_page
+  render
+end
+
+
+E a chamada na view é assim:
+1
+
+<%= render_cell :menu, :display, @page %>
+
+
+Muito simples. Finalmente, agora podemos ter testes de verdade para a Cell:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+require 'spec_helper'
+
+describe PollCell do
+  context "cell rendering" do 
+    context "rendering display" do
+      before do
+        @poll = Factory(:poll_with_question)
+      end
+      
+      subject { render_cell(:poll, :display) }
+  
+      it { should have_selector("h1", :content => @poll.name) }
+      it { should match(@poll.questions.first.name) }
+    end
+  end
+
+  context "cell instance" do 
+    subject { cell(:poll) } 
+    it { should respond_to(:display) }
+  end
+end
+
+
+Mas há um pequeno truque que precisei implementar. No meu caso, quando estou testando o PagesController, eu usei render_views. Isso faz com que o RSpec renderize as views no teste de controller. Mas ao fazer isso ele tentará chamar o render_cell da view e, caso você não tenha fixtures ou factories configurados para os models que as Cells dependem, terá problemas. Para isolar o teste e simplesmente não renderizar nenhuma das views das Cells, eu acrescentei o seguinte no meu spec de controller, em spec/controllers/pages_controller_spec.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+describe PagesController do
+  render_views
+
+  before(:each) do
+    ...
+    ActionView::Base.class_eval do
+      def render_cell(name, state, *args, &block)
+        ""
+      end
+    end
+  end
+...
+
+
+No caso sobrescrevi o método render_cell que a gem Cells acrescenta na ActionView para simplesmente devolver uma string vazia. Pelo menos até achar uma solução mais elegante isso deve bastar.
+Conclusão
+Como podem ver isso aumenta a quantidade de arquivos e parece aumentar a complexidade. Porém é a mesma coisa quando falamos de MVC, arquiteturas e patterns em geral: o mais “simples” é colocar tudo numa página só, conexão a banco, lógica de negócio, HTML, etc (como se faz com PHP ou ASP crús). Porém todos sabemos o que isso significa: muito rapidamente as coisas saem totalmente do controle, ficam extremamente engessadas, e é impossível dar manutenção depois. Separar em camadas, isolar as responsabilidades, diminuir o acoplamento e dependência, tudo isso ajuda a aumentar a mantenabilidade e ainda nos dá chance de tratar de forma robusta e confiável assuntos como segurança, performance, escalabilidade e mais.
+Cells é outra forma de organizar uma parte do Rails que até hoje estava espalhada, criando acoplamento por toda sua aplicação. Ela provavelmemnte ainda vai evoluir, mas no estágio onde está já é bem usável e muito melhor que o antigo Rails Components.
+Como o próprio autor do Cells, Nick, disse, a idéia do Cells não é substituir o uso de partials, helpers ou before_filters. Apenas use Cells onde faz sentido. Não há uma regra rígida, mas se tiver “cara” de “componente”, provavelmente poderia ser um Cell. Coisas simples ainda devem encaixar melhor em partials ou helpers. Experimente para saber.
+Cells também é diferente de Rails Engines. Engines são praticamente mini-aplicações, um stack completo de aplicação Rails que pode ser composta em outras aplicações (como é o caso do Devise, para autenticação). Já Cells são como “sub-controllers”, eles não tem rotas próprias (então não são acessíveis diretamente via URL pública) e servem inicialmente para organizar views em “pedaços” mais organizados.
+O Nick está indo para o segundo estágio: construído sobre essa infraestrutura de Cells ele criou o Apotomo, um framework de Widgets. A idéia é criar componentes reusáveis e interativos, com suporte a Ajax e tudo mais.
+Lembram que eu mencionei que Cells não são acessíveis via URL porque não tem rotas e coisas como a Cell de Enquete requer um PollsController separado para contabilizar os votos? Pois bem, o Apotomo é a segunda camada que permite criar um “Componente” de verdade, incluindo essa lógica de contabilização de votos. Daí em vez de uma Cell de Poll teríamos um Widget de Poll, totalmente reusável em outras aplicações.
+Então usaríamos Cells para componentes apenas visuais com pouca ou nenhuma lógica caso não tenhamos formulários ou chamadas Ajax. Para coisas mais complexas e interativas reusáveis usaríamos Widgets via Apotomo.
+Vale a pena explorar essas novas tecnologias, somando Rails com Engines, a possibilidade de composição com outras aplicações Rack, e agora Cells e Widgets, temos um framework web versátil que permite uma flexibilidade ínpar em termos de composição e reusabilidade.
+tags: obsolete rails
+

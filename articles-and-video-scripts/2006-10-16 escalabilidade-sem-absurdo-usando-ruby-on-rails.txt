@@ -1,0 +1,23 @@
+
+
+
+
+Este post foi publicado no site da Teare Software Solutions por David Teare (link permanente). O relato é muito interessante, por isso segue a tradução:
+Fui honrado porque meu principal produto figurou na homepage de tecnologia do Digg durante o fim de semana.
+Nunca experimentei um Efeito Digg antes, então isso tudo foi novo para mim. Foi excitante ver o log de acesso do servidor crescer ultrapassando todos os limites, batendo o recorde de acesso diário nas primeiras horas do Digg.
+Os gráficos de Visitas e Pageviews no Google Analytics foram incríveis:
+
+
+
+Como podem ver o tráfego cresceu mais de 1000%! Considerando que 73% dos usuários do Digg usam Windows, o crescimento poderia ter sido de 4000% se o título da história não tivesse a palavra Mac. Mas eu aceito 1000% :)
+Você imaginaria que um pico de carga do servidor de 1000% poderia matar seu site, mas o website nunca perdeu nem uma pulsação – nem uma única requisição de página dinâmica levou mais do que 1/10 de segundo! Considerando que nossa homepage é completamente gerada dinamicamente, sem cache e acessa 3 bancos de dados separados, é simplesmente incrível.
+Quando eu escrevi a homepage pela primeira vez em Rails, não pensei que poderia deixá-la do jeito que estava. Ela abre 3 conexões separadas de banco de dados para coletar estatísticas e mostrar na homepage. É bastante sobrecarga para mostrar estatísticas simples como estas:
+
+
+
+Ter nosso site mostrando “o último post no fórum foi à 24 minutos” é divertido e eu sei que meus usuários gostam disso. Eu imaginei que poderia fazer um cache dessa página para melhorar a performance quando e se isso se tornasse um problema.
+Incrivelmente, mesmo dessa forma teoricamente ineficiente para uma homepage, o uso da CPU nunca excedeu 5% durante o pico. Considerando que a máquina que roda nosso site tem um processador único de 2Ghz com apenas 1Gb de RAM, isso é impressionante!
+Se eu estivesse usando Java, eu teria precisado de uma configuração com clusters de máquinas muito poderosas para aguentar o tranco. De fato, em uma vida passada, eu fiz um teste de stress de uma aplicação Java “best of breed” que foi distribuída em 3 máquinas incrivelmente poderosas, e elas não foram capazes de aguentar um único usuário com esse nível de velocidade de graça.
+Verdadeira escalabilidade é apenas uma das razões que eu adoro tanto Rails. Sua arquitetura “Share Nothing” (não compartilhar nada) lhe permite escalar infinitamente (e é a mesma técnica que o Yahoo e Google usam), e é tão eficiente que você não precisa gastar montanhas de dinheiro em hardware também. Quando tivermos mais que do que alguns milhares de usuários por hora poderei comprar uma máquina maior, ou habilitar o cache :)
+tags: obsolete
+

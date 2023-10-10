@@ -1,0 +1,17 @@
+
+
+
+
+Acontecerá em São Paulo nos dias 21 e 22 de outubro a 2a edição do noSQL Brasil, principal conferência da América Latina sobre o tema. Este ano o evento conta com uma grade ainda mais rica, abordando não só as tecnologias noSQL, mas também newSQL e Cloud Computing.
+Serão dois dias intensos onde teremos 12 palestras e 6 Lightning Talks.
+Alguns palestrantes internacionais de destaque:
+
+Alistair Jones, Software Engineer da Neo Technology – empresa responsável pelo Neo4j
+Frank Weigel, Diretor de produtos da Couchbase – empresa responsável pelo desenvolvimento dos populares CouchDB e Membase)
+Benjamin Coverston, Diretor de Operaçōes da Datastax – empresa responsável pelo Apache Cassandra
+Mathias Stearn, Sr. Software Engineer da 10gen – empresa responsável pelo MongoDB
+
+Outros palestrantes nacionais e também internacionais estarão presentes no evento. A grade já está disponível no site do evento. Os preços promocionais são válidos até o dia 7 de Outubro.
+Não deixe de seguí-los no Twitter e compartilhar com seus amigos e colegas de trabalho. Quando até a Oracle está caminhando pelos trilhos do noSQL, você não vai querer ser o último a entender estas novas tecnologias.
+tags: obsolete conference
+

@@ -1,0 +1,13 @@
+
+Obie Fernandez acabou de publicar este post na InfoQ.
+Charles Nutter tem mantido uma página atualizada com o resultado da execução de testes com Rails que mostra progresso em direção ao objetivo de um JRuby on Rails totalmente funcional. Membros da equipe JRuby já demonstraram aplicações Rails trabalhando sobre JRuby, e até mesmo ActiveRecord falando com bancos de dados via JDBC. Para ser claro, o que estamos falando aqui é o esforço para conseguir fazer o enorme suíte de testes Rails rodar com 100% de sucesso.
+
+
+De acordo com os comentários recentes de Charles para o mailing list rails-core, os componentes Rails como ActionPack, ActiveSupport e ActionMailer estão quase em 100%. Outras partes ainda tem algum trabalho sobrando:
+ActiveRecord está provavelmente tem 2/3 de trabalho (mas as falhas incluem testes para Oracle, PgSql, Firebird …), e a maioria das coisas com que esperamos trabalhar funcionam muito bem. Ainda não comecei a executar testes de ActionWebService.
+A equipe JRuby está mirando para suporte a Rails 1.1.6, mas começarão a testar Rails 1.2 logo:
+Não imagino que o perfil de compatibilidade mudará muito por mudar de versões; estamos basicamente falando de Ruby puro aqui. Note que o uso de SQLite em vários lugares nos testes causam um pouco de problemas com JRuby porque o suporte a SQLite no Java é mínimo. A habilidade de trocar SQLite para alguma coisa equivalentemente simples (DBI ou JDBC com Derby/JavaDB, talvez?) tornará as coisas mais fáceis para executar esses testes.
+Charles e a equipe JRuby ainda estão procurando por ajuda adicional para este esforço que vale a pena:
+Claro, se algum de vocês é desenvolvedor Java e gostaria de nos ajudar a colocar as coisas rodando, certamente vamos agradecer. Eu debuguei por código Rails suficiente para saber que ter mais pessoas experientes realmente ajudaria.
+tags: obsolete jruby
+

@@ -1,0 +1,34 @@
+
+Atualização: 01/10: O José acabou de lançar a versão 0.9.1 enquanto eu estava fazendo upload deste vídeo :-)
+
+O José Valim está fazendo um grande trabalho no Rails 3.0 que está para ser lançado. Ele surpreendeu a todos com seu projeto do Google Summer of Code, reescrevendo todo o código dos Geradores para usar Thor e ser mais agnóstico. Não só isso, mas ele também fez melhorias no ActionController para torná-lo mais enxuto e limpo.
+
+Muito desse último trabalho vem uma gem de Rails dele chamado Inherited Resources. Ele pode ser usado agora mesmo nos seus projetos Rails 2.3 e ele também portou algumas das funcionalidades do Rails 3.0 como ActionController Responders e outras coisas.
+Em essência ele parece muito com o resource_controller do James Golick ou o make_resourceful do Hampton Caitlin, Mais um Plugin de Controller Magro se preferir. Mas o do José é definitivamente interessante.
+Então, decidi fazer um screencast para apresentar algumas das funcionalidades básicas. Tenha em mente que esta gem oferece muito mais e eu encorajo que você leia a página de Wiki sobre ele. Existem dúzias de opções que você pode usar para tornar seus projetos muito melhores para dar manutenção e mais enxutos.
+
+
+Para utilizar os códigos que eu menciono no screencast, apenas comece assim:
+1
+2
+
+git clone git://github.com/akitaonrails/ryanb-15min-blog.git
+cd ryanb-15min-blog
+
+
+O vídeo é dividido em duas partes, na primeira é uma simples conversão da aplicação para usar o inherited_resources. Para acessar esse código faça assim:
+1
+
+git checkout -b inherited_resources --track origin/inherited_resources
+
+
+Isso trás o branch com a primeira parte. Para ver a segunda parte, com mais recursos, faça:
+1
+
+git checkout -b inherited_resources_complete --track origin/inherited_resources_complete
+
+
+Pronto, agora você tem 3 branches: o master com o blog em 15 minutos original, o ‘inherited_resources’ com a primeira parte e o ‘inherited_resources_complete’ com a segunda parte. Use o comando ‘git checkout [nome do branch]’ para mudar de branches.
+José também é palestrante para o Rails Summit Latin America 2009, a maior conferência de Rails da América do Sul, e vai acontecer nos dias 13 e 14 de Outubro, em São Paulo. Nos ajude a promover o evento e não deixe de comparecer!
+tags: obsolete rails restful screencasts
+

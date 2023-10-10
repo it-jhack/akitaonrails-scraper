@@ -1,0 +1,13 @@
+
+
+
+
+Ontem o Carlos Eduardo organizou outra palestra muito legal sobre XP com o Vinicius Manhães Teles da ImproveIT.
+
+O assunto é muito importante, principalmente para nós Railers, pois a tendência são os processos Ágeis. Nada deve ser seguido à risca como Dogma, mas a técnicas ágeis são extremamente importantes. Se seu interesse são projetos entregues dentro do custo, tempo, prazo e qualidade, procure técnicas Ágeis. Se seu interesse é apenas ter um pescoço extra para torcer quando algo der errado, contrate uma dessas consultorias “tradicionais” de paletós pretos e deixe nas mãos deles.
+Voltando à palestra, infelizmente no meio do caminho o Carlos teve problemas com o hosting dele. A Locaweb não é exatamente nenhum primor de qualidade nem robustez e isso ficou provado ontem. Foi uma pena porque a sala online do TreinaTom (que aliás, está melhorando muito) estava lotada e todo mundo foi derrubado. Quem não pôde assistir até o fim (como eu), recomendo baixar a gravação que o Carlos fez aqui
+Todo bom serviço costuma oferecer algum SLA (Service Level Agreement), mas normalmente em vez de ajudar o cliente eles servem mais para os isentar da responsabilidade de problemas como os de ontem. Sugiro que todos que usem serviços de hosting, e dependam dele, discutam SLAs diferenciados com seus provedores de serviço. Se possível não use shared-hosting. Prefira co-location ou algo mais privativo. É mais caro, mas é melhor do que usar o contrato padrão, que normalmente, não garante nada além do trivial.
+Espero que todos entendam que o Carlos faz o possível para dar a seus clientes, e a nós da comunidade, a melhor qualidade possível. A iniciativa das palestras é outro indicativo do seu nível de comprometimento com a comunidade. E que atire a primeira pedra o programador que nunca varou noites tentando resolver um problema impossível (se você nunca passou por isso, não quer dizer que você é bom, apenas que nunca participou de um projeto de verdade). Eu mesmo me lembro de já ter passado mais de 72 horas em claro atrás de um bug cabeludo. O próprio DHH relatou em seu blog sobre 44 horas de problemas com o Basecamp.
+A recomendação a todos que oferecem serviços: seja transparente. É uma recomendação que também está no Getting Real, mas é óbvio: seus clientes não ficarão bravos pelo problema ter acontecido, eles querem saber como você lidou com ele. É isso que empresas como as nossas famigeradas telecoms precisam aprender.
+tags: obsolete
+

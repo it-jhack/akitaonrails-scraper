@@ -1,0 +1,38 @@
+
+
+
+
+Para os iniciantes em Ruby, hoje existem pelo menos 4 grandes bibliotecas de XML sendo utilizadas, o REXML, Hpricot (do why, the Lucky Stiff), o novato Nokogiri e o LibXML (que acabou de ter sua versão 1.0 final, depois de 7 anos de desenvolvimento). Aaron Peterson, o autor do Nokogiri, publicou uma suíte de benchmark de XMLparsing.rdoc e, segundo sua análise, o Nokogiri é o mais rápido de todos, seguido de perto pelo novo LibXML.
+Faça seus próprios testes, mas se quiser tirar vantagem disso na sua aplicação Ruby on Rails, faça o seguinte: crie um arquivo como config/initializers/xml.rb. Para habilitar o suporte à LibXML coloque nesse arquivo:
+1
+
+ActiveSupport::XmlMini.backend = 'LibXML'
+
+
+Ou se quiser o Nokogiri:
+1
+
+ActiveSupport::XmlMini.backend = 'Nokogiri'
+
+
+Não esqueça de configurar o config/environment.rb com:
+1
+
+config.gem "nokogiri"
+
+
+Ou para LibXML configure o config/environment.rb com:
+1
+
+config.gem "libxml-ruby", :lib => "libxml"
+
+
+Lembrando que os comandos rake para instalar as gems dependentes é
+1
+
+sudo rake gems:install
+
+
+Via Ruby Inside
+tags: obsolete rails
+

@@ -1,0 +1,33 @@
+
+English version: here
+Ontem aconteceu o esperado RejectConf SP’07, um dos primeiros eventos relevantes de Rails no Brasil, no auditório Jacy Monteiro do Instituto de Matemática e Estatística da USP. Foi um excelente evento, considerando que eu fui o responsável (sou um [des]organizador muito amador :-) ). Foi um evento comunitário, sem fins lucrativos, que contou com o apoio importante da Caelum e do IME e isso possibilitou um encontro com entrada franca. Valeu muito a pena.
+
+Todos os palestrantes compareceram, a platéia estava animada, colaborativa e interessada, o que me deixou muito contente. Houve atrasos, o pessoal estava lá no meio de um dos maiores feriados prolongados, com fome, com calor, mas mesmo assim não deixaram de participar. Isso com certeza é um excelente sinal de que nossa comunidade é muito unida e esforçada.
+
+
+
+O evento começou ao meio-dia como combinado, mas em vez de acabar às 6:30 da tarde, acabou se estendendo até quase 8 horas da noite! Imaginei que precisaria de uma granada do Capitão Nascimento até o final, mas com certeza não havia nenhum 05 dormindo :-) Muito pelo contrário.
+Aliás, fiquei surpreso em ver a quantidade de Macs no evento! Não contei um a um mas acho que havia quase 10 por lá! :-)
+
+O auditório estava bem equipado. O telão era muito bom, deu para ligar o áudio direto na câmera e gravamos quase 6 fitas de mini-DV, aproximadamente 5 a 6 horas de vídeo. Infelizmente houve algumas pausas pra trocar fita no meio de algumas palestras e a câmera não se deu muito bem com a iluminação, mas espero que não se tenha perdido muito. Felizmente o Jonas e o Tapajós também estavam com câmeras então temos 2 backups :-) Ainda não sei quando vou conseguir editar tudo, quem conseguir editar primeiro pode liberar para download. Não tenho nenhuma restrição quanto a isso.
+Mas assim que tiver novidades sobre os vídeo vou postando aqui. Também vou publicar as palestras do pessoal pra que todos possam ver. Fiquem ligados para atualizações com todo esse material.
+
+Para começar, acabei de colocar as fotos do evento numa Web Gallery. Visitem o álbum e quem tirou fotos também pode fazer upload diretamente no álbum online (coloquei descrições em todas as fotos). O Marcos Vinícius acabou de publicar várias fotos suas no Flickr ! E aqui também tem o álbum do Fernando Meyer. O Marcos Tapajós, da ImproveIt também publicou seu álbum
+Devo agradecer todos que foram, mesmo no meio do feriadão, de diversas cidades.
+
+Alguns destaques como o Felipe Giotto e Eduardo Fiorezi, que vieram do Paraná para palestrar:
+
+O grande Vinícius e toda turma da ImproveIt que vieram do Rio para mostrar toda sua experiência.
+
+Ao Carlos Villela e seus amigos ThoughtWorkers.
+
+E o Carlos Eduardo, da eGenial, também nos contou sua história até chegar ao Rails, online, diretamente pelo TreinaTom.
+
+E no final tivemos um sorteio dos prêmios que Geoffrey Grosenbach me enviou: 5 camisetas Peepcode, 5 coupons Peepcode, 1 livro JRuby on Rails e 1 livro Repensando a Web com Rails. Espero que todos aproveitem!
+Foi um ótimo encontro, finalmente nomes ganharam rostos e vimos que nossa comunidade Rails está crescendo de forma saudável, com excelente pessoas. Semana que vem estarei num evento na UNESP de Bauru junto com o Vinicius para continuar divulgando Rails.
+E continuando a onda de eventos locais de Rails que começamos, o pessoal da Milk-it me pediu para divulgar também que acontecerá a Minas on Rails no dia 1o de dezembro! Espero que todos os mineiros Railers possam se encontrar, é muito importante conhecer a comunidade e ajudá-la a crescer em todos os estados!
+
+Mas eu estarei novamente junto com a ImproveIt, no Rio on Rails ! Não se esqueçam, dia 8 de dezembro! E na semana seguinte, dia 15, estaremos todos juntos com o Carlos Eduardo para o evento online beneficente Rails for Kids 2007.
+Bastante coisa acontecendo pessoal.
+tags: obsolete rejectconf
+

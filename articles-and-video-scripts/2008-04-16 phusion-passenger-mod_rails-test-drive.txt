@@ -1,0 +1,124 @@
+
+A semana passada teve grandes anúncios que chacoalharam a comunidade Ruby on Rails. Uma delas, foi sem dúvida o lançamento do tão esperado mod_rails, por Hongli Lai que vêm investindo recursos em maneiras de melhorar o MRI para funcionar com fork (o resultado disso é o lançamento futuro do que eles estão chamando de Ruby Enterprise Edition – sim, o nome é para ser uma piada).
+
+Vejamos como usar o Passenger e alguns números de benchmark!
+
+
+Booting up!
+Enfim, o mod_rails não poderia ser mais simples. No Mac OS X eles recomendam não usar o Apache 2 que já vem pré-instalado, em vez disso para instalar outro manualmente. Não tem problema, graças ao MacPorts isso é muito simples:
+1
+
+sudo port install apache2
+
+
+Pronto, feito isso, basta instalar a gem do Phusion Passenger:
+1
+
+sudo gem install passenger
+
+
+Também em Mac, garanta que você tem o Developer Tools instalado (vem no mesmo DVD de instalação do Leopard, ou baixe o pacote de 2+ Gb for free no site da Apple).
+Já estamos quase no final, agora basta executar o seguinte comando para instalar o módulo do Apache:
+1
+
+sudo passenger-install-apache2-module
+
+
+Isso vai abrir um simples menuzinho texto e basta seguir os passos que ele indicar (são poucos e óbvios). Feito isso, só falta configurar o Apache. No meu caso, meu arquivo de configuração se encontra em /opt/local/apache2/conf/httpd.conf, dependendo da sua plataforma isso vai variar. Agora basta colocar o seguinte ao final deste arquivo:
+
+1
+2
+3
+
+LoadModule passenger_module /opt/local/lib/ruby/gems/1.8/gems/passenger-1.0.1/ext/apache2/mod_passenger.so
+RailsSpawnServer /opt/local/lib/ruby/gems/1.8/gems/passenger-1.0.1/bin/passenger-spawn-server
+RailsRuby /opt/local/bin/ruby
+
+
+
+E para cada aplicação que você tiver, coloque o seguinte:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+<Directory "/Users/akitaonrails/rails/meu_projeto/public">
+    Order allow,deny
+    Allow from all
+</Directory>
+
+<VirtualHost *:80
+    ServerName 
+    DocumentRoot /Users/akitaonrails/rails/meu_projeto/git_trunk/public
+</VirtualHost
+
+
+
+Pronto! Só falta iniciar o Apache:
+1
+
+sudo apachectl start
+
+
+Start para iniciar, stop para parar ou graceful para reiniciar.
+No caso eu apontei minha aplicação para a porta 80. Se você tiver mais de uma aplicação rails e quiser servir como um sub-diretório como https://localhost/rails1 ou https://localhost/rails2? Bem, felizmente o pessoal da Phusion tem uma extensa documentação e, claro, para os Apache-ninja, os truques de Apache continuam valendo. Leiam aqui
+Agora. E como o mod_rails se compara ao Mongrel? Existem muitas diferenças, leia em mais detalhes no blog Pervasive Code
+Deathmatch!
+Vamos aos finalmentes, “mas o (mod)rails escala?” :-)
+Não fiz nenhum teste científico então não espalhem como se fosse!! Olhem o que eu fiz:
+
+peguei uma aplicação real – que desenvolvemos para um cliente na Surgeworks. Não tivemos tempo de otimizá-la então ela faz queries pesadas e não otimizadas ao MySQL, não usamos memcached, tem muito processamento de objetos em memória. Enfim, uma aplicação Rails normal, em desenvolvimento, que usa plugins, gems e tudo mais que temos direito. Não é nenhum “Hello World”.
+
+
+eu usei exatamente a mesma configuração que mostrei acima, sem nenhum fine tuning no passenger. Por padrão ele vai dar spawn em vários httpd e rubys (uma meia dúzia, mas obviamente dá para configurar isso).
+
+
+no caso dos mongrels eu primeiro fiz um teste apenas com um único mongrel depois com um mongrel cluster subindo 3 processos e sendo balanceados pelo Pound (apenas porque era mais simples).
+
+
+os testes foram executados no meu Macbook Pro 2.4Ghz com 2Gb de RAM (e com vários aplicativos abertos enquanto isso)
+
+
+para o stress test usei o bom e velho Apache Bench (ab). Primeiro com 1000 requisições em série (uma única conexão usando um único processo Ruby) e depois 2000 requisições espalhadas em 3 conexões simultâneas. Para ambos eu passei direto o cookie com a session para ir direto para uma página interna onde há queries e processamento, não é uma página estática.
+
+
+ambos rodaram a aplicação em modo de produção
+
+A linha de comando para o primeiro teste se assemelha a isso:
+1
+
+ab -n 1000 -C _app_session=ef2a3d714f53cdba054d31bdaf876a79 https://127.0.0.1/observations
+
+
+A segunda linha é assim:
+1
+
+ab -n 2000 -c 3 -C _app_session=ef2a3d714f53cdba054d31bdaf876a79 http://127.0.0.1/observations
+
+
+Os resultados foram os seguintes, primeiro para 1000 requisições e uma única conexão:
+
+Passenger: 11.40 [#/sec] (mean)
+Mongrel: 9.94 [#/sec] (mean)
+
+Agora, para 2000 requisições e 3 conexões simultâneas (exercitando 3 VMs Ruby ao mesmo tempo):
+
+Passenger: 20.97 [#/sec] (mean)
+Mongrel+Pound: 16.15 [#/sec] (mean)
+
+Como podemos ver, em ambos os casos o Passenger foi mais responsivo que o Mongrel, pode ser por não haver o overhead de um Mongrel (que tem partes em Ruby) no caminho. Pode ser porque o pessoal da Phusion realmente achou magia negra para colocar no mod_rails. Pode ser que o Pound não seja tão bom assim. Mas o fato é que o mod_rails não decepcionou!
+Para não dizer que foi perfeito, no segundo teste o mod_rails respondeu 2 vezes com erro (código de retorno não 2xx). Eu rodei uma segunda vez o teste reiniciando o Apache e usando outro cookie e deu 1 erro. Não investiguei para saber porque, mas é uma taxa de apenas 0,0005% a 0,001% de erro. E pior, pode ser um erro de fato na minha aplicação (oops :-).
+De qualquer forma, o mod_rails é bastante impressionante e com grande potencial. Para shared hostings principalmente ele já vem preparado para que cada aplicação Rails suba com a permissão do arquivo config/environment.rb. Ou seja, a aplicação de um usuário não tem a permissão para enxergar os arquivos de outro usuário porque o mod_rails proibe aplicações Rails para jamais subir como Root. Como disse antes, leiam a documentação, existe muitas opções para administradores de sistema. E inclusive não é necessário também usar mod_rewrite para que o Apache saiba buscar páginas cacheadas ou assets como imagens ou javascript sem precisar passar pelo Rails, o mod_rails já faz isso automaticamente.
+Futuro
+Mas isso significa que o Mongrel está com os dias contados? Não, acho difícil. Para começar o Mongrel é extremamente robusto e ainda está evoluindo. Para controlar a dedo sua aplicação um mongrel cluster + monit/god + nginx/litespeed ainda é a melhor solução, caso você não precise de Apache. Num VPS talvez a solução tradicional ainda seja interessante, mas para shared hostings e também para iniciantes o mod_rails é um grande passo à frente.
+Mas há mais: o pessoal da Phusion terá um produto comercial chamado Ruby Enterprise Edition. Ele anunciou agora há pouco que estará liberando aos clientes interessados.
+E qual a vantagem? O Hongli estudou muito o funcionamento do Ruby MRI. Uma das peculiaridades de uma VM dinâmica é que trivialmente não é fácil fazer um bom fork dele. Pelo fato que as classes e objetos são considerados dados não compartilháveis. Ou seja, fazer um fork não economiza memória, praticamente duplica, como subir um segundo processo manualmente. Mas as pesquisas do pessoal da Phusion demonstraram uma capacidade de criar um patch para o MRI para que o fork de VMs economize em até 33% o consumo de memória sem impactos na performance. Ou seja, para grandes instalações isso seria uma grande economia, afinal cada processo Rails costuma consumir, no mínimo, 30Mb por processo.
+Uma excelente pedida, sem dúvida nenhuma e um grande avanço para deployment de Rails.
+tags: obsolete passenger english
+

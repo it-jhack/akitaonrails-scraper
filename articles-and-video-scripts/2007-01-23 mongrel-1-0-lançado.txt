@@ -1,0 +1,10 @@
+
+
+
+
+Fonte: Riding Rails
+Para coincidir com o Rails 1.2.1, Zed lançou o Mongrel 1.0.1 oficial. Sim, o “.1” ao final é uma piada.
+Ele também disse que começou a trabalhar no Mongrel aproximadamente em Janeiro do ano passado, tornando ele por volta de 1 ano de idade também.
+Parabéns ao Zed e a todos que contribuíram com a aplicação e à maravilhosa comunidade Mongrel.
+tags: obsolete mongrel
+

@@ -1,0 +1,9 @@
+
+
+
+
+My good friend Vinicius, from Improve IT, and his team of ‘carioca’-Railers just released a new Ruby on Rails web application called just-remind.us. Let me explain what it is:
+Just-remind.us is the place to share personal information with a group of friends — the kind of info that you’d rather not expose on a social network, like mobile phone number or e-mail address. It’s like a bulletin board: anyone can place short cards containing some personal info. To begin having fun, create an new group for your social circle and add some cards. The group name will be shared by you and your friends, so everyone can collaborate. Why? Because on a real bulletin board, you can add new cards, or change information in an existing one, even if it was created by a friend. We like this freedom and simplicity. That’s the way just-remind.us is. Only one login and password for the whole group. You log in and see all the cards in one page. Anyone can update any card. It’s that easy.
+Enjoy!
+tags: obsolete rails english
+

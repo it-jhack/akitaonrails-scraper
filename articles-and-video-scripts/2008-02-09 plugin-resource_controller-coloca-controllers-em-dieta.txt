@@ -1,0 +1,11 @@
+
+
+
+
+Engraçado como as coisas funcionam sem nenhum planejamento. Lá estou eu, lendo minhas notícias diárias, separando algumas para o podcast. Num parágrafo escondido de um post vejo um plugin de nome sugestivo: resource_controller. Interessante …
+Daí você vai e esperimenta. Hm, promissor! Sem pensar muito vem aquela vontade de mostrar aos outros o que você achou legal, a gente sempre tem vontade de dividir as coisas que acha legal. Daí saiu meu screencast Easy Restful Rails.
+Claro, você comunica o autor do projeto para ver o que ele acha. Felizmente, ele gosta ! De repente o vídeo é acessado sem parar! Daí pessoas como Rick DeNatale acabam esbarrando na inércia do tráfego, e boom: ali vai um artigo dele para a InfoQ sobre o plugin do James.
+Foi um caso interessante, o James fez um trabalho muito promissor que se vende sozinho, eu fui apenas um mensageiro, me divertindo no processo. Foi legal saber que colaborei pelo menos um pouquinho para ligar as pontas.
+Aliás, se vocês nunca ouviram falar de Rick DeNatale, deveriam!! Este é um verdadeiro Jack of all trades. Ele é um grande veterano que, de verdade, manja de Smalltalk, Java, Ruby e diversas outras linguagens de alto e baixo nível. Recomendo muito o blog Talk like A Duck
+tags: obsolete rails restful
+

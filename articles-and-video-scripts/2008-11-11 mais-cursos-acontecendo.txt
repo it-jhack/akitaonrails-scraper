@@ -1,0 +1,10 @@
+
+
+
+
+Dois novos cursos à sua espera, pequeno Padawan :-)
+Primeiro, o curso sobre Shoes, o mini-framework para desenvolvimento de aplicações Desktop multi-plataforma criado pelo Why, the Lucky Stiff. O curso será ministrado por Satoshi Asakawa no RubyLearning.com, começando no dia 15 de novembro. Ruby não é só Rails, não percam!
+Segundo, a e-Genial finalmente está com um curso sobre o assunto da moda: BDD (Behavior Driven-Development) no Rails com RSpec, e por ninguém menos do que uma das maiores referência brasileiras no assunto, o Danilo Sato, consultor da ThoughtWorks Londres. Com carga horária de 12 horas, as inscrições já estão abertas. Serão 3 sábados, começando agora dia 29 de novembro.
+É hora de aprender, aprimorar e aproveitar os grandes recursos do Ruby.
+tags: obsolete
+

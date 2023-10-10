@@ -1,0 +1,10 @@
+
+
+
+
+Não se esqueçam que amanhã é nosso Barcamp Locaweb de Ruby on Rails. Clique aqui para mais detalhes do local e também para preencher o formulário de presença. A entrada será gratuita e os comes e bebes são por nossa conta, mas registre-se para sabermos quantas pessoas esperar!
+Mais do que isso: sabendo do evento, a Editora Novatec me contactou e ofereceu um brinde para sortearmos durante o evento: uma cópia do livro Desenvolvimento Fácil e Rápido de Aplicações Web em Ruby on Rails do Rodrigo Urubatan.
+E o mais importante: não esqueçam de levar seus notebooks, de levar idéias, dúvidas, e assuntos de Ruby on Rails para discutirmos amanhã. Inclusive provavelmente teremos um projetor no bar! Então se alguém quiser mostrar alguma coisa rápida, é só conectar no VGA e pronto :-)
+Nos vemos amanhã!
+tags: obsolete locaweb
+

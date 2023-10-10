@@ -1,0 +1,10 @@
+
+Atualização 13-10-2015: como o rubyonbr não está mais ativo, agora só via Webarchive
+
+
+Acabou de ser publicado minha coluna no RubyOnbr: Rails, Sucesso pela Arrogância?
+Pela palavras do Ronie: Lá vai o Akita cutucar a onça :) Nesse artigo desenvolve a idéia de “software de opinião” (Opinionated Software) que guia o desenvolvimento do Rails.
+O artigo é um tanto quanto picante e com certeza vai mexer com alguns egos :)
+Ele vai bem de encontro com a tendência recente da web de fazer aplicações focadas ao invés de sites que tentam fazer tudo.
+tags: rubyonbr
+

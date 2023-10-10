@@ -1,0 +1,11 @@
+
+Primeiro a notícia curta: quem quiser assistir à palestra do DHH na RailsConf Europe 2007, eis o link para uma versão em flash video (eu sei, argh).
+Agora a notícia quente: Charles Nutter relata que o primeiro compilador completo de Ruby 1.8 está pronto! Eles trabalharam duro, durante viagens, fazendo palestras em conferências e codificando no meio do caminho, mas nada disso impediu que o trabalho fosse feito.
+
+
+Antes, JRuby já era capaz de interpretar dentro de uma JVM toda a sintaxe do Ruby 1.8. Já era capaz de, dinamicamente, compilar parte do código. Mas agora ele não só é capaz de compilar TODO o código como também rodar em modo misto: permitindo executar construções exóticas dentro de comandos como eval e seus parentes dinâmicos.
+E a coisa ainda não acabou, eles já estão trabalhando numa segunda versão do compilador que será capaz de compilar uma classe Ruby e gerar um bytecode que, do ponto de vista do Java, será como se tivesse sido codificado em Java puro! Ou seja, chamadas de métodos diretamente do objeto instanciado, sem proxies ou factories no meio do caminho.
+O modo compilado já é quase 2 vezes mais rápido do que o modo interpretado, mas esta é apenas a primeira versão. Ainda há muita otimização a ser feita e muito mais velocidade a ser ganha. E mesmo assim, com o modo misto, não será necessário compilar todas as bibliotecas, gems, e tudo mais. Será possível fazer compilações seletivas.
+Uma excelente notícias a todos que estão buscando mais performance e/ou que tenham necessidade de não ter o código-fonte exposto no ambiente produtivo – uma política que muitas empresas adotam.
+tags: obsolete jruby
+

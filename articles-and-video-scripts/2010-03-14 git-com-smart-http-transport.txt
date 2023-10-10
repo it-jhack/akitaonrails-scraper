@@ -1,0 +1,141 @@
+
+Uma coisa que era defasada no Git até então era seu suporte a HTTP. Para quem não sabe, um repositório remoto de Git é nada mais nada menos do que um diretório num servidor acessível via SSH. Para criar um novo repositório apenas faça isso no seu servidor:
+1
+2
+3
+
+mkdir meu_projeto.git
+cd meu_projeto.git
+git init --bare
+
+
+Agora você pode clonar e dar pushes desta forma:
+1
+
+git clone meu_usuario@meu_servidor:meu_projeto.git
+
+
+É exatamente a mesma sintaxe se você fosse usar SSH ou SCP e ele vai se conectar via a porta padrão 22. Porém, muitas pessoas estão limitadas apenas à porta 80 ou 443 (HTTP e HTTPS). Antigamente, quando eu usava Subversion, uma funcionalidade importante era o suporte a WebDAV. Apesar de eu pessoalmente não gostar de DAV, pelo menos havia a opção.
+O Git até vem com um suporte primitivo a HTTP, que é inclusive chamado de Protocolo Idiota porque você nem precisa ter git instalado no servidor. Ele simplesmente procura o arquivo info/refs do seu projeto e vai puxando pacote a pacote via o nome SHA1 dele. Se precisar puxar apenas um arquivo dentro de um pack, não dá. É um processo lento e limitado, inclusive só pode ser read-only.
+
+
+Mas a partir da versão 1.6.6 (eu tenho o 1.7.0 na minha máquina agora) apareceu o Smart HTTP Transport a melhor versão de protocolo sobre HTTP possível para um repositório de códigos. Desta vez ele é read-write, você pode configurar para permitir leituras anônimas e escritas autenticadas usando HTTP Authentication do próprio servidor Web.
+Para configurar no Apache, basta seguir a documentação oficial
+1
+2
+3
+
+SetEnv GIT_PROJECT_ROOT /var/www/git
+SetEnv GIT_HTTP_EXPORT_ALL
+ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/
+
+
+Na primeira linha você configura o diretório onde estão seus projetos, na terceira linha você configura onde está o binário CGI que vem com o Git. Só isso já é suficiente para começar a clonar seus projetos via HTTP. Para configurar autenticação, apenas faça:
+1
+2
+3
+4
+5
+6
+
+<LocationMatch "^/git/.*/git-receive-pack$">
+        AuthType Basic
+        AuthName "Git Access"
+        Require group committers
+        ...
+</LocationMatch>
+
+
+Isso permite leituras anônimas e escritas autenticadas. Mas se quiser que tudo seja autenticado, basta fazer:
+1
+2
+3
+4
+5
+6
+
+<Location /git/private>
+        AuthType Basic
+        AuthName "Private Git Access"
+        Require group committers
+        ...
+</Location>
+
+
+Agora é possível fazer isso:
+1
+
+git clone https://meu_servidor/git/meu_projeto.git
+
+
+A documentação explica mais detalhes, portanto não deixe de ler. Esse processo é muito mais simples do que habilitar e configurar o mod_dav para subversion. E o protocolo é super eficiente.
+Agora, eu estava pensando no git-daemon que vem com o projeto Gitorious. Ele é ineficiente e já me deu muitos problemas. Uma ótima alternativa seria substituí-lo por este novo serviço. Porém, o Gitorious guarda seus repositórios em diretórios e sub-diretórios hasheados, por exemplo:
+1
+
+/home/git/ab8/9f5/1da3236ed490d36c1e985fb36f38410682.git
+
+
+O motivo disso é que a intenção dele é ser um repositório gigante, por exemplo, a versão online dela abriga centenas ou milhares de projetos open source. Colocar todos os projetos num mesmo diretório poderia estourar o limite do file-system, ou tornar as operações lentas (dependendo do FS sendo utilizado). Por isso ele guarda no banco de dados dele uma tabela ligando o nome canônico do repositório (ex. /gitorious.git) para o nome haseado.
+Agora fica mais complicado usar a versão CGI (até dá mas precisaríamos scriptar alguns rewrites na configuração do Apache e usar outros módulos para ajudar). Mas há uma alternativa mais simples (eu pelo menos acho mais simples), é usar a versão que o Scott Chacon criou em Rack, chamado Grack.
+O Grack é nada mais nada menos que uma aplicação web super leve feita sobre Rack e que conversa com o backend Git sem usar o CGI. Dessa forma você pode configurar coisas como autenticação e tradução transparente de diretórios diretamente via Ruby.
+Para instalar o Grack é muito simples:
+1
+
+git clone git://github.com/schacon/grack.git
+
+
+Edite o arquivo config.ru:
+1
+2
+3
+4
+5
+6
+
+config = {
+  :project_root => "/Users/akitaonrails/Sites/github",
+  :git_path => '/usr/local/bin/git',
+  :upload_pack => true,
+  :receive_pack => true,
+}
+
+
+Em :project_root indique o diretório onde você tem seus projetos, em :git_path indique onde está o binário do git (use which git se estiver em dúvida). As opções seguintes configuram se você quer permitir git push e git clone respectivamente.
+Para subir o servidor para testar faça assim:
+1
+
+rackup --host 127.0.0.1 -p 8080 config.ru
+
+
+Isso subirá o servidor na porta 80. A forma mais interessante é criar um servidor Linux vazio e instalar o Ruby 1.9 e o Phusion Passenger. Por alguma razão que ainda não explorei, ele falhou com o Ruby 1.9 por causa da primeira linha do config.ru, que tive que mudar para:
+1
+
+$LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + '/lib')
+
+
+Notem o :: antes da classe File. Mas fora isso as operações básicas de push e clone funcionaram sem problemas. Recomendo usar o Ruby 1.9 porque já tivemos problemas com o stack TCP do Ruby 1.8.x e é uma das coisas que foi muito melhorado no 1.9, especialmente em um serviço como esse onde haverá muitos dados subindo e descendo via rede pela aplicação.
+Para configurar no Passenger, não deixe de criar um sub-diretório public e tmp pois o Passenger pede para apontar para o diretório public:
+1
+2
+3
+4
+5
+6
+7
+8
+
+<VirtualHost *:80
+  ServerName 
+  DocumentRoot "/Users/akitaonrails/Sites/grack/public"
+  <directory "/Users/akitaonrails/Sites/grack/public">
+    Order allow,deny
+    Allow from all
+  </directory>
+</VirtualHost>
+
+
+Claro, troque o Servername e o DocumentRoot pelos nomes adequados no seu servidor.
+Esta funcionalidade é especialmente interessante para pequenas equipes ou empresas, que precisam de um repositório comum de código-fonte, acessível atrás de firewalls ou proxies, e que tenha baixo custo de manutenção. Num ambiente com poucos projetos, você não precisa de um Gitorious para gerenciá-los, basta criá-los diretamente no servidor e eles estarão automaticamente acessíveis à sua equipe seja lá onde eles estejam.
+Para aprender mais, não deixe de ler o livro online Pro Git do grande Scott Chacon.
+tags: obsolete git
+

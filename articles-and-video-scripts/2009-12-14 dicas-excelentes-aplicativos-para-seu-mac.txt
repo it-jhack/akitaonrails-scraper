@@ -1,0 +1,16 @@
+
+
+
+
+Normalmente eu não faço reviews de aplicativos mas estes dois particularmente me deixaram muito satisfeitos então aqui vão. Primeiro o ClickToFlash. Existem diversos plugins, hacks e tudo mais para bloquear aqueles malditos banners e outros supérfluos que se faz com Flash. Porém este se destaca porque ele bloqueia tudo por padrão e permite que você abra um por um individualmente apenas clicando nele:
+
+Ou então permite adicionar um site inteiro em um white list ou seja, você pode decidir que tudo que vem do youtube.com ou do gametrailers.com sempre pode aparecer. Mais do que isso, o código fonte dele está aberto, open source, e no Github. Uma ótima desculpa para brincar com seu XCode.
+
+O ClickToFlash é a companhia ideal que eu acho que deveria até vir instalado por padrão no Safari. O destino de todo Flash é ser bloqueado até que eu permita explicitamente que ele pode tocar. E falando nisso, passei mais de uma semana usando o Google Chrome Beta como browser padrão, mas até ele ficar mais estável (pra variar, o Flash nele estava consumindo 100% dos meus dois CPUs!), vou voltar ao meu confiável Safari.
+Nem preciso dizer que estou adorando meu Magic Mouse. Se existe uma área onde a Apple é um verdadeiro desastre é em seus mouses. E isso mesmo depois de 1998, quando foi lançado o excelente iMac colorido, com seu péssimo mouse redondo. Mesmo o famigerado “Mighty Mouse” que é o mouse que mais mistura amor e ódio no mesmo produto. Eu gostava tanto do Mighty que cheguei a ter 3 deles, dois com fio e um wireless. Todos eles pararam depois que a bolinha acumulava sujeira e não havia maneira simples de limpá-lo. Se não fosse por isso seria um mouse perfeito.
+
+Felizmente, o novo mouse é limpo, elegante, robusto, preciso e o melhor: não suja. Ele é descendente direto dos novos trackpads multitouch que todo novo Macbook tem. Pela primeira vez em mais de 10 anos, a Apple lançou um mouse decente. Como ele ainda é uma primeira versão, ainda não tem todos os gestos que tornam o trackpad tão excelente. Mas até a Apple lançar as configurações oficiais (que basicamente dependem apenas de calibragem de software), agora temos o BetterTouch. Ele permite habilitar uma grande gama de gestos tanto para o mouse quanto o trackpad.
+O que eu mais precisava? 3 dedos para cima para o Exposé, 3 dedos para baixo para mostrar o desktop e clicar com 3 dedos para simular o botão do meio que permite abrir links em novas abas no Safari. Agora meu Magic Mouse está completo!
+Acho que vou fazer mais reviews de aplicativos no futuro, existem dezenas de gemas que tornam a vida no Mac ainda mais refinado e otimizado. Se você está começando, já leu meu guia para iniciantes no Mac?
+tags: obsolete mac
+

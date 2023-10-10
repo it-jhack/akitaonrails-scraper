@@ -1,0 +1,12 @@
+
+
+
+
+O Carlos Eduardo, da e-Genial, está desenvolvendo uma nova plataforma de cursos on-line, que visa também suprir a demanda e procura por outros assuntos não ligados a Flex e Ruby on Rails.
+Então criaram um breve questionário de 3 questões para receber o feedback do pessoal, para que possamos em seguida lançar os cursos em ordem de prioridade. Ele conta com seu apoio! Para colaborar basta acessar este link.
+Outra grande notícia foi dada pelo André Fonseca, da Dito – Idéias & Soluções. Parece que está quase confirmado para os dias 20 e 21 de setembro a segunda edição do Minas on Rails.
+Ronaldo Ferraz, Carlos Brando, Tapajos, Manoel Lemos, Vinicius Teles entre outros feras brasileiros já foram convidados e devem ser presença garantida. Segundo o André:
+Assim que tivermos mais informações sobre o evento eu aviso aqui na lista. Quem tiver oportunidade de vir a Belo Horizonte será um prazer recebê-los.
+Duas excelentes iniciativas da comunidade brasileira. Muita gente vive me perguntando sobre cursos, pois bem, é hora de apoiar o Carlos Eduardo. Além disso, muita gente fala da pouca quantidade de eventos, pois bem, além do Rails Summit, eis o Minas on Rails. Espero que não só o pessoal de BH, mas quem mais puder comparecer, marque presença nesse evento!
+tags: obsolete
+

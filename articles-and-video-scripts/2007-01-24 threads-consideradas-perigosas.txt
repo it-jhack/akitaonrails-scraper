@@ -1,0 +1,11 @@
+
+
+
+
+Fonte: O’Reilly Radar, por Nat Torkington
+O Professor Edward A. Lee do departamento EECS de UC Berkeley escreveu O Problema com Threads (PDF) ano passado. Nele, ele observa que threads removem o determinismo e abrem as portas para bugs súbitos mas mortais, e que enquanto o problema fora até certo ponto gerenciável em sistemas com um único core (núcleo/processador), threads em sistemas multicore vão tornar os problemas fora de controle. Ele sugere que a única solução é parar de enfiar paralelismo nas linguagens e componentes – em vez disso fazer design de novas linguagens e componentes que podem ser compostos de forma determinista.
+Seu trabalho reflete duas tendências que vemos no Radar (O’Reilly): a primeira é em direção a sistemas multicore e a crescente importância de execução distribuída; a segunda é o aumento da relevância de linguagens como Erlang, Haskell e E. O crescimento de multicore é significante: se quiser que seu programa rode mais rápido, os dias de comprar hardware mais rápido estão chegando ao fim. Em vez disso, estamos olhando para um tempo quando você deve fazer seu programa rodar mais rápido em mais hardware (lento). Entra a programação paralela, clusters, e seu irmão maior tão falado: “grid computing”.
+Google obviamente enfrentou esse problema e resolveu com seu MapReduce. Lee argumenta que esse tipo de sistema de coordenação é como resolvemos o problema do não-determinismo das threads. Ele “paralela” a maneira onde fatiamento de banco de dados se torna a maienra de resolver escalabilidade (veja a história de guerra do Flickr, como exemplo). Por essa razão estamos observando Hadoop, a implementação open source do MapReduce, com interesse. (Também existem implementações em Perl, Ruby e outras linguagens).
+MapReduce é construído sobre uma técnica da linguagem de programação Lisp. Enquanto a necessidade por velocidade nos força para fora da nossa zona de conforto procedural single core, estamos olhando mais e mais para linguagens de programação de “nicho” para inspiração. Haskell tem algo assim entre os geeks alpha que conhecemos (ex. o projeto Pugs) e OCaml tem um grupo pequeno mas devoto. E então havia o grande interesse em Smalltalk na conversa com Avi Bryant na OSCON ano passado (SitePoint blogou sobre isso aqui)
+tags: obsolete
+

@@ -1,0 +1,28 @@
+
+Finalmente, chegamos ao fim de mais um ano. Para mim, fim de ano, começo de ano, é apenas uma continuação ininterrupta e Ano Novo é uma formalidade. Isso dito, é sempre bom um momento para olhar para trás e ver o que fazer para melhorar pra frente (embora isso deva ser um processo constante e não apenas para uma vez por ano).
+
+
+
+
+Enfim, estes foram os 15 links mais acessados no meu blog este ano:
+
+Off Topic - Comprei meu primeiro Mac, e Agora?
+Esta não é uma "página" mas a tag "iniciante"
+Ruby e Rails no Ubuntu 12.04 LTS Precise Pangolin
+Quais são algumas das piores práticas para aplicações Ruby on Rails
+Screencast - Começando com Git
+Internacionalização (i18n) mínima em Rails 3.2 - Parte 1
+Asset Pipeline para Iniciantes
+Tradução - Carta para um Jovem Programador considerando uma Startup
+Rails 4 - Lançado hoje
+Brechas de Segurança Crítica em aplicações Ruby on Rails
+Off Topic - Agile Feito Errado
+Heroku Tips - Enciclopédia do Heroku
+Off Topic - Dicas de Mac para Palestrantes
+Tradução - Estimativa, o Melhor que podemos fazer
+Indo de Ruby 1.8 e Rails 2.3 para Ruby 2.0 e Rails 3.2
+
+É isso aí, até 2014!
+
+tags: obsolete
+

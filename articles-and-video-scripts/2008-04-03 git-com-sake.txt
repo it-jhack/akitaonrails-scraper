@@ -1,0 +1,376 @@
+
+Se vocês ainda não sabem muito bem como usar o Git no dia-a-dia, recomendo primeiro ler meu micro-tutorial de Git.
+Muito bem, a primeira reclamação que eu sempre ouço é a falta de suporte a Windows. Não tem equivalente a TortoiseSVN, precisa instalar Cygwin pra usar git-svn. Blá blá. So sorry guys. Existem 3 opções: usar no Cygwin, que funciona bem. Instalar uma virtual machine linux com VMWare ou coisa que o valha. Parar de reclamar e, no bom espírito open source, tentar contribuir de volta. Não sei para que as reclamações. O problema não é reclamar, o problema é a atitude de ‘eu sou importante e vocês precisam fazer do jeito que eu gosto’. Bom, pare de usar open source se este for o caso. Não é suficiente já estarmos usando ferramentas de graça?
+
+
+De volta ao ponto, a segunda reclamação é: o Git tem mais de 140 comandos diferentes! Isso é coisa pra caramba! Mas sejamos realistas, no dia-a-dia de desenvolvimento – se você não for um programador hard-core – precisará sempre da mesma meia dúzia de comandos.
+No meu micro-tutorial, depois de já fazer clone do repositório online, eu falei do seguinte fluxo:
+
+git checkout -b meu_branch
+(trabalhar trabalhar trabalhar)
+git add .
+git commit -a -m “meu comentário”
+git checkout master
+git merge meu_branch
+git push (ou git svn dcommit)
+
+No fluxo acima estou fazendo o seguinte:
+
+Criando um branch chamado ‘meu_branch’
+(trabalhar trabalhar trabalhar)
+Adicionando novos arquivos que eu tenha criado
+Fazendo o commit com a descrição, tudo no ‘meu_branch’
+Voltando ao branch original ‘master’
+Trazendo as modificações que fiz commit, do ‘meu_branch’ para o ‘master’
+Enviando as modificações do ‘master’ para o repositório Git (ou para o Subversion caso eu tenha feito git svn clone, no começo)
+
+E se algum desenvolvedor também enviou mudanças ao repositório online e você quer trazê-las para seu repositório local?
+
+git checkout master
+git pull (ou git svn fetch e git svn rebase)
+git checkout meu_branch
+git rebase master
+
+O que estou fazendo? Vamos lá:
+
+Voltando ao branch ‘master’ caso eu já não esteja lá
+Puxando as modificações do servidor (se o servidor for SVN, são dois comandos, fetch e rebase)
+Voltando ao ‘meu_branch’
+Sincronizando ‘meu_branch’ com as modificações que chegaram ao ‘master’
+
+Esse é o fluxo de trabalho mais comum. As outras duas operações mais comuns são:
+
+git checkout -b ‘meu_branch’
+git branch -d ‘meu_branch’
+
+Literalmente, criar um branch e apagar um branch. Aliás, essa é uma das características de todo bom gerenciador de código decentralizado: criar branches é uma rotina, não uma exceção como é no Subversion. Crie quantos branches quiser, use e abuse. No Git, criar branches é barato e fazer merges entre branches também é barato! No SVN, criar branches é barato, mas fazer os merges e manipular esses branches é trabalhoso o suficiente para você reservar um dia inteiro só para isso.
+Agora, dos +140 comandos do Git, para o dia-a-dia de um humilde desenvolvedor, eu preciso apenas de cerca de 10 comandos. Nada mal, mas será que podemos fazer melhor?
+Git on Sake!
+Voltemos ao caso onde acabei de fazer um git clone (ou git svn clone). Quero criar um branch, começar a trabalhar, puxar novidades do repositório, enviar minhas modificações de volta ao repositório e apagar o branch temporário que criei. Como faço?
+
+sake git:open
+(trabalhar trabalhar trabalhar)
+sake git:update
+(trabalhar trabalhar trabalhar)
+sake git:push
+sake git:close
+
+Pronto. 4 comandos, que tal?
+O que estamos fazendo é usando o Sake. Todo mundo já conhece Rake, que é um gerenciador de tarefas. O Rake se ocupa com tarefas exclusivas do projeto em que você está no momento. Já o Sake é como se fosse um “Rake global”. Ele lê as tarefas do arquivo ~/.sake e funciona de qualquer diretório de onde você estiver. Para instalar o sake, é o básico:
+sudo gem install sake
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Sobre isso, o "Brian Donovan":https://brian.maybeyoureinsane.net/blog/2008/01/31/git-sake-tasks publicou em seu blog um conjunto de tasks Sake para facilitar o trabalho o Git.
+
+Eu fiz uma pequena alteração no código dele para que o task de 'push' faça o merge do 'meu_branch' de volta ao 'master' antes de enviar as modificações do 'master' para o servidor online, fechando meu workflow diário perfeitamente.
+
+Para instalar, basta fazer o seguinte:
+
+<macro:code>sake -i https://pastie.caboo.se/175145.txt
+
+Isso mesmo! O Sake instala tarefas a partir de arquivos locais ou até mesmo de URLs!
+Pois é, alguns reclamam: “Os comandos do Git são muito difíceis …” Buá buá buá
+Outros solucionam o problema. É como eu sempre digo se você não faz parte da solução, então faz parte do problema.
+Pronto, é tudo que você precisa para começar a desenvolver usando Git com a mesma facilidade de sintaxe de comandos que o Subversion! E para quem quiser uma cópia do script (caso aconteça alguma coisa com a cópia no Pastie), aqui vai:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+
+namespace :git do
+  task :helpers do
+    def git_branch
+      `git branch | grep "*"`.strip[2..-1]
+    end
+    
+    def git?
+      `git status`
+      $?.exitstatus != 128
+    end
+    
+    def git_stash
+      `git diff-files --quiet`
+      if $?.exitstatus == 1
+        stash = true
+        clear = `git stash list`.scan("\n").size == 0
+        puts "* Saving changes..."
+        `git stash save`
+      else
+        stash = false
+      end
+      
+      begin
+        yield
+      rescue
+        puts "* Encountered an error, backing out..."
+      ensure
+        if stash
+          puts "* Applying changes..."
+          sh "git stash apply"
+          `git stash clear` if clear
+        end
+      end
+    end
+    
+    def git_fetch
+      sh "git#{'-svn' if git_svn?} fetch"
+    end
+    
+    def git_rebase
+      if git_svn?
+        sh "git rebase git svn"
+      else
+        sh "git rebase origin/master"
+      end
+    end
+    
+    def git_push
+      if git_svn?
+        sh "git svn dcommit"
+      else
+        sh "git push"
+      end
+    end
+    
+    def git_svn?
+      `git branch -a` =~ /^\s*git svn/
+    end
+  end
+  
+  desc "Pull new commits from the repository"
+  task :update => %w[git:helpers] do
+    git_stash do
+      branch = git_branch()
+      if branch != "master"
+        switch = true
+        `git checkout master`
+        puts "* Switching back to master..."
+      else
+        switch = false
+      end
+
+      puts "* Pulling in new commits..."
+      git_fetch
+      git_rebase
+    
+      if switch
+        puts "* Porting changes into #{branch}..."
+        `git checkout #{branch}`
+        sh "git rebase master"
+      end
+    end
+  end
+  
+  desc "Push local commits into the Wesabe repository"
+  task :push => %w[git:update] do
+    git_stash do
+      puts "* Pushing changes..."
+    
+      branch = git_branch()
+      if branch != "master"
+        puts "Pushing changes from #{branch} into master"
+        `git checkout master`
+        `git merge #{branch}`
+        puts "Pushing changes from master into server"
+        git_push
+        puts "Going back to #{branch}"
+        `git checkout #{branch}`
+        `git rebase master`
+      else
+        puts "Pushing changes from master into server"
+        git_push        
+      end
+    end
+  end
+  
+  desc "Delete the current branch and switch back to master"
+  task :close => %w[git:helpers] do
+    branch = git_branch()
+    if branch == "master"
+      $stderr.puts "* Cannot delete master branch"
+      exit 1
+    end
+    
+    puts "* Switching to master"
+    `git checkout master 2>/dev/null`
+    puts "* Deleting branch #{branch}"
+    `git branch -d #{branch} 2>/dev/null`
+    if $?.exitstatus == 1
+      $stderr.puts "* Branch #{branch} isn't a strict subset of master, quitting"
+      `git checkout #{branch} 2>/dev/null`
+      exit 1
+    end
+  end
+  
+  desc "Create a new branch off master"
+  task :open => %w[git:helpers] do
+    print "* Name your branch: "
+    newbranch = $stdin.gets.chomp
+    
+    branch = git_branch()
+    if branch != "master"
+      puts "* Switching to master"
+      `git checkout master`
+    end
+    
+    `git checkout -b #{newbranch}`
+    unless $?.exitstatus.zero?
+      puts "* Couldn't create branch #{newbranch}, switchin back to #{branch}"
+      `git checkout #{branch}`
+      exit 1
+    end
+  end
+end
+
+
+
+tags: obsolete git
+

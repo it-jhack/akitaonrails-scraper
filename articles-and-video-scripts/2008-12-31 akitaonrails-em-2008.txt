@@ -1,0 +1,96 @@
+
+Pelo visto, a tradição manda que o último artigo do ano seja uma retrospectiva :-) Portanto, vamos às honras. Este foi um longo ano, definitivamente um dos melhores – e mais atarefados – que eu já passei. No meu blog, apesar disso, foram exatos 247 posts somente no meu blog. Foram 16 palestras (incluindo públicas e particulares) durante o ano todo.
+
+Vamos aos meus posts favoritos do ano, foram vários.
+
+
+Janeiro
+Lembram-se do Screencast de Restful Rails Fácil onde demonstro o plugin resource_controller do James Golick? Ele ainda é uma boa opção, vale a pena revisitar.
+Também lançamos mais um produto da comunidade brasileira, a tradução do livro Aprenda a Programar para quem está aprendendo o bê-á-bá da programação com Ruby.
+Em Janeiro ainda entrevistei o grande Hal Fulton e o Sir. Ruby Inside, Peter Cooper. Mais ainda, uma das minhas melhores entrevistas, que foi com o criador do Django, Adrian Holovaty, foi o ponto alto do blog em Janeiro.
+Fevereiro
+Como muita gente ainda não sabe bem a diferença entre tipagem estática e dinâmica, releiam este artigo sobre isso. Sobre o interpretador Ruby MRI em especial, pouca gente compreende seu comportamento em produção e porque coisas como Monit, God e até o Passenger precisam derrubá-los de vez em quando. Leia meu artigo sobre seu uso de memória.
+Este ano estive na Campus Party, foi muito legal reencontrar vários amigos e fazer novos. Em Janeiro de 2009 também estarei novamente na Campus Party, nos vemos lá!
+Em Fevereiro entrevistei ninguém menos que Evan Phoenix, do projeto Rubinius. Também entrevistei o James Crane Baker, um empreendedor americano de Rails muito gente boa que conheci através do Manoel Lemos. Ele tem o site RedeParede.com. Espero que esteja indo bem e passe ileso pela atual crise econômica.
+Nessa época Rails 2.0 ainda era a notícia mais quente e eu tinha lançado meu tutorial e screencast. Até hoje são os posts mais acessados do meu blog.
+Março
+Março foi mais devagar. Coloquei uma discussão se Rails serve para grandes aplicações como um ERP. Como sempre, a resposta é, “depende”, por isso falo mais dos critérios e não dou uma resposta definitiva.
+Porém traduzi um artigo que gosto muito, o Somos Matematicamente Ignorantes porque todos os dias vejo os mesmos erros sendo cometidos – inclusive eu mesmo os cometo. Vale a pena prestar um pouco mais de atenção às nossas idéias pré-concebidas. Isso é um assunto off-topic constante no meu blog.
+Abril
+Eu e o Satish Talim nos conhecemos faz tempo e sempre que possível tento ajudá-lo, pois sua iniciativa com o RubyLearning.org é muito importante. Nesse mês fiz um artigo para ele entitulado Conselhos para Jovens Programadores Ruby, respondendo a um de seus alunos.
+Já em Abril a Phusion, dos meus amigos Ninh Bui, Hongli Lai e Tinco Andringa esta começando a pegar tração. De lá para cá nos tornamos muito amigos e o produto deles deslanchou de vez. Neste outro artigo explico um pouco o que é o Ruby Enterprise Edition.
+Minha peregrinação de palestras acho que começou na FISL 9. Foi minha primeira vez no Rio Grande do Sul e também no FISL. Como não poderia deixar de ser, teve alguns obstáculos mas foi muito divertido. Outra palestra que dei no mesmo mês foi na Impacta, em São Paulo. Um ano cheio de palestras!
+Ainda entrevistei o Chris Wanstrath, antes mais conhecido pelo blog Err the Blog e plugins como will_paginate e cache_fu, hoje mais conhecido pelo Github, que na época ainda não era tão grande quanto é agora. Incrível como alguns meses fazem muita diferença. Aliás, até este mês o Github ainda era Beta desde o fim de 2007, e foi em Abril que ele foi oficialmente lançado.
+Mais do que isso: esse mês marcou a migração do projeto Ruby on Rails de Subversion para Git. Para comemorar, lancei meu Micro Tutorial de Git, outro artigo bastante acessado do meu blog desde então.
+Normalmente sou eu quem entrevista, mas nesse mês eu também fui o entrevistado, no caso pelo pessoal da FiveRuns, onde trabalha Railers como Adam Keys e tem produtos como o TuneUp. Vale a pena conferir.
+Maio
+O Twitter, em 2007, foi vítima de seu próprio sucesso. E como Ruby on Rails já era a tecnologia web mais famosa e comentada, também sofreu com seu sucesso. Por causa disso surgiu o patético “Rails Escala?”. Comento a respeito neste artigo – com direito a parte 2. Traduzi um artigo do Ola Bini que fala sobre escalabilidade também. Até hoje muita gente confunde performance com escalabilidade.
+Fiquei surpreso com o contato do Geoffrey Grosenbach, do Peepcode, querendo patrocinar meu website. No final, eu disse a ele que gostei muito da proposta, mas que faria propaganda para ele (o banner no meu blog) de graça e que o dinheiro deveria ser usado para outras iniciativas. Ninguém soube disso – e eu nunca postei sobre isso – mas eu nunca cobrei ele. Falei pessoalmente sobre isso com ele na RailsConf.
+Aliás, nesse mês começou minha peregrinação rumo à Portland! O episódio da minha caça ao passaporte vai ficar para a história. Leiam como eu dei o sangue pelo Rails, literalmente. E tem a parte 2 também!
+
+Nesse mês, entrevistei meus amigos Ninh e Hongli, a primeira de muitas. Foi nesse mês que bolamos uma brincadeira-surpresa que faríamos na RailsConf este ano ;-)
+Muita gente sempre me pergunta sobre meu livro. Eu sempre recomendo: não comprem se não precisarem muito. Está desatualizado. Mesmo o Desenvolvimento Ágil Web com Rails, do Dave Thomas, que eu revisei, também está desatualizado. Mesmo assim ainda servem para aprender. Leiam este artigo para entender como. Resumindo, você pode rodar diversas versões de Rails em paralelo na mesma máquina, daí os exemplos dos livros devem funcionar. Mas eu recomendo que se comprem os livros em inglês, mais atuais. Ou leiam comecem pelo Rails Guides que deve ser a fonte mais atualizada deste momento. Antigamente o Rails era mesmo mal documentado. Hoje isso não é mais um problema com a quantidade de material online que temos. Vou escrever um artigo sobre isso ano que vem :-)
+
+Falando em livros, foi em Maio também que meu amigo Carlos Brando começou o épico projeto de tradução do Why’s (Poignant) Guide to Ruby, o clássico da literatura rubista. Demorou meses mas está quase no fim, você pode colaborar e já acessar o que foi traduzido no site dele.
+Outro tutorial que ainda é muito acessado no meu blog é sobre o Rails 2.1 (parte 2). Do 2.1 para 2.2 tem tanta pouca coisa nova (muita coisa interna, vários pequenos detalhes), nenhuma grande feature que acabei não fazendo um tutorial de 2.2.
+Apesar de estar muito contente na Surgeworks, foi em Maio também, pouco antes da minha viagem para a RailsConf, que começou minha história com a Locaweb. Primeiro, eles lançaram o beta de Passenger. E logo em seguida veio o convite para eu integrar a equipe. Foi a partir daqui que meu ano acelerou exponencialmente e eu praticamente não tive mais descanso :-) Mas valeu a pena!
+E foi já via Locaweb que fui Ruby à RailsConf.
+Junho
+Nem preciso dizer que a RailsConf foi fantástica! Conheci pessoalmente todo mundo que eu já conhecia online, fiz novos amigos, fortaleci laços. Leiam toda minha cobertura na seção RailsConf’08 no meu site. Um dos destaques, claro, foi a controvérsia Maglev. Claro, não pude deixar de fazer muitas entrevistas ao vivo.
+
+Para o blog, entrevistei o Blaine Cook, ex-engenheiro do Twitter, para melhorar a visão sobre o problema Twitter.
+Na mesma RailsConf conversei com Ryan Davis e depois pedi permissão para traduzir sua excelente palestra Machucando Código por Diversão e Lucro. Aliás, foi a partir desse screencast que vieram alguns convites de palestras que dei durante o ano.
+É incrível como as mídias antigas realmente mostram sua idade. Foi somente em Junho que foi publicado a tradução do livro Desenvolvimento Web Ágil com Rails, que eu já tinha revisado em Janeiro!
+Julho
+Comecei Julho já na Locaweb e planejando o futuro Rails Summit Latin America. O anúncio foi feito logo em seguida. Imagine: menos de um mês atrás eu sequer estava na Locaweb, de repente já estávamos planejando o maior evento de Ruby da América Latina. Não estava brincando quando disse que tudo acelerou exponencialmente.
+Entrevistei o Luis Lavena sobre Ruby no Windows. O Luis é um cara fantástico e seus esforços no projeto One-Click RubyInstaller um dia serão reconhecidos. Eu também testei bastante Ruby no Windows nesse mês. Infelizmente ainda não está perfeito, mas também o Luis tem muita pouca colaboração. Como sempre, reclamar é fácil, ajudar são outros quinhentos …
+Falando em ajudar, nesse mês meu amigo Satish pediu minha ajuda para o RubyLearning.org. Desta vez eram dificuldades financeiras. Nesse momento fiquei muito contente de já estar na Locaweb e de ter chefes como o Gilberto Mautner. Foi a partir desse mês que a Locaweb se tornou patrocinadora oficial do RubyLearning, possibilitando que esse esforço pudesse continuar.
+Como brinde, outro artigo que gosto bastante – por alguma razão eu gosto de falar sobre tudo que deveria ser óbvio mas muita gente ignora. Traduzi um artigo chamado Regras de Otimização. Se você é programador, deveria ler.
+Agosto
+Dada a Largada para o Maior Evento de Rails da América Latina! Foi o primeiro call to arms para a blogosfera ajudar a divulgação. Imagino que nessa época a maioria das pessoas ainda estava um pouco reticente com o evento. Na época pouca gente aderiu à idéia.
+Também foi quando a Locaweb lançou oficialmente o suporte a Rails nas hospedagens, saindo do período de beta. Eu criei a simples gem Locarails para tentar facilitar a vida de desenvolvedores instalando aplicações na nossa hospedagem (assistam o webcast que gravei sobre isso). Aliás, fiz um update recentemente ajustando algumas coisas. Em Agosto foi quando começamos a divulgação de marketing em revistas e outros veículos como a Linux Magazine
+Este foi o mês onde fiz vários artigos mapeando a comunidade brasileira. Na verdade começou no mês anterior com os Sites Brasileiros em Rails, continuando neste mês com os Blogs Brasileiros de Rails. E no meio do mês fizemos o primeiro Happy Hour de Railers em Sampa. Estou devendo um repeteco em breve! Aguardem!
+Um dos artigos mais importantes, mas mais ignorados do meu blog, é o de como habilitar Page Caching nas suas aplicações Rails. Isso é importantíssimo!! Vou dar um exemplo: meu blog estava com o cache desabilitado por acidente. Estava consumindo picos de 2GB de RAM, comendo quase 1/3 da CPU e com o banco sendo acessado direto. Depois de habilitar o cache em tudo, a memória tem picos de no máximo 200Mb, a CPU e o banco quase não fazem mais nada. Está tudo perto de zero!! Não é o Rails que não Escala, é o auto-aprendizado que não vai para frente. Prestem atenção.
+E falando em aprender, outra coisa que até hoje tem gente que me pergunta é sobre Ruby e thread-safety. Escrevi esse artigo para esclarecer o que isso significa. Resumindo, no MRI, não muito.
+Setembro
+Começou minha maratona de palestras. A partir desse mês, um por semana até o fim do ano! Também foi nesse mês que produzi meu melhor screencast desse ano, o Matando a Média, tema que seria o pilar de todas as minhas palestras seguintes e meu lema para o resto do ano. Superar expectativas.
+Um Off-Topic que também gostei de escrever foi o Poder do Mito, Redux. O outro foi sobre Scaling Agile. Desde que entrei na Locaweb passei a estudar e pensar muito sobre o assunto já que eles já implementavam Scrum. Mas eu tinha muito mais idéias! Me adiantando um pouco, no mês seguinte eu escreveria o Manifesto Ágil, ou Como se Tornar o Google. Esse segundo e terceiro artigos delineariam o que eu colocaria em prática, internamente, nos próximos meses!
+Em entrevistas consegui conversar com o Joshua Peek sobre o novo suporte de thread-safe no Rails 2.2 (que expliquei no mês anterior).
+Não deu para escrever muito, afinal eu praticamente não parava em casa, e além de tudo ainda tinha o Rails Summit pegando fogo :-) Muita coisa a se fazer!
+Outubro
+Finalmente! Depois de 3 meses super densos de preparações chegou a hora do Rails Summit!
+Esse tipo de conferência leva muitos meses para organizar e implementar, por isso o que fizemos foi extremamente arriscado. Nenhuma empresa tradicional faria isso. Tecnologia nova, comunidade nova, nenhum histórico anterior, nada. Foi literalmente gut feeling. Mais uma vez, muito acertada ter a Locaweb por trás. Diretores mente aberta como o próprio Gilberto Mautner (CEO) e o Cláudio Gora tornaram isso possível.
+
+Eu não sei se foi impressão, mas antes do evento achei que a comunidade no geral não estava muito confiante. Entendo porque tendo eventos como RailsConf lá fora realmente é difícil chegar no mesmo patamar. Mas o after party foi fantástico! Na última hora o evento encheu e quem foi acho que encontrou muito mais do que esperava.
+Sinceramente, os dias 14, 15 e 16 de Outubro foram os mais intensos do ano para mim, pois foram os dias onde tive a maior carga de responsabilidade, tarefas que eu mesmo precisava fazer, além de querer tratar bem e dar atenção aos palestrantes e amigos. Eu praticamente não dormi nesses três dias seguidos, mas valeu a pena!
+Muitos dos palestrantes como Obie Fernandez, Chad Fowler, David Chelimsky gostaram bastante do Brasil e dos Brasileiros e querem retornar!
+Novembro
+Em Novembro fiz um apanhado geral sobre o feedback na Blogosfera sobre o Rails Summit. Como disse, acho que a maioria se surpreendeu com o evento.
+E mesmo durante o mês de Outubro ainda dei palestras toda semana, o Summit acabou e Novembro ainda tinha mais! Para ter uma idéia da correria, eu fui convidado para o CearaOnRails para o dia 15 de Novembro sendo que no dia 16 eu embarcaria para a QCon, em São Francisco!
+Aliás, a semana que passei em São Francisco foi muito legal! Do evento em si participei muito pouco, mas novamente o importante foi estreitar mais laços, conhecer mais pessoas. Foi onde fiquei amigo do Matt Aimonnetti, o evangelizador Merb que agora é evangelizador Rails 3.0 :-) Até a Leah Culver tive a chance de conhecer!
+
+Ainda tive tempo de escrever uns poucos artigos, em especial meu Micro Tutorial de Ruby em 3 partes (isso porque o campo TEXT do MySQL não comportava tudo!)
+E para fechar o mês com chave de ouro fui informado que o David Hansson ganhou o Prêmio Info 2008, da revista Info Exame, uma das mais importantes no Brasil. E eu fui convidado a receber o prêmio. Foi muito legal ver que nossos esforços estavam se concretizando.
+Dezembro
+O Fim do Ano chegou, acabaram as palestras, mas não acabou o trabalho. Estamos fazendo muita coisa nova na Locaweb. E, no melhor estilo Apple, claro que só vamos contar quando estiver tudo pronto :-)
+Desde Novembro fiquei discutindo internamento na comunidade sobre o andamento do Rails e do Merb. Lançamos o artigo Merb ♡ Rails, começamos o projeto Merb Book e pouco dias antes do Natal veio o anúncio bombástico de que o Rails e Merb seriam mesclados num único projeto.
+Tive pouco tempo, de novo, mas nada que algumas madrugadas não resolvam ;-) Traduzi o artigo Por que Git é Melhor que X, escrito pelo Scott Chacon. Mais dois off-topics sobre Método Científico vs Cargo Cult e Dívida Técnica.
+De novo, repetindo o que eu e até mesmo o DHH sempre falamos de que Rails não é solução para tudo. Fred Brooks é citado o tempo todo e vou fazê-lo novamente: “Não existe Bala de Prata”. Existem boas tecnologias que podem ser usadas do jeito certo e até do jeito errado. Meu objetivo como evangelizador não é dogmatizar o Rails e sim tentar criar bons programadores.
+E nesta madrugada mesmo, passei escrevendo diversos artigos para o novo Wiki da Locaweb. Em particular esta dica sobre RubyGems deve ajudar muita gente.
+Conclusão – Bem Vindos
+Como eu disse na abertura da Rails Summit, vou repetir o primeiro artigo que escrevi no meu blog, o início da minha jornada com Rails, acho que era em Abril de 2006 (a data está errada no artigo):
+Vamos ver até onde essa comunidade pode chegar.
+
+Ruby on Rails poderá ser muito ou nada, tudo vai depender de como o mercado vai encarar a novidade. Mas muita coisa pode ser feita agora. Para começar, aprendendo sobre o assunto.
+
+Vou postar os principais assuntos sobre a plataforma aqui e espero que todos colaborem com idéias e sugestões ou mesmo críticas e opiniões.
+
+Infelizmente ainda existem muitos desafios a serem vencidos. Para começar, materiais de Rails em português virtualmente inexistem. Sites brasileiros idem. Portanto quando digo “começar do zero”, estou falando sério.
+
+O maior desafio será convencer o mercado. E isso não se faz da noite para o dia. Significa que ainda não será possível deixar o legado do Java totalmente de lado. Vamos começar um período de transição onde tentaremos as duas coisas em paralelo.
+
+Os pioneiros sempre caminham por território árduo, mas a recompensa dos primeiros sempre será maior também. Esse é o sentido do investimento.
+
+O que acham? Estamos conseguindo? ;-)
+tags: obsolete
+

@@ -1,0 +1,49 @@
+
+
+Hoje eu fiquei muito contente! Depois de muito quebrar cabeça para imaginar meios de um usuário Windows finalmente ter uma boa experiência com Rails, meu colega Juliano Martinez aqui na Locaweb me deu uma excelente solução: andLinux !!
+Este artigo é especialmente para você, amigo desenvolvedor que infelizmente não tem como se liberar das amarras do Windows: seja porque sua empresa o obrigada a viver essa tortura, seja porque você depende de meia dúzia de aplicações que não existem no Linux, ou mesmo porque você não se sente seguro ainda para utilizar somente Linux. E, mesmo assim, gostaria muito de desenvolver aplicações Ruby on Rails.
+Há anos eu tinha ouvido falar do projeto coLinux ou Cooperative Linux, que é uma kernel modificada de Linux feito para rodar lado-a-lado, cooperativamente, com o Windows. Mais do que isso, ele instala drivers especiais e roda com praticamente a mesma performance do que se fosse instalado sozinho. Antigamente – se não me falha a memória – ele tinha uma limitação de apenas conseguir usar 64 Mb de RAM. Mas não mais: agora ele suporta até pelo menos 1 Gb de RAM.
+Veja na imagem abaixo meu desktop Windows – não! eu continuo usando meu Macbook Pro, mas por acaso tem um PC do meu lado … – com gVim, Windows Explorer, Synaptic, o painel do XFCE, todos rodando lado-a-lado!
+
+O andLinux usa o coLinux e empacota tudo de maneira super simples e trivial de se usar. Na atual versão ele te dá um ambiente Ubuntu Gutsy Gibbons completo! Ele tem duas versões: uma maior de 653 Mb já com KDE pré-instalado e outra mais minimalista de apenas 113 MB com XFCE. Recomendo essa última versão.
+
+
+Depois de instalado, dá para atualizar para a versão mais nova do Ubuntu, o Hardy Heron:
+
+edite o arquivo /etc/apt/sources.list
+troque onde aparece ‘gutsy’ para ‘hardy’
+rode apt-get update
+rode apt-get dist-upgrade
+
+Pronto. Ele continuará rodando a kernel modificada original do coLinux, mas todo o resto deve funcionar. A partir daí basta seguir os inúmeros tutoriais de como instalar Rails no Ubuntu Hardy (8.04).
+Se você fizer essa atualização, algumas coisas vão quebrar, em especial a partir de dentro do Ubuntu conseguir montar um compartilhamento Windows via Samba. Para isso siga estes passos :
+
+apt-get install smbfs
+edite o arquivo /etc/nsswitch.conf
+procure por algo parecido com “hosts: files dns mdns” e adicione “wins” ao final dela para ficar parecido com “hosts: files dns mdns wins”
+apt-get install winbind
+shutdown -r now
+teste manualmente mount -t cifs //windows-host/MyShare /mnt/win -o username=seu_username
+vá para /mnt/win e veja se está tudo ok
+cp /etc/smbpasswd /root/.smbcredentials
+edite o arquivo /root/.smbcredentials  e coloque o username e senha corretos
+coloque esta nova linha no /etc/fstab: //windows-host/MyShare /mnt/win cifs auto,credentials=/root/.smbcredentials,iocharset=iso8859-1,codepage=cp437 0 0
+
+No caso, ele já tem no /etc/hosts que ‘windows-host’ aponta para ele mesmo. ‘MyShare’, claro, é onde você coloca o nome do compartilhamento que você já fez no seu Windows.
+Feito isso, teoricamente, você consegue, a partir do andLinux, acessar seu Windows. O oposto também é possível. Para isso, siga este tutorial. Ou seja, tecnicamente, qualquer tutorial de Ubuntu Hardy deve funcionar. Então procure como instalar MySQL, Apache 2.2, Rails, etc. Aliás, dá inclusive para instalar Passenger também.
+Se você instalar com as opções padrão, ficará tudo concentrado no diretório ‘C:\Program Files\andLinux’. As partições principal e de swap são discos virtuais que ficam em ‘C:\Program Files\andLinux\Drives’. Ele pré-instala com uma partição de 2 GB, mas é fácil redimensionar a partição a quente:
+
+descompacte o arquivo ‘C:\Program Files\andLinux\ImageResizeTool.zip’
+rode o ‘toporesize.bat’ dentro dele. Escolha o arquivo da partição no diretório onde falei
+marque ‘resize file only no resize2fs’
+mexa no slider para o tamanho que quiser e dê ‘resize file’
+note que o andLinux tem que estar desligado! Rode ‘C:\Program Files\andLinux\srvstop.bat’
+depois que o resize acabar rode ‘C:\Program Files\andLinux\srvstart.bat’
+faça login no seu Ubuntu (aliás, o usuário padrão é ‘root’ sem senha!)
+você precisará rodar ‘resize2fs /dev/cobd0 xxxxxxx’
+
+Onde está ‘xxxxxx’ é a quantidade de blocos. Por exemplo, se você escolheu uma partição de 4140Mb = 4140 * 1024 = 4239360Kb. Com cada bloco tendo 4k então 4239360 / 4 = 1059840 blocos. Portanto, nesse exemplo, o comando seria de ‘resize2fs /dev/cobd0 1059840’. Mas não se preocupe, se você colocar mais do que ele permite, o comando não vai executar e lhe avisará disso.
+Mais ainda: o Ruby roda significativamente mais rápido no andLinux do que no Windows. Faça o teste, você não vai mais querer voltar atrás. A grande vantagem é que você terá toda a flexibilidade de um Ubuntu rodando com seus aplicativos Windows lado-a-lado! Portanto, não há a dor de cabeça de fazer dual boot ou configurar um VMWare que deixa tudo mais pesado. As coisas funcionarão quase com velocidade nativa! A única coisa é que o boot inicial demora um pouco, mas uma vez que sobe a máquina você não precisa desligar. Além disso ele come muito pouca memória, recomendo configurar para uns 256Mb que é mais do que suficiente para rodar o que precisa.
+Portanto: “como fazer para desenvolver aplicações Rails, sendo que eu não posso desistir do Windows?” Solução: instale o andLinux !
+tags: obsolete linux
+

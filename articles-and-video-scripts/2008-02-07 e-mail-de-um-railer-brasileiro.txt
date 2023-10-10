@@ -1,0 +1,28 @@
+
+Eu recebo vários e-mails de Railers, nem sempre posso responder todos – falta tempo. Nesse caso, peço que procurem a rails-br. O William Namikawa foi um desses e-mails, mas ele enviou algumas perguntas interessantes e achei legal fazer um post com isso já que são perguntas recorrentes. Para responder algumas, eu pedi ajuda dos universitários :-) No caso, meu chefe Carl Youngblood.
+Então, vamos ao e-mail:
+
+
+1. Como a crise econômica americana está afetando a demanda de projetos Ruby on Rails?
+Carl: Não é bem uma crise, por equanto é apenas uma recessão nascente. O mercado já caiu mais ou menos 10-15%, mas não chega a ser muito difícil ainda.  Estamos vendo um pouquinho menos interesse em nosso estado local, mas os centros tecnológicos do país ainda estão mostrando muito interesse no Rails.
+2. E a demanda por brasileiros, como está?
+AkitaOnRails: De vez em quando eu mesmo recebo algumas propostas de empresas americanas. Já vi uma empresa argentina e outra européia que não me lembro o nome. Alguns brasileiros da comunidade também já disseram que tem recebido propostas. Ainda não é nada nem perto da demanda massiva que se vê na Índia, mas está começando. Os brasileiros precisam demonstrar que tem mais capacidade técnicas que os indianos e também são mais fáceis de se trabalhar, não só pela maior aproximação da cultura e até no caso do fuso horário, mas nossa natural pró-atividade e qualidade.
+3. Os americanos ainda preferem os indianos? Se positivo, sabe explicar o motivo?
+Carl: Não sei.  Os indianos, por pior que falem, ainda falam inglês muito melhor do que os brasileiros.  Deve ser mais por isso que as pessoas tentam terceirizar o desenvolvimento mais na Índia, mas posso afirmar que é bem difícil achar bons programadores Rails na Índia.
+4. O que as empresas americanas esperam dos brasileiros? O que
+precisam que nós saibamos, que nós conheçamos? (Essa é uma pergunta
+que servirá como um norte para mim.)
+Carl: É imprescindível saber escrever bem o inglês. É importante saber falar bem o inglês, mas isto é um pouco menos
+importante do que a escrita. Parece-me que os brasileiros têm valores mais semelhantes aos dos americanos, comparado com os indianos.  Eles tendem a entender mais facilmente o que os americanos lhes explicam do que fazem os indianos. Por outro lado, o americano vai ser mais exigente com o brasileiro quanto a isso, porque ele custa mais e portanto o americano já acha que devem valer mais os serviços dos brasileiros. O americano também espera poder entrar em contato mais facilmente, pois o horario do Brasil é mais próximo dos EUA. Além disso, depende da posição quais habilidades técnicas serão esperadas.
+5. Para aumentar o interesse das empresas aqui no Brasil por Ruby on Rails, não seria interessante fazer um RailsConf com CIOs? Será que não podemos chegar mais longe com isso?
+AkitaOnRails: Eu realmente não sou um bom promoter :-) Ano passado fizemos alguns pequenos eventos locais entre desenvolvedores. Mas CIOs – pelo menos os que eu conheço – não se levantam de suas mesas para eventos que consideram “alternativos”. É a velha história: ele precisa receber convites bonitos, ser bem tratado, aparecer perante seus pares nos concorrentes. E ele não vai escolher porque é “melhor”, ele vai escolher o que dependendo do que seus fornecedores lhe “oferecerem”. Sempre foi assim. Em empresas médias e pequenas, normalmente os desenvolvedores tem mais influência e aí a cultura pode mudar de dentro para fora, que é o que eu acho mais plausível.
+6. Será que não tem uma editora que possa nos apoiar? O´Reilly apóia a comunidade lá nos EUA e aqui no Brasil não seria possível uma IDG Brasil, Editora Campus, Alta Books, nos apoiar no Brasil? A IDG promove vários congressos pelo Brasil, quem sabe você não consegue se apresentar numa delas?
+AkitaOnRails: Minha percepção – pessoal – é: as editoras brasileiras não gostam nem um pouco de risco. Isso deve remeter às editoras mais antigas na praça e que dominam o mercado. Editora brasileiras vendem ou commodity ou algo que tem venda garantida. Conteúdo original tem muito pouco espaço. A maioria prefere traduzir o que já é best-seller lá fora do que apostar num conteúdo novo e inovador. Lá fora a O’Reilly faz um grande trabalho de ser a porta de entrada de muita tecnologia nova. No Brasil apenas pequenas editoras como a Brasport tentam fazer isso, mas são sufocadas pelas grandes. Não conheço a IDG, então me corrijam se eu estive errado, mas eles fazem congressos e tudo mais de coisas que já estão sedimentadas no mercado ou cuja tendência lá fora já foi largamente comprovada.
+7. Você acha que há alguma chance do Emotionmeter.net (meu primeiro projeto) dar certo? Se quiser me dar uma sugestão/crítica, aceito numa boa.
+AkitaOnRails: Bom, não dá para saber. Se fosse possível saber que projetos vão bombar ou não eu mudava de ramo :-) Vamos perguntar à comunidade: o que vocês acham?
+8. O que você acha que falta na comunidade Rails que eu possa ajudar? Já estou achando que tem muitos blogs. Será que a comunidade precisa de mais?
+AkitaOnRails: A comunidade precisa de mais material. A porta de entrada para iniciantes no Brasil é muito mais alta do que para os americanos. Muito simples: todo bom material está em inglês. Eu venho tentando publicar algumas coisas. Mas precisamos de mais sites, wikis, tutoriais, forums, livros. Os iniciantes precisam de material mais diversificado e não os mesmos tutoriais o tempo todo.
+Abraços,
+William Namikawa
+tags: obsolete surgeworks
+

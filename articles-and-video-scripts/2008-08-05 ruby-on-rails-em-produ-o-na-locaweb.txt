@@ -1,0 +1,12 @@
+
+
+
+
+
+Galera, vocês sabem que estamos há algum tempo com o Trial de Rails aqui na Locaweb. Como eu disse antes o principal é que meu objetivo não é só oferecer produtos: graças aos esforços da Phusion, isso ficou muito mais fácil agora para todos nós. O objetivo é auxiliar o mercado Rails a realmente ganhar asas.
+Sexta-feira passada, colocamos o site de registro para o Rails Summit Latin America e agora estamos finalmente lançando o suporte oficial a Ruby on Rails na Locaweb!
+Sim, é com Passenger + Ruby Enterprise Edition, temos mais de 430 RubyGems pré-instaladas, se existir mais que são importantes por favor nos digam que podemos considerar colocar, mas vocês também sabem que é possível congelar as gems localmente no seu projeto Rails. Mais do que isso: nós temos suporte a múltiplas aplicações Rails na mesma hospedagem !!
+Para entender como colocar suas aplicações Rails na hospedagem da Locaweb, veja este post que acabei de publicar com as instruções!
+Não existe empresa de hosting mais comprometida com Ruby on Rails do que nós, isso eu garanto. E, claro, meu e-mail continua aberto para quaisquer dúvidas. Não deixem de entrar em contato: fabio.akita@locaweb.com.br
+tags: obsolete locaweb
+

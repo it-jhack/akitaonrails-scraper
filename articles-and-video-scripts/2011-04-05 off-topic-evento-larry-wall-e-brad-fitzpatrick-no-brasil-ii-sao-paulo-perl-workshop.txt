@@ -1,0 +1,13 @@
+
+
+
+
+
+Antes de Ruby e diversas outras linguagens, existe Perl. No dia 7 de maio acontecerá a São Paulo Perl Workshop que contará com as presenças de Brad Fitzpatrick e ninguém menos que Larry Wall. Brad, criador do LiveJournal, memcached (que nós rubistas gostamos muito!), mogilefs, gearman e dentre outras importantes contribuições, virá ao Brasil pela primeira vez para divulgar em primeira mão o novo projeto de storage voltado para a web chamado Camlistore.
+Larry Wall, criador do Perl – não preciso dizer mais nada! – uma das pessoas que mais contribuem com a Internet que conhecemos hoje, estará presente no evento compatilhando suas experiências com as comunidades brasileiras.
+Quem ainda não se convenceu, lembrem-se do que Yukihiro Matsumoto (“Matz”, criador do Ruby) já disse sobre isso:
+“Ruby herdou a filosofia Perl de ter mais de uma maneira de fazer a mesma coisa. Eu herdei essa filosofia do Larry Wall, que é na realidade meu herói. Eu quero tornar os usuários de Ruby livres. Eu quero lhes dar a liberdade de escolher.”
+O evento foi pensando pela comunidade para a comunidade, e a organização está interessada em trazer a aplicação de tecnologias de maneira ágil ao mundo real. Por este motivo a programação está diversificada, abordando vários aspectos do desenvolvimento. Além dos palestrantes internacionais, teremos uma excelente palestras sobre empreendedorismo do André Garcia sobre como ele transformou uma limitação durante os estudos num projeto de sucesso. Rodrigo Campos, renomado e valorizado sysadmin compatilhará seus conhecimentos no plajemamento de ambientes escalonável. Meta-programação, persistência em banco de dados MongoDB, formatos de dados em padrão abertos, segurança e ambiente de desenvolvimento serão outros temas abordados de maneira prática.
+Este evento é realizado pela comunidade da São Paulo Perl Mongers e as vagas são limitadas! Faça já sua inscrição no site !
+tags: obsolete conference
+

@@ -1,0 +1,787 @@
+
+Atualização Jul/2016: As recomendações mudaram. Leiam este post mas usem o que explico no post mais recente Updating my Old Posts on Uploads.
+Atualização (18/12/2014): Este artigo ainda é bom pra explicar a motivação, o mecanismo e a arquitetura, mas a melhor solução saiu depois que escrevi isso então vá para o novo post com a solução definitiva!
+O problema que este artigo vai tentar detalhar é "upload e processamento de imagens". Algo simples como subir uma foto no seu perfil. Assumindo que todos já leram meus artigos sobre o Heroku é hora de mais uma dica muito importante.
+
+Neste exemplo de ilustração vemos o que a maioria das pessoas iniciando implementa:
+
+Seu browser terá um form multipart e um campo file para escolher um arquivo de imagem e fazer o POST para seu controller do lado Rails
+O servidor web recebe o arquivo inteiro primeiro (ex. NGINX) e só então passa pra aplicação. Seu controller recebe esse arquivo, instancia o model adequado com um uploader de Carrierwave montado. O uploader inicia o processamento das imagens, digamos, 5 versões de tamanhos diferentes, usando ImageMagick.
+Opcionalmente, o uploader faz o upload das novas versões ao AWS S3. Finalmente, retorna ao controller que tudo deu certo e o controller, por sua vez, devolve uma página de sucesso ao browser.
+
+
+
+
+Se estiver rodando num VPS ou Cloud Server como na Digital Ocean, onde você tem acesso à configuração da máquina, provavelmente vai sentir alguma lentidão. Mas não será o fim do mundo. Porém, particularmente se estiver no Heroku as chances são que você vai encontrar o seguinte erro:
+
+Já falamos sobre isso e a situação está documentada: o Heroku impõe um limite máximo de 30 segundos do momento em que a request deixa o router até receber uma resposta de volta. Uploads podem fazer o timeout acontecer e seu usuário vai ver o erro estourando na sua frente. Existem 3 pontos de lentidão que queremos consertar:
+
+Tempo de upload do arquivo, do browser até a aplicação.
+Tempo de processamento das versões das imagens.
+Tempo de upload das versões ao S3.
+
+O objetivo é chegar neste novo cenário:
+
+
+Novamente, seu browser terá um form multipart e campo file, mas além disso terá javascripts para realizar um POST diretamente ao seu bucket no AWS S3, recebendo de volta a URL no S3.
+Agora o browser não gasta mais tempo fazendo o upload do arquivo à sua aplicação Rails, ela vai mandar apenas a string da URL.
+O controller vai receber a URL e novamente instanciar o model com seu uploader. Só que em vez de processar as diferentes versões da imagem imediatamente, ele vai somente enviar à uma fila no Redis e já retornar a página de sucesso ao usuário. Do ponto de vista do usuário, a requisição acaba aqui.
+Assim que tiver tempo, um worker de Sidekiq vai receber essa tarefa que ficou na fila do Redis e então vai puxar a imagem original do S3, processar as novas versões e realizar o upload de todas de volta ao S3. Esse tempo também o usuário não vai sentir.
+
+Neste exemplo, meramente ilustrativo, no primeiro cenário o usuário sentia toda a espera dos 2 segundos. Neste segundo cenário ele não vai sentir o tempo do upload (a página não recarrega, visualmente terá apenas uma barra de progresso durante o 1 segundo), depois vai sentir a espera de, digamos 200 milissegundos que é o tempo de dar POST da URL e receber a página de sucesso.
+O resto do tempo de, digamos, 700 ms, vai ser "invisível" pra ele pois vai rodar em background. Ou seja, do ponto de vista do usuário a melhoria será de uma ordem de grandeza de 10 vezes.
+Mais do que isso: será um tempo razoavelmente constante independente do tamanho da imagem que ele tente subir. E isso é importante para não atingirmos o limite de timeout do Heroku quando alguém subir imagens gigantes. Nesse exemplo o tempo de processamento da requisição vai ficar na média de 200 ms independente das imagens que receber.
+TL;DR - Too Long, Don't Read
+Indo direto ao assunto, vamos primeiro assumir que tudo isso que estou dizendo não é novidade para você então vamos à solução, sem muitas explicações:
+
+Para fazer o upload do browser diretamente para seu bucket no AWS S3 use a gem s3_direct_upload. Ele tem suporte inclusive a upload de múltiplos arquivos (mas não vou tratar disso neste artigo) e providencia diversos hooks para callbacks javascript onde você pode customizar comportamentos. Ele também vai ser responsável por renderizar uma barra de progresso simples para mostrar o upload ao usuário. E Não se esqueça da configuração de CORS no S3.
+Do lado do Rails, imagino que todos estejam usando o bom e velho Carrierwave para criar uma classe de uploader junto com o Mini Magick para processar as imagens.
+Além disso também assumo que estejam usando a gem Fog para fazer upload diretamente ao S3 ou Rackspace Cloud Files ou Google Storage e não deixando os arquivos localmente no seu filesystem.
+Agora, também assumo que não seja novidade que o processamento já esteja sendo feito em background via Sidekiq usando as gems Carrierwave Backgrounder ou Carrierwave Direct. Vamos explicar sua utilidade mas no final a solução não vai precisar de nenhum dos dois (!!) A solução mais simples deste exemplo vai usar um Worker simples de Sidekiq diretamente, sem precisar de gems extras.
+
+Pronto, parece simples - mas não é. A combinação de todas essas gems e a quantidade de opções diferentes que você pode fazer poderiam ser documentadas num livro inteiro sobre o assunto.
+Adiantando sua dor de cabeça, os pontos que mais vão tirar seu sono são:
+
+Compatibilidade com o maldito Internet Explorer, qualquer versão, todas são imprestáveis. Isso não é dor de cabeça, é garantia de enxaqueca, especialmente para fazer o IE 8 ou 7 funcionarem minimamente dentro do aceitável. Aliás já avisando: a barra de progresso do S3 Direct Upload NÃO  funciona no IE 9 pra baixo, nem perca seu tempo.
+Compatibilidade com navegadores de smartphones. Ainda não sei porque, mas nem toda vez que se tenta fazer upload vai sem problemas.
+Fazer um model que has_many imagens, conseguir fazer o upload de várias na mesma página sem reload, seja via input file habilitado para múltiplos arquivos ou via ajax escolhendo e subindo um a um. Este ponto particularmente não é tão dor de cabeça mas é trabalhoso para não se confundir ao lidar com nested attributes e, no caso do Rails 4, configurar direito o Strong Parameters.
+
+Neste artigo não vou chegar a lidar com esses problemas, mas fica o aviso e colaborações são bem vindas na seção de comentários.
+Outra solução que não testei mas parece promissor é usar o SaaS Transloadit. Parece uma ótima idéia terceirizar esta dor de cabeça. Se alguém testar, não deixe de dizer o que achou nos comentários.
+Configurando seu Ambiente
+Todo o código-fonte de exemplo está no Github. Então faça o clone dele para ver seu código:
+
+1
+2
+3
+4
+5
+
+git clone https://github.com/akitaonrails/image_uploader_demo.git
+cd image_uploader_demo
+rvm use 2.0.0@image_upload_demo --ruby-version --create
+bundle install
+rake db:migrate
+
+
+Vamos navegar pelo código usando os commits que estão, mais ou menos, organizados nas seções deste artigo.
+Este é um simples exemplo de um site que recebe imagens e mostra numa timeline, um Instagram-like bem tosco e que no final tem esta cara:
+
+Como ele depende de um dyno worker que não é gratuito, vou deixar ele de pé só por alguns dias. Mas você mesmo pode subir uma versão na sua conta de Heroku. Crie uma nova aplicação com PostgreSQL e Redis To Go, crie um dyno worker e faça deployment (bom e velho git push heroku master).
+
+Versão 1: Tudo Local
+No branch master está a versão final, mas vamos navegar para o primeiro commit relevante:
+
+1
+
+git checkout -b step_1 0bd183593e22ed7481f4553ae17665a3cff77f0f
+
+
+Esta versão tem de relevante o seguinte:
+Gemfile:
+
+1
+2
+3
+4
+
+...
+gem 'carrierwave'
+gem 'mini_magick'
+...
+
+
+Para a versão mais simples que poderia funcionar só precisamos do carrierwave e mini_magick. Não esqueça de rodar o comando bundle sempre que atualizar a Gemfile.
+app/uploaders/image_uploader.rb:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+class ImageUploader < CarrierWave::Uploader::Base
+  include CarrierWave::MiniMagick
+  storage :file
+
+  # Override the directory where uploaded files will be stored.
+  # This is a sensible default for uploaders that are meant to be mounted:
+  def store_dir
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
+  # Create different versions of your uploaded files:
+  version :normal do
+    process :resize_to_fit => [300, 300]
+  end
+end
+
+
+Isto é um uploader padrão de Carrierwave. Se alguma vez já programou um uploader, este é idêntico a todos que você já viu. Como disse, nesta versão o armazenamento é direto no disco local, por isso storage :file.
+app/models/photo.rb:
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+class Photo < ActiveRecord::Base
+  belongs_to :user
+  validates :user, presence: true
+  attr_accessible :image, :user_id
+  mount_uploader :image, ImageUploader
+
+  scope :recent, -> { order("created_at desc") }
+end
+
+
+Aqui a linha importante é o do mount_uploader que configura o ImageUploader no model. Novamente, nada de novo aqui pra quem já fez isso antes.
+app/views/home/index.html.slim:
+
+1
+2
+3
+4
+5
+
+...
+= form_for @photo, :html => {:multipart => true} do |form|
+  = form.file_field :image
+  = form.submit "Upload"
+...
+
+
+Finalmente, um mero form multipart com um campo de file para escolher sua imagem. Ao dar submit o browser vai fazer o POST para nossa aplicação.
+Só com isso, se rodar rails s e for para https://localhost:3000 você já deve ser capaz de subir imagens. Aliás, o esqueleto desta aplicação foi feita com o Rails Apps Composer que mencionei no post anterior. Então ele já tem Devise pré-configurado e você precisa criar uma nova conta antes de conseguir subir uma imagem. O resto do código lida com a associação do model User como Photo. Também adicionei o PureCSS para o site não ficar totalmente feio. O tema é o blog de exemplo deles que copiei e não alterei muita coisa. Aceito contribuição pra alinhar melhor os elementos ;-)
+Versão 2: Processamento Assíncrono
+
+1
+
+git checkout -b step_2 fa0974050406abdf14724b7bb36ddd0525fc96b7
+
+
+Aqui é onde muitos estão aprendendo a chegar ainda. Depois do Rails receber a imagem do form e passar para o ImageUploader, queremos que ele processe a versão :normal e transfira os arquivos para o AWS S3. E queremos que ele não perca tempo da requisição fazendo isso, mas que processe mais tarde, em background.
+No modo normal o Carrierwave se coloca no callback de after_commit do ActiveRecord e quando o model salva ele processa as imagens dentro da transaction. Se o processamento der errado ele inclusive faz rollback na transaction se o banco de dados suportar. Ou seja, é bem amarrado, o que é péssimo.
+Por isso existem gems como Carrierwave Backgrounder cujo objetivo é deferir o processamento usando gerenciador de filas como Sidekiq, Resque, Delayed Jobs e outros. Para configurá-lo fazemos:
+Gemfile:
+
+1
+2
+3
+4
+5
+6
+
+gem 'carrierwave_backgrounder'
+gem 'sidekiq'
+gem 'sinatra'
+gem 'fog'
+gem 'unf'
+gem 'dotenv-rails'
+
+
+Adicionamos o Sidekiq porque é o que gostamos mais para rodar tarefas em background. Adicionamos o Sinatra porque o Sidekiq tem uma interface opcional de monitoramento que, se você quiser, precisa do Sinatra.
+Também adicionamos o Fog porque vamos aproveitar para configurar o ImageUploader para mandar nossos arquivos para o AWS S3. E se vamos usar o S3 precisamos configurar coisas como Access Key, Secret Access Key, Bucket e Region e por isso adicionamos o dotenv-rails, sobre o qual já escrevi um post.
+app/uploaders/image_uploader.rb:
+
+1
+2
+3
+4
+5
+6
+7
+
+class ImageUploader < CarrierWave::Uploader::Base
+  include ::CarrierWave::Backgrounder::Delay
+
+  # storage :file
+  storage :fog
+  ...
+end
+
+
+No uploader adicionamos o módulo Delay para habilitar o modo assíncrono e aproveitamos para mudar o storage para o Fog para mandarmos para o S3.
+app/models/photo.rb:
+
+1
+2
+3
+4
+5
+6
+
+class Photo < ActiveRecord::Base
+  ...
+  mount_uploader :image, ImageUploader
+  process_in_background :image
+  ...
+end
+
+
+Com o método process_in_background indicamos que queremos que ele mande pro Sidekiq em vez de processar na hora. O Carrierwave Backgrounder tem diversas opções, customizações e comandos que podem ser úteis. Estou apenas mostrando o caminho mais simples então leia a documentação para entender mais.
+O arquivo config/initializers/carrierwave.rb é muito longo para copiar no post. Mas basta entender que eu coloquei duas configurações diferentes: uma para ambiente de teste e outra para produção. Na primeira ele continua operando localmente e gravando em arquivos, no segundo tem como configurar para que o Fog seja configurado corretamente para mandar os arquivos para o S3.
+config/initializers/carrierwave_backgrounder.rb:
+
+1
+2
+3
+
+CarrierWave::Backgrounder.configure do |c|
+  c.backend :sidekiq, queue: :carrierwave
+end
+
+
+Isso é só para dizer ao Backgrounder que queremos o Sidekiq. Lembre de configurar no Procfile para ter a linha worker: bundle exec sidekiq -q carrierwave apontando pra fila ("queue") correta. É a mesma linha de comando que você vai rodar localmente para consumir seu Redis local em desenvolvimento.
+Como agora a requisição retorna uma resposta de sucesso tão logo envie ao Sidekiq a tarefa de processar as imagens, significa que provavelmente não vamos ter a imagem do tamanho :normal já pronta. Existem diversos truques que você pode implementar mas o mais comum é adicionar uma coluna booleana como image_processing e na vier checar se ela é nula ou não. O Backgrounder checa por uma coluna com esse nome e se existir ele se encarrega de deixar "true" na hora de criar o model e coloca nil depois de processar as versão. Então, na view app/views/home/index.html.slim onde temos a listagem de fotos, podemos fazer:
+
+1
+2
+3
+4
+5
+6
+
+...
+- if photo.image_processing
+  = image_tag "animation_processing.gif"
+- else
+  = image_tag photo.image.url(:normal)
+...
+
+
+E ele vai mostrar a imagem temporária de "processando". Até aqui é onde a maioria dos iniciantes chega quando está experimentando com upload. E como disse antes, se estiver num VPS ou Cloud Server que consegue controlar, normalmente indo até aqui já é suficiente.
+Isso porque uma máquina padrão não tem o limite fechado de menos de 30 segundos. Se alguém se pendurar no seu NGINX ele não vai reclamar por um bom tempo, e você ainda pode aumentar se for o caso. E a aplicação Rails não vai travar por trás. Isso porque o NGINX foi feito pra aguentar esse tipo de pancada. Ele é desenvolvido sobre I/O assíncrono, então se precisar ficar em espera, ele continua atendendo outras requisições até voltar o callback.
+No caso de upload ele vai receber o arquivo inteiro antes de mandar pra aplicação Rails atrás. Em muitos casos os sites ou aplicações não são tão pesadas em imagens. Normalmente é um upload de avatar de perfil, ou então um CMS onde somente alguns poucos usuários com permissão podem subir imagens. Então não chega a ser um peso pro servidor. Agora, se sua aplicação for pesada em uploads, algo como clones de Instagram, Flicker, SnapChat, daí você vai precisar continuar vendo as próximas seções.
+Mais do que isso, se quiser ir mais longe, ainda pode configurar o módulo de upload do NGINX para suportar uploads parciais. Ou seja, "resume", continuar um uploade de onde parou. Mas, não vou chegar tão longe neste artigo.
+Versão 3: S3 Direct Upload
+
+1
+
+git checkout -b step_3 3118bd4dc7faf100fbb97996e009a27c2253b0ff
+
+
+A partir de agora começa a parte mais "chata". Na verdade o conceito é simples mas como envolve Javascript, compatibilidade de browsers, bugs de Internet Explorer, e outros mistérios de front-end, vou considerar essa a parte mais chata.
+O primeiro conceito que você precisa entender é que uma aplicação em um domínio não deveria poder fazer nenhuma ação além de HTTP GET em outro domínio. É o que gera os famigerados problemas de Cross Site. Para aliviar o problema criou-se o conceito de CORS ou Cross Origin Resource Sharing, como o nome diz, compartilhamento de recursos cross origem.
+O que queremos é do browser fazer um POST da imagem diretamente ao nosso bucket no AWS S3. Para isso precisamos configurar permissões e política de CORS.
+Novamente, assumindo que você sabe pelo menos criar uma conta na AWS e criar buckets no S3, primeiro vamos criar uma permissão para "Everyone":
+
+Agora, vamos editar a configuração de CORS com uma política bem flexível:
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="https://s3.amazonaws.com/doc/2006-03-01/">
+    <CORSRule>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedMethod>PUT</AllowedMethod>
+        <AllowedMethod>POST</AllowedMethod>
+        <MaxAgeSeconds>3000</MaxAgeSeconds>
+        <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+
+
+Preste atenção especialmente a "AllowedOrigin" que deve ser o domínio da sua aplicação e "AllowedHeader" que deve fornecer só o mínimo de informações que se precisa. Para nosso exemplo não vou me aprofundar, mas a documentação da própria AWS deve ser suficiente.
+Agora queremos mudar nosso form para que ele faça o upload direto pro S3 e para isso vamos usar a gem s3_direct_upload.
+Gemfile:
+
+1
+2
+3
+
+...
+gem 's3_direct_upload'
+...
+
+
+app/views/home/index.html.slim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+= s3_uploader_form callback_url: photos_path, post: root_url, as: "photo[image_url]", max_file_size: 5.megabytes, id: "s3-uploader"
+  = file_field_tag :file
+
+script id="template-upload" type="text/x-tmpl"
+  | <div id="file-{%=o.unique_id%}" class="upload">
+  |   {%=o.name%}
+  |   <div class="progress"><div class="bar" style="width: 0%"></div></div>
+  | </div>
+
+
+Leia a documentação do s3_direct_upload. Aqui estamos substituindo o form antigo por este novo. O s3_uploader_form permite muitas opções. Em particular o callback_url é a URL na nossa aplicação pra onde ele vai dar POST com a URL do S3 depois que terminar o S3.
+O bloco de script é um template. O plugin de JQuery que vai se ligar ao form vai criar um clone desse bloco a anexar no fim do form para controlar o evento de barra de progresso. E falando nisso:
+app/assets/javascripts/application.js:
+
+1
+2
+3
+4
+5
+6
+
+...
+//= require s3_direct_upload
+//= require_tree .
+jQuery(function() {
+  return $("#s3-uploader").S3Uploader();
+});
+
+
+Como qualquer plugin JQuery que você já deve ter visto, usamos o id do form que configuramos antes na view e configuramos o plugin. O método S3Uploader() vai ligar todos os eventos que precisamos. É assim que ele controla a barra de progresso e depois faz o POST via Ajax pra aplicação, dentre outros eventos. A documentação detalha bem como configurar mais do que o padrão.
+app/assets/stylesheets/application.css
+
+1
+2
+3
+
+...
+*= require s3_direct_upload_progress_bars
+...
+
+
+Não esqueça de adicionar os styles, são eles que vão dar o visual da barra de progresso.
+app/controllers/photos_controller.rb:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+class PhotosController < ApplicationController
+  def create
+    @photo = current_user.photos.build
+    if params[:url]
+      @photo.remote_image_url = params[:url]
+    else
+      @photo.attributes = params[:photo]
+    end
+    @photo.save
+    redirect_to root_path
+  end
+end
+
+
+O controller que vai receber o POST no callback não vai receber um params[:photo] normal, mas um conjunto de informações do arquivo que subiu no S3. Em particular estamos interessados no params[:url] que podemos usar pra anexar no ImageUploader que já temos ou qualquer outro campo do nosso model para processarmos depois.
+Na hora que fiz este exemplo não tinha me dado conta disso, mas este trecho tem um grande defeito. O método remote_image_url que na verdade é um método de metaprogramação que usa no nome do seu uploader (ou seja, se seu uploader se chama "avatar" o método vai se chamar "remote_avatar_url"), faz muitas coisas por baixo dos panos em vez de somente gravar a string na tabela.
+Ao atribuir a URL nesse método ele vai se conectar ao S3 e baixar o arquivo num diretório temporário. Vamos ver na última seção como consertar isso, mas por enquanto fica o exemplo apenas para ilustrar como do s3_direct_upload sua aplicação Rails pode receber a URL do arquivo que já foi gravado remotamente no S3.
+Finalmente, o s3_direct_upload precisa da mesma configuração do Carrierwave/Fog para saber para onde no S3 mandar os arquivos:
+config/initializers/s3_direct_upload.rb:
+
+1
+2
+3
+4
+5
+6
+7
+
+S3DirectUpload.config do |c|
+  c.access_key_id = ENV['AWS_ACCESS_KEY']
+  c.secret_access_key = ENV['AWS_SECRET_KEY']
+  c.bucket = ENV['AWS_BUCKET']
+  c.region = ENV['AWS_REGION']
+  c.url = "https://#{ENV['AWS_BUCKET']}.s3.amazonaws.com"
+end
+
+
+Usamos a mesma coisa que já configuramos com o dotenv-rails e que você pode configurar em produção com o bom e velho comando heroku config:set.
+Versão 4: Manipulando o Form do S3 Direct Upload
+
+1
+
+git checkout -b step_4 72ad3271762882f71e4c9108bc3ff44a8c18da17
+
+
+Digamos que queremos aumentar a funcionalidade desse site de exemplo. Em vez de somente subir uma imagem, e se quisermos também subir um comentário?
+Para começar, basta criarmos a migration para adicionar um campo de comment no model Photo, adicionar as as validations.  necessárias. Não vou copiar o trecho da migration nem do model porque isso imagino que todos saibam o que fazer, você pode vê-los nos dois links anteriores.
+Outro detalhe, até a seção anterior estávamos colocando as coisas no HomeController e no app/views/home. Agora movi para o PhotosController e app/views/photos para poder tratar como resources no routes.rb, vai ficar mais limpo.
+Agora, a grande mudanças está em app/views/photos/index.html.slim. Para ficar mais curto, relembre o trecho da view que fizemos na seção anterior, com o s3_uploader_form e o template da barra de progresso. Acima disso vamos colocar um novo form:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+= form_for @photo, html_options: { class: "pure-form" } do |form|
+  - if @photo.errors.any?
+    div id="error_explanation"
+      h2
+        = "#{pluralize(@photo.errors.count, "error")} prohibited this photo from being commented:"
+      ul
+      - @photo.errors.full_messages.each do |msg|
+        li = msg
+  fieldset.pure-group
+    = form.text_field :comment, class: "pure-input-rounded"
+    = form.hidden_field :remote_image_url
+    label.pure-button for="file"
+      | Choose Image
+    = form.submit "Submit Comment", class: "pure-button pure-button-primary"
+div.progress_bar
+
+
+É um form normal de Rails (que, aliás, ficaria muito melhor com Formtastic ou Simple Form, mas o exemplo é tão simples que não vou tão longe hoje). Sendo um form normal, colocamos todos os campos normais da Model que editaríamos, neste exemplo temos o campo :comment.
+De importante temos o campo :remote_image_url que é hidden (escondido) porque ele vai ser preenchido depois do upload. E temos um elemento div com a classe .progress_bar. Isso porque o form do s3 direct upload vamos esconder movendo pra fora da tela, e como o plugin dele anexava a barra de progresso nele mesmo, então até a barra ficaria pra fora da tela. Então precisamos de outro div para dizer ao plugin que é onde ele deve passar a anexar a barra de progresso.
+Pra esconder o form pro S3 editamos o app/assets/stylesheets/application.css, adicionando:
+
+1
+2
+3
+4
+5
+
+form#s3-uploader {
+  position: absolute;
+  top: 500px;
+  left: -9999px;
+}
+
+
+Não use display:none ou o plugin vai falhar. Além disso você deve se perguntar: "se escondermos esse form, como vamos selecionar a imagem?" Se olhar o novo form vai notar que ele tem um elemento label for="file". E não tem um elemento file no novo form, então ele "magicamente" vai fazer usar o elemento file do form escondido. E isso serve nosso propósito porque daí os eventos do plugin de file upload vão funcionar como antes.
+Agora precisamos dizer ao plugin do s3_direct_upload para anexar o template de barra de progresso no nosso novo div. Pra isso editamos app/assets/javascripts/application.js:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+jQuery(function() {
+  var s3_uploader = $("#s3-uploader");
+  var uploader = s3_uploader.S3Uploader({
+    progress_bar_target: $(".progress_bar"),
+  });
+
+  s3_uploader.bind("s3_uploads_start", function(e, content) {
+    $("#new_photo input[type=submit]").hide();
+  });
+
+  s3_uploader.bind("s3_upload_complete", function(e, content) {
+    $("#new_photo input[id=photo_remote_image_url]").val(content.url);
+    $("#new_photo input[type=submit]").show();
+  });
+});
+
+
+Com calma agora. O initializer do plugin aceita um hash de opções e um deles é o progress_bar_target que recebe um elemento JQuery. Agora a barra de progresso vai ser anexada nele. Em seguida temos os eventos de s3_uploads_start que é logo que inicia o upload e o s3_upload_complete que é logo que o upload termina. Só de perfumaria fiz o botão de submeter o novo form ficar escondido enquanto está fazendo upload e no final mostra de volta o botão e colocar a URL do arquivo, que vem em content.url, no campo escondido que mencionei antes e cujo id, nesse caso, é photo_remote_image_url. Novamente, veja a documentação completa, existem outros eventos e outras configurações que você pode mexer.
+O resto é praticamente a mesma coisa. Não esquecer de editar o model em app/models/photo.rb para ter attr_accessible :image, :user_id, :remote_image_url, :comment, ou no caso do Rails 4 não deixe de configurar o params.permit(). Vai ser um mass assignment de parâmetros e a URL, neste exemplo, vai estar em params[:photo][:remote_image_url].
+A partir daí, depois que o controller passar os parâmetros pro model, ao salvar os callbacks do Carrierwave Backgrounder vão mandar o processamento pro Sidekiq, como antes. Mas agora você tem flexibilidade no formulário no front-end e pode customizar como achar melhor.
+Versão 5: Active Admin
+
+1
+
+git checkout -b step_5 3a07f7d6ef86ea8db6a191353676149460200777
+
+
+Tirando o engasgo que mencionei do campo remote_image_url, tudo parece funcionar perfeitamente agora. Você já manda as imagens diretamente pro S3, no Rails o processamento pesado vai pro Sidekiq. O que falta?
+Normalmente uma boa aplicação tem algum tipo de Administração. Para gerenciar usuários, apagar elementos impróprios e assim por diante. E por experiência digo que, na dúvida, coloque o bom e velho ActiveAdmin. Ele é simples e mesmo se precisar de alguma customização ele não é complicado.
+Vou economizar espaço e não vou mostrar como se configura o ActiveAdmin. Veja este commit para saber como.
+O que vamos fazer é a mesma coisa que antes:
+
+Adicionar o s3_uploader_form escondido embaixo do form. Para esconder colocamos o mesmo CSS de antes em app/assets/stylesheets/active_admin.css.scss.
+Adicionar os javascripts do plugin e dos eventos que precisamos customizar. É praticamente o mesmo de antes e colocamos em app/assets/javascripts/active_admin.js.
+Criar um campo hidden no form original. Para customizar forms no activeadmin que a DSL não é suficiente podemos fazer o seguinte:
+
+Em app/admin/photos.rb colocamos form :partial => "form" e com isso dizemos a ele para procurar uma partial normal.
+E a partial fica em app/views/admin/photos/_form.html.slim e usamos o mesmo Formtastic que ele usa, ficando assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+= semantic_form_for [:admin, @photo] do |f|
+  = f.inputs do
+    = f.input :user
+    = f.input :comment
+    = f.input :remote_image_url
+    label.pure-button.pure-button-active for="file"
+      | Choose Image
+  = f.actions
+
+= s3_uploader_form as: "photo[image_url]", id: "s3-uploader", class: "pure-form pure-form-stacked"
+  = file_field_tag :file
+
+script id="template-upload" type="text/x-tmpl"
+  | <div id="file-{%=o.unique_id%}" class="upload">
+  |   {%=o.name%}
+  |   <div class="progress"><div class="bar" style="width: 0%"></div></div>
+  | </div>
+
+
+Veja que é praticamente a mesma coisa. O s3_uploader_form vai ficar escondido. No Javascript falamos para ele anexar a barra de progresso no form do Formtastic fazendo progress_bar_target: $(".formtastic.photo"). E no form não esquecer do elemento label for="file" que é o trigger que vai abrir o selecionador de arquivos no form que está escondido.
+Duas dicas genéricas de ActiveAdmin é que ele pode reclamar da ausência do "jquery-ui". Então adicione a gem "jquery-ui-rails" na Gemfile e crie os seguintes arquivos:
+app/assets/javascripts/active_admin.js:
+
+1
+
+//= require active_admin/base
+
+
+app/assets/javascripts/jquery-ui.js
+
+1
+
+//= require jquery.ui.all
+
+
+E a outra dica é um problema com rotas, e para garantir que tudo funciona no config/routes.rb coloque a linha ActiveAdmin.routes(self) no final do arquivo ou pelo menos depois da configuração do Devise.
+O resto do código é para mostrar a imagem na listagem do ActiveAdmin e para mostrar a imagem de "processando" caso as versões ainda não tenham sido processadas no Sidekiq.
+Versão 6 (FINAL!)
+
+1
+
+git checkout -b step_6 c112d2eb7023932067f05acd8a5bacd6ed6c3d28
+
+
+Finalmente, vamos consertar o que disse antes sobre o campo remote_image_url. Recapitulando, depois que o S3 Direct Upload termina o upload ao S3, fazemos o Javascript gravar a URL no campo remote_image_url, que é criado no model pelo Carrierwave. E via mass assignment, o controller manda pra dentro do model. Só que quando esse campo é configurado, o Carrierwave faz o download do arquivo. E downloads demoram, eliminando as vantagens que queríamos de fazer o Rails ser o mais rápido possível.
+A "correção" é razoavelmente simples. Vamos criar um novo campo no model Photo. Esta é a migration:
+
+1
+2
+3
+4
+5
+
+class AddRemoteUrlFieldToPhoto < ActiveRecord::Migration
+  def change
+    add_column :photos, :original_image_url, :string
+  end
+end
+
+
+Agora substituímos em todos os arquivos, todos os lugares que usamos "remote_image_url" para "original_image_url", que é meramente um campo string.
+Além disso, vamos remover o Carriewave Backgrounder. Retire da Gemfile. Dessa forma o Carrierwave volta à forma original e vai processar as versões tão logo o model seja salvo.
+O controller app/controllers/photos_controller.rb vai ficar o mais simples possível, como qualquer controller que você já viu por aí:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+class PhotosController < ApplicationController
+  before_filter :load_photos_page
+
+  def index
+    @photo = current_user.photos.build if current_user.present?
+  end
+
+  def create
+    @photo = current_user.photos.build(params[:photo])
+    if @photo.save
+      redirect_to root_url
+    else
+      render :index
+    end
+  end
+
+  private
+
+  def load_photos_page
+    @photos = Photo.recent.page params[:page]
+  end
+end
+
+
+Isso vai garantir que o controller dinâmico do ActiveAdmin também funcione corretamente. O model em app/models/photo.rb vai ganhar um pouco mais de complexidade:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+
+class Photo < ActiveRecord::Base
+  belongs_to :user
+  validates :user, presence: true
+  validates :original_image_url, presence: true
+  validates :comment, length: { maximum: 140 }
+
+  attr_accessible :image, :user_id, :original_image_url, :comment
+  mount_uploader :image, ImageUploader
+
+  before_save :check_url
+  after_save :process_async
+
+  scope :recent, -> { order("created_at desc") }
+
+  private
+
+  def check_url
+    self.image_processing = true if new_record? && original_image_url
+  end
+
+  def process_async
+    ProcessImageWorker.perform_async(self.id, original_image_url) if original_image_url && !image_processing
+  end
+end
+
+
+Em particular note os eventos em before_save e after_save. No primeiro caso, como o uploader está vazio já que estamos gravando a URL no campo original_image_url em vez do remote_image_url, o Carrierwave não vai processar nada quando o model salvar. Só mudamos o campo image_processing para ser "true" em vez de "nil" para que possamos mostrar a imagem de "processing" nas views. Esse campo image_processing também é checado antes de enviar um job ao Sidekiq porque no job haverá um #save, que por sua vez vai chamar esse callback de novo e isso vai gerar infinitos jobs de Sidekiq. Então garantimos que ele só será chamado uma vez, daí no job o image_processing é zerado e o callback não vai criar outro.
+Logo depois que salvar, enfileiramos uma nova tarefa assíncrona de Sidekiq no método process_async. Agora precisamos criar esse worker em app/workers/process_image_worker.rb:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+class ProcessImageWorker
+ include Sidekiq::Worker
+
+  def perform(photo_id, url)
+    Photo.find(photo_id).tap do |photo| # 1
+      photo.remote_image_url = url      # 2
+      photo.image_processing = nil      # 3
+      photo.save!                       # 4
+    end
+  end
+end
+
+
+Vejamos o que ele está fazendo:
+
+Carrega o model a partir do ID que passamos
+Agora ele passa a URL para o campo dinâmico remote_image_url. Isso vai fazer o Carrierwave puxar o arquivo do S3 e, quando salvarmos o model novamente, vai processar as versões
+Mudamos o campo image_processing para nil. Pra sermos mais precisos, deveríamos fazer isso só depois de chamarmos save, porque o Carrierwave ainda não gerou as versões. Lembre-se disso, mas deixemos assim no exemplo só para simplificar.
+Agora chamamos save. E como tiramos o Backgrounder, o Carrierwave vai imediatamente usar o Mini Magick pra gerar as versões e vai subir os novos arquivos no S3 via Fog.
+
+Na prática simplificamos e substituímos o que o Backgrounder faz mas com mais controle sobre o que estamos fazendo.
+Conclusão
+
+Finalmente, temos uma aplicação de acordo com a arquitetura que definimos no começo do artigo:
+
+O usuário não sente o upload do arquivo porque ele é feito diretamente ao S3 via Ajax no browser. A nossa aplicação não é tocada enquanto isso.
+Depois que o upload termina, via Javascript gravamos a URL do S3 no form e quando fazemos submit ele é rápido porque não vai arquivo nenhum.
+No controller recebemos a URL e criamos o model. Como não gravamos a URL nos campos dinâmicos do Carrierwave, ele não vai processar nada. Mas por causa do after_save podemos chamar o Sidekiq e enfileirar uma tarefa pra rodar depois. A aplicação vai devolver HTTP 200 pro usuário e não haverá nenhuma espera.
+O usuário vai ver uma imagem de "processando" enquanto o Sidekiq não rodar. Uma melhoria é fazer um Javascript que fica checando a URL da versão. Se voltar HTTP 200 daí ele puxa a imagem e substitui a imagem de "processando" pela real. É algo simples e que vai melhorar a usabilidade.
+Quando o Sidekiq finalmente rodar em background, ele vai pegar a URL que foi originalmente pro S3, mandar pro Carrierwave e aí sim, ele vai gastar seu tempo processando tudo e subindo os arquivos pro S3.
+
+Existem várias coisas que não fizemos neste artigo. Não sei se vou fazer um novo artigo então fica de lição de casa ou para quem quiser fazer um artigo para complementar este :-)
+
+Permitir selecionar múltiplos arquivos no form S3 Direct Upload. A documentação dele dá exemplos de como fazer isso. Vai precisar de algum Javascript na hora de transferir as URLs para o form normal. E no model vai precisar aceitar nested attributes. Mas feito isso não é para ser muito complicado.
+Não testei extensivamente em navegadores toscos (IE 6, 7, 8), mas é certeza que a barra de progresso não funciona. Precisa fazer algum tipo de fallback para dar o feedback para o usuário sobre o upload em andamento. Também não fiz testes em smartphones ou tablets. "Teoricamente" deveria funcionar mas ainda não tenho certeza.
+Não esqueça de limitar a configuração de CORS do seu bucket, caso contrário qualquer um pode subir o que quiser. Quando você for ver seu bucket vai estar cheio de lixo. Se estiver numa VPS ou Cloud Server, use NGINX como proxy para o S3 de forma a controlar melhor o que pode ir para lá.
+Este aplicativo é um exemplo bem primário, não usa nenhuma das boas práticas que já mencionei em outros artigos, como transferir seus assets também para o S3, por exemplo. Não use ele como aplicativo de modelo para novos projetos. Se alguém quiser melhorar o aplicativo, ele está no Github. Já a aplicação rodando no Heroku pode sair do ar a qualquer momento.
+
+Como eu disse no começo do artigo, este assunto parece muito simples. "O que pode dar errado num mero upload de uma foto?" Muita coisa!
+Este artigo foi o resultado de um projeto real, e muito suor e muitas lágrimas. Agradecimentos ao Rafael Macedo que também sofreu comigo até chegarmos na melhor solução desse enrosco. Lembrando que o que narrei neste artigo é uma versão simplificada do que tivemos que fazer. Espero que parte da dor tenha sido transmitida e todos levem esse assunto a sério.
+
+tags: obsolete learning rails heroku
+

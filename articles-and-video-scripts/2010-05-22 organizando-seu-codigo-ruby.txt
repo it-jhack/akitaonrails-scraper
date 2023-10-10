@@ -1,0 +1,431 @@
+
+Me ocorreu esses dias que nunca falei sobre organização de código em Ruby. Diferente de Java, o Ruby não obriga que você separe tudo em namespaces, diretórios e sub-diretórios. Tecnicamente é válido ter um único arquivo com milhares de linhas de código, dezenas de módulos e classes dentro. Para o Ruby não faz diferença.
+Porém, para nós desenvolvedores, essa organização faz toda a diferença na hora de dar manutenção ou mesmo de aprender mais sobre determinado projeto. Não existe um “padrão” que todos devem seguir, mas observando projetos open source mais maduros, podemos tirar algumas lições. Neste caso, vamos observar como o pessoal do Ruby on Rails (3.0 beta) organizou o código.
+
+
+Configure os diretórios-raíz e ferramentas de manutenção
+Para quem vem de Java isso será familiar. Namespaces em Ruby são Módulos (tecnicamente são coisas diferentes, mas vai servir para nossos propósitos).
+Um framework como o ActiveRecord está dividido da seguinte maneira:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+activerecord/
+  examples/
+  lib/
+    active_record/
+    active_record.rb
+  pkg/
+  test/
+  activerecord.gemspec
+  CHANGELOG
+  Rakefile
+  README
+
+
+Esses são os elementos que eu considero como mínimos para uma boa RubyGem. Explicando:
+
+Notem o nome da Gem é o mesmo nome do diretório principal, do arquivo gemspec e também dentro do diretório ‘lib’
+O código em si fica dentro do diretório “lib”, no mesmo nível existe um arquivo com o mesmo nome do projeto que carrega o que tem na “lib”
+Opcionalmente você pode colocar um diretório com exemplos de uso, no caso está em “examples”
+Obrigatoriamente coloque um diretório de “test” ou “spec” dependendo se você terá uma suíte completa ou só testes unitários.
+Crie um Rakefile com tarefas para coisas como rodar os testes, gerar e publicar a Gem e assim por diante.
+
+O Rakefile você pode copiar de projetos como o Rails. Veja seu código seguindo o link anterior para ver como ele é implementado. Retirando as coisas específicas de ActiveRecord (testar com JDBC, com bancos diferentes como Postgresql, etc) temos o seguinte básico:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+
+require 'rubygems'
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+require 'rake/packagetask'
+require 'rake/gempackagetask'
+
+require File.expand_path(File.dirname(__FILE__)) + "/test/config"
+
+desc 'Run mysql, sqlite, and postgresql tests by default'
+task :default => :test
+
+# Generate the RDoc documentation
+
+Rake::RDocTask.new { |rdoc|
+  rdoc.rdoc_dir = 'doc'
+  rdoc.title    = "Active Record -- Object-relation mapping put on rails"
+  rdoc.options << '--line-numbers' << '--inline-source' << '-A cattr_accessor=object'
+  rdoc.options << '--charset' << 'utf-8'
+  rdoc.template = ENV['template'] ? "#{ENV['template']}.rb" : '../doc/template/horo'
+  rdoc.rdoc_files.include('README', 'RUNNING_UNIT_TESTS', 'CHANGELOG')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.rdoc_files.exclude('lib/active_record/vendor/*')
+  rdoc.rdoc_files.include('dev-utils/*.rb')
+}
+
+# Enhance rdoc task to copy referenced images also
+task :rdoc do
+  FileUtils.mkdir_p "doc/files/examples/"
+  FileUtils.copy "examples/associations.png", "doc/files/examples/associations.png"
+end
+
+spec = eval(File.read('activerecord.gemspec'))
+
+Rake::GemPackageTask.new(spec) do |p|
+  p.gem_spec = spec
+end
+
+# Publishing 
+
+desc "Release to gemcutter"
+task :release => :package do
+  require 'rake/gemcutter'
+  Rake::Gemcutter::Tasks.new(spec).define
+  Rake::Task['gem:push'].invoke
+end
+
+
+Primeiro você tem os “requires” para tarefas comuns do Rake como rodar testes do test/unit, gerar documentação RDoc e criar pacotes de Gem. Em seguida definimos que a tarefa padrão (“default”) será rodar os testes. Na sequência configuramos como queremos gerar RDoc (isso é opcional, mas recomendado). Finalmente, ao fim carregamos a Gemspec e definimos tarefas para gerar a Gem e para publicar ao Gemcutter (que agora é o RubyGems.org oficial).
+Falando em Gemspec, o exemplo do ActiveRecord é assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+version = File.read(File.expand_path("../../RAILS_VERSION", __FILE__)).strip
+
+Gem::Specification.new do |s|
+  s.platform    = Gem::Platform::RUBY
+  s.name        = 'activerecord'
+  s.version     = version
+  s.summary     = 'Object-relational mapper framework (part of Rails).'
+  s.description = 'Databases on Rails. Build a persistent domain model by mapping database tables to Ruby classes. Strong conventions for associations, validations, aggregations, migrations, and testing come baked-in.'
+
+  s.required_ruby_version = '>= 1.8.7'
+
+  s.author            = 'David Heinemeier Hansson'
+  s.email             = 'david@loudthinking.com'
+  s.homepage          = 'https://www.rubyonrails.org'
+  s.rubyforge_project = 'activerecord'
+
+  s.files        = Dir['CHANGELOG', 'README', 'examples/**/*', 'lib/**/*']
+  s.require_path = 'lib'
+
+  s.has_rdoc         = true
+  s.extra_rdoc_files = %w( README )
+  s.rdoc_options.concat ['--main',  'README']
+
+  s.add_dependency('activesupport', version)
+  s.add_dependency('activemodel',   version)
+  s.add_dependency('arel',          '~> 0.3.3')
+end
+
+
+Essas são as informações mínimas para uma Gemspec bem comportada. Primeiro informações gerais sobre o projeto, como nome, versão, descrição. Em seguida requerimento de qual versão de Ruby mínima é necessária. Informações sobre o autor do projeto. Depois define-se quais arquivos fazem parte do pacote (s.files) e ao final temos dependências com outras Gems e isso é bem importante para que o desenvolvedor não fique tendo erros triviais porque uma dependência não foi instalada. Sempre mantenha a parte de dependências atualizada à medida que você desenvolve seu projeto. De tempos em tempos crie um ambiente Ruby com nenhuma gem (o RVM facilita muito isso por causa de seus “gemsets”), tente instalar a sua Gem do zero e veja se os testes não falham por falta de dependências.
+Com tudo configurado como explicado acima, as tarefas padrão de Rake para gerar gems usarão o gemspec e criarão o pacote no diretório “pkg”. Daí você pode instalar a gem localmente e no fim, quando estiver tudo pronto, um simples “gem push” irá enviar sua gem ao repositório central. Leia a documentação do RubyGems no site deles para entender mais detalhes.
+Organize seu projeto usando namespaces e sub-diretórios
+Agora, o principal do seu projeto está no sub-diretório “lib”. Lá temos o “activerecord/” e “activerecord.rb”. Como o ActiveRecord é uma classe muito grande, ela foi separada em diversos módulos para concentrar funcionalidades parecidas nos mesmos arquivos.
+Por exemplo, se abrirmos o “lib/activerecord.rb” começamos com o seguinte:
+1
+2
+3
+4
+5
+
+activesupport_path = File.expand_path('../../../activesupport/lib', __FILE__)
+$:.unshift(activesupport_path) if File.directory?(activesupport_path) && !$:.include?(activesupport_path)
+
+activemodel_path = File.expand_path('../../../activemodel/lib', __FILE__)
+$:.unshift(activemodel_path) if File.directory?(activemodel_path) && !$:.include?(activemodel_path)
+
+
+Isso permite que eu faça algo como:
+1
+
+require 'active_model/errors'
+
+
+O “$:” é um símbolo que aponta para a lista de caminhos de carga de bibliotecas do Ruby. Ele é um Array. Toda vez que você usa o comando “require” ou “load” ele vai procurar nesse Array. Como acrescentamos os diretórios de “lib” do activesupport e activerecord, quando executarmos o “require” do exemplo anterior seria o equivalente a carregar assim:
+1
+
+require File.join(File.expand_path('../../../activemodel/lib', __FILE__), "active_model", "errors")
+
+
+É uma boa maneira de carregar arquivos dependentes de outros projetos fora do que você está. Agora vem a parte importante, a definição do namespace/módulo “ActiveRecord”. Vou simplicá-la para caber neste artigo de forma mais confortável porque o original é bem maior:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+
+module ActiveRecord
+  extend ActiveSupport::Autoload
+
+  eager_autoload do
+    autoload :VERSION
+
+    autoload :ActiveRecordError, 'active_record/errors'
+    autoload :Aggregations
+
+    autoload_under 'relation' do
+      autoload :QueryMethods
+      autoload :FinderMethods
+    end
+
+    autoload :Base
+  end
+
+  module ConnectionAdapters
+    extend ActiveSupport::Autoload
+
+    eager_autoload do
+      autoload :AbstractAdapter
+      autoload :ConnectionManagement, "active_record/connection_adapters/abstract/connection_pool"
+    end
+  end
+
+  autoload :TestCase
+  autoload :TestFixtures, 'active_record/fixtures'
+end
+
+
+Parece complicado mas não é. A idéia como falei, é separar o código em namespaces/módulos e sub-módulos e depois compôr o namespace principal. Relembrando, estamos no diretório “activerecord/lib/” olhando o arquivo “activerecord.rb”. No mesmo nível temos o subdiretório “activerecord/lib/active_record”.
+A primeira coisa é entender um dos motivos de estarmos dependendo do ActiveSupport. Ele possui um módulo chamado “ActiveSupport::Autoload”. O RubyInside cobriu essa funcionalidade algum tempo atrás, então chequem esse artigo primeiro. Mas resumindo, é uma maneira de carregar arquivos Ruby de forma organizada escolhendo entre Lazy Loading e Eager Loading.
+Basicamente a idéia de Lazy Loading é carregar o arquivo somente quando você pedir pela primeira vez. Por exemplo. o arquivo “activerecord/lib/active_record/aggregations.rb” define o módulo “ActiveRecord::Aggregations”, só quando alguém chamar esse módulo é que o conteúdo do arquivo será carregado.
+Já Eager Loading é como do jeito antigo: o módulo é carregado e “mixado” ao módulo principal no momento em que você define.
+No exemplo acima, o módulo “TestCase” é Lazy Loaded, ou seja, só precisamos dele se estamos rodando testes, mas no dia a dia não precisa carregar. O AutoLoad irá usar as mesmas convenções de nomenclatura do Rails normal, usando a classe Inflector. Por isso, o módulo “ActiveRecord” (note o “camel casing”) vai mapear para “active_record” e o “TestCase” para “test_case”. Portanto ao dar “autoload :TestCase” ele vai mapear para “activerecord/lib/active_record/test_case.rb”.
+Caso o arquivo esteja em algum lugar diferente das convenções, você pode passar como segundo parâmetro ao “autoload”, como no caso do módulo “ConnectionManagement” do exemplo acima. E se por acaso seu arquivo estiver um nível mais abaixo de sub-diretório, pode usar o “autoload_under”, como em “autoload_under ‘relation’” que está carregando módulos como o “QueryMethods”. Isso fará o carregador procurar em “activerecord/lib/active_record/relation/query_methods.rb”.
+O jeito antigo, sem Lazy Loading, somente Eager Loading, sem usar o recurso de AutoLoad, seria mais ou menos assim:
+1
+2
+3
+4
+5
+6
+7
+8
+
+activerecord_files = Dir.glob(File.join(File.expand_path(__FILE__), "active_record", "**", "*.rb")
+activerecord_test_files = activerecord_files.select { |f| f =~ /test_case/ or f =~ /fixtures/ }
+activerecord_files -= activerecord_test_files
+
+activerecord_files.each { |f| require f }
+if defined?(:Rails) and Rails.env.test?
+  activerecord_test_files.each { |f| require f }
+end
+
+
+Na primeira linha nós usamos “Dir.glob” para nos devolver um Array com todos os arquivos Ruby (“*.rb”) dentro do sub-diretório “active_record” independente se ele está em dentro de outros sub-diretórios mais a fundo (“**”).
+Na segunda linha separamos os arquivos que não queremos carregar agora, no caso os relativos a testes, e na terceira linha retiramos do Array principal de arquivos.
+Na quinta linha carregamos todos os arquivos que queremos. E o cuidado aqui é que cada um dos arquivos deve declarar os namespaces da forma correta, começando do namespace-pai. Por exemplo, o arquivo “activerecord/lib/active_record/query_cache.rb” começa assim:
+1
+2
+3
+4
+5
+
+module ActiveRecord
+  class QueryCache
+  ...
+  end
+end
+
+
+Poderíamos também definir a mesma classe da seguinte forma:
+1
+2
+3
+
+class ActiveRecord::QueryCache
+  ...
+end
+
+
+Mas não recomendo esta forma porque se o módulo “ActiveRecord” já não estiver declarado, você receberá um erro “NameError: uninitialized constant ActiveRecord”. Já na forma anterior, o módulo “ActiveRecord” está sendo explicitamente declarado, e se por caso ele já existir o Ruby obviamente não vai tentar criar novamente, só vai processeguir e criar a classe “QueryCache” dentro dela.
+Finalmente, da sexta linha em diante, checamos se estamos dentro de um ambiente Rails (checando se a constante “Rails” existe) e em seguida checando se estamos num ambiente de testes (“Rails.env.test?”). Em caso positivo ele tenta requerer os módulos específicos de teste.
+Ambos os métodos, usando o AutoLoad ou somente ‘require’ normal, são aceitáveis. Mas no primeiro caso você ficará dependente do ActiveSupport. Mas se você já precisar dele pra mais coisas, não tem problemas, caso contrário talvez seja melhor usar o segundo método para compôr seus namespaces. Só que desse segundo jeito ele é mais “implícito” e no futuro talvez fique só um pouco mais estranho para entender de fato do que um certo namespace é composto. Com o AutoLoad as dependências estão todas explícitas e fica mais fácil entender.
+Mais sobre namespaces e diretórios
+A parte mais importante, porém, é a organização de diretórios. Ainda no exemplo do ActiveRecord, já sabemos que estamos considerando como “raíz” o diretório “activerecord/lib”. Como o nome do módulo é “ActiveRecord”, por causa do camel casing, o diretório seguinte será “active_record”, tendo um “active_record.rb” que é quem declara o que requerir daí por diante. Vimos os métodos de AutoLoad e require anteriormente.
+Agora, dentro do diretório “activerecord/lib/active_record” temos mais exemplos. Por exemplo:
+Em “active_record/associations/association_collection.rb” fica a classe “ActiveRecord::Associations::AssociationCollection”, que por acaso herda de “AssociationProxy”. Por causa das convenções, sabemos que vamos encontrar essa classe em “active_record/associations/association_proxy.rb” que é onde, de fato, ela está.
+Porém em “active_record/connection_adapters” temos algo um pouco diferente. Vejamos um trecho do arquivo “active_record/abstract_adapter.rb”
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+# TODO: Autoload these files
+require 'active_record/connection_adapters/abstract/schema_statements'
+require 'active_record/connection_adapters/abstract/database_statements'
+require 'active_record/connection_adapters/abstract/quoting'
+...
+module ActiveRecord
+  module ConnectionAdapters # :nodoc:
+    class AbstractAdapter
+      include Quoting, DatabaseStatements, SchemaStatements
+      ...
+    end
+  end
+end
+
+
+Esse é o método de carga usando “requires” como mencionei anteriormente só que usando nomes explícitos dos arquivos em vez de usar o “Dir.glob” que pode ser difícil de manipular caso tenha muitos arquivos opcionais. Se tiver poucos arquivos a requerir é melhor declará-los todos explicitamente, com os caminhos completos a partir do $: (load path). Note que existe um comentário com um “TODO”, ou seja, em algum momento o pessoal da equipe Rails Core deve mudar isso para a forma com AutoLoads do ActiveSupporte, como demonstramos anteriormente.
+Agora, vejamos como começa o arquivo “active_record/connection_adapters/abstract/schema_statements”
+1
+2
+3
+4
+5
+6
+7
+
+module ActiveRecord
+  module ConnectionAdapters # :nodoc:
+    module SchemaStatements
+    ...
+    end
+  end
+end
+
+
+Ele define o namespace “ActiveRecord::ConnectionAdapters::SchemaStatements”. Mas se fôssemos seguir ao pé-da-letra a convenção dos diretórios, deveria ser “ActiveRecord::ConnectionAdapters::Abstract::SchemaStatements”. Mas no caso a idéia era apenas quebrar o mesmo módulo em diversos arquivos menores para ficar mais fácil de dar manutenção, e o sub-diretório “abstract” serve apenas para agrupá-los sem se misturar a outros arquivos no mesmo diretório que não tem nada a ver. Isso também é válido. Separar namespaces/módulos 1 para 1 com sub-diretórios é uma convenção e não uma regra imposta pelo Ruby. Portanto, se for para ficar mais organizado, podemos extender a regra, como neste caso.
+Dependências entre arquivos
+Mesmo tendo um arquivo “mestre” como é o caso do “activerecord/lib/active_record.rb”, não assuma que tudo estará carregado lá. Na verdade nem precisaria. Vamos dar um exemplo:
+1
+2
+3
+4
+5
+6
+7
+8
+
+require 'active_record/connection_adapters/abstract_adapter'
+...
+module ActiveRecord
+  ...
+  class SQLiteAdapter < AbstractAdapter
+    ...
+  end
+end
+
+
+Este é um trecho do arquivo “activerecord/lib/active_record/connection_adapters/sqlite_adapter.rb”. A sua função principal é criar a classe “ActiveRecord::SQLiteAdapter” e algumas outras classes acessórias. Essa classe principal herda de “ActiveRecord::AbstractAdapter”, definida em “connection_adapters/abstract_adapter.rb”, como vimos acima. Por isso ele tem um “require” logo na primeira linha garantindo que esse arquivo está carregado. Não tem problema se alguém já carregou ele antes, pois nesse caso um segundo “require” simplesmente será ignorado.
+É boa prática declarar explicitamente os “requires” no arquivo onde você estará usando, tanto para evitar que um deles não seja carregado e você receba uma exceção de “NameError” e também para documentar a um segundo desenvolvedor que, somente olhando para esse arquivo, já sabe quais são suas dependências. Novamente, isso é uma convenção, mas vale a pena seguir boas práticas para facilitar manutenções futuras.
+Arquivos acessórios
+Acho que isso cobre a maior parte do que é necessário para organizar um projeto de forma clara. Somente para completar, atente-se a outros arquivos opcionais mas que são importantes para outros desenvolvedores (ou mesmo para você no futuro, porque depois de algumas semanas você vai se esquecer).
+O arquivo CHANGELOG é uma documentação sobre todas as modificações, em ordem decrescente de data (modificações mais recentes no topo do arquivo). Isso facilita quando alguém quiser souber de quais foram as principais alterações que aconteceram entre duas versões. Não precisa ser algo hiper-detalhado, e nem deve na verdade, mas pelo menos em linhas gerais deve haver um resumo.
+O arquivo README é fundamental. Nele você descreve para que serve o projeto, quais foram as motivações, quais os objetivos que se pretende atingir. Além disso deve conter instruções sobre como instalar o projeto (e se você fez tudo direito isso é basicamente uma linha do tipo “gem install meu-projeto-1.0.0.gem” ou algo assim). Você pode usar diversos markups de documentação como do "RDoc"https://rdoc.sourceforge.net/doc/files/README.html ou outros como Textile ou Markdown. Para facilitar ao Github formatar o HTML correspondente da forma correta, você pode declarar o nome do arquivo assim: “README.textile” ou “README.markdown”.
+O arquivo RUNNING_UNIT_TESTS não é tão comum, mas caso rodar seus testes seja muito mais do que um simples “rake test” ou “rake spec”, é melhor documentar aqui. No caso dos testes do Active Record, é necessário configurar um banco de dados, dar as permissões corretas, então foi melhor documentar em separado.
+Conclusão
+Como podem ver, escrever um bom código Ruby é muito mais do que simplesmente cuspir tudo em um único arquivo. É importante que tudo esteja em organizado. Em projeto internos, proprietários, porque alguém terá que dar manutenção nesse projeto no futuro e um bom desenvolvedor respeita outros desenvolvedores. Em última instância você mesmo precisará dar manutenção e dali alguns meses você irá se xingar por não ter organizado tudo antes.
+Em projetos open source, se seu código for desarrumado, desorganizado, difícil de encontrar onde está cada classe, poucos vão se aventurar a ajudá-lo. E um projeto open source sem contribuidores rapidamente se torna obsoleto, caindo em esquecimento. É uma das razões, talvez, de centenas de projetos open source simplesmente acabarem. Nenhum bom desenvolvedor gosta de ver código sujo dos outros.
+Muito mais do que ter ou não cobertura de testes e tudo mais, é mais importante que o código seja “explorável” e a estrutura do projeto é o primeiro passo para isso.
+tags: obsolete rails
+

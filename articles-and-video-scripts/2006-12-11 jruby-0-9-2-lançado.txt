@@ -1,0 +1,21 @@
+
+
+
+
+Do RubyInside : A equipe do JRuby acabou de anunciar o lançamento do JRuby 0.9.2 (download). Apesar de ser apenas um lançamento de menor ponto, muitas coisas foram ajustadas ou adicionadas. Direto da equipe:
+Esse lançamento tem grandes melhorias:
+
+Extensões openssl e readline agora funcionam
+Código para um novo console irb gráfico
+Suporte parcial a iconv e extensões bigdecimals
+RSpec suportado
+Suporte melhorado a Rails
+Corrigidos todos os bugs conhecidos de blocos e escopos
+Melhoria na performance do parser
+Maior trabalho de compilador e performance
+Refatorada a lógica de escopo de variáveis
+127 ítens do Jira resolvidos desde 0.9.1
+
+Parabéns à equipe JRuby por seus esforços contínuos!
+tags: obsolete jruby
+

@@ -1,0 +1,185 @@
+
+English readers, click here
+Época de Ano Novo é quando olhamos o ano que passou e refletimos para o próximo ano. É quando desaceleramos um pouco para nos permitir ver o que fizemos, que diferença fizemos, e se ainda estamos caminhando na direção certa.
+Felizmente, tudo que eu considerei importante (do ponto de vista de tecnologia) está no meu  del.icio.us/fabioakita. Convido todos a assinarem o feed ou apenas darem uma olhada. Eu selecionei apenas alguns links que representam alguns dos eventos mais interessantes desse ano (pelo menos do meu ponto de vista).
+Para mim, 2007 foi um ano incrível, sem reclamações. Eu trabalhei como louco nos últimos meses, mas pelo menos estou orgulhoso de ter tomado uma boa decisão mais de um ano atrás e me mantido com ela. E adivinhem só? Deu tudo certo! O livro que publiquei em setembro de 2006 foi um sucesso, estou trabalhando tempo integral com o grande pessoal da Surgeworks LLC e agora tenho uma equipe local própria, com 3 companheiros Railers (sigam os links para conhecê-los).
+
+Participei de não menos que 5 encontros de Rails, uma a cada fim de semana desde 17 de novembro. Foi muito legal ver a comunidade Ruby on Rails brasileira florescendo. E espero que 2008 seja o ano em que as pessoas finalmente prestem atenção em nós.
+Meu Screencast de Rails 2.0 foi um enorme sucesso, atingindo reconhecimento mundial (veja o gráfico do Google Analytics abaixo). Fiz grandes amigos como Dr. Nic, Geoffrey Grosenbach, Satish Talim e outros. (Leiam as entrevistas exclusivas aqui)
+
+Mais importante de tudo: consegui me separar do mercado geral e fazer o que eu queria. Eu queria trabalhar com Rails tempo integral, e consegui. Esse é o caminho: faça o que quiser fazer, não o que outras pessoas lhe dizem. E educação é chave: a única maneira de tomar uma boa decisão para si mesmo.
+
+
+Retrospectiva
+Janeiro/2 – YARV é Ruby, Ele é, Ele realmente é
+
+Começamos 2007 com altas expectativas sobre Ruby 1.9, e levou um ano para ele voar, mas agora é hora de analizar o que temos e preparar o terreno para Ruby 2.0.
+
+Janeiro/19 – Rails 1.2: REST admiration, HTTP lovefest, and UTF-8 celebrations
+
+Agora temos Rails 2.0 mas menos de um ano atrás estávamos colocando nossas mãos em 1.2 e toda a mudança de paradigma RESTful. As pessoas ainda estão tentando entender esse conceito mas eu espero que ele persista.
+
+Janeiro/23 – Mongrel 1.0 – Lançado!
+
+Quem imaginaria, hoje, que até mesmo Mongrel ainda não era 1.0 estável quase um ano atrás? Estamos nos movendo com muita velocidade hoje.
+
+Fevereiro/14 – Healthcare Startup Takes Rails Mainstream
+
+Grandes empresas estão apostando em Rails. Steve Case, ex-CEO da AOL fundou o Revolution Health, e sua equipe fez boas constribuições para a comunidade, com Rails plugins, informações. É um website muito bem feito e roda sobre Rails.
+
+Fevereiro/19 – What’s New in Edge Rails: Cookie Based Sessions are the New Default
+
+Rails 1.2 acabou de sair mas Ryan Daigle foi incansável: começou a dissercar Rails 2.0 bem no começo. Eu recomendo muito sua série “What’s New in Edge Rails”.
+
+Março/6 – Behind The Scenes: JRuby 0.9.8 Released!
+
+Outro projeto que não era 1.0 estável menos de um ano atrás. Charles Nutter e a Equipe Principal do JRuby deveriam ganhar um prêmio do tipo “Os programadores mais produtivos do ano”. Foi incrível ver quão rápido eles evoluíram com JRuby. E ainda participaram de vários eventos por todo o mundo: EUA, Europa e até Japão! Eu gostaria de ter a mesma velocidade e qualidade.
+
+Março/23 – ‘Drop Rails into TomCat and it just works’ – Ola Bini on JRuby presentation
+
+Com JRuby 1.0 se aproximando, as pessoas começaram a se perguntar se aplicações Rails poderiam realmente rodar sobre um application server Java. Ola Bini – da Equipe do JRuby – foi um dos primeiros a demonstrar isso.
+
+Março/27 – Getting Real: tradução completa! Chegamos ao 1.0!
+
+O livro “Getting Real” da 37signals foi muito bom e decidi pegar o desafio de traduzí-lo para o público brasileiro. Fui muito feliz ao conseguir juntar uma equipe competente que, com esse objetivo em mente, fomos o primeiro país a ter uma tradução completa desse livro. Pontos para nossa comunidade.
+
+Março/27 – Off Topic: Ameaças de Morte contra Kathy Sierra
+
+Ainda não consigo acreditar que não há mais artigos da Kathy Sierra para ler. Foi um dia muito triste para toda a comunidade. Ela era uma das minhas escritoras favoritas, mas depois de ser ameaçada ela decidiu deixar suas atividades online. Espero que esteja tudo bem com ela.
+
+Março/29 – Sexy Migrations
+
+Uma das novidades do Rails 2.0 é o chamado ‘Sexy Migrations’. Mas o plugin original foi lançado lá atrás, em Marco. E na realidade, esse plugins tem mais funcionalidades. Você ainda pode usá-lo em suas aplicações Rails 1.0 se quiser.
+
+Abril/13 – Magic Multi-Connections: A ‘facility in Rails to talk to more than one database at a time’
+
+Alex Payne causou uma grande polêmica depois de uma entrevista onde disse que Rails não estava dando certo para o Twitter. Foi um pesadelo de relações públicas, com certeza. O próprio DHH se meteu na discussão. Mas a coisa não esfriou até 24 ou 48 horas depois quando Dr. Nic lançou seu Magic Multi-Connections. A resposta? Sim, Rails pode escalar mais do que se pensava.
+
+Maio/2 – Softies on Rails: REST 101: Part 5 – Respond!
+
+Até hoje muitas pessoas ainda estão coçando a cabeça sobre essa história de REST. Felizmente muitos artigos e tutoriais surgiram para ajudar, como esta série de 5 artigos do Jeff Cohen.
+
+Maio/7 – Hobo – The web app builder for Rails
+
+E a critividade nunca pára. Hobo foi uma maneira inovadora de se sobrepor ao jeito padrão do Rails, levando scaffold a um novo patamar. Ele ainda não chegou a 1.0 e não tenho ouvido falar muito dele hoje em dia. Espero que ainda estejam desenvolvendo porque era uma grande idéia.
+
+Maio/7 – InfoQ: Mingle from ThoughtWorks is Big Win for JRuby
+
+ThoughtWorks quer ser a primeira e ela quer tudo. Eles foram a primeira grande empresa de mercado a lançar um produto completo – Mingle – para rodar sobre JRuby. Com suporte total. Isso deu muita credibilidade ao projeto JRuby. Ola Bini, membro da Equipe Principal foi contratado para trabalhar para eles esse ano.
+
+Maio/10 – ActiveScaffold goes Gold: 1.0 Released!
+
+Outra grande maneira de acelerar o desenvolvimento com Rails. Se o scaffold padrão é muito crú, você pode tentar esse novo plugin (que se chamava ‘AjaxScaffold’ antigamente quando tentei da primeira vez). Ele irá criar telas CRUD com Ajax para você. Definitivamente merece uma tentativa.
+
+Maio/14 – Scaling Twitter » SlideShare
+
+Depois que o pó baixou, agora podemos voltar a aproveitar nossas atividades no Twitter e ver quais foram as lições aprendidas escalando algo tão grande quanto Twitter. Eles certamente tem muita experiência para dividir.
+
+Maio/14 – How to deploy a self contained Rails application on Tomcat, painlessly!
+
+Implantar aplicações Rails sobre qualquer container JEE veio ficando cada vez mais fácil! Talvez agora seja mais fácil de implantar em Glassfish do que criar uma configuração de mongrel cluster.
+
+Maio/16 – Novidade! Akita na Surgeworks
+
+Em Maio, eu estava realmente deprimido com meu trabalho. Meu antigo empregador se revelou um ladrão e então a Surgeworks apareceu, no meio da comoção. Isso certamente ‘resgatou’ meu ano. Sou muito agradecido por poder trabalhar com o que gosto, tempo integral.
+
+Maio/17 – RailsConf 2007 – Day 1
+
+Outra RailsConf. Todo ano esse evento fica mais e mais cheio. Encontros que começaram com seus 50, 100 pessoas, agora se tornaram grandes conferências com centenas ou milhares de pessoas. Isso ainda me surpreende.
+
+Maio/20 – Rails Envy: Hi, I’m Ruby on Rails…
+
+Os caras da Rails Envy, Gregg Polack e Jason Seifer apareceram com seus comerciais engraçados e espertos de Rails inspirados nos comerciais de Mac. Provocativos, sim. Mas engraçados, sem dúvida. E agora eles também têm um Podcast muito bom. Esses caras de Orlando chacoalharam a comunidade um pouquinho.
+
+Junho/4 – Giles Bowkett: Rails Scalability: Real-World Solutions
+
+Este ano, muitos novos projetos começaram, muitos novos produtos foram lançados e nós investigamos e aprendemos muito sobre escalar aplicações Rails. Se procurar no Google encontrará diversos artigos excelente sobre isso. Este acima sendo apenas um deles.
+
+Junho/4 – Amazon Web Services Developer Connection : Building a Web Application with Ruby on Rails and Amazon S3
+
+A Amazon esteve na dianteira este ano. Não apenas com o lançamento do Kindle, mas com seus serviços online massivos como EC2 e S3 – e agora SimpleDB. Eles literalmente mudaram a maneira que pensamos em hosting de websites e os Railers pularam nesse vagão rapidamente. Agora você tem um monte de material sobre hosting de Rails sobre EC2+S3.
+
+Junho/4 – Rail Spikes: Merb
+
+Ezra é definitivamente minha referência número 1 para implantação e performance de Rails. Ele tem boas colocações e seu produto Merb apareceu para demonstrar que Rails tem o potencial de se tornar muito mais rápido do que é atualmente. Recomendo Merb para aqueles cenários excepcionais onde performance é chave.
+
+Junho/10 – Meu Primeiro Teste com JRuby 1.0
+
+Como todos eu também estava empolgado com o JRuby 1.0 lançado, então resolvi fazer meu próprio teste caseiro rodando Redmine sobre Glassfish, e adivinhem? Funcionou!
+
+Junho/18 – Rails Watcher. Ubuntu Feisty + Rails + Nginx + Mongrel + Mongrel Cluster
+
+Primeiro foi com CGI (não usado mais, ainda bem). Então veio FastCGI e LightTPD e Apache. Mongrel virou a mesa com Proxy Reverso HTTP. Agora descobrimos sobre esse web server Russo leve, fácil de usar e muito rápido chamado Nginx. Agora toda receita de implantação menciona Nginx e eu recomendo que todos dêem uma olhada.
+
+
+Junho/22 – Riding Rails: Capistrano 2.0
+
+SwitchTower se tornou Capistrano e com ele aprendemos procedimentos de implantação sem dor. Automação é a chave para não perder noites de sono. E Capistrano 2.0 deixa claro que não precisamos fazer as coisas manualmente o tempo todo.
+
+Junho/24 – David Heinemeier Hansson says No to Use of Rails Logo
+
+DHH finalmente falou sobre o uso justo do logotipo de Rails: nenhum empreendimentos lucrativos pode usar o logo sem sua aprovação. Eventos não-lucrativos e coisas assim podem.
+
+Julho/7 – Akita lança plugin: Acts As Replica
+
+Esta foi a primeira vez que lancei um plugin Rails. E ele é certamente um dos mais complicados plugins já feitos – e ainda inacabado. Com ele eu tento um sistema de replicação de banco de dados sobre HTTP para cenários cliente-servidor. Funciona, mas eu ainda preciso de mais ajuda :-)
+
+Julho/8 – Hanselminutes: Entrevista com David Hansson e Martin Fowler
+
+Scott Hanselman é um desses desenvolvedores de mente aberta: ele trabalha com ferramentas e tecnologias Microsoft, mas pesquisas outras áreas. Então, ele esteve na RailsConf e conseguiu gravar uma das melhores entrevistas de todas, com ambos DHH e Martin Fowler. Altamente recomendado.
+
+Julho/30 – Three years with Ruby on Rails
+
+É incrível pensar que 3 anos já se passaram. No começo as pessoas ignoravam Rails como algo que desapareceria logo. Eles devem estar chocados hoje com todo o sucesso que Rails conseguiu sozinho. Parabéns à toda a comunidade Rails pelo mundo que foi responsável por isso.
+
+Setembro/4 – RubyWorks Production Stack
+
+Novamente, implantação foi um tema recorrente esse ano. Muitas empresas lançadas pacotes completos para facilitar. RubyWorks é um desse tipo. Vale a pena tentar, para um procedimento de implantação sem dor.
+
+Setembro/18 – Fingerprints of Casper Fabricius » RailsConf: The DHH keynote – Rails 2.0 update
+
+Na RailsConf 2007 Europa, DHH fez uma grande apresentação mostrando as principais funcionalidades do Rails 2.0. Nessa época já tínhamos o Preview Release, esperando para ver os Release Candidades chegando por aí.
+
+Setembro/22 – Jogar Pedra em Gato Morto: por que Subversion não presta
+
+Por alguma razão, GIT ganhou muita atenção esse ano. Talvez seja só eu, mas eu não vi uma agitação igual com Mercurial, Darcs ou outro SCM distribuído. Todo mundo conhece Subversion e o considera como ‘normal’, mas GIT chacoalha o mundo de SCM um pouco. Rubinius mudou seu repositório para GIT e vejo outros falando sobre ou usando. Eu tentei e foi muito legal! Altamente recomendado.
+
+Outubro/1 – Migrando Mephisto para Rails 2.0: AkitaOnRails 2.0 Preview
+
+Com o Rails 2.0 Preview Release em mãos, era hora de testá-lo. Então foi o que fiz: eu atualizei meu blog em Mephisto para Rails 2.0 Preview a de fato implantei! Eu nunca mais tive tempo de olhar para isso novamente, mas agora mesmo você está lendo este artigo sobre uma aplicação Rails 2.0 de 3 meses de idade :-)
+
+Novembro/10 – Nullcreations | Installing ruby mysql gem in OSX 10.5
+
+O Apple Leopard foi um dos produtos que eu comprei esse ano (junto com a Apple TV, iPhone, Mac Mini, iPods – sim, eu gasto demais). Com ele veio a instalação completa de Ruby e produtos como Rails e Mongrel. Mas estava faltando o MySQL e haviam alguns truque para lidar com isso. Alguns artigos documentaram esses truques.
+
+Dezembro/10 – The First Rails 2.0 Screencast
+
+Rails 2.0 foi finalmente lançado! E menos de 3 dias depois eu consegui publicar um screencast (tanto em inglês quanto português) passando por todas as funcionalidades principais do Rails 2.0 e construindo um mini-blog (no estilo DHH) em menos de 30 minutos. Foi um grande sucesso! Milhares de pessoas assistiram e estou muito contente e ter podido ajudar – pelo menos um pouquinho – a chacoalhar a comunidade.
+
+Dezembro/12 – Rolling with Rails 2.0 – The First Full Tutorial – Part 1
+
+Seguindo o sucesso do screencast, eu fiz um tutorial explicando o que acontece no vídeo com mais detalhes. Esse artigo em 2 partes foi outro grande sucesso. Ambos, o screencast e o tutorial são as páginas mais vistas do meu blog.
+
+Dezembro/19 – The Rails Way
+
+Falando em sucesso, Obie Fernandez finalmente lançou o que eu pessoalmente chamo ‘A Bíblia do Rails’. Falando sério, é “The Rails Way”, com quase 900 páginas é “o” guia definitivo para Ruby on Rails. Altamente recomendado.
+
+Dezembro/20 – RubyGems 1.0.0 Released
+
+RubyGems é o padrão para implantação de aplicações Rails. E finalmente alcançou maturidade com 1.0.
+
+Dezembro/26 – PragDave: Ruby 1.9—Right for You?
+
+Como manda a tradição, Matz conseguiu lançar o Ruby 1.9! Estávamos ansiosos. Dave Thomas está para lançar o novo livro “Programming Ruby” (talvez em um mês ou quase). Agora temos muito trabalho a fazer, ver se todas as gems funcionam, se toda aplicação roda, reportar os bugs de volta à equipe principal e preparar terreno para a versão estável Ruby 2.0 em alguns meses.
+
+Conclusão
+Este foi o ano da maturidade. 3 anos atrás, Rails era o novo garoto no pedaço. Tivemos que nos provar. Todo mundo reclamou, interrogou, repugnou. Mesmo assim, um pequeno grupo se colocou à frente da maioria. Esse é o tipo de pessoa que normalmente nos ajuda a moldar o futuro.
+As pessoas erroneamente assumem que a ‘demanda das massas’ é que moldam o futuro, mas é o contrário: uma pessoa ou um pequeno grupo faz o grande salto e somente depois as massas decidem seguir ou não. Mas você precisa ter esses empreendedores e inovadores que estão dispostos a fazer a aposta mais arriscada, quando ninguém mais se arrisca. Você precisa ter um Colombo para toda a América existir.
+3 anos depois. Não precisamos mais brigar tão duramente com as pessoas agora. Rails já tem uma boa reputação. Agora temos uma sólida comunidade pelo mundo. Ainda há muito espaço para crescer, mas o que conquistamos já é incrível. Muitos produtos alcançaram status x.0 estável, agora temos um grande portfolio de projetos entregues.
+
+Não somos ‘os melhores’. Não acredito que exista um ‘o melhor’. Toda tecnologia tem vantagens e desvantagens. Entre esse grande leque, temos que escolher. Tem tudo a ver com prioridades. Por exemplo, se apenas performance a fosse a única grande prioridade, ainda estaríamos escrevendo em assembler. Mas não é. Gerenciabilidade, produtividade, têm um monte de ‘-dades’ para considerar. Por isso é impossível ter apenas uma única escolha que se encaixe em tudo.
+Para nossas necessidades, Rails se encaixa perfeitamente. Para outros cenários, não. E não precisa, esse é o truque. Sempre que se tentar ser tudo para todos, pelo menos você irá crescer em complexidade, e aqui está uma “-dade” onde você miseravelmente falhou em suportar.
+Se eu puder oferecer apenas uma recomendação para 2008, seria: “Decida por si só!” Não se deixe influenciar totalmente por outors. Ruby on Rails é uma grande plataforma, eu tiro meu sustento dela, mas não significa que eu sei a resposta para “você”. “Você” tem um conjunto completamente diferente de circunstâncias. Faça sua própria escolha! Mas faça uma escolha consciente.
+Feliz Ano Novo!!
+tags: obsolete
+

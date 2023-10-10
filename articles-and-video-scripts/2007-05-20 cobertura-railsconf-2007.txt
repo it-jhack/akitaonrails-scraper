@@ -1,0 +1,59 @@
+
+A RailsConf 2007, acontecendo em Portland, Oregon, está fervilhando! Ano passado, se não me engano, o evento lotou com mais de 250 pessoas. Este ano, eles se prepararam melhor e o evento conta com mais de 1.600 pessoas! O evento começou dia 17 e acaba hoje, dia 20.
+
+Dentre os diversos assuntos abordados, DHH veio à frente dizer que o Rails 2.0 não será nenhuma mudança radical. A introdução do modelo RESTful na versão 1.2 deu certo e ele será melhorado na nova versão. Como ele já havia avisado, APIs deprecadas na versão 1.2 começarão a desaparecer na nova versão (todos estão observando os warnings durante os testes unitários, certo??)
+
+
+Meu assunto favorito, JRuby. Charles Nutter e Thomas Enebo estão para liberar a versão 1.0 até o fim do mês! Já temos o RC2 para download, vocês viram, certo?? Mongrel está rodando bem. Aplicações Rails já podem ser empacotadas em um WAR com facilidade por um plugin e já ser instalado num Glassfish. Suporte a MySQL é 100% e outros drivers estão por vir.
+Depois da polêmica Twitter, o assunto performance e ambientes produtivos ganharam mais atenção. Bradley Taylor deu sua apresentação sobre Virtual Clusters. Jason Hoffman, da Joyent, também falou sobre escalabilidade e performance. Chris Wanstrath explicou sobre o plugin acts_as_cached para facilitar a utilização do excelente Memcache para aumentar a performance dos seus Models.
+
+Rails Enterprise? Primeiro eles o ignoram, depois o ridicularizam, então você briga de volta, então você vence — _Mohandas Gandhi. Steve Smith, Avi Bryant e Ze Frank deram apresentações inspiradoras a esse respeito. Stephen Becker parece ter dado exemplo de mapeamento de Rails a sistemas legados, no caso, da Vonage.
+A apresentação de Tim Bray a respeito da Sun e dos esforços de levar Ruby ao mundo Enterprise embaixo do guarda-chuva Java parece não ter agradado muito. Mas a apresentação do produto Mingle deixou todos empolgados. É o primeiro produto comercial feito para rodar totalmente sobre JRuby, criado pela ThoughtWorks. Além disso, a partir de Junho a ThoughtWorks estará oferecendo suporte 24/7 a JRuby!
+
+Mas as coisas não são apenas codificar por codificar. No mundo Ruby temos o The Ruby Way. Jamis Buck, da 37signals fez uma apresentação sobre a Maneira Ruby de se fazer as coisas. Não basta fazer, tem que fazer certo.
+Isso foi apenas uma amostra. Muita coisa está aconteceu na RailsConf este ano. Acompanhem as fotos no Flickr aqui e aqui.
+Querem ver todas as apresentações? Vejam no site oficial aqui e mais informações e notícias aqui. Tem MUITA coisa para ver e se atualizar!
+Atualização: 22/05/2007
+Que tal baixar todas as apresentações da RailsConf 2007? Lee Marlow publicou uma receita em Ruby para isso:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'hpricot'
+require 'open-uri'
+
+base = 'https://www.web2expo.com'
+h = Hpricot(open("#{base}/pub/w/51/presentations.html"))
+
+h.search('div .presentation > a[@href^="/presentations/rails2007/"]').each do |a|
+  url = "#{base}#{a[:href]}"
+  if File.exists?(File.basename(url))
+    puts "skipping #{url}... already downloaded"
+  else
+    puts "downloading #{url}..."
+    `wget --quiet #{url}`
+  end
+end
+
+
+
+tags: obsolete conference
+

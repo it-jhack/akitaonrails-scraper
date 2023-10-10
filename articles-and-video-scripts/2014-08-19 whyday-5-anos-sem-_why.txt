@@ -1,0 +1,14 @@
+
+
+
+
+Hoje, dia 19 de Agosto, celebramos o trabalho de Why, The Lucky Stiff. Quem foi à Rubyconf Brasil 2013 assistiu em primeira mão, em telão de cinema, o "beta" do documentário "Two Cartoon Foxes", que está sendo produzido por Kevin Triplett.
+Um ano depois ele finalmente está lançando seu trabalho ao mundo! Então, sem mais delongas, aqui vai:
+
+Ano passado também escrevi sobre o assunto, então não vou me repetir.
+Em 2012, escrevi um artigo (em inglês), com uma teoria pessoal do desaparecimento do _Why.
+O Kevin ainda não terminou com o documentário. Ele quer adicionar uma introdução para não-programadores entenderem a significância do Why para a comunidade Ruby e também incluir o lançamento do suposto último trabalho do _Why, o CLOSURE, que o Steve Klabnik compilou. Este review de Kevin Watters trás alguns insights sobre o assunto. Não deixe de ler.
+Depois de assistir e ver tudo, deixe seu comentário.
+
+tags: why
+

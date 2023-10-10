@@ -1,0 +1,14 @@
+
+
+
+
+Update 17/04: Pessoal, hoje, dia 17, não consegui chegar à tempo para minha palestra que estava agendada para as 11hs porque o aeroporto de Porto Alegre ficou fechado a manhã toda.
+-Porém, para aqueles que estão vendo o blog e estão por aqui no FISL, vamos nos juntar na Sala Prédio 30, Bloco F, Sala 201, que é o prédio da engenharia e da matemática (peçam informação aos organizadores). Estaremos lá a partir das 10hrs até o meio-dia. -
+Mudança de planos: conseguimos uma sala melhor, no próprio prédio do evento (40L), acho que é um andar acima (informem-se) na sala 713, a partir das 11hs em ponto.
+Farei a palestra que estava programada para hoje e em seguida podemos fazer uma sessão de discussão sobre Rails.
+Espalhem a notícia, espero todos lá ;-)
+
+Estou me preparando para ir ao FISL amanhã. Minha palestra Deploying de Rails será na sala Tim Berners Lee (Sala 41E) das 11hs ao meio-dia.
+Durante o evento nos procure no quiosque da e-Genial, o Carlos Eduardo e outros Railers devem se encontrar por lá. Nos vemos no FISL!
+tags: obsolete conference
+

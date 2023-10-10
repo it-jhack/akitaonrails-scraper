@@ -1,0 +1,13 @@
+
+
+
+
+“O poder total do Phusion Passenger ainda não foi libertado.”
+Ultimamente andei trocando idéias com o Ninh Bui e essa semana estávamos comentando sobre gerar Hype, estratégias Apple e tal. Lembram do “There’s something in the Air?” no começo deste ano?
+Pois é, a Phusion vai lançar alguma coisa grande no dia 1o de Junho, que é o último dia da RailsConf US. Eles me garantiram que quem estiver presente não vai se arrepender.
+As dicas para isso começam com o quiz que eles lançaram no site Ruby Enterprise Edition (que, aliás, tem outro ‘truque’ para quem acompanhou meu Twitter dos últimos dias ;-)
+Nesta primeira dica é um jogo onde você olha gráficos de performance e consumo de memória e tenta descobrir qual é cada uma das configurações. Terça que vem sai a segunda dica e, na RailsConf, bem a bomba!
+Aliás, está engraçado porque toda vez que eu vejo o Ninh no MSN ele fica me dizendo “cara, vai ser legal! vai ser legal! eu quero te contar! mas não posso contar! argh!!! que tortura!” hahaha
+Na verdade o quiz é um enigma, quem fizer o melhor blog post e enviar pra ele vai levar a camiseta da Phusion :-) Vamos botar o Tico e o Teco pra funcionar!
+tags: obsolete phusion
+

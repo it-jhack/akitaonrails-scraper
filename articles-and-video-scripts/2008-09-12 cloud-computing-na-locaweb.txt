@@ -1,0 +1,27 @@
+
+
+Pessoal, estou meio atrasado com essa notícia, mas antes tarde do que nunca :-) A Locaweb lançou esta semana sua plataforma de Cloud Computing.
+Eu já ouvi de muitas pessoas sobre a falta de oferta de VPS ou similares a preços acessíveis. Realmente preciso concordar. E para alguns eu pedi paciência mais um pouco pois “algo” estava por vir. Enfim, nessa nova plataforma você pode contratar uma máquina virtual em diversas configurações, mas ela começa com Dois Cores de 500Mhz, 1 Gb de RAM, 40Gb de HD e 900Gb de transferência mensal por apenas R$ 150 !!!
+Isso mesmo. E você pode configurar sua máquina como quiser, chegando até a um 4 cores de 2Ghz, com 8Gb de RAM, 400Gb de HD e 1.8Gb de transferência mensal por R$ 1279!
+Acredito que isso seja uma boa notícia para quem precisa de coisas que não podemos oferecer num ambiente compartilhado, por exemplo, rodar um daemon de Sphinx, escolher usar o Thin com Nginx. E no Cloud você pode pois na sua máquina você é o root e tem acesso a colocar o que quiser.
+Inicialmente o único Linux oferecido é o CentOS 5.2 (o clone do RedHat Enterprise) mas a idéia é passar a ter mais opções no futuro. Eu sei, eu sei, o OS da moda é o Ubuntu, mas não subestimem o CentOS.
+
+
+E para quem contratar o Cloud com CentOS, eis aqui uma pequena receita sobre como instalar o suporte a Rails com Passenger no CentOS:
+
+yum -y install gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel mysql-server mysql mysql-devel subversion sqlite sqlite-devel httpd-devel
+wget https://rubyforge.org/frs/download.php/41040/ruby-enterprise-1.8.6-20080810.tar.gz
+tar xvfz ruby-enterprise-1.8.6-20080810.tar.gz
+ruby-enterprise-1.8.6-20080810/installer
+/opt/ruby-enterprise-1.8.6-20080810/bin/ruby /opt/ruby-enterprise-1.8.6-20080810/bin/gem install sqlite3-ruby
+ln -s /opt/ruby-enterprise-1.8.6-20080810 /opt/ruby-enterprise
+echo “export PATH=/opt/ruby-enterprise/bin:$PATH” >> /etc/profile
+source /etc/profile
+gem install passenger capistrano 
+passenger-install-apache2-module
+service httpd start
+-
+Claro, você precisa configurar algumas coisinhas para o Apache carregar o Passenger corretamente. Apenas siga o que o ‘passenger-install-apache2-module’ disser e estará tudo bem.
+Agora é só puxar suas receitas de Thin, Mongrel, Monit, Sphinx, Solr e o que mais precisar colocar. Você é o root, você manda :-)
+tags: obsolete locaweb
+

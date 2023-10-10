@@ -1,0 +1,17 @@
+
+
+Joel Spolsky é um cara controverso, não há dúvidas quanto a isso. Às vezes queremos quebrar seu pescoço mas não podemos ignorar o cara. Muitas vezes na realidade ele está certo. Em particular existe dois artigos muito conhecidos dele e que eu gosto muito. O primeiro é o The Perils of JavaSchool e o outro é Can Your Programming Language Do This?. O trecho mais famoso é este:
+
+Sem entender programação funcional, você não consegue inventar MapReduce, o algoritmo que torna o Google tão massivamente escalável. Os termos “Map” e “Reduce” vêm de Lisp e programação funcional. MapReduce é, em retrospecto, óbvio a qualquer um que se lembre das aulas de programação funcional que programas puramente funcionais não tem efeitos colaterais e, portanto, são trivialmente paralelizáveis. Só o fato que o Google inventou MapReduce e a Microsoft não diz alguma coisa sobre porque a Microsoft está na laterna para conseguir funcionalidades básicas de procura funcionando, enquanto o Google se move para o próximo problema: construir Skynet o maior supercomputador massivo do mundo. Eu não acho que a Microsoft completamente entende quão longe eles estão.
+
+
+
+Neste artigo Joel explica – utilizando Javascript – os conceitos básicos de Map e Reduce. Recomendo a leitura.
+E provavelmente Adam Pisoni leu esse artigo também pois ele recentemente lançou Skynet mais uma implementação em Ruby de MapReduce inspirada no Google.
+Segundo Adam, Skynet é um sistema totalmente distribuído, adaptativo, auto-atualizável, com tolerância a falhas sem um único ponto de falha. Ele usa um sistema de “recuperação em ponto” onde trabalhadores (workers) olham-se uns aos outros. Se um trabalhador morre ou falha por alguma razão, outro trabalhador irá notar e pegar essa tarefa. Skynet também não tem servidores mestres ‘especiais’, somente trabalhadores que podem agir como masters para qualquer tarefa a qualquer momento. Mesmo essas tarefas-mestre podem falhar e serão continuadas por outros trabalhadores.
+A partir do README do projeto, a instalação se resume a apenas isso:
+sudo gem install skynet—-
+
+O mais interessante para nós, Railers, é que ele tem suporte a Rails, se instala na sua aplicação e ainda tem facilidades para trabalhar com ActiveRecord e distribuir processamento sobre dados retornados do banco. Ele também serve para trabalhar tarefas assíncronas, como você faria com BackgroundDrb. E o principal: ele parece muito simples de se usar. Assim que puder, vou brincar com isso.
+tags: obsolete
+

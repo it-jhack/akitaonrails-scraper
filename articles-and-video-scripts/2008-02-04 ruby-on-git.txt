@@ -1,0 +1,45 @@
+
+Update 05/02: Ironia, o próprio Piston agora está mantido em Git! :-) Um gerenciador de plugins para SVN mantido no Gitorius.
+Update 06/02: Estava olhando a lista de projetos no Gitorius e tem muito mais projeto Ruby e Rails do que eu imaginava. Vejam a lista atualizada lá embaixo. Vejam outra discussão interessante em All that Git talk in the Rails world. What Gives?, outro interessante é o Git is the new Unix
+O Mephisto – finalmente – saiu com uma nova versão, a 0.8 acelerando seu desenvolvimento para a tão esperada versão 1.0.
+
+A maior mudança nesta versão? A mudança para suportar seu desenvolvimento sobre GIT! Isso mesmo, mais um projeto Ruby migrando de Subversion para Git.
+
+
+Vejamos quem já suporta Git:
+
+Thin, o “mongrel-light”
+Capistrano 2.0 suporta deployments a partir de Git
+Rubinius, desde o começo em Git
+Bundles Textmate, pelo Dr. Nic, agora sendo mantido em Git
+Ruby/Git, biblioteca Ruby para manipular repositórios Git
+Merb, o “rails-light” também está em Git!
+Giston, o clone de Piston para Git
+Piston, o próprio Piston está em Git :-)
+Peepcode ensinando a usar Git
+
+
+Comatose micro-CMS para embutir nos seus projetos Rails
+BackgroundDRb, servidor de tarefas assíncronas
+Globalize, plugin de internacionalização que foi recentemente reescrito e agora está no Git
+Twitter4R, biblioteca para a API REST do Twitter
+Gitorius, o código-fonte do próprio site se quiser fazer seu próprio Gitorius privado.
+
+Projetos como Typo e Mephisto são um PITA pelo seguinte motivo: você faz checkout do repositório SVN deles, configura, faz dezenas de alterações, customizações até ficar como você quer. Amanhã eles lançam uma nova versão. Pergunta: como fazer o merge das modificações?
+Resposta: você não faz. Boa sorte aplicando os patches manualmente. Isso porque o merge em Subversion só pode ser feito no repositório que – por definição – é centralizado. Normalmente você tem um repositório local SVN também, mas o seu local e o original remoto não sabem como se comunicar. Entra gambiarras como SVK para fazer uma ponte entre esses dois repositórios.
+Pois bem, em julho do ano passado, eu expliquei como montei um mirror de Typo (antes de eu migrar para Mephisto) a partir do Subversion usando SVK. Na época fiquei mais ou menos contente, porque eu consegui atingir esse objetivo de mesclar dois SVNs. Porém a realidade é mais suja do que isso: gerenciar esse tipo de configuração e usar com frequência é um enorme PITA também!!! No fim, desisti de usar essa configuração.
+Eis que no fim de setembro do ano passado eu expliquei um pouco sobre Git. Graças ao bom e velho Linus Torvalds para jogar uma balde de água fria no que estamos fazendo atualmente nos dar uma solução inteligente: Git.
+Por alguma razão, eu tenho visto a palavra “git” com uma boa frequência no meio Ruby e Rails. Por alguma razão “Git” e “Ruby/Rails” combinam. São ambos o mesmo caso: são os new kids on the block, são ousados, são elegantes, são poderosos.
+O passo do Mephisto migrar para Git faz todo o sentido do mundo: ele resolve o meu problema de julho passado: basta agora eu fazer um clone do repositório deles, criar um branch com o meu site e agora eu manter meu site sempre atualizado fazendo merges a partir do branch original. E mais: se precisar posso até mesmo continuar usando meu repositório SVN do meu hosting (apesar que a Railsplayground também tem suporte a Git).
+Não deixem de “assistir” o video que tornou Git famoso. Melhor, leia o transcript com o que Linus Torvarls disse nessa palestra. Esta parte é a melhor:
+
+Quando eu digo que odeio CVS com paixão, também tenho que dizer que se houver algum usuário de SVN na audiência, vocês podem querer sair. Porque meu ódio por CVS significa que eu vejo Subversion como o projeto mais sem sentido já começado, porque o slogan para Subversion por um tempo era ‘CVS feito direito’ ou algo assim. E se você começa com esse tipo de slogan, não há para onde ir, não existe maneira de fazer CVS direito.
+
+E mais esta:
+
+Ninguém está interessado em fazer branches. Branches são totalmente inúteis a menos que você faça merge entre eles, e CVS não consegue fazer merge de nada. Dá para fazer uma vez, mas aí o CVS esquece o que você fez, e você nunca mais conseguirá fazer merge novamente sem ter conflitos horrendos. Merging no subversion é um completo desastre. O pessoal do subversion meio que entende isso e eles tem um plano, e o plano deles é uma droga também. É incrível como esse pessoal é estúpido. Eles ficaram olhando para o problema errado o tempo todo. Branching não é um problema, merging é. E eles não fizeram nada sobre isso, cinco anos depois do fato. Isso é triste.
+
+Para logo eu vejo o seguinte: cada vez mais Alpha Geeks devem começar a usar Git. Muitos pequenos grupos de rebeldes usam Git mesmo que suas empresas obriguem o uso de Subversion. É simples: basta fazer um clone do SVN, trabalhar localmente com Git e depois usar Git-SVN para empurrar as modificações de volta ao repositório central :-) Eu faço isso hoje e funciona muito bem.
+O único problema de Git hoje: não funciona muito bem em Windows sem o suporte de Cygwin ou coisa que o valha. Tudo bem, também deve demorar até sair um "Tortoise"Git :-D Usuários de Linux e Mac: se preparem para mais e mais projetos de renome migrando para Git em breve.
+tags: obsolete git
+

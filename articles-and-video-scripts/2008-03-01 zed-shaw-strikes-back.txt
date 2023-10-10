@@ -1,0 +1,13 @@
+
+
+
+
+Esta semana Zed Shaw apareceu nas manchetes novamente! Desta vez escrevendo um longo artigo de 4 páginas para a CIO.com (mais uma dessas revistas para CIOs que “acham” que entendem alguma coisa de informática).
+De qualquer forma, ao contrário do que se imagina, o artigo de Zed é equilibrado, bem escrito, razoavelmente bem argumentado, expondo suas experiências sobre o que é Ruby, a comunidade, os prós e contras de se adotar Ruby.
+E são bons pontos. As vantagens foram expostas, os pontos fracos apontados são de verdade e ainda temos muito o que melhorar. Vale a pena ler aqui
+Mais engraçado é a descrição de Zed no final do artigo :-)
+
+Zed A. Shaw is currently a vice president at an investment bank leading a gang of smarties building a cutting-edge document management system, using Ruby on Rails. More important, he writes tons of free software that many people doing Ruby on Rails use all day long. After almost two decades of programming in many languages, he finds writing and music to be more fun. He is now an essayist and antipundit with a very vulgar blog, www.zedshaw.com, that you should avoid.
+
+tags: obsolete zed
+

@@ -1,0 +1,324 @@
+
+Last year I interviewed Adam Jacob, from Opscode about Chef. Chef is a configuration management tool, which does something similar to what Puppet and CFEngine provides. Check out the interview to have a better idea about it.
+One thing that I like about Chef is its Chef Solo setup. It makes it easy for me to have a single server, such as a VPS (virtual machine) and set it up the same way everytime. So I did an exercise and installed a bare bone Debian server into a Parallels Desktop virtual machine. I want to configure it to the point where it can receive a simple MySQL based Rails app and run it under Phusion Passenger for Nginx.
+
+
+First thing is to download Debian Lenny (5.0.4) ISO file. Just the 1st CD will do. Edit the /etc/apt/sources.conf file and remove any mention to the CD so apt-get can install everything from the internet. Log in as root and install support for both Open SSH and development tools:
+1
+
+apt-get install ssh build-essential
+
+
+As Chef is written in Ruby, we need to have a ruby interpreter installed. I prefer to have Ruby Enterprise Edition so just download and install its .deb file. Finally, you will need to set up the chef client, so you need at least 2 gems: chef and ohai.
+1
+2
+3
+
+wget https://rubyforge.org/frs/download.php/68718/ruby-enterprise_1.8.7-2010.01_i386.deb
+dpkg -i ruby-enterprise_1.8.7-2010.01_i386.deb
+gem install chef ohai --no-ri --no-rdoc
+
+
+Now, you need 3 other elements: a JSON file describing what do you want configured in this machine, the cookbooks required to configure them and a Ruby Solo configuration file stating where the cookbooks are. In the client-server configuration you would make the chef client connect to a chef server which would provide the up to date recipes (Cookbooks contain recipes). Because I am playing with Chef Solo, we need the cookbook inside the machine or at least reachable through HTTP in another server.
+To make things easier, you can download my sample JSON and solo files and my cookbook set from Github.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+wget https://github.com/akitaonrails/chef-debian/tarball/master
+cd /etc
+tar xvfz ~/akitaonrails-chef-debian-f0e174f.tar.gz
+mv akitaonrails-chef-debian-f0e174f chef
+
+wget https://github.com/akitaonrails/cookbooks/tarball/master
+mkdir -p /var/chef-solo
+cd /var/chef-solo
+tar xvfz ~/akitaonrails-cookbooks-2b4edeb.tar.gz
+mv akitaonrails-cookbooks-2b4edeb cookbooks
+
+
+Obs: The hash ID in the files may change if I push changes to my repository, so beware of the correct tar.gz file you will get.
+This procedure creates both a /etc/chef and /var/chef-solo/cookbooks directories. The first one has a solo.rb stating where to find the cookbook and a dna.json Node file stating what to configure. You should read and edit the dna.json file carefully. In a nutshell it will:
+
+Check if the build-essential is installed (it already is anyway)
+Install git
+Configure a restrictive iptables configuration well suited for a web server
+Install a non-root user account for the web app
+Configure sudo for this non-root user and authorize your local ssh public key
+Install Ruby Enterprise Edition from source (it already is anyway, just as an example)
+Install ImageMagick
+Install a bunch of useful gems
+Install Phusion Passenger and Nginx
+Install MySQL client and server
+Prepare the home directory to support a Rails app
+
+You can see what recipes will run looking at the tail of the dna.json file:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+...
+  "recipes": [
+    "build-essential", 
+    "git", 
+    "iptables",
+    "users",
+    "sudo",
+    "imagemagick", 
+    "passenger_enterprise::nginx",
+    "gems",
+    "mysql::server", 
+    "simple_rails_app"
+  ]
+}
+
+
+The “users” recipe, for example, is configured like this:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+...
+"users": {
+  "akitaonrails": {
+    "password": "$1$62AtR4zf$owGCHACYTpI3F/KOVvhTB1",
+    "comment": "Fabio Akita"
+  }
+},
+"ssh_keys": {
+  "akitaonrails": "ssh-rsa AAAAB3N...0w== fabioakita@MacHal9001.local"
+},
+...
+
+
+You should change “akitaonrails” for your preferred user name. Create a new password using openssl. Open a terminal and execute:
+1
+
+openssl passwd -1
+
+
+It will prompt you for a password and then return the hashed version which you can use in the dna.json file.
+I am configuring a simple Rails app structure where I have a git repository locally, configured with post-receive hooks to automatically deploy it, also locally:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+...
+"apps": [ 
+  { 
+    "name": "enki", 
+    "username": "akitaonrails", 
+    "git_branch": "akitaonrails", 
+    "server": "debian.local"
+  } 
+],
+...
+
+
+I configured my virtual machine’s IP in my local machine’s /etc/hosts hence the debian.local hostname above. I am using “Enki” as an example, but you can change it for any other application name of your choosing.
+When you have everything configure, just execute the following command in your virtual machine:
+1
+
+chef-solo -c /etc/chef/solo.rb -j /etc/chef/dna.json
+
+
+It will run for a few minutes, downloading every package needed, configuring everything and in the end you will have a pristine web server with included MySQL server all properly up and running.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+debian:~# chef-solo -c /etc/chef/solo.rb -j /etc/chef/dna.json
+[Wed, 17 Feb 2010 13:51:01 -0500] INFO: Starting Chef Solo Run
+[Wed, 17 Feb 2010 13:51:02 -0500] WARN: Missing gem 'mysql'
+[Wed, 17 Feb 2010 13:51:02 -0500] WARN: Missing gem 'right_aws'
+[Wed, 17 Feb 2010 13:51:03 -0500] INFO: Installing package[mysql-devel] version 5.0.51a-24+lenny3
+[Wed, 17 Feb 2010 13:51:32 -0500] INFO: Installing gem_package[mysql] version 2.8.1
+...
+[Wed, 17 Feb 2010 14:01:45 -0500] INFO: Ran execute[rebuild-iptables] successfully
+[Wed, 17 Feb 2010 14:01:45 -0500] INFO: template[/etc/mysql/grants.sql] sending run action to execute[mysql-install-privileges] (delayed)
+[Wed, 17 Feb 2010 14:01:45 -0500] INFO: Ran execute[mysql-install-privileges] successfully
+[Wed, 17 Feb 2010 14:01:45 -0500] INFO: Chef Run complete in 644.747168 seconds
+
+
+Chef’s recipes, try to be Idempotent, meaning that if we run the same command multiple times, it should not change its results. For instance, it should not try to reinstall mysql many times around. But it all depends on how the recipes are written. Another thing is that recipes should be platform independent, meaning that if I try to install mysql in a Fedora box it should use “yum” or if I try in a Debian box it should use “apt-get”. Again, it depends if you have recipes prepared for that.
+For my cookbook I actually cloned from Opscode’s Github repository and merged it with 37signals’ Github cookbooks. Then I had to modify several aspects of many recipes. I customized the mysql, iptables, and other recipes.
+Anatomy of a Recipe
+The simplest possible recipe is a directory with this structure:
+1
+2
+3
+
+/my_recipe
+  /recipes
+    default.rb
+
+
+And you can add it to your JSON’s recipe chain:
+1
+2
+3
+4
+5
+
+"recipes": [
+  ...
+  "my_recipe", 
+  ...
+]
+
+
+You should read Chef’s Documentation on Cookbooks to have a better understanding. Another way is to git clone Opscode and 37signals (or even mine) cookbook and read one by one to try to get the gist of it. To make it easier, you have to know this:
+
+Most well written recipes will have a metadata.rb, metadata.json and at least a README.rdoc files. You should read them to get more information on a particular recipe.
+
+
+If your recipe has an attributes directory, you know you can customize variables. For example, the mysql/atttributes/server.rb has the following attributes (The Ruby hashes translate directly to JSON objects. So this is a great way to understand what and how to configure a resource):
+
+1
+2
+
+set_unless[:mysql][:server_root_password] = secure_password
+set_unless[:mysql][:bind_address]         = ipaddress
+
+
+So, in your dna.json file you can customize it as:
+1
+2
+3
+4
+
+"mysql": {
+  "server_root_password":  "root",
+  "bind_address": "127.0.0.1"
+},
+
+
+
+Attributes can be used within recipes. There should be a recipes directory with at least a default.rb file. It describes what steps are necessary to configure this resource such as installing packages, creating configuration files, restarting services and so on. You can have multiple recipes. They will be stated in the metadata.rb file. For example, the mysql recipe has the following metadata:
+
+1
+2
+3
+
+recipe "mysql::client", "Installs ... magic"
+recipe "mysql::server", "Installs .. intervention"
+recipe "mysql::server_ec2", "Performs ... manipulation"
+
+
+You will notice that in my dna.json file I have this in my list of recipes to execute:
+1
+2
+3
+4
+5
+
+"recipes": [
+  ...
+  "mysql::server", 
+  ...
+]
+
+
+If I had used only “mysql” it would install just the client tools. Because I want to install the server I have to use the “server” recipe within the “mysql” namespace, hence “mysql::server”. Chef only allows for a single level of namespace nesting. So you can have multiple recipes within a single namespace.
+
+Sometimes you need the recipe to contain some static files that will be copied or manipulated by the recipe. You can have them in the files/[recipe] directory. The most common is files/default because each sub-directory is mapped to the recipe’s name. An example can be found at nginx/files/default/mime.types
+
+
+After installing some software you may need to create configuration files, such as /etc/mysql/my.cnf. Inside the recipe you can use the template command to point to an ERB (Embedded Ruby) file. If you know Ruby on Rails, it is similar to its views template. An example can be found at mysql/templates/default/my.cnf.erb. Again the templates will be in the templates/[recipe] directory. You can have as many as you want.
+
+
+Finally, some recipes have definitions. Think of them as a library of functions. You can have reusable sets of commands. You can even reuse them in multiple recipes. For example in the apache2/definitions/apache_module.rb you have this snippet:
+
+1
+2
+3
+4
+5
+
+include_recipe "apache2"
+
+if params[:conf]
+  apache_conf params[:name]
+end
+
+
+The apache_conf command is defined in the apache2/definitions/apache_conf.rb file:
+1
+2
+3
+4
+5
+6
+
+define :apache_conf do
+  template "#{node[:apache][:dir]}/mods-available/#{params[:name]}.conf" do
+    source "mods/#{params[:name]}.conf.erb"
+    notifies :restart, resources(:service => "apache2")
+  end
+end
+
+
+Chef provides a very rich DSL (Domain Specific Language) and lots of Resources for you to work with, package, service, template and more. You will use pure Ruby to script your recipes, which makes it very flexible and powerful. You will have to modify existing recipes and write your own for specific needs, such as my “simple_rails_app” recipe. Don’t expect all recipes to “just work”, you will have to modify some of them.
+With my configuration above, now I can get into my Rails project and do:
+1
+2
+
+git remote add debian akitaonrails@debian.local:~/repos/enki.git
+git push akitaonrails akitaonrails
+
+
+This will upload all my source code to the new git repository. Then I need to log in (as I didn’t setup capistrano) as ‘akitaonrails’ and do:
+1
+2
+3
+
+cd enki
+rake db:create RAILS_ENV=production
+rake db:migrate RAILS_ENV=production
+
+
+Of course, you need to configure config/database.yml as well. That should do it.
+Next up I will experiment with the client-server setup and see how it goes. For now, Solo is good enough for my needs.
+tags: obsolete rails english
+

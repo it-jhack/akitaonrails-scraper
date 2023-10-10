@@ -1,0 +1,47 @@
+
+
+
+
+Hoje bati com um probleminha ao tentar iniciar um aplicativo Rails 3.1.x sobre Ruby 1.9.3-p0 com a gem MySQL2 no meu Mac OS X Lion.
+Resumindo, é possível que você esbarre com o seguinte erro:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+dyld: lazy symbol binding failed: Symbol not found: _mysql2_set_field_string_encoding
+  Referenced from: /Users/akitaonrails/.rvm/gems/ruby-1.9.3-p0/gems/mysql2-0.3.7/lib/mysql2/mysql2.bundle
+  Expected in: flat namespace
+
+dyld: Symbol not found: _mysql2_set_field_string_encoding
+  Referenced from: /Users/akitaonrails/.rvm/gems/ruby-1.9.3-p0/gems/mysql2-0.3.7/lib/mysql2/mysql2.bundle
+  Expected in: flat namespace
+
+Trace/BPT trap: 5
+
+
+Esse problema foi reportado como bug no projeto do MySQL2 com o número #216. O criador e mantenedor da gem, Brian Mario já fez um commit com a correção, basicamente a mudança é esta:
+1
+2
+3
+
+-inline VALUE mysql2_set_field_string_encoding(VALUE val, MYSQL_FIELD field, rb_encoding *default_internal_enc, rb_encoding *conn_enc) {
+          142        
++static VALUE mysql2_set_field_string_encoding(VALUE val, MYSQL_FIELD field, rb_encoding *default_internal_enc, rb_encoding *conn_enc) {
+
+
+Se quiser usar esta correção, modifique seu Gemfile declarando a gem mysql2 da seguinte maneira:
+1
+
+gem "mysql2", "~> 0.3.7", :git => "git://github.com/brianmario/mysql2.git", :ref => "d3a96b8"
+
+
+O Brian ainda não lançou uma nova versão da gem com a correção por isso podemos baixar diretamente do repositório no Github.
+Para atualizar execute bundle update mysql2. Isso deve resolver esse problema.
+tags: obsolete ruby
+

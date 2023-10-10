@@ -1,0 +1,356 @@
+
+Se você é desenvolvedor com certeza usa frequentemente os excelente sites Stack Overflow e Stack Exchange, em termos de conteúdo técnico se você está tendo um problema a probabilidade de encontrar a solução num desses sites é enorme.
+O co-fundador, Jeff Atwood, resolveu iniciar um novo projeto de fóruns. Se pararmos para pensar temos centenas de "blog engines" por aí, do famigerado Wordpress até o geeky Jekyll. Isso sem contar os inúmeros CMS como Joomla, ecommerces como Magento e Spree. Mas uma categoria que evoluiu muito pouco foram os fóruns e até hoje ainda vemos os antigos phpBB por aí.
+Com isso em mente Jeff juntou uma equipe e desenvolveu o Discourse. Mais interessante ainda: ele desenvolveu tudo usando Ruby on Rails, Ember.js, PostgreSQL e Redis. Tudo está open source e ele está ainda em ativo desenvolvimento.
+
+
+
+
+Uma coisa que temos na minha empresa, a Codeminer 42 é um email interno "developers@codeminer42.com" onde os mais de 30 desenvolvedores espalhados em 4 escritórios que temos postam sobre os mais diversos assuntos técnicos, dicas, truques e tudo mais que acontecem nos projetos. Uma coisa que me perturba há um ano é que todos os novos Miners não tem um histórico aonde recorrer. Quando estive na Locaweb ajudei a instalar o MediaWiki que você pode acessar publicamente aqui. Eu gosto da idéia de criar um repositório de conhecimento. Por mais que um Stack Overflow e nosso velho amigo Google resolvam isso, é sempre bom não desperdiçar conhecimento criado na prática, no nosso dia a dia.
+Por outro lado, somos uma software house Ruby, e até hoje eu não tinha visto um bom software para usar de base para criar esse repositório. Finalmente o Jeff nos presenteou com o Discourse e logo que o vi sabia que era o que eu queria. Mais do que isso ele tinha uma coisa que foi fundamental: integração com diversos providers OAuth, incluindo Google Apps que é o que a maioria das empresas como a minha usa como serviço de email. Isso é importante porque dá trabalho ficar gerenciando manualmente contas de todo mundo.
+Se quiser ir direto ao assunto recomendo recorrer à Bitnami que já tem instalador pra OS X, imagem de máquina virtual para VMWare e imagem para Amazon e Azure. Baixe a imagem e a máquina já estará configurada e pronta pra funcionar. Mas pensando no velho "casa de ferreiro, espeto de ferro", resolvi eu mesmo configurar uma máquina do zero. Gosto de fazer isso como hobby.
+Usei um box Ubuntu na Rackspace, criei um usuário chamado 'discourse'.
+
+1
+2
+
+useradd -d /home/discourse -m discourse
+passwd discourse
+
+
+A partir daqui faço o resto logado com esse usuário com sudo su - discourse.
+Não vou repetir o que já existe então veja a documentação no Github do Discourse para mais detalhes, em particular o artigo DEVELOPER-ADVANCED. Basta trocar o usuário "vagrant" pelo usuário que quiser. Antes de sair executando o passo-a-passo do link anterior, continue lendo até o final.
+Algumas diferenças envolvem instalar o Redis não a partir do tarball mas simplesmente fazendo apt-get install redis-server.
+Eu pessoalmente não acho ruim usar RVM, então instalei o RVM, com ele instalei o Passenger e de lá instalei o NGINX. Novamente, existem dezenas de tutoriais sobre o assunto, em resumo:
+
+1
+2
+3
+
+curl -#L https://get.rvm.io | bash -s stable --autolibs=3 --ruby
+gem install passenger
+rvmsudo passenger-install-nginx-module
+
+
+Agora, subir o NGINX usando um initscript para que ele inicie sozinho se a máquina reiniciar:
+
+1
+2
+3
+4
+
+wget -O init-deb.sh https://library.linode.com/assets/660-init-deb.sh
+sudo mv init-deb.sh /etc/init.d/nginx
+sudo chmod +x /etc/init.d/nginx
+sudo /usr/sbin/update-rc.d -f nginx defaults
+
+
+Só como referência, o passenger já vai configurar seu binário sozinho no NGINX mas meu /opt/nginx/conf/nginx.conf tem o trecho:
+
+1
+2
+3
+4
+5
+
+...
+http {
+    passenger_root /usr/local/rvm/gems/ruby-2.0.0-p0-turbo/gems/passenger-4.0.0.rc5;
+    passenger_ruby /usr/local/rvm/wrappers/ruby-2.0.0-p0-turbo/ruby;
+...
+
+
+E no meio configuro a aplicação:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+
+...
+server {
+
+  listen 80;
+  gzip on;
+  gzip_min_length 1000;
+  gzip_types application/json text/css application/x-javascript;
+
+  server_name discourse.suaempresa.com.br;
+
+  sendfile on;
+
+  keepalive_timeout 65;
+
+  location / {
+    root /home/discourse/discourse/public;
+    passenger_enabled on;
+
+    location ~ ^/t\/[0-9]+\/[0-9]+\/avatar {
+      expires 1d;
+      add_header Cache-Control public;
+      add_header ETag "";
+    }
+
+    location ~ ^/assets/ {
+      expires 1y;
+      add_header Cache-Control public;
+      add_header ETag "";
+      break;
+    }
+
+    proxy_set_header  X-Real-IP  $remote_addr;
+    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header  X-Forwarded-Proto $scheme;
+    proxy_set_header  Host $http_host;
+
+    # If the file exists as a static file serve it directly without
+    # running all the other rewite tests on it
+    if (-f $request_filename) {
+      break;
+    }
+  }
+...
+
+
+Feito isso, baixar o Discourse e configurá-lo:
+
+1
+2
+3
+4
+5
+6
+
+git clone git://github.com/discourse/discourse.git
+cd discourse
+cp config/database.yml.sample config/database.yml
+cp config/redis.yml.sample config/redis.yml
+cp config/fog_credentials.yml.sample config/fog_credentials.yml.sample
+bundle
+
+
+Edite o config/database.yml e edite ambos os ambiente production e profile:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+production:
+  adapter: postgresql
+  database: discourse_production
+  pool: 5
+  timeout: 5000
+  host_names:
+    - discourse.suaempresa.com.br
+
+profile:
+  adapter: postgresql
+  database: discourse_production
+  pool: 5
+  timeout: 5000
+  host_names:
+    - discourse.suaempresa.com.br
+
+
+Lembre de mudar o host_name para o domínio que tem registrado. Além disso, ao seguir a documentação do Discourse que linkei acima, lembre de que é para criar o banco de produção:
+
+1
+2
+3
+4
+
+createuser --createdb --superuser -Upostgres discourse
+psql -c "ALTER USER discourse WITH PASSWORD 'password';"
+psql -c "create database discourse_production owner discourse encoding 'UTF8' TEMPLATE template0;"
+psql -d discourse_production -c "CREATE EXTENSION hstore;"
+
+
+E depois suba o dump de produção também:
+
+1
+
+psql -d discourse_production < pg_dumps/production-image.sql
+
+
+O Discourse vem por padrão configurado para mandar emails usando o sendmail da máquina. No meu caso quis ser mais simples e usar o SMTP do meu Google Apps. Para isso edite os arquivos config/environments/production.rb e também o config/environments/profile.rb, substitua a configuração de :sendmail por:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+config.action_mailer.delivery_method = :smtp
+ActionMailer::Base.perform_deliveries = true
+ActionMailer::Base.raise_delivery_errors = true
+ActionMailer::Base.smtp_settings = {
+  :address              => "smtp.gmail.com",
+  :port                 => 587,
+  :user_name            => "do-not-reply@suaempresa.com.br",
+  :password             => 'suasenha',
+  :authentication       => "plain",
+  :enable_starttls_auto => true
+}
+
+
+Não deixe de executar o bundle exec rake assets:precompile para gerar os assets.
+Além disso o Discourse necessita de mais dois serviços para funcionar, o excelente Sidekiq do Mike Perham para gerenciar filas, jobs e workers e o Clockwork do Adam Wiggins. Mas não queremos executar no shell como daemon e deixar por isso mesmo, afinal queremos que eles iniciem sozinhos quando a máquina iniciar.
+Para isso resolvi criar dois scripts para o Upstart do Ubuntu em vez de initscripts tradicionais. Primeiro, via sudo criei o arquivo /etc/init/discourse-sidekiq.conf com:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+description "Discourse Sidekiq"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+respawn
+respawn limit 5 20
+
+script
+  HOME_DIR=/home/discourse
+  APP_ROOT=$HOME_DIR/discourse
+  PIDFILE=$APP_ROOT/log/sidekiq.pid
+  LOGFILE=$APP_ROOT/log/sidekiq.log
+  RAILS_ENV=production
+
+  exec su -c  "/usr/local/rvm/bin/rvm-shell '2.0.0-p0-turbo' -c 'cd $APP_ROOT; bundle exec sidekiq -e production -P $PIDFILE -L $LOGFILE' 2>&1" discourse
+end script
+
+
+Depois criei o /etc/init/discourse-clockwork.conf com:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+description "Discourse Clockwork"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+respawn
+respawn limit 5 20
+
+script
+  HOME_DIR=/home/discourse
+  APP_ROOT=$HOME_DIR/discourse
+  PIDFILE=$APP_ROOT/log/clockwork.pid
+  LOGFILE=$APP_ROOT/log/clockwork.log
+
+  exec su -c  "/usr/local/rvm/bin/rvm-shell '2.0.0-p0-turbo' -c 'cd $APP_ROOT; RAILS_ENV=production bundle exec clockwork config/clock.rb >> $LOGFILE 2>&1'" discourse
+end script
+
+
+Com isso podemos iniciar os serviços assim:
+
+1
+2
+
+start discourse-sidekiq
+start discourse-clockwork
+
+
+Isso deve ser suficiente. Leia a documentação oficial e entenda os passos que expliquei com calma.
+Depois de instalado você pode ir para "https://discourse.suaempresa.com.br/admin/site_settings". O Discourse tem dezenas de configurações para customizar da forma como você precisa. Em particular considero os parâmetros a seguir importantes:
+
+company_domain (suaempresa.com.br) - é o domínio que registrou para seu servidor
+email_domains_whitelist (suaempresa.com.br) - para aceitar apenas usuário de dentro do seu domínio
+access_password - uma senha que somente seu grupo sabe. mesmo não podendo se registrar como usuário, qualquer um pode ler o conteúdo em modo "read-only". essa senha é uma pequena proteção
+allow_index_in_robots_txt (deschecar) - não precisamos que engines de procura indexem nosso site interno
+enable_yahoo_logins (deschecar) - no meu caso não preciso de integração com Yahoo! para autenticação
+enable_twitter_logins (deschecar) - no meu caso não preciso de integração com Twitter para autenticação
+enable_facebook_logins (deschecar) - no meu caso não preciso de integração com Facebook para autenticação
+s3_upload_bucket - é opcional para é o nome do bucket que você pode criar no Amazon S3, e nesse caso você também precisa configurar o arquivo config/fog_credentials.yml com o access key e secret key da sua conta
+default_trust_level (1) - o padrão é "0" que é o nível de "visitante", mas esse nível é muito baixo para seus usuários poderem participar
+
+Pronto, agora basta seus usuários se registrarem com o email do domínio que você configurou como válido acima e eles poderão começar a discutir os assuntos de forma estruturada num fórum moderno.
+
+tags: obsolete rails
+

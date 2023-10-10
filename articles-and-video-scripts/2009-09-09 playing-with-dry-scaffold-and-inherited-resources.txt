@@ -1,0 +1,92 @@
+
+There are several ways to start a new Rails project nowadays, specially since Rails brought project templates to the mix. On the other hand there are still lot’s of generators. So, today I want to just pinpoint some tips on this regard.
+First of all, make sure you have all the usual suspects installed:
+1
+
+sudo gem install rspec rspec-rails josevalim-inherited_resources mislav-will_paginate justinfrench-formtastic thoughtbot-factory_girl haml ryanb-nifty_generators
+
+
+One other is dry_scaffold from grimen. I’ve made a fork and added rspec support today. I think the 0.3.3 version should be generated soon from Github, then you will be able to install it like this:
+1
+
+sudo gem install akitaonrails-dry_scaffold
+
+
+
+
+
+But you can also install it manually from the source:
+1
+2
+3
+4
+
+git clone git://github.com/akitaonrails/dry_scaffold.git
+cd dry_scaffold
+gem build dry_scaffold.gemspec
+sudo gem install dry_scaffold-0.3.3.gem
+
+
+Now, create a normal Rails 2.3.x project and configure your config/environment.rb with:
+1
+2
+3
+4
+5
+6
+
+config.gem 'haml'
+config.gem 'will_paginate'
+config.gem 'justinfrench-formtastic', :lib => 'formtastic', 
+  :source => 'https://gems.github.com'
+config.gem 'josevalim-inherited_resources', :lib => 'inherited_resources', 
+  :source => 'https://gems.github.com'
+
+
+And also add the following to your config/environments/test.rb:
+1
+2
+
+config.gem 'rspec'
+config.gem 'rspec-rails'
+
+
+In order to add Rspec support, create the initial Formtastic stylesheets and add a little bit of sugar to your layouts do the following:
+1
+2
+3
+
+./script/generate rspec
+./script/gererate formtastic_stylesheets
+./script/generate nifty_layout --haml
+
+
+Notice that I am referring to Ryan Bates’ Nifty Generators. I really like it’s initial CSS and layout to start a new project instead of the default ‘blank’ theme. But that’s just me :-)
+The excellent Formtastic will create your scaffolded views with a bit more of web semantics, so it’s highly recommended to use. To make it look pretty, add the following to your ‘app/views/layouts/application.html.haml’:
+1
+2
+3
+
+  = stylesheet_link_tag 'application'
+  = stylesheet_link_tag 'formtastic'
+  = stylesheet_link_tag 'formtastic_changes'
+
+
+Finally, you can start scaffolding some resources to get started, for example:
+1
+
+./script/generate dry_scaffold Post title:string body:text --rspec
+
+
+If you don’t like fixtures you’d rather use Factory Girl instead doing this:
+1
+
+./script/generate dry_scaffold Post title:string body:text --rspec --fgirl
+
+
+By default, it’s going to create thin controller with Inherited Resources and paginated with Will Paginate. The view templates will use HAML and Formtastic for a semantically rich form. It will create tests using the standard test/unit and fixtures, but I’d rather choose Rspec and Factory Girl.
+It’s also going to generate a separated “_form” partial that both “new” and “edit” views will use, which is one of those things that you do all the time after a normal scaffold. The usage of HAML is not very common, but I would recommend everybody to at least try it for a while, it will grow on you quickly. And having well formatted HTML outputs is always nice.
+The Dry Scaffold also supports generating just models (“./script/generate dry_model”). Read the documentation on the github project site to understand all the options.
+With this, you should be good to go and start to rapidly prototype your next web application.
+tags: obsolete rails restful english
+

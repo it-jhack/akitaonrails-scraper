@@ -1,0 +1,98 @@
+
+Fonte: techno weenie
+O processo de inicialização do Rails mudou de maneiras súbitas para o Rails 1.2 por causa da recodificação de dependências e algumas mudanças em plugins. Se estiver interessado em extender o framework Rails através de plugins, é muito importante entender esse processo. O segredo para tudo isso é mantido no Rails::Initializer#process.
+
+
+Aqui vão alguns dos pontos principais:
+
+require_frameworks
+…
+load_environment
+load_plugins
+load_observers
+after_initialize
+
+Quando uma aplicação Rails carrega, ele deve seguir essa ordem básica de carga: framework => environment => plugins => application. Note que plugins carregam antes da sua aplicação, então idealmente seu plugin não vai ficar alterando models ou controllers da aplicação. Isso leva a problemas de dependência do plugin. Isso pode ser resolvido bagunçando com a ordem do config.plugins se quiser, mas prefiro que meus plugins fiquem para trás e deixem o Rails fazer suas coisas.
+Mixins
+Qual é outra maneira de resolver isso? Mixins. É como um monte de plugins funcionam. Em vez de modificar diretamente sua aplicação, eles definem módulos que então você inclui em seu model ou controller para adicionar a funcionalidade. Plugins mais complexos podem jogar um método helper mais simples (adicionando um método acts_as_* ao ActiveRecord::Base, por exemplo), que não faz mais do que adicionar dinamicamente um módulo e configurar opções customizadas.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+# init.rb
+# note the lack of an explicit require, let Dependencies take care of that
+class << ActiveRecord::Base
+  def capitalized_titles!
+    include CapitalizedTitles
+  end
+end
+
+# lib/capitalized_titles.rb
+module CapitalizedTitles
+  def capitalized_title
+    title.to_s.capitalize
+  end
+end
+
+
+Models
+Podemos adicionar models nos plugins, ou estamos apenas limitados a mixins? Claro, apenas seja cuidadoso que seus models não conflitem com nenhum model da aplicação. Para desenvolvimento geral de aplicações Rails, eu pessoalmente recomendo mixins e geradores de migrations, já que isso dá mais controle ao desenvolvedor. Mas se quiser incluir models, dê uma olhada em Engines ou o plugin plugin_migrations. Para o model propriamente dito, você pode apenas adicionar um arquivo sobre lib, como “lib/post.rb”.
+Se quiser armazenar seu model em um diretório como “vendor/plugins/SEU_PLUGIN/app/models/foo.rb”, pode simplesmente adicionar essas linhas ao init.rb:
+1
+2
+3
+4
+
+# You can't use config.load_paths because #set_autoload_paths has already been called in the Rails Initialization process
+models_path = File.join(directory, 'app', 'models')
+$LOAD_PATH << models_path
+Dependencies.load_paths << models_path
+
+
+Isso é uma coisa que coisas como Engines fornecem de graça, mas acho que é bom saber o que está acontecendo por baixo dos panos antes de pular para algo do tipo.
+Controllers
+Controllers são mais complicados por causa de problemas de segurança. Se você se lembrar do grande incidente de segurança no Rails 1.1 vai recordar que o problema aconteceu por causa da noção que se tinha que qualquer classe jogava limpo o suficiente para ser um controller. A recodificação do Routing no Rails 1.2 introduz a propriedade #controller_paths exatamente por causa disso. Eis como um controller em um plugin deve se parecer:
+1
+2
+3
+4
+
+controller_path = File.join(directory, 'app', 'controllers')
+$LOAD_PATH << controller_path
+Dependencies.load_paths << controller_path
+config.controller_paths << controller_path
+
+
+Views
+É fácil fazer seu controller rodar, mas e as views? Tão logo começar a usar seu controller, deve começar a reeber erro de falta de template: “Missing template script/../config/../app/views/foo/index.rhtml”. Isso porque por padrão, Rails usa um template_root de RAILS_ROOT/app/views. Se quiser mudar para “vendor/plugins/SEU_PLUGIN/app/views”, adicione isso ao seu controller:
+1
+2
+3
+4
+5
+
+class FooController < ApplicationController
+  self.template_root = File.join(File.dirname(__FILE__), '..', 'views')
+  def index
+  end
+end
+
+
+Claro, você pode definir uma classe base PluginController que manipula isso para você. Também dê uma olhada em Engines para manipulações mais complexas de views. Um dos benefícios é que ele deixa sobrescrever a view padrão do plugin por arquivos de views no template_root da sua aplicação. Devo falar mais sobre isso no futuro, existe um patch pendente que permite múltiplos caminhos de views …
+Observers
+Observers de plugins funcionam como os observers da sua aplicação. Eles devem ser definidos em algum lugar do caminho de carga da sua aplicação (app/models, vendor/plugins/seu_plugin/lib, etc), e adicionados à coleção de observers. Você pode fazer isso adicionando ao config.active_record.observers tanto no environment.rb ou no init.rb do seu plugin. Como instanciar observers também instanciam os models, isso é feito depois que os plugins são carregados.
+Da Próxima Vez …
+Amanhã, vou seguir com o post com várias soluções para configurar suas aplicações Rails. Sim, isso é verdade. Decidi escrever os dois ao mesmo tempo para não ficar atolado com serviço e esquecer e colocar a próxima parte no ar. Não tive a chance de mexer muito com ActiveResource ultimamente, que é porque ainda não coloquei um segundo artigo.
+tags: obsolete rails
+

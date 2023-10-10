@@ -1,0 +1,20 @@
+
+Eu sempre leio os posts de Arun Gupta, do blog Miles to go … (uma das dezenas de blog no meu Google Reader). Ele sempre posta a respeito de JRuby. Hoje ele trouxe alguns pontos importantes de uma entrevista do DHH. Aqui vai a tradução:
+
+
+Em uma entrevista recente, David Heinemeir Hansson (criador do Rails) fala sobre a próxima Rails Conf Europe, o futuro do Rails, JRuby e outras coisas. Aqui vão algumas citações …
+Sobre JRuby e Rails
+JRuby é uma ótima maneira de abrir a conversação com o pessoal corporativo dizendo, Vocês não precisam jogar fora todo aquele “lixo” que acumularam pelos anos, Ruby é apenas uma peça incremental que vocês podem adicionar. Mas de várias maneiras, é um jeito macio de trazer as pessoas à bordo. É uma ponte para ir de um ponto a outro.
+Sobre o relacionamento da Sun com Rails
+Acho que eles reconheceram o que os desenvolvedores querem, eles estão reconhecendo que existe grande entusiasmo e paixão para Ruby on Rails, e eles não querem perder isso. Até certo ponto, eles estão seguindo a paixão, o excitamento.
+Conheço algumas pessoas dentro da Sun que sabem o que está acontecendo, mas se eles, enquanto empresa, escolhem aceitar as lições eu não sei. De várias maneiras, Rails é uma rebelião contra J2EE, mas ao mesmo tempo, eles estão fazendo um grande trabalho com JRuby e ferramentas do nível de Unix como DTrace. Como qualquer grande empresa, haverá diferentes facções dentro. Eu dou boas vindas à Sun e IBM para entrarem e oferecer serviços.
+Aqui vão alguns artigos úteis (com numerosos links para screencasts, blogs, dicas e extensivo conjunto de funcionalidades) para vocês começarem:
+
+JRuby in GlassFish
+NetBeans Ruby Support
+Ruby Tutorials and Demos
+
+E um artigo muito recente em:
+JRuby/Rails em Glassfish Realmente Funciona!
+tags: obsolete
+

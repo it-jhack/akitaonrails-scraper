@@ -1,0 +1,8 @@
+
+
+
+
+Sempre me perguntam sobre cursos de Rails, finalmente a e-Genial vai começar a ministrar cursos de Ruby on Rails na atual versão 2.0. Quem dará o curso será o Julio Monteiro, que entre outras coisas mantém o site oficial rubyonrails.pro.br e também é quem dá suporte ao nosso Ruby on Rails Podcast Brasil. 
+Quem queria aprender Rails, desde o começo, esta pode ser uma boa chance. Aproveitem!
+tags: obsolete
+

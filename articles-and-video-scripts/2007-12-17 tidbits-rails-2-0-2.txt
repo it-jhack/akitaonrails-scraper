@@ -1,0 +1,51 @@
+
+Parece que as gems ainda não foram atualizadas para 2.0.2, acabei de tentar atualizar mas ainda não vieram. Mesmo assim a tag rel-2_0_2 já existe em o DHH deve anunciar em algumas horas no blog oficial. Se houver algum bug de última hora pode ser que ele vire 2.0.3 antes mesmo do anúncio, como aconteceu com o 2.0 para 2.0.1.
+Update 15:00hs: Como eu disse, o DHH acabou de fazer o anúncio sobre essa nova release ;-)
+
+
+Pelos changelogs, tem algumas correções de bugs, testes que faltavam. Das mudanças mais relevantes temos:
+
+Adicionado opção para passar um proc ao ActionController::Base.asset_host:
+
+1
+2
+3
+4
+5
+6
+7
+
+ActionController::Base.asset_host = Proc.new { |source|
+  if source.starts_with?('/images')
+    "https://images.example.com"
+  else
+    "https://uploads.example.com"
+  end
+}
+
+
+
+Correção no validates_acceptance_of, como foi reportado no artigo do link, onde ele dá problemas com tabelas que ainda não existem em tempo de migration.
+
+
+O banco de dados default agora será sqlite3 em vez de MySQL. Se quiser criar um projeto Rails com MySQL como antes, use:
+
+rails projeto d mysql—
+
+* ActionView::Base.cache_template_loading estará ligado como default. Isso afeta apenas produção, onde será necessário reiniciar a aplicação caso mude seus templates. Mas isso é normal.
+
+* Já expliquei sobre Cookie Store antes, e todos devem ter visto a chave secreta gerada para o environment.rb. Agora você terá um ‘rake secret’ para gerar uma chave criptográfica segura, caso queira mudar.
+
+* Também expliquei que com o novo Foxy Fixture não é mais necessário digitar IDs manualmente, agora os templates do scaffold foram corrigidos para gerar fixtures sem IDs também.
+
+* As rake tasks de banco de dados foram muito melhoradas no Rails 2.0, agora tem também ‘db:migrate:redo’ e ‘db:migrate:reset’ para re-executar as migrations.
+
+* Antes a constante RAILS_GEM_VERSION que tem em todo environment.rb não suportava aspas duplas, apenas simples. Esta release corrige isso.
+
+* Algumas pessoas estavam tendo problemas com o novo RubyGems 0.9.5 e esta release deve corrigir esses erros.
+
+Falando em novas releases, o pessoal do rSpec anunciou a versão 1.1 compatível com Rails 2 também. Então o pessoal de BDD já pode rodar seus specs no novo Rails. Essa notícia é meio velha e o Danilo Sato já havia anunciado.
+
+Outra notícia que também não é tão nova (semana passada) é que finalmente saiu o primeiro livro de DJango, pelo próprio autor do framework Adrian Holovaty. Então, para os pythonistas isso é uma ótima notícia já que deve ajudar a difundir mais o DJango. Mais do que isso, o livro está disponível todo online protegido pela licença GNU Free Document License. Quisera o Brasil fosse maduro o suficiente para as editoras daqui fazer coisas desse tipo: publicar um livro impresso e ainda permitir o texto inteiro disponível online.
+tags: obsolete rails
+

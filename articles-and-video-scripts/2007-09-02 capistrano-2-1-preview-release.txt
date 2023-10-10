@@ -1,0 +1,29 @@
+
+Jamis Buck acabou de anunciar o lançamento da versão de melhorias 2.1 da novíssima série 2.0 do Capistrano. Acredito que todos já devem ter migrado para o novo Capistrano, que está realmente muito mais refinado.
+Para instalar esta versão, é o de sempre:
+
+gem install -s http://gems.rubyonrails.com capistrano
+
+Vou repetir: é um Preview Release. O nome ‘preview’ tem motivos: leiam o artigo do Jamis porque muita coisa mudou e caso vocês não façam a devida lição de casa (cof sandbox cof) podem ser mordidos à toa.
+Para quem ainda pretende migrar, aqui vão algumas dicas:
+
+
+Se você ainda usava a versão 1.4.1 e por acaso rodou um gem update por ‘acidente’, neste momento deve estar com as duas versões instaladas: a 1.4.1 e a 2.0. Isso pode ser bom pois se ainda tiver algum projeto Rails com o antigo config/deploy.rb, você pode continuar usando a mesma configuração desta forma:
+1
+2
+3
+4
+5
+6
+7
+
+
+Isso irá forçar a execução do Capistrano antigo. Desta forma você pode utilizar ambos lado-a-lado, com projetos novos e antigos. De qualquer forma, modificar seu deploy.rb atual não é complicado. Primeiro, na raíz do seu projeto Rails, crie um arquivo chamado *Capfile* com o seguinte conteúdo:
+
+<div style="overflow: auto; width: 400px">
+--- ruby
+load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+load 'config/deploy'
+
+
+

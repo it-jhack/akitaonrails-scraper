@@ -1,0 +1,45 @@
+
+Update 2013: Não estou usando mais a configuração mostrada aqui. Vá direto para o YADR que é um conjunto melhor e mais moderno de dotfiles.
+Update 04/27/09: eu fiz alterações importantes que você pode ver aqui
+
+Faz tempo que venho quebrando a cabeça sobre qual a melhor maneira de se programar com Ruby e Rails fora do ambiente Mac. Principalmente no Windows. O Netbeans e o Eclipse Aptana são boas opções e estão evoluindo rápido, mas eu sempre vou achá-los muito mais pesados do que necessário.
+Sempre digo que basta um bom editor de textos e o terminal/linha de comando. Porém, no Windows não há tantos editores competentes como o Textmate. E mesmo no Mac, há quem não queira pagar pelo Textmate também.
+Recentemente alguns Railers começaram a se voltar ao Emacs, incluindo Geoffrey, que fez um screencast sobre isso para o Peepcode. Sinceramente, eu ainda não consigo gostar muito do Emacs. É absolutamente questão de gosto pessoal, mas eu sempre preferi o Vim.
+
+
+Por outro lado, eu nunca tinha parado para tentar configurar o Vim decentemente. Gastei uns 2 dias remexendo a Web em busca das peças que tornariam o Vim mais parecido com o Textmate. No próprio Github existem várias configurações. Eu peguei um deles que achei interessante e fiz meu próprio fork. Passei o dia todo convertendo snippets do Textmate para o NERDSnippets do Vim, incluindo os bundles de Ruby, Rails, Javascript e jQuery. O resultado é algo muito próximo, porém a engine de snippets do Textmate é mais avançada que o NERDSnippets. A adaptação do plugin FuzzyFinder do Jamis Buck dá um substituto razoável para o navegador de arquivos do Textmate também.
+Para instalar no Mac, primeiro recomendo não usar o Vim que vem por padrão porque ele não tem com os bindings de Ruby que precisamos. Baixe o MacVim. Daí no seu ~/.bash_profile coloque o seguinte:
+
+alias vim=“/Applications/MacVim.app/Contents/MacOS/Vim”
+1
+2
+3
+4
+5
+6
+7
+
+
+No Windows, baixe o "gVim":https://www.vim.org/download.php#pc. No Mac e no Linux, você deve ter um arquivo .vimrc e um diretório .vim no seu home (ex. /Users/akitaonrails). No Windows você deve ter um arquivo _vimrc e um diretório vimfiles também no home (ex: c:\Documents and Settings\akitaonrails, no Windows XP ou c:\Users\akitaonrails, no Vista e no Windows 7).
+
+No Linux e no Mac, no seu diretório home, faça:
+
+<macro:code>git clone git://github.com/akitaonrails/vimfiles.git ~/.vim
+cp ~/.vim/vimrc ~/.vimrc
+
+
+No Windows, no seu diretório home, faça:
+git clone git://github.com/akitaonrails/vimfiles.git vimfiles
+copy vimfiles\vimrc _vimrc
+copy vimfiles\snippets.vim.win32 vimfiles\after\plugin\snippets.vim
+-
+
+Pronto, é só isso. De dentro do Vim, digite “:help rails” para saber as opções que você tem. Comandos como :Rgenerate emulam o script/generate, :Rake emula o rake, :Rscript emula os script/* e assim por diante. 
+
+
+Ctrl+t é o FuzzyFinder, o equivalente ao Command+T do Textmate. O comando \+p abre o Nerd Tree que é parecido com o Project Viewer do Textmate. Navegue pelos diretórios e arquivos apertando a tecla “o”. E a partir dos arquivos do seu projeto Rails experimente usar as mesmas abreviações do Textmate.  Para descobrir todas as abreviações, navegue pelo diretório .vim/snippets. Dentro haverá sub-diretórios para cada tipo de arquivo. Por exemplo, .vim/snippets/ruby-rails/hm.snippet significa que se você digitar “hm[tab]” ele ativará o “has_many” (veja no meu screencast).
+E para aprender um pouco mais de como usar os modos de edição do Vim, leia o Why, oh WHY, do those #?@! nutheads use vi?. O Vim é bastante poderoso e tem diversas opções que rapidamente devem fazer sentido à medida que você for usando.
+No Mac, acho que eu ainda não vou sair do Textmate tão cedo, mas se precisar usar Linux ou Windows, com certeza esta será minha opção padrão.
+Alguém tem mais dicas legais de Vim para compartilhar? Não deixem de comentar.
+tags: obsolete vim screencasts
+

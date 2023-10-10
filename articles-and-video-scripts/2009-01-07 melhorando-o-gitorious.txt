@@ -1,0 +1,15 @@
+
+
+
+
+Update 09/01: Varei noite de novo! Consegui terminar a internacionalização completa do Gitorious! Vejam aqui. O Johan já deu merge do meu Private Mode no master dele também.
+Update 09/01: Acabei de criar o Private Mode. Agora dá para ter um Gitorious totalmente fechado para projetos sigilosos.
+Faz algum tempo que escrevi um post sobre como instalar o Gitorious
+Em primeiro lugar é um projeto em Rails, com boa cobertura de testes em RSpec. Em segundo é uma excelente ferramenta para equipes que querem trabalhar em Git mas precisam manter seus repositórios em lugar privativo (não online, talvez no Github).
+Uma das coisas que estou tentando fazer é internacionalizar o Gitorious, para tê-lo em Português. Para isso a primeira coisa foi migrar o projeto para Rails 2.2.2. Passei algumas horas nisso. Ajudou bastante que o projeto tinha uma cobertura razoável, caso contrário seria bem mais difícil. Migrei de 2.1.0 para 2.2.2 e parece que está tudo funcionando. Mandei um merge request para o Johan que já fez merge no repositório principal. Deu uns pequenos pepinos que fui corrigindo depois.
+Em seguida, fiz uma coisa que estou postergando faz meses: documentação. Isso ainda está só no meu fork mas eu coloquei um texto de introdução explicando o mecanismo do Gitorious e depois duas receitas, uma para instalar em Cent OS e outra para instalar em Ubuntu.
+Feedback iria bem, principalmente porque eu não sou sysadmin de Linux e uma das coisas que meus procedimentos trazem são init scripts, nos dois sistemas. Imagino que não deve estar da melhor forma possível. Fora algumas peculiaridades entre distros e tudo mais.
+Além disso também coloquei lá um wish list, ou seja, uma listinha de coisas que eu gostaria de tentar implementar. Eu não pretendo gerenciar isso, apenas joguei as idéias lá. Algumas eu já estou começando a fazer. Para começar a ajudar, eu postei no Google Groups deles sobre uma das esquisitices da mudança de Rails 2.1 para 2.2.2. Alguém já passou por isso?
+A grande vantagem do Gitorious em relação ao Github? O servidor fica dentro da sua empresa. Imagine um mini Github dentro da sua rede interna. Um projeto open source, que você pode ajudar a evoluir como quiser. E o melhor de tudo: feito em Rails, claro! :-)
+tags: obsolete git
+

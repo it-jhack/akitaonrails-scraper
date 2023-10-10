@@ -1,0 +1,41 @@
+
+Ou, escreva seu próprio maldito servidor web
+
+Este é um serviço de utilidade pública. Com a palavra, Zed Shaw, criador do  famoso e espartano servidor web Mongrel. Acredito que suas palavras devam ajudar a esclarecer algumas dúvidas frequentes a respeito de seu produto e também dar algumas dicas sobre como trabalhar em projetos de software.
+Fonte: Zed Shaw
+
+
+De vem em quando, recebo e-mails como esse:
+“Hey Zed! Tive essa grande idéia para o Mongrel. Tudo que você tem que fazer é mudar completamente o processamento interno, adicionar 200 métodos a mais ao parser HTTP, fazê-lo rodar no Solaris ZFS com backends AIX, servir BitTorrent sobre Ethernet e fazê-lo salvar órfãos coreanos enquanto come Mango no banco de trás de um El Camino sendo dirigido por vinte palhaços anões. Se fizer isso eu serei rico! Uh, nós seremos ricos!”
+Mongrel é um servidor HTTP para aplicações Ruby. Ele faz o mínimo necessário para servir aplicações Ruby. É só isso. Não mais, não menos. Eu brigo para não colocar funcionalidades o tempo todo até que sejam absolutamente necessárias. E normalmente se alguém precisa de alguma coisa eles podem escrever seus próprios GemPlugin especiais e serví-los sem nem mesmo falar comigo. Mongrel é ótimo assim mesmo e eu amo quando as pessoas o extendem para seus próprios usos.
+Notem que eu disse “eu amo quando as pessoas o extendem para seus próprios usos”. Eu não disse nada do seguinte:
+
+“Eu amo fazer o trabalho sujo das pessoas de forma que eles possam fazer milhões a partir do suor das minhas costas”.
+
+
+“Eu sou sua puta, portanto faço certo em escrever esse seu cliente BitTorrent”.
+
+
+“Eu adoraria ser sua ferramenta corporativa já que eu sou totalmente a favor de ser fodido”.
+
+
+“Wow, essa idéia é tão brilhante que eu acho que vou assinar um contrato de sigilo agora mesmo para que você possa pegar todos os meus direitos e meu trabalho”.
+
+Se você tem uma funcionalidade que acha que seria ótimo para o Mongrel, então vá para ele, mas você implementa primeiro. Eu posso lhe dar conselhos, dar ajuda, encorajamento, encontrá-lo para um café em conferências e até mesmo pegar patches razoáveis se você encontrar bugs e realmente chegar com pequenas boas idéias.
+Mas não me mande patches monstros que fazem sua aplicação rodar melhor e não espere que eu ponha eles no núcleo do Mongrel instantaneamente. Isso é chamado de “socar código”.
+Socar Código
+Eu trabalhei com esse cara uma vez que veio até meu escritório um dia para me dizer que começou a reorganizar o código-base para o produto. O problema foi que ele começou essa reorganização completamente inútil dois dias antes de uma grande entrega, gravou no repositório CVS sem dizer a ninguém, não fez nada funcionar e teve que sair de férias no mesmo dia. Ele foi ao meu escritório para me dizer para limpar sua bagunça já que suas mudanças quebraram a compilação completamente. Ele fez tudo isso sem dizer a ninguém ou perguntar antes.
+Isso é “socar código”, onde você joga grandes quantidades de código nas pessoas onde não é necessário. Quando você faz isso, tudo que está fazendo é pentelhando as pessoas com quem trabalha e levando custos a seus patrões. Em um projeto open source isso pode levar você a ser chutado para fora, ridicularizado em público e colocando em risco sua reputação.
+Eu entendo que as pessoas que fazem isso parecem não entender a regra número 1 sobre trabalhar com outros em um projeto de software:
+“Sempre que fizer alguma coisa garanta que isso cause a menor quantidade sofrimento a outros”
+Mudanças são importantes e projetos precisam disso para melhorar, mas se você vai atirando seus horrorosos designs em outras pessoas de maneira ninja então você não está seguindo a regra.
+Então como você reduz o sofrimento que vem com grandes mudanças?
+Código lubrificado
+Código lubrificado é a resposta para socar código necessário. Código lubrificado é uma combinação de comunicação, coordenação e gentilmente aplicar suas mudanças lentamente com o tempo até estarem em sincronia com o resto do mundo. Você precisa levar os outros participantes em passos de bebê e se eles não estão receptivos, então coloque suas coisas em um patch ou um branch e volte a isso mais tarde.
+Isso inclui mudanças que não estão relacionados com código. Entregas precisam ser pesadamente coordenadas. Mover servidores, mudar schemas de bancos de dados, instalar novas versões de ferramentas e mudar documentação importante, tudo isso requer falar com pessoas.
+Contribuindo com Mongrel
+Amarre cada um com um pouco de código lubrificado. Falar com pessoas do projeto, contribua com alguma coisa pequena e útil primeiro. Não apenas mude o uso de todo STDERR para $stderr apenas para que você tenha uma boa saída nos seus testes unitários (especialmente quando já existe uma maneira mais simples). Fale com as pessoas primeiro e veja se estão receptivas.
+Se não estiverem receptivos, pegue o código do Mongrel e faça isso você mesmo. Você nunca sabe, talvez sejamos todos estúpidos e você é brilhante. Como Mongrel é open source e você aparentemente tem tempo livre, então pegue o código e tente sua idéia. Se de repente for mesmo bom então fale com as pessoas para ter isso implementado.
+Caso contrário, divirta-se com seu projeto.
+tags: obsolete mongrel
+

@@ -1,0 +1,18 @@
+
+
+
+
+Estou no capítulo sobre Deployment de Rails em ambiente de produção. Afinal, qual a vantagem de se desenvolver um grande aplicativo, totalmente Ajax … se não sabemos como colocá-lo para o uso de nossos usuários?
+The Usual Suspects são Apache2 + FastCGI, LightTPD + FastCGI. Não há muitas outras opções. WEBRick é um servidor competente para nossos testes durante o desenvolvimento mas dificilmente serve para produção.
+Temos dispatch.cgi, o que significa CGI. Acredito que este suporte exista apenas para o último caso, talvez para algo próximo ao Dia do Apocalipse. Nah, CGI não é opção, esqueçam.
+Mas Apache tem o mod_ruby. Também não, é um projeto pouco atualizado, instável e jamais serviria para produção.
+Também temos ouvido falar de SCGI, uma simplificação do FastCGI, mas ainda é muito novo. Falta amadurecer para receber a responsabilidade de nossa produção.
+Bom, então só pode ser Apache2 + FCGI. Também não. Infelizmente o projeto mod_fastcgi estava quase abandonado, tem vários problemas de deixar processos zumbis sobrando, defuntos. Não desejo esse tipo de problema para ninguém.
+Chegamos ao LightTPD + FCGI, que é a opção recomendada pelo próprio David Hansson e é usado por todos os seus produtos na 37signals. De fato, Lighty vem sendo muito bem desenvolvido, tem performance e robustez quase comparáveis ao Apache e o melhor: tem um excelente suporte a FCGI. Para ambiente *nix talvez seja mesmo o ideal.
+Mas e ambientes Windows? Lighty é compilado usando Cygwin e ainda é um estágio muito experimental. Não tem suporte para se instalar como um Windows Service, dependendo de produtos de terceiros. Há pouca maturidade nisso.
+Mas felizmente, Zed Shaw, o criador de um suporte ao SCGI para Rails trouxe uma alternativa muito mais atraente: Mongrel. Ele é uma biblioteca e um servidor HTTP totalmente feito em Ruby. Para aqueles que não fugiram das aulas de compiladores no curso de Ciências da Computação, seu processador de HTTP foi feito com Ragel.
+“Mas WEBRick também é feito em Ruby”. Acreditem, não analisei ainda para saber a mágica, mas Zed Shaw fez um milagre. Sim, o interpretador Ruby talvez seja um dos mais lentos, mesmo assim Mongrel é muito bom, e com as capacidades de cache do Rails, ele é a melhor solução hoje. Funciona muito bem em ambiente unix e também tem suporte muito bom para Windows. Pode ser instalado via RubyGems e ainda se instala como Windows Service.
+Com suporte para cluster com Mongrel_Cluster, é ainda mais simples de escalar. Tanto Apache quanto Lighty tem bons suportes a proxy reverso e load balancing, o que facilita mais ainda colocar os velhos conhecidos na linha de frente e Mongrel no backend, servindo Rails. Acredito que este seja o melhor denominador comum de todas as soluções de produção.
+Prestem atenção ao trabalho de Zed Shaw, ainda vem novidades por aí. Sabendo que muitos brasileiros se vêem obrigados a lidar com ambientes Windows em seus clientes, esta é uma excelente notícia a todos.
+tags: obsolete mongrel
+

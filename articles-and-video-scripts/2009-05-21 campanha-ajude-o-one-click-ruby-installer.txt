@@ -1,0 +1,10 @@
+
+
+
+
+Eu tenho tentado, na medida do possível- windows-part-2, ajudar a crescente comunidade rubista que, por diversas razões, vivem em um mundo Windows.
+Infelizmente, existem muito poucos desenvolvedores – incluindo dentro da própria comunidade Windows – ajudando nisso. Atualmente existe um Ruby estável e usável em produção no Windows graças ao esforço, quase individual, do Luis Lavena, o argentino que mantém o excelente projeto One-Click Ruby Installer
+Porém ele precisa de ajuda. Por isso ele começou uma campanha para angariar fundos ou qualquer tipo de colaboração para melhorar a visibilidade do projeto, criando um novo website, um novo wiki e ele começou primeiro no blog dele, depois na lista ruby-talk# e, finalmente, numa página para doações que você pode acessar por aqui
+Vamos ajudar, twite sobre a campanha, espalhem por blogs, doem. Nenhuma quantia é pequena demais.
+tags: obsolete windows
+

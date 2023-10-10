@@ -1,0 +1,17 @@
+
+Update 18/01: Caramba, a DHL foi bem rápida. Menos de uma semana. A globalização é sensacional :-) Agora só preciso arranjar tempo pra devorar tudo isso …
+
+Falta apenas meia-hora para começar o esperadíssimo keynote do Steve Jobs, no Moscone Center. Não se falou de outra coisa. “Something is in the Air …”
+Espero, espero que eles finalmente lancem o famoso sub-notebook, menor e mais leve que meu atual Macbook, com pelo menos as mesmas especificações técnicas dos Macbooks atuais (C2D 2.2Ghz, até 2Gb de RAM, pelo menos 120Gb de HD solid-state). E se vier realmente uma versão 100% wireless (com recarga de energia por indução magnética) aí já é meu!! :-)
+No espírito Macworld resolvi fazer umas compras, mas de livros. Alguns tinha PDF – que eu prefiro – alguns tive que comprar impresso. Segue abaixo minha lista de recomendações do dia:
+
+
+PDFs
+
+Impressos
+
+A curiosidade são os livros de Objective C e Mac OS X Internals. Primeiro, porque faz MUITO tempo que prometi a mim mesmo aprender todo o encanamento do OS X. Segundo porque o mercado de aplicações para iPhone pode crescer muito rápido a partir de Fevereiro.
+O Google Android, por outro lado, é um pouco mais prático. A sintaxe é baseada largamente no Java e pelo que experimentei do SDK deles, o bom e velho Eclipse (nostagia …) não será difícil criar aplicações para ele. Mas para iPhone, Objective C e Cocoa são dois animais muito diferentes – e muito mais interessantes, diga-se de passagem.
+Opa, em alguns minutos vai começar o keynote! Não percam!
+tags: obsolete leisure
+

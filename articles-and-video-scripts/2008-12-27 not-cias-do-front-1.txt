@@ -1,0 +1,50 @@
+
+Essas últimas semanas foram bastante atarefadas para mim. Mesmo quando estou em casa não estou parado. Estou com várias novas atribuições na Locaweb. O resultado disso é que minha taxa de blogging, podcasting e tudo mais andou caindo. Pelo que soube o Carlos Brando também andou mais carregado que o normal. Mas não se preocupem, em breve voltamos ao ritmo normal.
+Mas para não acumular muita coisa, resolvi escrever um artigo com um resumo das últimas semanas, para acabar o ano sem pendências :-) Entao vamos lá.
+
+
+
+Não deixem de ler o blog Riding Rails, de uns tempos para cá o Mike Gunderloy está se dedicando a uma série semanal This Week in Edge Rails, contando as principais novidades acontecendo no desenvolvimento do Rails. Na semana de 29/11 a 5/12, ele anunciou o novo recurso de templates que o Jeremy McAnally acrescentou para o Rails 2.3. Isso permite criar templates de projetos, de forma que você não precise reconfigurar o padrão do Rails toda vez que criar um novo projeto, instalando plugins, substituindo test/unit por rspec e assim por diante. Uma resposta ao movimento recente de aplicações-base como Bort ou BaseApp. Outra notícia importante é o constante refatoramento do núcleo do Rails para eliminar os resquícios de CGI, substituindo tudo por Rack.
+
+
+Esse movimento começou com o Ezra Zygmuntowicz em Abril, quando ele decidiu começar o movimento do Rack no Rails. Em breve deveremos ter deixado de lado o antigo CGI em favor do mais moderno e elegante Rack. Atualmente está bastante comum ver projetos de Rails que usam Sinatra, Merb ou outro micro-framework em paralelo para servir coisas como Widgets, Web Services ou outras coisas que não requerem toda a carga do Rails. Para combater isso, o Josh Peek aproveitou o movimento em torno do Rack para criar o Rails Metal cujo objetivo é exatamente esse: oferecer uma infra-estrutura mínima, leve e enxuta para os casos onde performance bruta é crucial. Veja mais artigos, do Ryan e no Rails Inside
+
+
+A notícia mais quente da atualidade é a fusão do Rails com Merb. Ao contrário do que muitos poderiam imaginar, não será necessariamente apenas uma morte do Merb. O futuro Rails 3 também poderá ser considerado Merb 2, e haverá um caminho de migração para ela. Enquanto isso vocês podem aprender os conceitos que tornaram o Merb relevante no curso que o Satish Talim estará ministrando a partir de 10 de Janeiro de 2009 no RubyLearning.org.
+
+
+Micro-benchmarks sempre devem ser considerados com muito cuidado. Não se pode tirar absolutamente nenhuma conclusão sobre elas, mas as comparações do Antonio Cangiano sempre são interessantes de acompanhar. Para terem uma idéia da dificuldade de se rodar benchmarks, o Antonio escreveu um primeiro artigo entitulado The Great Ruby Shootout e no dia seguinte escreveu o Reflections on the Ruby Shootout onde ele identificou diversos erros de interpretação no primeiro. De qualquer forma, a parte importante é notar como o JRuby evoluiu rápido, ultrapassando até mesmo o MRI e como o Ruby 1.9 também evoluiu bastante. Se continuar nesse ritmo, o Ruby em breve entrará para a mesma liga do Python e Perl em termos de performance.
+
+
+Como sempre, o Ilya Grigorik explica um conceito complicado de maneira simples. No seu artigo Ruby AST for Fun and Profit ele explica como o código Ruby é representado dentro da virtual machine e como manipular a Abstract Syntax Tree. Isso deve dar um entendimento maior sobre as “mágicas” do Ruby.
+
+
+O Luis Lavena é solitário defensor dos fracos e oprimidos no mundo Windows. Um dos maiores problemas para quem não usa Linux ou OS X e quer desenvolver em Ruby é que existem muitas Ruby Gems que tem extensões nativas (na instalação da Gem ela precisa ser compilada). O Windows é um péssimo ambiente de desenvolvimento, isso é notório. Coisas que são arroz-com-feijão em todos os sistemas operacionais, como um compilador GCC, simplesmente inexistem. No artigo rake-compiler for the masses o Luis oferece uma solução: facilitar aos criadores de Gems que estão em Linux ou Mac para usar seu toolkit para já pré-compilar binários para Windows. Sim, é possível compilar binários para Windows fora do Windows. A idéia é oferecer uma solução simples para que as Gems já suportem todos os sistemas por default.
+
+
+Por alguma razão existem muitas poucas aplicações completas open source. Existem diversas gems, bibliotecas, plugins e toolkits. O mundo Rails desenvolve para outros desenvolvedores Rails. Por isso sinto falta de coisas como Wordpress, Drupal, Joomla escritas em Ruby. Dois projetos chamaram minha atenção recentemente. O primeiro foi o Wagn, que se entitula “Um Wiki Revolucionário”. Sinceramente não sei se é tão revolucionário assim. Em vez de Páginas serem o elemento básico, como em qualquer Wiki, o Wagn decidiu que “Cards” (trechos de conteúdo que compõe uma página) seriam o elemento básico. O segundo projeto é o Ansuz. Por muito tempo o Radiant era a única opção de um CMS (Gerenciador de Conteúdo), e mesmo assim sempre foi muito básico. O Ansuz é a primeira tentativa séria que eu vi de tentar criar algo mais completo nessa área. Então, se você é desenvolvedor de sites de conteúdo, provavelmente vai querer acompanhar esses dois projetos.
+
+
+Com Rails+Merb+Rack+Rails Metal imagino que até o fim do ano que vem soluções alternativas – infelizmente – serão desnecessárias. Mas enquanto isso ainda há muita vantagem em soluções como o Sinatra. Quem quiser aprender um pouco mais, acompanhe o tutorial Building a simple Sinatra/DataMapper/HAML/SASS + Passenger app para saber mais.
+
+
+Como disse antes o Carlos Brando não está parado, leia mais em Remarkable 2.0.1 e Atualização do (Comovente) Guia de Ruby do Why. O Remarkable é bem interessante, principalmente para quem já usava Shoulda e decidiu migrar para RSpec (provavelmente por causa do Cucumber). E não deixem de ajudar os projetos de tradução! O Guia do Why está quase lá, só precisa de um empurrãozinho.
+
+
+Outro projeto que ainda não está pronto mas que merece se acompanhado é o Prawn, criado pelo Gregory Brown, o mesmo que criou o PDF-Writer e Ruport. Sinceramente, já usei seus projetos antes e, como ele mesmo disse, são uma droga. O Prawn é um rewrite completo, bem melhor escrito e que deve se tornar o novo padrão para gerar PDFs no Ruby. Porém, outro projeto pouco comentado é o RGhost, do nosso colega Shairon Toledo. Vale a pena conferir, principalmente agora que ele acabou de anunciar que colocou o projeto no Github.
+
+
+A thoughtbot não pára de liberar pequenas ferramentas úteis. A última foi o Quiet Backtrace. Em resumo, quando alguma coisa dá errado na sua aplicação/testes você vê aquele stacktrace enorme e daí precisa ficar caçando onde está o erro real (a sua linha de código). Pensando nisso, essa gem suprime o que normalmente é apenas lixo para mostrar apenas o que é realmente relevante.
+
+
+Eu nunca fui usuário de Emacs, porém iniciou-se um movimento pró-Emacs na comunidade Ruby, ainda não entendi por qual motivo. E pensando nisso, Geoffrey Grosenbach lançou mais um episódio do Peepcode explicando como usar o Emacs para desenvolvimento de Ruby. É um bom screencast para que quer se iniciar nesse ambiente. Sendo bem prático, para quem já é usuário de Textmate, existe muito pouco que cause alguma diferença significativa o suficiente que justifique mudar, mas para quem está em Windows ou Linux, esta é uma excelente opção, principalmente se integrar com o pacote Textmate.el do Chris Wanstrath.
+
+
+Essa é Off-Topic, mas eu achei interessante para mim mesmo. Eu nunca fui usuário de Solaris. O OpenSolaris está crescendo rápido também e em breve deve ser tornar uma opção muito interessante ao Linux em ambientes que antes não pensariam em usar Solaris. Mesmo ambos tendo herança Unix, o Solaris tem muita coisa diferente das distros Linux “normais”. Esse blog post dá uma boa idéia das principais diferenças cosméticas e algumas internas que devem facilitar a migração de bons sysadmins Linux para o mundo da Sun.
+
+
+O segundo Off-Topic é o lançamento da versão 0 (zero) do Ioke, a linguagem criada por Ola Bini e que roda sobre a JVM. Ela é uma linguagem orientada a protótipos (não a classes) inspirada em Lisp, Smalltalk e Ruby. Algumas semanas atrás eu entrevistei o Ola em São Francisco justamente para falar sobre o Ioke e sobre diversas outras características de linguagens de programação que a grande maioria dos “programadores” desconhece totalmente. Não deixe de conferir.
+
+Isso deve eliminar minha dívida “bloguística” por algum tempo ;-) Nos vemos em breve!
+tags: obsolete
+

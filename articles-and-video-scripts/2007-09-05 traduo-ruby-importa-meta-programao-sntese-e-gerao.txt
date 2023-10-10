@@ -1,0 +1,51 @@
+
+por Neal Ford (ThoughtWorks), do blog Meme Agora
+publicado hoje: 05/09
+Em meu último post Ruby Matters, eu falei sobre meta-programação em Ruby, dizendo que Ruby lhe dá “lugares para colocar suas coisas”. Eu sempre pensei sobre meta-programação em Smalltalk e como ela se compara com Ruby, e Onde Colocar Coisas em Smalltalk. A peça final do quebra-cabeça veio depois que conversei com Glenn Vanderburg (o Cientista Chefe da Relevance).
+Eu estava intrigado de por que o livro do Gang of Four (que tinha exemplos tanto em C++ quanto Smalltalk) não tinha mais meta-programação. Muitos dos design patterns são quase trivialmente fáceis de implementar com meta-programação, mas eles não fizeram isso nos exemplos de Smalltalk. Eles usaram o mesmo caminho estrutural do C++ . Parece mais e mais para mim que o livro de Design Patterns foi realmente apenas uma maneira de resolver problemas em C++ que poderia ser facilmente resolvido em uma linguagem mais poderosa como Smalltalk.
+
+
+E eis o motivo de porque eu estava intrigado pela falta de mais soluções de meta-programação em Smalltalk. Gleen me iluminou. Uma das características principais de Smalltalk é a maneira que o código é armazenado, em um arquivo imagem, que permite ferramentas muito espertas. O programa e o ambiente residem todos em um arquivo binário de imagem. Não existe código fonte como conhecemos hoje, apenas a imagem.
+Uma comparação de detalhes de implementação é necessária, sobre como Ruby difere de Smalltalk. Vamos falar sobre has_many em Ruby on Rails. Código típico de Rails parece algo assim:
+
+rubyclass Order < ActiveRecord::Base
+has_many :lineitems
+end
+-
+Para aqueles não familiares com Ruby, isto é um método, definido como um inicializador em nível de classe (meio como uma instância de bloco de código em Java, um pedaço de código entre chaves no meio da definição da classe, que Java pega e executa enquanto a classe é instanciada). Então, em última instância, este é o equivalente Ruby de uma chamada de método estática, que é chamada quando a classe é criada.
+Vamos falar sobre Smalltalk, que tem meta-programação de primeira classe. Você poderia facilmente construir has_many em Smalltalk, implementado como um botão que você clica no browser, que lança uma janela dialog com propriedades que permitem a você configurar todas as características que existem na versão de Ruby. Quando estiver pronto com a janela, ele vai fazer exatamente o que Ruby faz com Rails: gerar um monte de métodos, adicioná-los à classe (coias como os métodos finders e counters dinâmicos). Quando estiver pronto, todos os métodos estarão lá, como métodos de instância de sua classe.
+Ok, então direto ao ponto, o comportamento é o mesmo em Smalltalk ou em Rails. Mas há uma diferença chave: a versão Smalltalk usa geração de código. É uma versão sofisticada de um Wizard de código, gerando código usando técnicas de meta-programação. A versão Ruby usa síntese de código: ele gera o código em runtime (em tempo de execução), não em tempo de construção.
+Construir coisas em runtime significa mais flexibilidade. Mas isso é um ponto menor comparado a isto: na versão Smalltalk, você usa o dialog e propriedades para gerar todos os métodos que precisa. O ímpeto original para a intenção do has_many sobrevive apenas enquanto estiver rodando do dialog. Assim que se termina, você é deixado com um monte de código imperativo. Na versão Ruby, a intenção continua exatamente onde você a colocou.
+Quando você lê a classe novamente, 6 meses pra frente, consegue claramente ver que você ainda quer dizer has_many. Smalltalk tem o mesmo suporte de meta-programação, mas a intenção da síntese do código permanece para sempre.
+Por isso é importante ter um lugar para colocar suas coisas. Não é acidental em Rails que muitas das características de DSL aparecem como métodos de classe em vez de código que você chama no método initialize. Colocar como parte da declaração da classe declara intenção de uma grande maneira, e mantém o código bem declarativo.
+Para resumir as similaridades e diferenças:
+
+Ambos Ruby e Smalltalk lhe dão lugares para colocar suas coisas de meta-programação.
+
+
+Ambos lhe dão um lugar para colocar a declaração de uma intenção (a ferramenta no Smalltalk, a meta-classe sombra no Ruby),
+
+
+Um tempo no ciclo de vida quando as coisas acontecem. Na versão Smalltalk, é um negócio de uma vez apenas, já que você usa a ferramenta para gerar o código. Em Ruby, a síntese acontece na carga da classe. Isso deixa o código limpo e declarativo exatamente onde você a deixou, em vez de gerar um monte de código imperativo menos claro.
+
+Glenn fez um excelente comentário aqui: a versão Smalltalk é um grande exemplo de complexidade acidental, não complexidade essencial. Software é cheio de complexidade essencial: escrever software é difícil. Mas acabamos nos submetendo a muita complexidade acidental em nossas ferramentas e linguagens. E isso deve ser dito. A versão do Ruby elimina complexidade acidental nos dando uma grande abreviação para a intenção de has_many. Este blog faz um grande trabalho de ilustrar as diferenças entre abreviações a abstrações.
+(obs. do Akita: “complexidade acidental” e “complexidade essencial” estão na análise de Fred Brooks em seu paper No Silver Bullet – Essence of accidents of software engineering)
+Smalltalk tinha (e tem) um ambiente fantástico, incluindo um suporte de ferramenta incrível. Como a ferramenta é uma parte presente constante (literalmente parte do próprio projeto), os Smalltalkers geralmente se protegem desse tipo de meta-programação descrita acima porque você precisa construir suporte à ferramenta junto com o código de meta-programação. É uma troca consciente.
+Uma das melhores coisas sobre o mundo Ruby (até agora) é a falta de suporte de ferramenta, o que significa que as ferramentas nunca limitam (tanto literalmente ou influenciando) o que você pode fazer. Felizmente, este nível de poder em Ruby é bem arraizada (veja Rails para muitos exemplos), então mesmo quando as ferramentas finalmente chegarem, eles precisam suportar as coisas incríveis que se pode fazer em Ruby.
+A seguir, “design patterns” em Ruby.
+Agradecimentos a Gleen por fornecer as informações de Smalltalk, como um grande suporte a isto e todas as coisas interessantes, realmente.
+
+Tradução-Resposta: “Geração de Código, síntese, ou o que for”
+publicado por Glenn Vanderburg em 06/09/07
+Estou tão contente que Avi Bryant tenha pulado à discussão (eu esperava que ele entrasse).
+(AkitaOnRails: tradução desse post de Avi aqui)
+A história até agora (para provavelmente 99% dos meus leitores que não lêem muitos blogs de Smalltalk): Avi e eu tivemos uma discussão ano passado na OSCON sobre Ruby e Smalltalk, e Rails e Seaside. Avi já foi um cara de Ruby, mas mudou para Smalltalk (mas ele ainda e amigável à comunidade Ruby). Eu atualmente sou um cara Ruby e Rails, mas eu evangelizei Seaside até que extensivamente.
+Durante nossa discussão, falamos sobre as diferentes trocas (vantagens e desvantagens) pelas escolhas que as duas comunidades fazem.
+Eu falei sobre essa história para Neal Ford, que o ajudou a entender algumas coisas que ele andava imaginando, o que levou a estes artigos em seu blog. De uma maneira altamente super-simplificada: Ruby tem alguns pontos fortes que Smalltalk não tem, porque ele lhe dá locais para colocar suas coisas. (Por favor, notem que isso não implica que Smalltalk é fundamentalmente inferior a Ruby. Eu acredito que Smalltalk, por sua vez, tem outras forças que Ruby não tem).
+James Robertson tomou seu lado contra o blog de Neal, mas não deu nenhuma evidência real para sustentar seu ponto. Eu estava ficando um pouco frustrado com todo o “calor e nenhuma luz” da discussão, até que Avi salvou o dia explicando o jeito Smalltalk de fazer as coisas.
+Eu preciso dizer que acho que até certo ponto Avi confirma o meu ponto e o de Neal: Ruby fornece um local pronto para coisas como “has_many”, enquanto em Smalltalk, para ter funcionalidades similares e ainda preservar a “declaração de intenção” (como temos chamado) a ferramenta precisa construir um local para essa declaração. O que está bem, mas parece para mim que “para tornar o código gerado rastreável”, como Avi diz, isso adiciona complexidade extra na construção das ferramentas.
+Novamente, isso não é para dizer que o jeito Ruby é necessariamente superior. Essas diferentes formas refletem diferentes escolhas. Essa é a conclusão que Avi e eu chegamos durante nossa última conversa ano passado, e ficamos ambos felizes em concordar em não concordar. Smalltalkers tendem preferir gerar os métodos diretamente, porque dessa maneira eles podem tirar melhor proveito de seu incrível conjunto de ferramentas. E Alan Knight (em seu comentário ao blog de James) definitivamente prefere gerar os métodos in-place, de maneira que a API completa esteja visível aos desenvolvedores. Nós, Rubyistas, por outro lado, não tendo boas ferramentas, estamos livres para fazer as coisas de tal maneira que nem mesmo rdoc entende, e por mim, eu gosto do fato que todos aqueles métodos de encanamento não estejam fisicamente engordurando meu código-fonte. Você paga seu dinheiro e leva sua escolha.
+Meu interesse em discussões como essa não é ter uma guerra de linguagens, e especialmente não entre Smalltalk e Ruby. (É irmão contra irmão). O ponto é aprender de cada um e, aprendendo com o outro, entender mais claramente as forças de ambas as formas.
+AkitaOnRails: resumindo, não marketar uma alternativa apontando somente fraquezas das outras, sem ao menos, discutir as fraquezas da sua própria – levando à propaganda enganosa.
+tags: obsolete smalltalk paradigms translation
+

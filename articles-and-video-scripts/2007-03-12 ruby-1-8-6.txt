@@ -1,0 +1,8 @@
+
+
+
+
+Galera, algumas horas atrás foi anunciado o lançamento do novo Ruby 1.8.6 com várias correções de bugs, melhorias de performance e novas funcionalidades, mantendo compatibilidade com a versão 1.8.5 anterior. Dêem uma olhada nesse post no Ruby Talk.
+Atualização: Acabei de ver no Riding Rails sobre o Rails 1.2.3. Ele é basicamente a mesma coisa que o 1.2.2 que saiu não faz muito tempo mas com correções para permitir o funcionamento adequado com o novo Ruby 1.8.6. Portanto, se você pretende usar o novo Ruby, atualize seu Rails Gem.
+tags: obsolete ruby
+

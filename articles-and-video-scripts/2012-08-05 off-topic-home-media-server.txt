@@ -1,0 +1,40 @@
+
+Aqui no Brasil infelizmente Netflix não é suficiente, Hulu não funciona oficialmente, e apesar de eu poder consumir tudo via iTunes (EUA com Gift Card, mais um obstáculo), infelizmente preciso de conteúdo legendado em português por conta da minha esposa :-P
+Portanto estou preso à rotina de torrents, esperar as legendas em português e arrumar um jeito de passar isso na TV. Obviamente não preciso explicar a vocês como se se baixa torrents e legendas (todo brasileiro tem phD nisso) e nem quero perder tempo com as interpretações morais ou jurídicas - aliás, para todos os efeitos, <disclaimer> este blog não incentiva pirataria </disclaimer>
+
+
+
+
+Existem literalmente dezenas de opções para um Media Server caseiro. Você pode usar seu XBox, pode usar seu PS3, pode montar um desktop com peças de baixo preço ou máquinas usadas, pode comprar media servers como o Boxee ou Roku ou, se for como eu, pode comprar um Apple TV 3 que, convenhamos, mesmo comprando no Brasil está bastante acessível.
+Porém ele tem um problema: por si só ele foi feito para consumir conteúdo do iTunes, e mais recentemente Netflix e Hulu. Como disse antes, esses conteúdos não resolvem meu problema porque não são legendados (do Netflix são, mas não tem novidades).
+Você pode facilmente realizar o jailbreak do seu Apple TV e instalar um nitoTV, XBMC e outros softwares que transformariam seu Apple TV num media server mais versátil. Mas pessoalmente eu não tenho mais tanta paciência para ficar fazendo jailbreak.
+Minha configuração atual tem os seguintes componentes:
+
+Macmini 2007 - poderia ser qualquer máquina velha
+Drobo 1a geração - leia meu artigo de 2009
+Apple TV 2a ou 3a geração
+iPad 2+/iPhone 4+ com iOS 5 ou Macbook (Air/Pro) com Lion ou Mountain Lion
+Airport Extreme ou Time Capsule
+
+A combinação Macmini e Drobo serve como o repositório onde você baixa e armazena todas as séries e filmes. Uma dica é que você pode configura seu cliente de torrent como o Transmission para automaticamente iniciar a transmissão quando ele detectar arquivos .torrent em alguma pasta específica. E o download sempre direto indo para o Drobo.
+AirPlay Mirroring - a peça chave que faltava!
+Na sua HDTV você precisa ter um Apple TV conectado com HDMI, isso é padrão. O truque agora é transmitir seus vídeos do Macmini para a Apple TV sem precisar fazer jailbreak ou qualquer coisa mais complicado.
+Se você mantém seu Macbook ligado perto da TV, você pode usar o excelente recurso de Airplay Mirroring. Veja abaixo:
+
+
+
+Lembrando que esse recurso no Mountain Lion só é ativado se seu Macbook possui uma placa integrada Intel HD3000 ou HD4000, ou seja, somente hardware que foi lançado em 2011, nada antes disso. Se você tiver uma máquina anterior a 2011, vai precisar de outro software, o AirParrot que vai permitir usar AirPlay em máquinas antigas. A Arstechnica fez um artigo comprando AirPlay Mirroring e AirParrot para você entender a diferença.
+
+Além disso, se não quiser ter seu Macbook ligado, você pode usar seu iPhone 4 ou iPad 2 ou superiores. Quem tem um Macbook e um Apple TV, obviamente tem no mínimo um iPhone. E o iOS 5 também possui AirPlay Mirroring! Agora, quando você combina um Macbook ou um dispositivo iOS que pode transmitir vídeo para o Apple TV, sem fio, resta software que consiga tocar todo tipo de formato exótico de vídeo (tudo que não é H.264) e com suporte a legendas.
+
+No caso do Macbook, basta usar o VLC ou mplayerX. No caso de iOS você tem a opção do Air Video. Você instala o player no dispositivo iOS e um programa servidor no seu Mac, no caso, no Macmini. É tudo bastante "plug-and-play". Ele vai tocar diretamente todo vídeo compatível com Macs (H.264) e vai lhe dar a opção de converter em tempo-real, enquanto assiste, qualquer outro formato (como os famigerados Matroska).
+Desta forma, você pode facilmente transmitir quaisquer vídeos, de qualquer dispositivo iOS ou Mac, através do seu Apple TV, sem fio, até sua HDTV.
+
+
+
+Claro que muitos prefeririam que o Apple TV diretamente já tivesse um tocador universal que suportasse qualquer formato (instalando um XBMC), mas na prática, não vejo nada de ruim em usar desta forma. Depois de centenas de horas assistindo vídeos nessa configuração, digo que acho confortável o suficiente. Ah sim, e entre todos os seus dispositivos você não vai querer um D-link ou Linksys de segunda mão e baixa qualidade. Recomendo que se use o bom e velho Airport Extreme ou o Time Capsule (que é o Extreme com suporte a backup com Time Machine). Não tem roteador caseiro com melhor qualidade, nem vale a pena perder tempo.
+E novamente, dá para fazer de dezenas de outras formas, com roteadores que você instala Linux, conecta um HD externo e o torna um cliente de torrent e outro mini-PC com mais um Linux customizado com Plex ligado à sua TV. Porém não estou interessado mais em soluções geeks demais, prefiro que seja o mais "out-of-the-box" possível e num ambiente todo Apple, esta solução é suficientemente bom para consumir conteúdos "não-oficiais" ou "customizados".
+Divirtam-se.
+
+tags: obsolete mac
+

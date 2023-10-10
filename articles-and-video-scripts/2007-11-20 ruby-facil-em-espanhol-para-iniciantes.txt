@@ -1,0 +1,12 @@
+
+Ontem recebi um e-mail inusitado. O Diego Guillen quer colaborar com nossa comunidade. Ele é um Engenheiro Eletricista formado na Colômbia, mora atualmente na Austrália e trabalha há anos na Fujitsu com diversas tecnologias como C/C++, Java, etc. Já viajou muito dando cursos na Irlanda, Inglaterra, Japão, Tailândia.
+Recentemente seu pai (de 77 anos) se mostrou interessado em aprender uma linguagem de programação. Então Diego se propôs a lhe ensinar Ruby. Como o pai dele está na Colômbia e ele na Austrália, ele começou a escrever lições e textos para o pai.
+
+
+Com base nessa premissa – desmistificar programação com uma linguagem dinâmica simples e elegante – ele está formatando um livro chamado “Ruby Fácil”, cuja proposta é um enfoque mais didático para realmente ensinar Ruby a iniciantes.
+Tendo em vista nossas atividades aqui no Brasil para disseminar Ruby e Rails, ele se sentiu motivado a colaborar também. Por isso me enviou a versão atual do seu livro em PDF e pediu que eu disponibilizasse a todos.
+O livro ainda está inacabado e em espanhol, em breve talvez ele traduza para português também. Enquanto isso quem quiser poderá aprender Ruby e treinar um pouco de espanhol também :-)
+Deixarei o link permanente desse material na barra lateral, na seção “Materiais” também. Sem mais delongas, aqui está o link. Seria legal se todos também colaborassem enviando comentários, sugestões e opiniões ao autor.
+Obrigado pela colaboração, Diego!
+tags: obsolete
+

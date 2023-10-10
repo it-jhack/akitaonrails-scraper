@@ -1,0 +1,11 @@
+
+
+
+
+
+Acabei de gravar o terceiro episódio do Webcast da Locaweb sobre Rails, ao vivo, com uma hora de duração. A gravação já está disponível neste link. Além disso fiquem sempre de olho nos próximos webcasts através do Blog da Locaweb. O legal de participar ao vivo é poder fazer perguntas em tempo real. Eu respondi várias perguntas hoje, espero que tenha conseguido solucioná-las.
+Nesse webcast explico como funciona o sistema de deployment na Locaweb para Ruby on Rails e apresento ao vivo o funcionamento da gem akitaonrails-locarails que publiquei esses dias (ainda em fase experimental, portanto nada de abrir chamado para isso, mandem e-mail para mim ou comentem aqui no meu blog).
+Ainda mostrei ao vivo o andLinux em funcionamento, mostrando como rodar Linux lado-a-lado com Windows, para aqueles que ainda se vêem obrigados a ter que rodar Windows.
+Também falei rapidamente sobre cache no Rails onde mostrei este outro tutorial que publiquei ontem e ainda, num behind-the-scenes vocês viram a conta do akitaonrails.com sendo acessada via ssh :-)
+tags: obsolete locaweb
+

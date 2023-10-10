@@ -1,0 +1,137 @@
+
+Muitos instalam e mantém seu próprio servidor num VPS. Uma aplicação web hoje é formada por diversos componentes como o web server (NGINX), banco de dados (PostgreSQL, Redis), workers de fila (Resque ou Sidekiq), serviços agregados (como SOLR).
+Como já disse antes, fazer "rodar", é simples. Agora e se o processo der crash por alguma razão ou o servidor reiniciar?
+
+
+
+
+
+Se você usar NGINX com Passenger, já está coberto (apesar de muitos gostarem de Unicorn, não vejo nenhuma vantagem num VPS a usar o Passenger). Se instalar o banco de dados via pacotes (sudo apt-get install postgresql redis-server) ele vai instalar corretamente os init script em /etc/init.d/.
+E os workers de Resque e Sidekiq? Para isso uma das formas que inventaram foi o Bluepill. Sinceramente não entendi porque isso foi inventado. Ele é uma mistura de Init Script e Monit ou God. Um trecho da configuração do Bluepill é assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+rails_env   = ENV['RAILS_ENV']  || "production"
+rails_root  = ENV['RAILS_ROOT'] || "/var/rails/my_app"
+
+user = ENV['USER'] || 'www-data'
+group = ENV['GROUP'] || 'www-data'
+num_webs = ENV["NUM_WEBS"].to_i > 0 ? ENV["NUM_WEBS"].to_i : 4
+
+Bluepill.application("your_app") do |app|
+  app.gid = group
+  app.uid = user
+  app.process("sidekiq-worker") do |process|
+    pidfile = "#{rails_root}/tmp/pids/sidekiq-worker.pid"
+  
+    process.start_command  = "/usr/bin/env PIDFILE=#{pidfile} RAILS_ENV=#{rails_env} bundle exec sidekiq" 
+    process.pid_file = pidfile
+    process.start_grace_time = 30.seconds
+    process.stop_grace_time = 10.seconds
+    process.restart_grace_time = 10.seconds
+    process.uid = user
+    process.gid = group
+    process.daemonize = true
+  end
+end
+
+
+Agora veja a ironia: o Bluepill cuida de gerenciar seu processo de Sidekiq. Agora quem cuida do Bluepill? Tem que ser o sistema operacional, e nesse caso precisamos de um Init Script para carregar o Bluepill quando o sistema reinicia e precisamos de um Monit para monitorar o Bluepill caso ele se comporte de forma incorreta.
+Se vamos fazer Init Script e Monit para o Bluepill, porque não cortamos o Bluepill e fazemos diretamente um Init Script e Monit para os serviços que precisamos? Com o Bluepill estamos apenas adicionando mais uma peça móvel e um bom sysadmin sabe que quanto menos peça móveis existirem, melhor.
+A única "vantagem" que vejo é poder usar uma DSL Ruby para escrever a configuração. Mas se for somente esse o motivo, continuo não vejo vantagem nenhuma. Concordo que escrever um bom Init Script no formato LSB (Linux Standard Base), instalar nos run levels corretos é consideravelmente chato. Se nunca viu um Init Script LSB veja este exemplo para o postgresql. É tão comprido que não vou adicionar neste post.
+Felizmente existem novidades nesse setor. Se você usa um Mac OS X, temos o Launchd que usa um formato em XML para configurar os daemons do sistema. Não é exatamente "simples" mas comparado ao formato LSB é muito melhor.
+E no caso de VPS como a maioria utiliza Ubuntu Server podemos usar o novo Upstart. Para todo serviço que você precisa iniciar automaticamente num reboot, crie um arquivo com extensão .conf no diretório /etc/init do servidor, como root. Um exemplo para Resque numa máquina com RBENV e com deployment via Capistrano, podemos criar o arquivo /etc/init/resque.conf:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+description "Resque worker configuration"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+respawn
+respawn limit 5 20
+
+script
+  HOME_DIR=/home/www
+  APP_ROOT=$HOME_DIR/apps/rails/current
+  PIDFILE=$HOME_DIR/apps/rails/shared/pids/resque.pid
+  LOGFILE=$HOME_DIR/apps/rails/shared/log/resque.log
+  echo $$ > $PIDFILE
+  chown www:www-data $PIDFILE
+  chown www:www-data $LOGFILE
+  exec su -c "export PATH=$HOME_DIR/.rbenv/shims:$HOME_DIR/.rbenv/bin:$PATH; cd $APP_ROOT; bundle exec rake environment resque:work QUEUE=* RAILS_ENV=production PIDFILE=$PIDFILE >> $LOGFILE 2>&1" www
+end script
+
+
+Está vendo a opção respawn? Ela garante que se o processo der crash e cair por alguma razão, ele vai automaticamente carregar novamente até o limite descrito no respawn limit. Só isso já é suficiente para a maioria das suas necessidades. Leia toda a documentação do Upstart.
+Uma coisa é recarregar quanto cair, outra coisa é não cair e consumir mais memória do que deveria. Para monitorar isso usarmos o bom o velho Monit. Basta um simples sudo apt-get install monit e editar o arquivo /etc/monit/monitrc adicionando ao final:
+
+1
+2
+3
+4
+5
+6
+
+check process resque_worker
+  with pidfile /home/www/apps/rails/shared/pids/resque.pid
+  start program = "start resque" as uid www and gid www-data
+  stop program = "stop resque"
+  if totalmem is greater than 400 MB for 10 cycles then restart  # eating up memory?
+  group resque_workers
+
+
+Como temos o Resque configurado via Upstart um simples start e stop é suficiente para iniciar ou matar o processo do Resque. E o Monit faz a checagem de recursos como total de memória consumida, total de CPU sendo utilizado por quantos ciclos. O Monit pode monitorar dezenas de aspectos sob diversos cenários, leia toda a documentação para aprender mais.
+
+Recomendações
+Não use Bluepill
+Pelo menos eu não vi vantagens. Se existir alguma vantagem sobre Upstart   Monit, por favor comentem. Se for pra iniciar Bluepill via Upstart, use direto o Upstart
+Não use God
+Novamente, alguém precisa monitorar o God, se for pra colocar o Monit olhando o God, remova o God completamente e use direto o Monit
+Não suba processos num shell e largue
+Obrigatoriamente todo processo que precisa ficar de pé (daemon) deve estar declarado num Init Script LSB ou Upstart
+Teste Tudo!
+Depois de configurar tudo, faça um reboot na máquina para simular uma falha e veja se tudo se carrega automaticamente. Toda vez que fizer um init script, execute os comandos 'start' e 'stop' e cheque com 'ps -a' para ver se o processo morreu mesmo, cheque se o Pidfile tem o número correto do processo depois de reiniciar, cheque se o processo está escrevendo os logs no arquivo correto. Não existe isso de "copiar" e "colar" um script como esse e "confiar" que vai funcionar. Teste cada aspecto do script antes de começar a confiar nele. E mesmo assim não confie passe algumas horas e dias monitorando manualmente, refinando o script de Monit (ele pode acabar criando comportamentos estranhos), e adicionando monitores externos
+
+tags: obsolete rails
+

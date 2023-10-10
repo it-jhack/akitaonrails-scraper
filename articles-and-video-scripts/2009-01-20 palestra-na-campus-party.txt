@@ -1,0 +1,9 @@
+
+
+
+
+São 7hs da manhã, falta 1 hora para minha palestra. Espero que o pessoal esteja mais acordado do que eu :-) Em todo caso, já estou me antecipando e colocando os slides para download. A idéia da palestra é dar um panorama rápido sobre 3 temas: 1) Ruby on Rails propriamente dito; 2) Alguns mitos; 3) Comunidade.
+Ecossistema Rails   Campus Party 09View more presentations or upload your own. (tags: cparty rubyonrails)
+O único problema é que via Slideshare não dá para ver meu abuso de transitions e efeitos que eu quis testar do novo iWork Keynote’ 09 ;-)
+tags: obsolete conference
+

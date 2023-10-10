@@ -1,0 +1,11 @@
+
+Atualização 13-10-2015: como o rubyonbr não está mais ativo, agora só via Webarchive
+
+
+Nesse fim de semana saiu minha última coluna na RubyOnBr: Acampamento de Curiosos.
+Desta vez proponho um desafio: entender ou mesmo criar seu próprio web framework. Como base falo do Camping, de _WhyTheLuckyStiff.
+Mas cuidado: sou contra fazer seu próprio framework e achar que ele é o melhor de todos. Todos fazem mais ou menos a mesma coisa (sem ofensas). A idéia aqui é aprender, porque todo bom programador web tem obrigação de saber como seu framework favorito funciona.
+O conceito de todos é o mesmo, as técnicas utilizadas também. Se quiser, é melhor escolher algum já famoso no mercado e participar do projeto como colaborador. Isso é muito mais prático.
+E já leram minhas outras colunas na RubnyOnBr? Veja uma lista aqui.
+tags: rubyonbr
+

@@ -1,0 +1,73 @@
+
+Diretamente do blog. Aqui vai a tradução para todos acompanharem:
+Capistrano é um utilitário para gerenciar servidores remotos e automatizar tarefas remotas. É popularmente usado para deployment de aplicações Rails (mas pode fazer muito mais!). A versão 2.2.0 está disponível agora:
+
+gem install capistrano
+
+A versão 2.2.0 tem as seguintes mudanças:
+
+
+Funcionalidade: Definição dinâmica de roles (papéis). O método role() agora aceita um bloco, que pode retornar tanto o nome do host, um objeto Capistrano::ServerDefinition, um array de nomes de host ou um array de Capistrano::ServerDefinition. Isso pode ser usado para descrever os servidores em um role em momento de execução:
+1
+2
+3
+4
+
+role :app do
+  hosts = some_method_that_looks_up_the_current_hosts
+  hosts[0,3]
+end
+
+
+Funcionalidade: Definições alternativas de roles server-centric, usando o método server():
+1
+2
+3
+4
+5
+
+role :app, "server" 
+role :web, "server" 
+
+# the above is the same as this:
+server "server", :app, :web
+
+
+Funcionalidade: Suporte a uma opção :max_hosts em tarefas, isso restringe a tarefa para que seja executada em um número limitado de hosts de cada vez, em pedaços. Isso ajuda as pessoas que usam Capistrano com um número muito grande de servidores, e previne que entrem em gargalos de conexão e de ficarem sem memória.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+task :ping, :max_hosts => 100 do
+  # anything here will only run against 100 hosts at a time
+end
+
+# alternatively, you can pass :max_hosts to the run command itself for
+# finer granularity
+task :pong do
+  # this will run on ALL hosts at once
+  run "something" 
+
+  # this will run on no more than 100 hosts at a time
+  run "something-else", :max_hosts => 100
+end
+
+
+Melhoria: Melhor suporte a GIT!
+Melhoria: Prompt de password para Mercurial.
+Melhoria: Implementa Bzr#next_revision para que mudanças pendentes possam ser reportadas corretamente, e usa checkout – mais leve em vez de branch.
+Melhoria: Trás de volta as variáveis :p4sync_flags e :p4client_root para Perforce.
+Além disso, há várias pequenas correções de bugs que foram consertadas. Vocês podem ver no CHANGELOG para ver os detalhes sórdidos.
+E como sempre, reportem bugs através do Rails trac, em https://dev.rubyonrails.org/. E se ainda não tiver assinado ao Capistrano mailing list, é onde todos os bons cappistas se juntam.
+tags: obsolete rails
+

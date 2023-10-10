@@ -1,0 +1,67 @@
+
+Este ano de 2009 foi bastante corrido. Em 2008 foram 13 palestras pelo Brasil. Já este ano fiz 28 palestras em 11 cidades pelo Brasil, literalmente de Norte a Sul, incluindo Buenos Aires. Infelizmente tive que recusar diversos convites de palestras pois não daria para ir em todas.
+Falei basicamente de 3 temas este ano. O primeiro foi sobre o Ecossistema Ruby on Rails e Agilidade. Nessa palestra, dependendo da versão, eu dou uma passada rápida sobre a evolução do framework, os principais mitos, os principais cases, a grande quantidade de material disponível para aprendizado e, principalmente, a grande sinergia com as práticas Ágeis e como isso permeia toda a comunidade Rails.
+O segundo tema começou no Encontro Locaweb, entitulado Agilidade e Qualidade de Projetos, é uma palestra que evoluiu bastante a cada versão. Nela eu falo de agilidade sem necessariamente explicar nenhuma das metodologias. Eu parto dos princípios de porque os métodos antigos não funcionam, a evolução do gerenciamento, o paralelo com a cultura japonesa da Toyota e aponto para a direção de organizações democráticas.
+O terceiro tema começou no Encontro Ágil, às vésperas do Rails Summit 2009 e eu entitulei Além do Caos: Pensamentos Aleatórios sobre Agilidade. Essa foi a mais difícil de todas porque é o resultado de mais de um ano de pesquisas que levaram a temas meio hardcore como Teoria do Caos, Sistemas Complexos Adaptativos, Psicologia, etc. Ainda não está num formato que eu gostei, mas a quinta versão começou a tomar uma forma melhor, e o principal é sobre o comportamento de indivíduos dentro de equipes.
+Abaixo segue o calendário de 2009 com os links para os slides:
+
+
+Todas as palestras estão disponíveis na minha conta no Slideshare. Se você assistiu minhas palestras e quer relembrar alguma parte, podem baixar à vontade.
+Para o ano que vem ainda não decidi que temas vou explorar. Provavelmente ainda vou tentar refinar o “Além do Caos”. Sobre Rails provavelmente vou tentar explorar o Rails 3, mas ainda não tenho certeza. O maior problema é que a maioria das platéias que visitei ainda não conheciam bem o Rails, por isso preciso explicar do começo.
+Janeiro 2009
+
+Dia 20 – Campus Party/São Paulo – Ecossistema Ruby on Rails
+
+Março 2009
+
+Dia 7 – UNIP/São Paulo – Ecossistema Ruby on Rails
+Dia 17 – Web Expo Forum/São Paulo – Ecossistema Ruby on Rails (nesse mesmo dia fizemos o Barcamp Rails)
+Dia 25 – Reunião do SouJava/São Paulo – Introdução ao Ruby, powered by JRuby
+Dia 28 – Encontro de TI da Artecom/São Paulo – Ruby on Rails, Ecossistema e Agilidade
+
+Abril 2009
+
+Dia 2-5 – Locos x Rails/Argentina – i18n – Rails Globalization
+Dia 13 – Encontro Locaweb/Belo Horizonte – Agilidade e Qualidade de Projetos
+
+Maio 2009
+
+Dia 13 – Encontro Locaweb/Curitiba – Agilidade e Qualidade de Projetos
+Dia 20 – Encontro Locaweb/Porto Alegre – Agilidade e Qualidade de Projetos
+
+Junho 2009
+
+Dia 3 – ERECOMPI/Teresina – Ruby on Rails e Agilidade
+Dia 8 – Encontro Locaweb/Rio de Janeiro – Agilidade e Qualidade de Projetos
+Dia 17 – Encontro Locaweb/São Paulo – Agilidade e Qualidade de Projetos
+Dia 26 – FISL/Porto Alegre – Ruby on Rails, demonstrações
+
+Agosto 2009
+
+Dia 7 – Oxente Rails/Natal – Ruby on Rails e Agilidade
+
+Setembro 2009
+
+Dia 5 – ENECOMP/Curitiba – Ruby on Rails e Agilidade
+Dia 12 – Rails for Kids/Online – Evolução Ruby on Rails
+Dia 14 – Dev in Rio/Rio de Janeiro – Ruby on Rails e Agilidade
+Dia 15 – Fórum de Software Livre no Serpro/Rio de Janeiro – Ruby on Rails e Agilidade
+Dia 21 – Claretiano/Batatais,SP – Ruby on Rails e Agilidade
+
+Outubro 2009
+
+Dia 10 – Encontro Ágil na USP/São Paulo – Além do Caos
+Dia 13 – Rails Summit 2009/São Paulo – Além do Caos
+Dia 19 – SemComp/São Carlos – Ruby on Rails e Agilidade
+Dia 23 – Latinoware/Foz do Iguaçu – Ruby on Rails e Agilidade
+Dia 23 – Latinoware/Foz do Iguaçu – Além do Caos
+
+Novembro 2009
+
+Dia 7 – Ceará on Rails/Fortaleza – Ruby on Rails e Agilidade
+Dia 12 – Business School de São Paulo – Além do Caos
+Dia 13 – Faculdade OPET/Curitiba – Ruby on Rails e Agilidade
+
+Que venha 2010! :-)
+tags: obsolete presentation
+

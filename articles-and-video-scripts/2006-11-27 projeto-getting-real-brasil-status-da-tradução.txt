@@ -1,0 +1,520 @@
+
+Pessoal, como todos já sabem, uma das premissas da 37signals para a tradução do livro Getting Real é que o material permaneça fechado até o fim da tradução, achei que é uma boa hora de prestar contas com todos. Os colaboradores que se inscreveram estão fazendo um ótimo trabalho e já temos bastante coisa traduzida. A seguir está a tabela com o status de cada capítulo e os respectivos responsáveis pela tradução.
+
+
+Tradutores
+
+
+Introduction chapter 1
+
+
+What is Getting Real?
+Gustavo Cardoso
+reservado
+
+
+About 37signals
+Gustavo Cardoso
+reservado
+
+
+Caveats, disclaimers, and other preemptive strikes
+Gustavo Cardoso
+reservado
+
+
+The Starting Line chapter 2
+
+
+Build Less
+Rafael Cardoso
+reservado
+
+
+What’s Your Problem?
+none
+livre
+
+
+Fund Yourself
+none
+livre
+
+
+Fix Time and Budget, Flex Scope
+none
+livre
+
+
+Have an Enemy
+Leonardo Prado
+Em Tradução
+
+
+It Shouldn’t be a Chore
+none
+livre
+
+
+Stay Lean chapter 3
+
+
+Less Mass
+Leonardo Prado
+Reservado
+
+
+Lower Your Cost of Change
+none
+livre
+
+
+The Three Musketeers
+Diogo Bispo
+Aguardando Revisão
+
+
+Embrace Constraints
+none
+livre
+
+
+Be Yourself
+Diogo Bispo
+Em revisão por Jorge Wagner
+
+
+Priorities chapter 4
+
+
+What’s the big idea?
+Adriano Mitre
+Reservado
+
+
+Ignore Details Early On
+Adriano Mitre
+Reservado
+
+
+It’s a Problem When It’s a Problem
+Adriano Mitre
+ 	Aguarda Revisão
+
+
+Hire the Right Customers
+Adriano Mitre
+Reservado
+
+
+Scale Later
+Adriano Mitre
+Reservado
+
+
+Make Opinionated Software
+Adriano Mitre
+Aguarda Revisão
+
+
+Feature Selection chapter 5
+
+
+Half, Not Half-Assed
+Marcello Rocha
+Em revisão por Jorge Wagner
+
+
+It Just Doesn’t Matter
+Marcello Rocha
+Em Revisão por Juraci
+
+
+Start With No
+Marcello Rocha
+Em Revisão por Juraci
+
+
+Hidden Costs
+Marcello Rocha
+Em Revisão por Juraci
+
+
+Can You Handle It?
+Marcello Rocha
+Em Revisão por Juraci
+
+
+Human Solutions
+Marcello Rocha
+Em Revisão por Juraci
+
+
+Forget Feature Requests
+Marcello Rocha
+Em Revisão por Juraci
+
+
+Hold the Mayo
+Marcello Rocha
+Aguarda Revisão
+
+
+Process chapter 6
+
+
+Race to Running Software
+Everton J. Carpes
+Em Traducao
+
+
+Rinse and Repeat
+Everton J. Carpes
+Em Traducao
+
+
+From Idea to Implementation
+Everton J. Carpes
+Reservado
+
+
+Avoid Preferences
+none
+Livre
+
+
+Done!
+none
+Livre
+
+
+Test in the Wild
+none
+Livre
+
+
+Shrink Your Time
+none
+Livre
+
+
+The Organization chapter 7
+
+
+Unity
+Juraci Krohling Costa
+Livre
+
+
+Alone Time
+Juraci Krohling Costa
+Em Traducao
+
+
+Meetings Are Toxic
+Juraci Krohling Costa
+Reservado
+
+
+Seek and Celebrate Small Victories
+Juraci Krohling Costa
+Reservado
+
+
+Staffing chapter 8
+
+
+Hire Less and Hire Later
+Juraci Krohling Costa
+Reservado
+
+
+Kick the Tires
+Juraci Krohling Costa
+Reservado
+
+
+Actions, Not Words
+none
+Livre
+
+
+Get Well Rounded Individuals
+none
+Livre
+
+
+You Can’t Fake Enthusiasm
+none
+Livre
+
+
+Wordsmiths
+none
+Livre
+
+
+Interface Design chapter 9
+
+
+Interface First
+none
+Livre
+
+
+Epicenter Design
+none
+Livre
+
+
+Three State Solution
+none
+Livre
+
+
+The Blank Slate
+none
+Livre
+
+
+Get Defensive
+none
+Livre
+
+
+Context Over Consistency
+none
+Livre
+
+
+Copywriting is Interface Design
+none
+Livre
+
+
+One Interface
+none
+Livre
+
+
+Code chapter 10
+
+
+Less Software
+Herval Freire
+Aguardando Revisão
+
+
+Optimize for Happiness
+Rodrigo K
+Aguardando Revisão
+
+
+Code Speaks
+Rodrigo K
+Reservado
+
+
+Manage Debt
+Rodrigo K
+Reservado
+
+
+Open Doors
+Herval Freire
+Aguardando Revisão
+
+
+Words chapter 11
+
+
+There’s Nothing Functional about a Functional Spec
+Herval Freire
+Em revisão por Jorge Wagner
+
+
+Don’t Do Dead Documents
+Herval Freire
+Aguardando Revisão
+
+
+Tell Me a Quick Story
+Herval Freire
+Em revisão por Jorge Wagner
+
+
+Use Real Words
+Herval Freire
+Em revisão por Jorge Wagner
+
+
+Personify Your Product
+Herval Freire
+Em revisão por Jorge Wagner
+
+
+Pricing and Signup chapter 12
+
+
+Free Samples
+Fabio Akita
+Aguarda Revisão
+
+
+Easy On, Easy Off
+Fabio Akita
+Aguarda Revisão
+
+
+Silly Rabbit, Tricks are for Kids
+Herval Freire
+Reservado
+
+
+A Softer Bullet
+none
+Livre
+
+
+Promotion chapter 13
+
+
+Hollywood Launch
+none
+Livre
+
+
+A Powerful Promo Site
+none
+Livre
+
+
+Ride the Blog Wave
+none
+Livre
+
+
+Solicit Early
+none
+Livre
+
+
+Promote Through Education
+none
+Livre
+
+
+Feature Food
+none
+Livre
+
+
+Track Your Logs
+none
+Livre
+
+
+Inline Upsell
+none
+Livre
+
+
+Name Hook
+none
+Livre
+
+
+Support chapter 14
+
+
+Feel The Pain
+Marcello Rocha
+Reservado
+
+
+Zero Training
+Marcello Rocha
+Reservado
+
+
+Answer Quick
+Marcello Rocha
+Reservado
+
+
+Tough Love
+Marcello Rocha
+Reservado
+
+
+In Fine Forum
+Marcello Rocha
+Reservado
+
+
+Publicize Your Screwups
+none
+Livre
+
+
+Post-Launch chapter 15
+
+
+One Month Tuneup
+Fabio Akita
+Aguardando Revisão
+
+
+Keep the Posts Coming
+Fabio Akita
+Aguardando Revisão
+
+
+Better, Not Beta
+Fabio Akita
+Aguardando Revisão
+
+
+All Bugs Are Not Created Equal
+Fabio Akita
+Aguardando Revisão
+
+
+Ride Out the Storm
+Fabio Akita
+Aguardando Revisão
+
+
+Keep Up With the Joneses
+Fabio Akita
+Aguardando Revisão
+
+
+Beware the Bloat Monster
+Fabio Akita
+Aguardando Revisão
+
+
+Go With the Flow
+Fabio Akita
+Aguardando Revisão
+
+
+Conclusion chapter 16
+
+
+Start Your Engines
+Davis Zanetti Cabral
+Reservado
+
+
+Status possíveis:
+
+Livre
+Reservado
+Em tradução
+Aguardando revisão
+Finalizado
+
+tags: obsolete 37signals getting-real
+

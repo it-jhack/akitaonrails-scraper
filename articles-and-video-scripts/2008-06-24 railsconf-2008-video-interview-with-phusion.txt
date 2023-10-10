@@ -1,0 +1,10 @@
+
+
+
+
+
+    Phusion Passenger 2.0 and Ruby Enterprise Edition from Carl Youngblood on Vimeo.
+We are a little bit late but this is a video interview conducted at RailsConf 2008 by myself and Carl Youngblood (Surgeworks, Confreaks) with Hongli Lai, Ninh Bui and Tinko Andringa of Phusion, creators of Phusion Passenger and Ruby Enterprise Edition, which is fast becoming the deployment method of choice for Rails developers.
+Português: Estamos um pouco atrasados mas esta é a entrevista em vídeo feita na RailsConf 2008 por mim e pelo Carl Youngblood (Surgeworks, Confreaks) com Hongli Lai, Ninh Bui e Tinko Andringa da Phusion, criadores do Phusion Passenger e Ruby Enterprise Edition, que está rapidamente se tornando a escolha padrão para deployment.
+tags: railsconf2008
+

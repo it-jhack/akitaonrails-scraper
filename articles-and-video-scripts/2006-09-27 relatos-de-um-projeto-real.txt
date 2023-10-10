@@ -1,0 +1,82 @@
+
+Este post é um pouco velho, mas nem por isso menos interessante. Principalmente se considerar que o relato é baseado em uma versão antiga de Rails, a 0.13.1, bem antes da 1.0.
+O post completo está neste link. Mas para aqueles que tem preguiça de ler em inglês (envergonhem-se), resolve dar uma colher de chá e traduzir em português, pelo bem da comunidade. Este texto merece ser divulgado.
+
+
+From: Rick Bradley <rick@…>
+Subject: (long!) An “Enterprise” Rails story and a help with nested transaction support
+Newsgroups: gmane.comp.lang.ruby.rails
+Date: 2005-10-10 17:32:22 GMT
+Olá, todos,
+Um pouco de background primeiro: Estou gerenciando um desses chamados projetos “Enterprise”: N * 1000 usuários dedicados espalhados em múltiplos estados (provavelmente mais de 80 locais de instalação), sistema no ar 24/7, orçamento de milhões de dólares (veja também: treinamento), múltiplas plataformas para ambos servidores e clientes, etc.
+Começamos presumindo que seríamos forçados a usar a pilha Java (primariamente por causa dos terceiros de que somos parceiros). Implementamos um pedaço vertical da aplicação (tabelas, mapeamentos Hibernate, pojos/beans, configuração Struts, JSPs, coisas AJAX, testes unitários) para um grupo de entidades. Porém, na realidade não fomos muito longe depois de um tempo razoável: começamos a sentir o cheiro de código “shot-gun” (também chamado, “o efeito dominó”) com todos os interlaceamentos inter-camadas, e AJAX era praticamente impossível de funcionar com a camada Struts/JSP que estávamos usando. Isso e ainda não tivemos nem tempo de decidir que ferramentas de teste usar (JUnit, Cactus, HTTPUnit, JHTTPalgumacoisa, etc.).
+Entrei nesse projeto como um grande fã de Rails, mas, dados os requerimentos externos, entendo que esta avenida estaria fechada de antemão.
+À medida que navegávamos o barco na grande pilha Java, nossos desenvolvedores (que estavam por conta própria vendo como Rails fazia AJAX para ajudá-los a entender como fazer tais coisas em Java) começaram a perguntar “Por que não fazemos em Ruby?” Estes eram desenvolvedores Java, contratados por qualificações Java, perguntando porque não mudar para Ruby on Rails?
+E ao mesmo tempo, algumas das amarras externas começaram a se perder. Não seria necessário entregar o projeto em Java, afinal. Mas, precisávamos de um bom case para mudar de arquitetura.
+Pouco depois, nosso chefe (o Diretor) disse, “Como vocês se sentiriam em gastar algumas semanas implementando um pouco disso em Ruby para ver quão bem funcionaria?” Não havia um indício de “não” na mesa.
+Nosso líder técnico codificou uma rápida versão vertical de uma classe de entidade em Rails que já havia sido implementada em Java. Ele descobriu uma razão de redução de tamanho de código de 8:1 (oito linhas de Java para uma de Ruby).
+Uma semana atrás (apenas alguns dias depois que nosso chefe nos deu “go” para tentar a versão Rails do módulo já escrito em Java), nós começamos o desenvolvimento Rails, usando 3 desenvolvedores (2 dos quais apenas tiveram um dia ou dois de conhecimento Ruby), um DBA bem meio-período, e eu ocasionalmente questionando sobre coisas que ninguém queria lidar.
+Depois de uma semana, tínhamos ~85% do desenvolvimento Rails para o módulo, incluindo uma ótima interface AJAX (que nunca conseguíramos fazer em Java), e um sub-conjunto dos testes unitários/funcionais que precisávamos. A melhor estimativa para esforço equivalente do lado Java (porque nosso modelamento de dados pode ser reusado, claro) é de 6 semanas.
+Aqui vão alguns números sobre a última versão do código no Subversion:
+versão Java:
+1
+2
+3
+4
+5
+
+10361 linhas de código Java
+1143  linhas de JSP
+8082  linhas de XML
+1267  linhas de configuração de construção
+-----------------------------------------------------
+
+20853 TOTAL de linhas
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+versão Rails:
+
+--- ruby
+494  linhas de código (386 "LOC" segundo rake stats)
+254  linhas de RHTML
+75   linhas de configuração (incluindo 
+     comentários no routes.rb)
+0    linhas de configuração de construção
+-----------------------------------------------------
+
+823  TOTAL de linhas
+1
+2
+3
+4
+5
+6
+7
+
+
+Somente a redução de código teve uma taxa de 20:1, e contando linhas gerais produzidas (configurações, templates, código), a razão foi de 25:1. Estou usando o número maior (494) para linhas de código Rails, porque eu contei as linhas de Java por um simples comando "wc -l" e, portanto, sem descontar comentários, espaços em branco, etc. Estamos também usando 2 bancos de dados, por isso 75 linhas de configuração para o aplicativo Rails.
+
+Então, resultado de onde estamos: aqueles reclamando que relatos de economias de 10:1 para Java são baboseira, estavam certos: 10:1 é baixo demais pelo que podemos ver.
+
+Estou certo que haverá muitas pessoas dizendo _"Bem, você deveria ter usado JSF, Shale, Tapestry, Spring, Echo{1,2}, Castor, Cayenne, etc."_ (para aqueles que se interessam, estávamos usando a versão rascunho EJB 3.0 com anotações), mas eu vi evidência zero que qualquer combinação de qualquer componente ultra recente de Java nos levaria a um aplicativo funcional usando <= 823 linhas totais -- realmente, nem mesmo com um fator de 5 disso por tudo que andei lendo recentemente. Notem que nem mencionei o ponto sobre o servidor de aplicação (JBoss), que inclui "algumas" linhas de complexidade XML próprios:
+
+
+
+& Mon Oct 10 10:49:57 jrbradle rick
+~/svn/phoenix/srv$ find . type f -name ‘*.xml’ | 
+xargs wc -l | grep total
+44472 total
+--
+Isso e adicione a pura chatice de rodar JBoss sobre CruiseControl e nosso servidor de compilação tem que estar lotado de RAM.
+tags: obsolete rails pitch
+

@@ -1,0 +1,12 @@
+
+
+
+
+A comunidade brasileira está andando rápido, recentemente tiveram vários lançamentos muito legais para todos os rubistas.
+Primeiro, o Rodrigo Urubatan lançou mais um livro em português de Ruby on Rails, o Desenvolvimento Fácil e Rápido de Aplicações Web.
+O Carlos Brando e mais um pessoal criaram a versão brasileira do conhecido site Ruby Inside, que sempre trás as melhores notícias do mundo Ruby e Rails. A melhor forma de se manter atualizado. Esse site nasceu na Inglaterra, pelo Peter Cooper, e se tornou um grupo de sites de notícias especializado em Ruby, Rails, JRuby e mais.
+Depois de quase 1 ano em tradução e revisão, o livro O Guia (Comovente) do Why, um dos melhores livros para iniciantes em Ruby também foi lançado. Você pode ler online todo o conteúdo em português e começar a aprender não só a linguagem mas também o “estilo” do _Why, um dos programadores mais irreverentes da comunidade.
+Finalmente, saiu uma versão “beta” da tradução do Rails Guides. Se não me engano começou com o Cassio Marques e logo envolveu mais tradutores da comunidade. Para quem não conhece, o Rails Guides nasceu de um esforço paralelo do Pratik Naik, um dos Rails Core, como resposta à antiga reclamação de “Rails é mal documentado”. Pois bem, este guia definitivamente derruba isso pois ele cobre todos os aspectos do Ruby on Rails, em detalhes, de maneira simples de seguir. Qualquer um que estiver aprendendo Rails irá se beneficiar. Mas ainda não acabou, se você quiser participar, entre em contato com eles.
+Se você está iniciando, estes são excelentes materiais. E não deixe de participar do grupo Rails-br, ou, se é de São Paulo, participe do Guru-SP. Além dos fórums do RubyOnBR.org.
+tags: obsolete
+

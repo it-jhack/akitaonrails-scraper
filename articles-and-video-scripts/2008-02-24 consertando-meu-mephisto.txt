@@ -1,0 +1,68 @@
+
+Como vocês devem ter visto neste post que publiquei algum tempo atrás, meu blog está rodando sobre o novíssimo Mephisto 0.8 e Rails 2.0.2, com ambos os trunks (do Mephisto e o meu) sincronizados com facilidade graças ao poder do GIT :-)
+Porém, um problema vem me atormentando desde que migrei do Typo para Mephisto há vários meses atrás: o sistema de caching do Mephisto não estava funcionando para mim. Na época eu não fui atrás do erro e simplesmente desliguei o cache. Mas desde o fim do ano passado os acessos do meu site aumentar exponencialmente e agora a falta de cache começou a me dar rasteiras – com meu blog saindo do ar mais vezes do que deveria.
+Quando mudei para um plano de VPS foi quando me lembrei que o cache estava desligado esse tempo todo! Depois que sincronizei meu blog com o trunk do Mephisto comecei a fazer um pente fino (git diff) entre os dois branches e depois de muito procurar finalmente achei a droga do erro! Ei-lo:
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+
+ActionController::Routing::Routes.draw do |map|
+  Mephisto::Routing.connect_with map do
+    # Fix for some of Typo old paths
+    map.typo_atom_new 'articles.atom', :controller => 'feed', 
+    :sections => "",  :action => 'feed'
+    map.typo_rss_new 'articles.rss', :controller => 'feed', 
+    :sections => "",  :action => 'feed'
+    map.typo_atom_comments 'comments.atom', :controller => 'feed', 
+    :sections => ["all_comments.xml"],  :action => 'feed'
+    map.typo_atom10_comments 'xml/atom10/comments/feed.xml', 
+    :controller => 'feed', :sections => ["all_comments.xml"],  :action => 'feed'
+    map.typo_rss_comments 'comments.rss', :controller => 'feed', 
+    :sections => ["all_comments.xml"],  :action => 'feed'
+    map.typo_atom_feed 'xml/atom/feed.xml', :controller => 'feed', 
+    :sections => "",  :action => 'feed'
+    map.typo_atom10_feed 'xml/atom10/feed.xml', :controller => 'feed', 
+    :sections => "",  :action => 'feed'
+    map.typo_rss_feed 'xml/rss/feed.xml', :controller => 'feed', 
+    :sections => "",  :action => 'feed'
+    map.typo_rss2_feed 'xml/rss20/feed.xml', :controller => 'feed', 
+    :sections => "",  :action => 'feed'
+    # esta última linha é o erro!
+    map.dispatch 'articles/*path', :controller => 'mephisto', 
+    :action => 'dispatch'
+  end
+end
+
+
+Explicando: numa instalação padrão de Mephisto esse tanto de código não existe. Ele termina apenas na chamada ao método connect_with_map. Alguns já devem ter notado para quê isto serve: remapear as antigas URLs de Typo para Mephisto.
+Você vão se lembrar que a engine antiga de blog que eu usava era Typo. Quando migrei para Mephisto eu não queria que quem tivesse linkado para meu site de repente passasse a ver erros 404. O engraçado é que eu acho que logo no começo isso funcionava. Não sei o que começou a causar o erro.
+O que eu descobri é que tirando o último map.dispatch faz os testes integrados todos passarem! E não adiantou mudar a linha de lugar: colocando antes, depois ou dentro do bloco do connect_with_map parece causar o mesmo erro. E tanto map.connect quanto map.dispatch dá problema com esse pattern de URL.
+Ainda não investiguei mais a fundo para entender porque uma linha que tecnicamente não deveria dar problema acaba desligando todo sistema de cache do Mephisto. De qualquer forma, acabei de refazer o deployment sem esse mapeamento e parece que tudo voltou ao normal, com o cache habilitado e sendo corretamente expirado. Vamos ver se continua assim.
+tags: obsolete
+

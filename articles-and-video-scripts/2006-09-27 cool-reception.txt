@@ -1,0 +1,16 @@
+
+Acabei de ler um post chamado “Cool Reception” no blog Cocoa. Ele lida com um assunto delicado: “por que programadores Java mostram tanta resistência a Rails”.
+Eu colocaria isso mais genericamente: “por que muitos programadores mostram tanta resistência a qualquer mudança?”.
+A conclusão é simples. Aqui vai a tradução de seu post:
+
+
+Um amigo meu, que trabalha em uma empresa de Java, recentemente fez uma apresentação de Ruby on Rails e ficou surpreso e desapontado pelas pessoas que não estiveram presentes. Em seu blog discutiu algumas teorias de porque uma pessoa em particular não apareceu …
+Eu tenho uma teoria mais simples, uma que foi apresentada por Bruce Tate (aquele, que escreveu o livro “Beyond Java” e começou esta discussão) no Ruby on Rails Podcast, em março deste ano. Ele disse:
+Você pode encarar uma linguagem de programação tanto como Meio ou como Fim. Se estiver encarando como um meio, ele é apenas uma ferramenta para fazer seu trabalho, e religiões caem fora disso. Mas se uma linguagem se fortalece e se torna um vale-refeição então ela se torna o fim. E quando isso acontece você terá forte paixão querendo ou não, porque agora quando se ameaça uma linguagem estará se ameaçando a habilidade de alguém de alimentar sua família …
+Não apresentaria de forma tão dramática como se tornar incapaz de alimentar sua família, afinal Java não está para ser substituído tão cedo. Mas acho que sua posição está provavelmente correta. Java é o vale refeição para muita gente. Muitos trabalharam seu caminho para serem “arquitetos” ou “líderes sêniors”. Muitos através de trabalho duro. Eles conhecem Java, os frameworks e as ferramentas (JSF, Hibernate, Struts, Spring, Eclipse, IntelliJ, Tomcat, JBoss, JUnit, etc). Fizeram um investimento significativo e naturalmente se sentem ameaçados por algo como Rails, percebam eles ou não. Isso desafia sua posição e seu conhecimento.
+Andy Hunt, um dos autores da The Pragmatic Programmer disse:
+Linguagens e frameworks vêm e vão, mas seus hábitos – suas práticas – ficam com você por toda sua carreira
+Infelizmente, a maioria das pessoas não entende isso. Eles olham apenas o que está diretamente na frente de seus narizes, ignorando o horizonte, sem ver o que está vindo. Hoje Java é um mundo de complexidades e é apenas olhando para coisas como Rails que desafiamos nossos preconceitos e melhoramos nossa posição no dia-a-dia de desenvolvimento Java.
+Continue dando apresentações, continue empurrando as barreiras. Pessoas não gostam de ser empurradas mas persuasão sutil e constante eventualmente deixará sua marca.
+tags: obsolete insights
+

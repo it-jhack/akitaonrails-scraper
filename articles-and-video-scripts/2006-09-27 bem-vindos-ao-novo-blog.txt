@@ -1,0 +1,10 @@
+
+
+
+
+Espero que todos gostem do novo blog. Acabei de migrar todo o conteúdo do antigo balanceonrails.blogspot.com, com todos os artigos publicados até hoje (27 de setembro).
+Este blog é baseado no excelente Typo 4. Dessa forma chegamos próximos ao lançamento do livro de Rails, agora em outubro, com estilo: afinal a casa é de ferreiro e o espeto também tem que ser de ferro!
+Finalmente ganhei as funcionalidades que não tinha no Blogger como categorização dos artigos, pesquisa (que inclusive utiliza Ajax, dêem uma olhada!) e muito mais.
+Não deixem de dar feedback e opiniões para melhorar ainda mais este espaço.
+tags: obsolete blog
+

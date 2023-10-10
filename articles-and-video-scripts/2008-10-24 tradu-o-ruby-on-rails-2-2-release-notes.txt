@@ -1,0 +1,489 @@
+
+Desta vez (finalmente!) existe Anotações de Lançamento decentes diretamente no diretório ‘doc’ do pacote railties. Veja este link no Github para acessar diretamente. Aliás, parabéns ao Pratik Naik e todos que colaboraram nos Rails Guides e que é onde as Anotações do Rails 2.2 foram colocados. Vou simplesmente traduzir esse documento. Como já sabem, a versão 2.2 está iminente, talvez uma questão de dias.
+Para testar as gems da versão 2.2 Release Candidate 1 e ver se sua aplicação funciona com ela, faça assim:
+gem install rails -s http://gems.rubyonrails.org -v 2.2.0
+
+
+Notas do Akita: Pessoalmente, para mim a maior novidade nesta versão é a Internacionalização (i18n). Veja meu fork da aplicação de demonstração com a tradução em português sobre como usar.
+A parte de thread-safety, como já falamos antes, só faz sentido se você usar JRuby, se não, não fará muita diferença. A parte de Connection Pool também só faz sentido se thread-safe estiver ativado. Mas se for no JRuby é melhor usar o suporte a Pool do próprio Application Server Java, como Glassfish.
+Outra coisa bem vinda é a melhoria no “config.gems”. Eu tive problemas no 2.1 justamente por causa de dependências.
+Anotações de Lançamento do Ruby on Rails 2.2
+Rails 2.2 entrega diversas novas funcionalidades e melhorias. Esta lista cobre as maiores atualizações, mas não inclui cada pequena correção de bug ou mudança. Se quiser ver tudo, cheque a lista de commits no repositório principal do Rails no Github.
+Junto com o Rails, 2.2 marca o lançamento do Ruby on Rails Guides, o primeiro resultado do Rails Guides hackfest em andamento. Este site entregará documentação de alta-qualidade das maiores funcionalidades do Rails.
+1. Infraestrutura
+Rails 2.2 é um lançamento significativo pela infraestrutura que mantém o Rails zunindo junto e conectado com o resto do mundo.
+1.1. Internacionalização
+Rails 2.2 tem um sistema fácil de internacionalização (ou i18n, para quem estiver cansado de digitar).
+
+Contribuidores Líderes: Equipe Rails i18n
+Mais informação:
+	
+Website Oficial Rails i18n
+Finalmente, Ruby é internacionalizado
+Localizando Rails: Aplicação Demo
+
+
+1.2. Compatibilidade com Ruby 1.9 e JRuby
+Junto com thread-safety, muito trabalho foi feito para fazer Rails funcionar bem com JRuby e com o Ruby 1.9 que está para sair. Com Ruby 1.9 ainda sendo um alvo móvel, rodar Edge Rails em um Edge Ruby é ainda uma proposição de tentativa-e-erro, mas Rails está pronto para fazer a transição para Ruby 1.9 quando ele for lançado.
+2. Documentação
+A documentação interna do Rails, na forma de comentários de código foi melhorado em diversos lugares. Em adição, o projeto Ruby on Rails Guides é a fonte definitiva para informação nos maiores componentes do Rails. No seu primeiro lançamento oficial, as páginas do Guia incluem:
+
+Getting Started with Rails
+Rails Database Migrations
+Active Record Associations
+Active Record Finders
+Layouts and Rendering in Rails
+Action View Form Helpers
+Rails Routing from the Outside In
+Basics of Action Controller
+Rails Caching
+Testing Rails Applications
+Securing Rails Applications
+Debugging Rails Applications
+Benchmarking and Profiling Rails Applications
+The Basics of Creating Rails Plugins
+
+Isso dito, os Guias contém dezenas de milhares de palavras de guia para desenvolvedores iniciantes e intermediários de Rails.
+Se quiser gerar os guias localmente, dentro de sua aplicação:
+rake doc:guides
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+
+
+Isso colocará os guias dentro de "RAILS_ROOT/doc/guides" e você pode começar a surfar direto abrindo "RAILS_ROOT/doc/guides/index.html" em seu browser favorito.
+
+* Contribuidores Líders: "Equipe de Documentação Rails":https://guides.rails.info/authors.html
+* Maiores contribuições de "Xavier Noria":https://advogato.org/person/fxn/diary.html e "Hongli Lai":https://izumi.plan99.net/blog/
+* Mais informação:
+** "Rails Guides hackfest":https://hackfest.rubyonrails.org/guide
+** "Ajude a melhorar a documentação do Rails no branch do Git":https://weblog.rubyonrails.org/2008/5/2/help-improve-rails-documentation-on-git-branch
+
+h2. 3. Melhor integração com HTTP: Suporte a ETAG
+
+Suportar o etag e carimbo de horas de última modificação nos cabeçalhos HTTP significa que o Rails agora pode enviar de volta uma resposta vazia se ele receber uma requisição que não foi modificada ultimamente. Isso permite que você cheque se a resposta precisa ser enviada ou não.
+
+--- ruby
+class ArticlesController < ApplicationController
+  def show_with_respond_to_block
+    @article = Article.find(params[:id])
+
+# Se a requisição enviar cabeçalhos que diferem das opções enviadas a stale?, então
+# a requisição está de fato parada e o bloco respond_to é ativado (e as opções
+# para a chamada stale? é configurado na resposta).
+#
+# Se os cabeçalhos da requisição baterem, então a requisição é fresca e o bloco
+# respond_to não é ativado. Em vez disso o render padrão ocorrerá, que checará os
+# cabeçalhos last-modified e etag e concluir que ele precisa apenas enviar 
+# "304 Not Modified" em vez de renderizar o template.
+    if stale?(:last_modified => @article.published_at.utc, :etag => @article)
+      respond_to do |wants|
+        # processamento normal de resposta
+      end
+    end
+  end
+
+  def show_with_implied_render
+    @article = Article.find(params[:id])
+
+# Configura os cabeçalhos de resposta e os checa contra a requisição, se a
+# requisição estiver parada (isto é, sem bater nem o etag nem o last-modified),
+# então o render padrão do template acontece.
+# Se a requisição for fresca, então o render padrão retornará um "304 Not Modified"
+# em vez de renderizar o template.
+    fresh_when(:last_modified => @article.published_at.utc, :etag => @article)
+  end
+end
+
+
+4. Thread Safety
+O trabalho feito para tornar o Rails thread-safe está rolando no Rails 2.2. Dependendo da infraestrutura do seu servidor web, isso significa que você pode lidar com mais requisições com menos cópias do Rails em memória, levando a uma melhor performance do servidor e maior utilização de múltiplos núcleos.
+Para habilitar o despacho multi-thread em modo de produção da sua aplicação, adicione a seguinte linha em seu “config/environments/production.rb”:
+
+rubyconfig.threadsafe!
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+
+
+* Mais informação:
+** "Anúncio do projeto Thread Safety":https://weblog.rubyonrails.org/2008/8/16/josh-peek-officially-joins-the-rails-core
+** "Perguntas e Respostas: O que Rails Thread-Safe significa":https://blog.headius.com/2008/08/qa-what-thread-safe-rails-means.html
+
+h2. 5. Active Record
+
+Existem duas grandes adições para falar aqui: migrações transacionais e transações de banco de dados em pool. Também existe uma nova (e mais limpa) sintaxe para condições de join, assim como diversas pequenas melhorias.
+
+h3. 5.1 Migrações Transacionais
+
+Historicamente, migrações Rails com múltiplos passos têm sido uma fonte de problema. Se alguma coisa der errado durante uma migração, tudo executado antes do erro modificou o banco de dados e tudo depois do erro não foi executado. E mais, a versão de migração foi armazenado enquanto era executado, o que significa que ele não pode simplesmente rodar novamente usando "rake db:migrate:redo" depois de corrigir o problema. Migrações transacionais mudam isso encapsulando os passos de migração em uma transação de DDL, de maneira que se um deles falhar, a migração inteira é desfeita. No Rails 2.2, migrações transacionais são suportadas *apenas pelo PostgreSQL*.  O código é extensível a outros tipos de bancos de dados no futuro.
+
+* Contribuidor Líder: "Adam Wiggins":https://adam.blog.heroku.com/
+* Mais informação:
+** "Transações DDL":https://adam.blog.heroku.com/past/2008/9/3/ddl_transactions/
+
+h3. 5.2. Connection Pooling
+
+Connection pooling deixa o Rails distribuir requisições de banco de dados entre um pool de conexões de banco de dados que cresce até um tamanho máximo (5 por padrão, mas você pode adicionar uma chave "pool" a seu "database.yml" para ajustar isso). Isso ajuda a remover gargalos em aplicações que suportam múltiplos usuários concorrentes. Existe também um "wait_timeout" com padrão de 5 segundos antes de desistir de esperar por uma conexão. "ActiveRecord::Base.connection_pool" lhe dá acesso direto ao pool se precisar.
+
+--- ruby
+development:
+  adapter: mysql
+  username: root
+  database: sample_development
+  pool: 10
+  wait_timeout: 10
+
+
+
+Contribuidor Líder: Nick Sieger
+Mais informação:
+	
+O que tem de novo no Edge Rails: Connection Pools
+
+
+5.3. Hashes para Condições de Join de Tabelas
+Agora você pode especificar condições de join usando um hash. Isso é uma grande ajuda se precisar fazer joins em queries complexos.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+class Photo < ActiveRecord::Base
+  belongs_to :Product
+end
+
+class Product < ActiveRecord::Base
+  has_many :products
+end
+
+# Pega todos os produtos com fotos sem copyright
+Product.find(:all, :joins => :photo,
+  :conditions => { :photos => { :copyright => false }})
+
+
+
+Mais informação:
+O que tem de novo no Edge Rails: Condições de Join de Tables Fácil
+
+5.4. Novos Finders Dinâmicos
+Dois novos conjuntos de métodos foram adicionados à família de finders dinâmicos do Active Record.
+5.4.1. find_last_by_<atributo>
+O método “find_by_last_<atributo>” é o equivalente a “Model.last(:conditions => { :atributo => valor })”
+1
+2
+
+# Pega o ultimo usuario que logou de Londres
+User.find_last_by_city('London')
+
+
+
+Contribuidor Líder: Emilio Tagua
+
+5.4.2. find_by_<atributo>!
+A nova versão com bang! “find_by_<atributo>!” é o equivalente a “Model.first(:conditions => { :atributo => valor }) || raise ActiveRecord::RecordNotFound” em vez de retornar “nil” se não encontrar um registro correspondente, este método soltará uma exceção.
+1
+2
+3
+
+# Solta a exceção ActiveRecord::RecordNotFound 
+# se 'Moby' não se registrou ainda
+User.find_by_name!('Moby')
+
+
+
+Contribuidor Líder: Josh Susser
+
+5.5. Outras mudanças do Active Record
+
+“rake db:migrate:redo” agora aceita um VERSION opcional para especificar a migração a refazer
+Configurar “config.active_record.timestamped_migrations = false” para ter migrações com prefixo numérico em vez do timestamp UTC.
+Colunas de contra cache (para associações declarados com “:counter_cache => true”) não precisam mais ser inicializados com zero.
+“ActiveRecord::Base.human_name” para traduções humanas que levam internacionalização em consideração em nomes de models.
+
+6. Action Controller
+Do lado do controller existem algumas mudanças que ajudarão nas suas rotas.
+6.1. Shallow Route Nesting
+Shallow route nesting fornece a solução para a conhecida dificuldade de usar recursos embaixo em múltiplos níveis de nesting. Com shallow nesting, você só precisa fornecer informação suficiente para unicamente identificar o recurso com que quer trabalhar – mas você pode dar mais informações.
+1
+2
+3
+4
+5
+
+map.resources :publishers, :shallow => true do |publisher|
+  publisher.resources :magazines do |magazine|
+    magazine.resources :photos
+  end
+end
+
+
+Isso habilitará o reconhecimento das seguintes rotas (entre outros):
+
+/publishers/1           ==> publisher_path(1)
+/publishers/1/magazines ==> publisher_magazines_path(1)
+/magazines/2            ==> magazine_path(2)
+/magazines/2/photos     ==> magazines_photos_path(2)
+/photos/3               ==> photo_path(3)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+* Contribuidor Líder: "S. Brent Faulkner":https://www.unwwwired.net/
+* Mais informação:
+** "Rails Routing de Dentro para Fora":https://guides.rails.info/routing/routing_outside_in.html#_nested_resources
+** "O que tem de Novo no Edge Rails: Shallow Routes":https://ryandaigle.com/articles/2008/9/7/what-s-new-in-edge-rails-shallow-routes
+
+h3. 6.2. Métodos de Arrays para Membros ou Coleções de Rotas
+
+Agora você pode fornecer um array de métodos para novos membros ou coleções de rotas. Isso remove o problema de ter que definir uma roda aceitando qualquer verbo quando precisa que responda a mais de um. Com Rails 2.2 isso é uma declaração legítima de rota:
+
+--- ruby
+map.resources :photos, :collection => { :search => [:get, :post] }
+
+
+
+Contribuidor Líder: Brennan Dunn
+
+Action Controller agora oferece bom suporte a requisições GET condicionais de HTTP, assim como outras adições.
+6.3. Outra mudanças de Action Controller
+
+Você pode agora facilmente mostrar uma página de erro customizada para exceções lançadas quando está roteando uma requisição.
+O cabeçalho HTTP Accept está desabilitado por padrão agora. Você deve preferir o uso de URLs formatadas (como “/customers/1.xml”) para indicar o formato que quer. Se precisar do cabeçalho Accept, você deve habilitá-lo de volta com “config.action_controller.user_accept_header = true”.
+Números de benchmark agora são relatados em milissegundos em vez de pequenas frações de segundo.
+Rails agora suporta cookies somente de HTTP (e os usa para sessions), que deve ajudar a mitigar alguns riscos de cross-site scripting em browsers novos.
+
+7. Action View
+
+“javascript_include_tag” e “stylesheet_link_tag” suportam uma nova opção “:recursive” para ser usado junto com “:all”, para que você possa carregar uma árvore inteira de arquivos com uma única linha de código.
+A biblioteca Prototype, que vem inclusa, foi atualizada para 1.6.0.2.
+O helper “RJS#page.reload” agora recebe uma opção “:instruct” que permite inserir instruções de processamento de XML.
+
+8. Action Mailer
+Action Mailer agora suporta layouts. Você pode fazer seus emails HTML tão bonitos quanto suas views apenas passando layouts nomeados apropriadamente – por exemplo, a classe “CustomerMailer” espera usar “layouts/customer_mailer.html.erb”.
+
+Mais informação:
+	
+O que tem de novo no Edge Rails: Mailer Layouts
+
+
+9. Active Support
+Active Support agora oferece memoização para aplicações Rails, o método “each_with_object”, suporte de prefixo em delegates, e vários outros métodos utilitários.
+9.1. Memoização
+Memoização é um padrão de inicializar um método uma vez e então armazenar seu valor para usos repetidos. Você provavelmente já usou esse padrão em sua própria aplicação:
+1
+2
+3
+
+def full_name
+  @full_name ||= "#{first_name} #{last_name}"
+end
+
+
+Memoização permite lidar com essa tarefa de uma maneira declarativa:
+1
+2
+3
+4
+5
+6
+
+extend ActiveSupport::Memoizable
+
+def full_name
+  "#{first_name} #{last_name}"
+end
+memoize :full_name
+
+
+Outras funcionalidades de memoização incluem “unmemoize”, “unmemoize_all” e “memoize_all” para ligar ou desligar a memoização.
+
+Contribuidor Líder: Josh Peek
+Mais informação:
+	
+O que tem de novo no Edge Rails: Memoização Fácil
+Memo-o-que? Um Guia para Memoização
+
+
+9.2. each_with_object
+O método “each_with_object” dá uma alternativa ao “inject”, usando um método trazido do Ruby 1.9. Ele itera sobre uma coleção, passando o elemento corrente e o memo ao bloco.
+1
+2
+
+%w(foo bar).each_with_object({}) { |str, hsh| hsh[str] = str.upcase } 
+#=> {'foo' => 'FOO', 'bar' => 'BAR'}
+
+
+
+Contribuidor Líder: Adam Keys
+
+9.3. Delegates com Prefixo
+Se você delega comportamento de uma classe para outra, você agora pode especificar um prefixo que será usado para identificar métodos delegados. Por exemplo:
+1
+2
+3
+4
+
+class Vendor << ActiveRecord::Base
+  has_one :account
+  delegate :email, :password, :to => :account, :prefix => true
+end
+
+
+Isso irá produzir os métodos delegados “vendor.account_email” e “vendor.account_password”. Você também pode especificar prefixos customizados:
+1
+2
+3
+4
+
+class Vendor << ActiveRecord::Base
+  has_one :account
+  delegate :email, :password, :to => :account, :prefix => :owner
+end
+
+
+Isso produzirá os métodos delegados “vendor.owner_email” e “vendor.owner_password”.
+
+Contribuidor Líder: Daniel Schierbeck
+
+9.4. Outras mudanças do Active Support
+
+Mudanças extensivas para “ActiveSupport::Multibyte”, incluindo correções de compatibilidade para Ruby 1.9.
+A adição de “ActiveSupport:Rescuable” permite qualquer classe de fazer mix in da sintaxe “rescue_from”.
+“past?”, “today?” e “future?” para as classes “Date” e “Time” para facilitar comparações de data/hora.
+“Array#second” até “Array#tenth” como sinônimos para “Array#1” até “Array#9”.
+“Enumerable#several?” para encapsular “collection.size > 1”
+“Inflector#parameterize” produz uma versão pronta para URL de seu input, para uso em “to_param”.
+“Time#advance” reconhece dias e semanas fracionadas, assim você pode fazer “1.7.weeks.ago”, “1.5.hours.since” e assim por diante.
+A biblioteca TzInfo inclusa foi atualizada para 0.3.11.
+
+10. Railties
+Em Railties (o código principal do próprio Rails) as maiores mudanças são no mecanismo “config.gem”.
+10.1. config.gems
+Para evitar problemas de deployment e tornar aplicações Rails mais auto-contidas, é possível colocar cópias de todas as gems que sua aplicação requer em “/vendor/gems”. Essa capacidade apareceu pela primeira vez no Rails 2.1, mas é muito mais flexível e robusta no Rails 2.2, lidando com dependências complicadas entre gems. Gerenciamento de gems no Rails incluem estes comandos:
+
+“config.gem ‘gem_name’” no seu arquivo “config/environment.rb”.
+“rake gems” para listar todas as gems configuradas, assim como se elas (e suas dependências) estão instaladas ou congeladas.
+“rake gems:install” para instalar gems que estão faltando no computador.
+“rake gems:unpack” para colocar uma cópia das gems requeridas em “/vendor/gems”
+“rake gems:unpack:dependencies” para pegar cópias das gems requeridas e suas dependências em “/vendor/gems”
+“rake gems:build” para construir qualquer extensão nativa faltando.
+“rake gems:refresh_specs” para trazer gems vendorizadas criadas com Rails 2.1 em alinhamento com o jeito Rails 2.2 de armazená-las.
+
+Você pode desempacotá-las ou instalar uma única gem especificando “GEM=gem_name” na linha de comando.
+
+Contribuidor Líder: Matt Jones
+Mais informação:
+	
+O que tem de novo no Edge Rails: Dependência de Gems
+
+
+10.2. Outras mudanças de Railties
+
+Se você é um fã do servidor web Thin, ficará feliz de saber que o “script/server” agora suporta Thin diretamente.
+“script/plugin install  -r ” agora funciona com plugins baseadas em git assim como em svn.
+“script/console” agora suporta a opção “-debugger”
+Instruções para configurar um servidor de integração contínua para construir o próprio Rails estão inclusas na fonte do Rails.
+“rake notes:custom ANNOTATION=meu_flag” deixa você listar anotações customizadas.
+Enpacotado “Rails.env” em “StringQuestioneer” para que possa fazer “Rails.env.development?”
+“script/generate” funciona sem avisos de depreciação quando RubyGems 1.3.0 está presente.
+
+Depreciação
+Algumas poucas peças de código velho foram depreciados nesta versão:
+
+“Rails::SecretKeyGenerator” foi substituído por “ActiveSupport::SecureRandom”
+“render_component” está depreciado. Existe um plugin render_component disponível se precisar dessa funcionalidade.
+“country_select” foi removido. Veja a página de depreciação para mais informações e um plugin substituto.
+“ActiveRecord::Base.allow_concurrency” não tem mais nenhum efeito.
+“ActiveRecord::Errors.default_error_messages” foi depreciado em favor de “I18n.translate(activerecord.errors.messages)”
+As sintaxes de interpolação “%s” e “%d” foram depreciadas.
+“String#chars” foi depreciado em favor de “String#mb_chars” (por motivo de compatibilidade com Ruby 1.9)
+Duração de meses e anos fracionados foi depreciado. Use a aritmética das classes “Date” e “Time” do próprio Ruby em vez disso.
+
+12. Créditos
+Anotações de Lançamento compilados por Mike Gunderloy
+tags: obsolete rails
+

@@ -1,0 +1,73 @@
+
+Today, Git is unanimously the only best way to manage source code. Back in 2009, when it was still gaining traction, there were some detractors. Some would say that they wouldn't use Git because it was written in C, instead of C++. To that, Linus Torvalds famously retorted:
+
+*YOU* are full of bullshit.
+
+
+C++ is a horrible language. It's made more horrible by the fact that a lot 
+of substandard programmers use it, to the point where it's much much 
+easier to generate total and utter crap with it. Quite frankly, even if 
+the choice of C were to do *nothing* but keep the C++ programmers out, 
+that in itself would be a huge reason to use C.
+
+
+
+
+To this day, many still try to reason against Linus' arguments. I am of the opinion that one of the reasons Git and the Linux kernel are good is exactly because of the choice of C (and, for better or worse, the bullying culture of their benefactor dictator, Linus).
+Languages have features, they have ancestors, they are imbued with some sense of philosophy and purpose. Because of that it's easy to see why young people choose languages in an attempt to fit in to some group. It's not so much because a language has some style of syntax or because it's insanely fast or because it's elegantly implemented.
+Some people like Google and feel more compelled to justify their choice of Go. Some people like Apple and feel more compelled to justify their choice of Swift or Objective-C. Some people are naturally more academic, and don't feel so much the need to justify their choice of Haskell - which, by the way, has an unofficial motto of "Avoid success at any costs."
+In particular, young programmers feel the need to justify their choices using some sort of logical reasoning. Trying to explain language choices because of features is a fallacy. You don't need to explain why you listen to Bruno Mars, if you like him just do. You don't need to explain why you eat Thai food, if you like it just do.
+Which is why, most blog posts and articles trying to justify the choice of a language or tool are very unreliable: because they can't escape being biased. There is no logical reasoning that can unambiguously define one language as the winner over other languages. Any language that is in use today has applications, some more than others, of course.
+Easier said then done, I know. Bear with me.
+Each new generation struggles to find identity, they have the need to not just follow what the previous generation left behind.
+And we, programmers, are naturally averse to "legacy" anyway. It's in our DNA to try to rewrite history every time. It's easy to write new stuff, it's very difficult to make something that lasts. Because of that, many of us go back to the longer past in order to justify our new choices as "rediscoveries". It may be one reason the Lisp people are so persistent.
+The Hype
+
+You don't only have a dozen languages to fight against if you're a language extremist. You have hundreds.
+There are not only imperative, object-oriented, funcional paradigms in programming. There are many more paradigms.
+It's rare to have a language that implements only one paradigm, most languages are multi-paradigm.
+Functional paradigm - the current new kid on the block - is not the best. It's just another paradigm. Electing one over the other is denying a long history of computer science research and achievements.
+
+Why the current trend in functional languages? Because it is a departure from the previous generation, very compelling for new folk trying to make a dent in history.
+It makes you feel special to be able to discuss about functional purity, monad vs unique type, and other oddities. That's all there is to most of the discussions.
+
+You have the credibility track of a Paul Graham's essays.
+You have the coincidental choice of Javascript gaining sudden traction and having some functional aspects.
+You start realizing that managing mutable state generates a lot of hassles and make parallel programming difficult and then realize that some functional languages offer immutable state and that triggers an epiphany.
+You hear stories, Bank Simple using some Clojure, a Clojure-based machine learning startup, Prismatic, getting a hefty Series A, or the amazing story of the small Erlang-based startup, Whatsapp, being bought by USD 19 billion. How can you not pay attention?
+
+Some Benefits
+The functional style of programming, of dealing with the transformation pipeline of immutable things without shared state, do actually improve our way of thinking about problem resolutions. But so does any other programming paradigm. Declarative programming, for example, where you define computation logic without defining a detailed control flow leading to SQL, regular expressions.
+There are indeed benefits of so many discussions around functional programming. At the very least the new generation is getting the chance to grasp old and really useful concepts such as:
+
+First Class Functions - when there is no restrictions on how a function can be created and used.
+Higher Order Functions - a function that can take a function as an argument and return functions.
+Lexical Closures or just Closures - the definition is bit difficult but it's usually there when you can define a function within a function.
+Single Assignment (from which you can have Immutability) - when a variable is assigned once, at most.
+Lazy Evaluation - when execution is deferred until really necessary.
+Tail Call Optimization (Tail Recursion) - in practice, if the last expression of a recursive function is itself, it can just jump back to the beginning instead of creating a new stack frame overhead.
+List Comprehensions - creating lists based on existing lists. Python programmers are more acquainted with the term, at least.
+Type Inference (Hindley-Milner Type System) - in practice it allow you to write code without having to declare static types all the time and leave it to the compiler to infer the correct types. Gives the best of both dynamic and static world.
+Pattern Matching - dispatching mechanism to choose between variants of a function (which is also important for Logic Programming and to differentiate between declarative and imperative paradigms)
+Monadic Effects - now, this is one of the most difficult concepts to really understand.
+
+Dynamic languages such as Ruby, Python, Javascript already made us comfortable with the notions of first class functions, higher order functions, closures, list comprehensions. Existing languages such as Java and C# have been deploying some of those features such as closures, comprehensions.
+Type Inference has been quickly gaining adoption since at least 2004 when Scala, Groovy, F# brought it to mainstream discussion. Then C# 3.0+ adopted it, now Rust, Swift were designed with it in mind.
+We are used to String Patterns because of Regular Expressions, but the Pattern Matching paradigm feels alien at first. Erlang is probably the most recognizable language that uses it, and now Elixir and Rust sport this feature and you should start to paying attention.
+There are many more concepts but the list above should be a fair enough list. But out of all of them the most difficult to wrap one's head around is Monads. A Monad can be defined as a functional design pattern to describe a computation as a sequence of steps.
+Pure functional languages are supposed to not have side-effects. This simple statement can spur quite a lot of heated discussions. You will come into contact with other concepts such as referential transparency (where you can safely replace an expression with its value). You will probably hear about how purely functional languages wrap side-effects such as I/O consequences using Monads, and that there are several different kinds of Monads (Identity, Array, State, Continuation, etc).
+Regardless of Haskell Monads and the intricasies of the mathematics behind it, you have probably already bumped into Monads one way or the other. One could argue that Javascript Promises is a kind of Monad. And you also have ML inspired Option Types which are of the same family of Haskell's Maybe Monads.
+Rust is all built around the Option Monad (also known as Maybe Monad, from Haskell, but the ML language came before and named this pattern as 'Option'). Even Java 8 recently obtained this new feature and named it Optional. In Swift it's also named Optional. It's the best way we know today to deal with errors, vastly superior than dealing with returning error codes, or (argh), raising exceptions or dealing with Null.
+Ruby is known as a multi-paradigm object-oriented and functional language, an amalgam between Smalltalk and Lisp, and the next version 3.0 will probably see the official inclusion of an optional operand inspired by the #try method we already use for safe method chaining. And we might also see immutable strings, making it easier to write more functional constructs while being more efficient for the garbage collector to boot.
+Conclusion
+Functional programming is not the end game for programming paradigms. It's a hell of a good one, and the current needs fit in nicely with the aforementioned techniques. But don't be fooled, we have been scaling very large applications that lasted years with no functional language features. C, C++, COBOL, ADA, have been driving very large systems for decades. Functional is great to have, but it's not utterly necessary if we didn't.
+We are in need of transforming large amounts of data points into more useful aggregates, we are in need to reason about those transformations a bit better and be able to execute volumes of small transformations in parallel and in distributed infrastructures. Functional techniques reasoning do help.
+Haskell is widely acclaimed as the language that represents the functional programming ideals. But it is meant to be an academic language, a compilation of the best research in the field. It's supposed to not be mainstream, but to give an implementation for those more inclined to dive deeper into the rabbit hole. There were many older languages that preceded it and you could be interested such as ISWIM, Miranda, ML, Hope, Clean. Haskell kind of compiles the best of them in one place.
+Clojure is trying to bring those functional concepts to the Java world. The Java legacy integration is one of its strength but also the source of its weaknesses. It stil remains to be seen how far it can go.
+Elixir is my personal bet as it drives the industrial strength battle tested Erlang to the forefront. It's undeniably a Ruby for the functional world. It's actor model is what inspired what you have today in Scala/Akka. Go's goroutines and channels are a close match.
+Many other languages are receiving the functional sugar coating these days. Javascript and Ruby have some of the functional features mentioned above. Java and C# didn't have functional influences in their inceptions so they are receiving a few features just to remain competitive. But even without being a pure functional language, many of those features have been adapted and implemented in one way or another.
+In the near future we will probably have more hybrid languages leading the pack. Go, Swift and Rust are good examples of modern and very young languages that get inspiration in many different paradigms. They avoid pureness in order to be actually accessible to more developers. Pureness ends up alienating most people. We will find the more mainstream languages somewhere in the middle.
+In the meantime, by all means, do dive deeper into the functional programming concepts, they are quite interesting and finally today we can have more practical applications instead of just academic experimentation. But don't try to make a cult out of this, this is not a religion, it's just one small aspect of the computer science field and you will benefit if you incorporate this with other aspects to have a better picture of our field.
+
+tags: learning career elixir english
+

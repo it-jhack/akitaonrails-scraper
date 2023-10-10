@@ -1,0 +1,14 @@
+
+
+
+
+Para os programadores avançados nas diversas tecnologias de conteúdo e web design, provavelmente o termo Adobe Flex não será novidade. Para os iniciados, o runtime Flash é tão ubíquito hoje que ninguém mais se preocupa se um browser suporta ou não animações flash.
+Depois de quase uma década, o Flash se tornou o que os Applets Java tentaram ser no começo: um runtime de aplicações Web em ambiente de interface rica (mais do que HTML). “E Ajax?” alguns perguntariam. Existe outra longa discussão de Ajax VS Flex. Acho que é sina do mundo da tecnologia conviver com discussões “X VS Y”. Enfim, para alguns tipos de aplicativos web uma interface mais avançada, interativa e animada, com dados trafegando entre o browser e o servidor à la Ajax pode ser muito interessante.
+A Midnight Coders resolveu jogar mais lenha na fogueira liberando o produto WebORB for Ruby on Rails. Ele se instala no seu aplicativo Rails como um plugin e expõe suas classes à chamadas remotas a partir de requisições AMF0 (Flash Remoting) ou AMF3 (Flex).
+O WebORB é free tanto para desenvolvimento Rails quanto PHP e tem suporte comercial para Java e C#. No nosso caso ele é instalado assim:
+ruby script/plugin install 
+https://themidnightcoders.net:8089/svn/weborb/
+Sim, o tutorial e o resto da documentação, como o FAQ, é em inglês e infelizmente ainda não tive tempo para me aprofundar nesta tecnologia. Espero que outros programadores da comunidade estudem e divulguem tutoriais em português sobre como explorar esta tecnologia.
+Atualmente surgem tantos plugins, engines que não dá para conhecer todos em detalhes. Imagino que existem soluções para a maioria das necessidades de desenvolvimento web.
+tags: obsolete rails flex
+

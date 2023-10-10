@@ -1,0 +1,10 @@
+
+
+
+
+Se você ainda não conhece, o InfoQ é um dos websites mais influentes na área de TI. A Fratech está trazendo essa marca para o Brasil. Eles gentilmente me convidaram para participar na área de Ruby da versão em português. E além de mim, mais dois amigos meus da Locaweb, o Maurício De Diana e Carlos Mendonça também estão colaborando.
+
+Agora, no dia 01/11 será feito o lançamento do novo portal InfoQ. O evento de lançamento será na Faculdade Anhembi Morumbi, Campus Vila Olimpia, em São Paulo. A entrada será de R$ 40 e teremos várias palestras sobre os mais diversos assuntos cobertos pela InfoQ. Eu participarei do painel de plataformas distribuídas às 10h e depois darei uma palestra chamada “O Ecossistema Ruby e Rails”, com o objetivo de mostrar não o bit-byte de Ruby mas como a comunidade evolui e o que produziu nos últimos anos lá fora e no Brasil.
+Vejam mais detalhes do evento no site da Fratech e não deixem de divulgar e participar. Será mais um lançamento importante para a comunidade de TI em geral do Brasil. Parabéns à Fratech pela iniciativa.
+tags: obsolete
+

@@ -1,0 +1,11 @@
+
+
+
+
+A RailsConf 2008 foi excepcional! Tenho toneladas de material para compilar quando voltar para São Paulo. Mas apenas para dar um “gostinho”, aqui vai um preview.
+
+
+
+Ps: antes que alguém se engane, não, eu não codifiquei nada do Passenger :-)
+tags: biography railsconf2008 phusion
+

@@ -1,0 +1,39 @@
+
+Se você está há algum tempo acompanhando projetos no Github, as chances são que você tem alguns projetos pessoais e algumas centenas de projetos em observação (quando você clica no botão “watch”) na página de cada projeto no Github. Eu, por exemplo, tenho quase 400 projetos em observação. Claro, muitos deles eu nem mexo. Para variar, todos os projetos estão literalmente jogados num único diretório de projetos. Literalmente, uma bagunça. Hora de arrumar minha casa.
+
+
+Eu resolvi que terei um diretório para meus projetos pessoais ou forks, ou seja, projetos onde eu tenho acesso de push e outro diretório para projetos que eu apenas observo, ou seja, onde eu não posso fazer push. Portanto terei os diretórios “public” e “watched”.
+Além disso, quero que nos projetos onde eu tenha acesso de push, o branch ‘origin’ aponte para meu fork, e o repositório original seja adicionado como ‘remote’ com um nome arbitrário mas padronizado – no meu caso, “forked_from”. Fazendo isso, fica simples fazer um script que navegue em todos os projetos e faça fetch dos repositórios originais.
+Mas, com centenas de projetos, obviamente eu não quero entrar no site, copiar a URL e fazer ‘git clone’ um a um. Felizmente o Github tem diversas APIs para brincarmos. Sugiro que leiam a documentação aqui. Mais do que isso, até existem projetos de wrappers, como o Octopi mas, no meu caso, não vou usar esse wrapper. Mas algumas APIs ainda estão em falta, por exemplo, é possível puxar uma lista dos seus projetos, saber quais são fork mas ele não trás qual é o repositório original. Para puxar essa informação, usei o bom e velho Mechanize e usei o Selector Gadget para conseguir o selector CSS correto para puxar o nome do repositório original.
+Coloquei meu script completo no Gist e você pode baixá-lo assim:
+1
+2
+
+curl https://gist.github.com/268118.txt > ~/bin/github_repos.rb
+chmod +x ~/bin/github_repos.rb
+
+
+Claro, em vez de /usr/local/bin, coloque em algum outro diretório local que esteja no seu path, como ~/bin. Feito isso, manualmente crie um diretório onde você queira colocar seus projetos, por exemplo:
+1
+2
+3
+4
+
+mkdir -p ~/Documents/Projects/Github/public
+mkdir -p ~/Documents/Projects/Github/watched
+cd ~/Documents/Projects/Github
+github_repos.rb clone
+
+
+O importante é criar os diretórios “public” e “watched”. O resto do processo vai demorar bastante tempo porque ele fará um ‘git clone’ de cada projeto. Pode ir tomar um café. Depois que terminar, você pode executar o seguinte comando de tempos em tempos:
+1
+2
+
+cd ~/Documents/Projects/Github
+github_repos.rb pull
+
+
+Isso atualizará todos os seus repositórios. Nos repositórios que você apenas observa, basta um simples ‘git pull’, mas nos que você fez fork, é necessário atualizar os ‘remotes’. Esse script deve fazer o truque.
+Como podem ver é um script bastante ‘hackish’, literalmente feito para coçar uma coceira. Se alguém tiver sugestões, por favor não deixe de comentar. Existem dezenas de maneiras de organizar seus projetos, esta é apenas uma e que pode me servir melhor, compartilhe sua idéia.
+tags: obsolete github
+

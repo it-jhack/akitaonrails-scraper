@@ -1,0 +1,70 @@
+
+Esta é a última compilação para o último dia do ano. Foi mais um grande ano para Ruby no mundo todo. Este ano eu publiquei poucas retrospectivas, somente a número #8 (Janeiro a Abril) e #9 (Maio a Setembro). Agora é a vez de cobrir algumas das notícias de Outubro até Dezembro. Vamos ver se ano que vem eu consigo publicar com mais frequências.
+Este também deve ser meu último post de 2010. Espero que todos tenham um bom reveillon e Feliz Ano Novo. Nos vemos em 2011!
+
+
+Isso dito, vamos direto aos acontecimentos.
+Lançamentos
+
+Rubinius 1.2 Now Available! – este ano o Rubinius passou da fase de simplesmente experimental para algo mais prático. Ele já roda bem muitas coisas, está evoluindo rápido e melhorando tanto na compatibilidade quanto performance. Se você usa RVM recomendo rvm install rbx e começar a brincar com ele, especialmente com as novas funcionalidades de debugging. Além disso sua virtual machine está se tornando flexível o suficiente para começar a suportar novas linguagens sobre ele. Ainda não é um Parrot, mas está chegando lá.
+
+
+MacRuby 0.8 Released – Outra implementação importante de Ruby é o MacRuby, que permite integrar Ruby com a infra-estrutura Cocoa/Objective-C do Mac OS X. Estamos chegando muito perto de uma versão 1.0 estável também. Além disso já existem 2 livros publicados sobre o assunto. Com o lançamento próximo da Mac App Store que inicia suas operações agora no dia 6 de janeiro, criar aplicações nativas para Mac se tornará ainda mais relevante e o MacRuby pode ser a resposta para muitos de nós. E quem sabe, um dia, ela também não se torne capaz o suficiente para conseguirmos criar aplicações de iPhone/iPod Touch/iPad com Ruby.
+
+
+Phusion Passenger 3.0.0 final released – a evolução da melhor solução de deployment chegou na versão 3 estável. Eu mesmo já estou usando no meu blog e você pode usar nos seus projetos. Ele melhora todos os aspectos da versão 2, reescrevendo grandes porções e utilizando novas estratégias para que suas aplicações se mantenham robustas e estáveis. Já em Dezembro eles lançaram as versões 3.0.1 e 3.0.2 que corrigem bugs de última hora, melhoram compatibilidade. Esta versão tem funcionalidades de self-healing o que significa que ele tenta se auto-consertar caso alguns processos causem crash. Possui capacidade de atualizar as aplicações com downtime zero. Implementa spawning assíncrono evitando gargalos em fila de requisições quando os processos estão iniciando e evitando o problema de thundering herd que poderia causar sérios problemas em aplicações que sofrem de períodos separados sem requisições e depois tendo picos de requisições. Ele também consegue subir aplicações que utilizam versões diferentes de Ruby e finalmente ganha a capacidade de rodar localmente no lugar do webrick usando um simples passenger start no diretório do seu projeto em desenvolvimento. Ou seja, muitas coisas legais para facilitar nossas vidas.
+
+
+Novas versões de Ruby – como presente de Natal, a gerente do Ruby 1.9.2, Yuki Sonoda, lançou a revisão 136 que você pode instalar com rvm install 1.9.2-p136. Ao mesmo tempo o Urabe Shyouhei anunciou a revisão 330 do Ruby 1.8.7. E nada menos do que dois dias depois, o grande Luis Lavena já tinha preparado os instaladores para Windows com as duas novas revisões. Baixe e instale do site oficial do Ruby Installer.
+
+Dicas
+
+Criando Geradores com Thor – o Nando Vieira gosta de escrever gems e ele escreve bons artigos explicando como criar algumas funcionalidades de gems, neste caso como criar geradores. O Rails 3 adotou o Thor para implementar seus geradores (como o famoso scaffold), e você pode adicionar geradores nas suas gems também, toda vez que precisar usar templates para criar arquivos diretamente dentro de seus projetos. É uma boa dica.
+
+
+Replicando Memcached com Rails 3 – todos já sabemos que uma das formas de aumentar o tempo de resposta de uma aplicação web é usando um cache entre o servidor de aplicação e o banco de dados. O Rails tem suporte a memcached faz tempo. Mas e se tivermos uma aplicação grande o suficiente para precisar de mais de uma instância de memcached replicado? O Shairon Toledo explica como fazer isso no seu post.
+
+
+Back-end caching com Ruby, parte 1 – Introdução – novamente, vale a pena repetir a importância em se entender e implementar cache corretamente. Técnicas de cache dão ordens de grandeza mais resultado do que qualquer disputa irrelevante sobre linguagens, e estamos falando em muitas ordens de grandeza. Neste artigo o Lucas Húngaro dá uma introdução ao conceito e esperamos que ele publique mais posts nessa série.
+
+
+PeepCode Releases The “Meet Rails 3″ Screencast Series – não é de hoje que recomendo os screencasts do Geoffrey Grosenbach, do Peepcode. Há muito tempo ele havia lançado uma série explicando o Rails 2. Agora, ele refez muito desses screencasts adaptando para o Rails 3. Então, se você quer aprender o que tem de novo no Rails 3, esta é uma série que eu recomendo. Ela é voltada para iniciantes.
+
+
+Rails for Zombies – o pessoal da Envy Labs, do Gregg Pollack, criou mais um website legal para iniciantes em Ruby on Rails aprenderem de forma mais interativa do que assistir screencasts ou ler posts de blog. Eles tentaram uma forma mais animada e que talvez dê mais resultados. Novamente, se você é iniciante é outra boa fonte de aprendizado.
+
+
+Ehcache for JRuby and Rails: Now with more flavor and fewer calories – como eu sempre digo, não subestimem o mundo Java! As tecnologias Java já caminharam um longo percurso e já foram testadas em diversos ambientes hostis, provando sua robustez. O Ehcache é velho conhecido dos javeiros, um cache distribuído em java. E nesse post o Jason Voegele explica como usar o ehcache como provedor de cache para uma aplicação Rails (em vez de usar memcached, por exemplo). Mais ainda, no seu artigo anterior ele fala sobre o projeto BigMemory, da Terracotta para quem precisa atingir escala de terabytes em uso de memória. Se você tem a necessidade de usar hardware realmente parrudo com aplicações de processam quantidades massivas de dados, esta é uma das soluções.
+
+
+Writing Parsers in Ruby using Treetop – Treetop é um assunto que de vez em quando aparece novamente. Se você precisa escrever uma pequena linguagem para seu domínio de negócios, lembre-se que dá para ir pelo caminho simples de usar regular expressions, mas se sua linguagem por um pouco mais complexa, o correto é criar um parser de verdadade e Treetop é uma solução.
+
+
+You should already use CoffeeScript in your Rails app! – eu já havia explicado sobre o CoffeeScript e quais suas vantagens. Porém, as coisas evoluíram e este artigo fala sobre a gem Barista, que deve facilitar a integração do CoffeeScript em projetos Rails. Se ainda tinha dúvidas sobre como começar, esta é a resposta.
+
+Pessoas
+
+Crafting Rails Applications: Why I wrote this book – além de ter sido um dos programadores mais importantes no desenvolvimento do Rails 3, o José Valim – da Plataforma Tec – também aproveitou para escrever um novo livro sobre técnicas de desenvolvimento para Rails 3. O Crafting Rails Applications foi publicado por ninguém menos que a Pragmatic Programmers e está disponível tanto em formato impresso quanto e-book. Este não é um livro introdutório, é para Railers que já tem experiência e querem aprender novas técnicas para se aprimorar ainda mais. Livro altamente recomendado!
+
+
+How Santiago Pastorino Went From Ruby Newbie to Rails Core in 2 Years – este ano também a equipe do Rails Core ganhou novas caras e novo fôlego. Além do José Valim do Brasil, temos o Santiago Pastorino que trabalha na WyeWorks do Uruguai e trabalha em tempo integral no Rails. Ele é um dos committers mais ativos e o mais interessante é que ele também é relativamente novo com Rails. Esta entrevista conta sua história de iniciante em Rails a Rails Core Committer, num período curto de tempo, mostrando que foco, esforço, estudo, são mais importantes do que simplesmente anos de estrada.
+
+
+Honey, I’m Home!!! – esta é bem recente e a notícia é que o Wayne E. Seguin, também conhecido como o criador da excelente ferramenta RVM voltou ao quadro de funcionários da Engine Yard. Ele já trabalhou, saiu e agora retorna com a missão de facilitar ainda mais o ambiente de desenvolvimento Ruby e, desta vez, também tentando encontrar uma solução para facilitar a vida de quem desenvolve em Windows. Talvez a soma das forças do Luis Lavena, do Wayne e da Engine Yard, ainda consigam tornar o ambiente Windows razoavelmente usável para desenvolvimento de aplicações em Ruby. Vamos torcer!
+
+Ferramentas
+
+Hackety Hack 1.0 – learn programming with Ruby – depois do desaparecimento do _why todas as suas ferramentas ficaram órfãs. Mas algumas pessoas adotaram esses projeto e deram continuidade. Um deles foi Steve Klabnik que evoluiu o Hackety Hack, o programa que foi criado usando of framework Shoes (também do _why) com o objetivo de criar um ambiente onde pessoas que não saibam programar, incluindo crianças, pudessem aprender usando Ruby. Se você é educador, instrutor ou simplesmente quer um ambiente para ajudar outras pessoas a aprender, esta é uma opção.
+
+
+RailsAdmin – Rails 3 engine to view your data – este projeto criado a partir do Ruby Summer of Code pelo Bogdan Gaza foi uma surpresa muito legal. Eu mesmo fiz pequenas contribuições a ele recentemente. Por alguma razão nunca criamos nada parecido com o famoso módulo de Admin do Django, mas este pode ser o mais próximo, apesar que seu foco é ser bem mais simples. Para a maioria dos projetos que precisa de um Admin simples, esta é a resposta.
+
+
+Cool.io – este é um projeto muito promissor que espero ver ganhar massa rápido. Para recapitular eu já expliquei sobre servidores assíncronos e até um exemplo de web chat usando websockets. No mundo Python, temos alguns projetos como o Twisted, Tornado e Cyclone. Em um resumo bem a grosso modo, no mundo Ruby o equivalente ao Twisted é o Eventmachine, um servidor que pode implementar qualquer protocolo como HTTP, SMTP, POP, etc. O Tornado é como se fosse um “Twisted-light” apenas para HTTP, e o nosso equivalente talvez seria o Thin. Já o Cyclone é como se fosse um Tornado implementado sobre o Twisted, da mesma forma como no mundo Ruby o Cramp foi uma tentativa de fazer o mesmo sobre o EventMachine. Como podem ver a forma de evoluir esse tipo de coisa é muito parecida em ambos os mundos. Então, de repente, o Node.JS pegou todo mundo de surpresa, trazendo um servidor assíncrono simples, robusto, veloz e muito capaz baseado em libevent e na engine V8 do Chrome. Pois bem, o Cool.io é uma tentativa de ser um equivalente Node.JS só que escrito em Ruby e inspirado na simplicidade do Sinatra para possibilitar criar aplicações assíncronas com mais facilidade do que usando EventMachine. Mas como o Tornado que não é implementado sobre o Twisted, o Cool.io também não usa o EventMachine por baixo. De qualquer forma, é um projeto que vale a pena ficar de olho. Acho mais interessante porque o autor do projeto é o Tony Arcieri, que é também criador do Reia, uma implementação de Ruby para Erlang.
+
+
+Social Stream – todo mundo acha que vai criar o próximo Facebook, e talvez consigam, mas o fato é que a arquitetura de um stream social é mais ou menos bem conhecido hoje em dia, existem várias formas de implementar, mas do que reinventar a roda talvez você queira estudar este projeto, que tenta facilitar a implementação de aplicações com funcionalidades de redes sociais em Rails.
+
+Pronto, fechamos 2010! Feliz Ano Novo!
+tags: obsolete
+

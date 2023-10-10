@@ -1,0 +1,923 @@
+
+De err.the_blog : Caras, o Ruby Inside Advent Calendar 2006 é muito legal. Esse cara da Err the Blog fez até um guest post sobre Piston. Pena que não existe um calendário advent específico de Rails …
+Bem, segure esse pensamento. Fazemos tudo mais rápido em Rails, certo? Dez vezes mais rápido? Que tal vinte e cinco vezes mais rápido? Vamos tentar.
+
+
+>>A seguir, meus amigos, está um Rubyisms in Rails Advent Calendar, estrelando ActiveSupport. Vinte e cinco pequenos presentes de Natal condensados em um único post de blog. Vinte e cinco dias em um. É assim que fazemos.
+ActiveSupport é, claro, como fazer Ruby-fu em Rails. Todas as extensões legais de Ruby moram no ActiveSupport. Aqui, então, está meu presente de Natal para vocês: um guia. Aproveitem.
+
+Oh, espere. Preciso dizer: tirei esses métodos da versão Edge do Rails. Desculpe, pessoal do 1.1.6. Vocês terão que esperar até o 1.2 para todas essas coisas boas. Vamos lá.
+Sete Atalhos Satisfatórios de String [ Métodos de String ]
+Dia 1: at (String)
+Já se viu querendo pegar a primeira letra de um string e acidentalmente pegando o código do caracter? Pois é. Nunca mais.
+1
+2
+
+>> "Finally, something useful!".at(6)
+=> "y"
+
+
+Dia 2: from e to (String)
+Como slide de arrays, mais ou menos. Dê a cada método um número e você terá o resto do string from (a partir de) ou to (até) esse caracter.
+1
+2
+3
+4
+
+>> "Chris the Person".from(6)
+=> "the Person" 
+>> "Chris the Person".to(4)
+=> "Chris"
+
+
+Claro, poderíamos facilmente também usar …
+Dia 3: first e last (String)
+Dois dos meus métodos de array favoritos, Rails (claro) adiciona-os no String.
+1
+2
+3
+4
+5
+6
+7
+8
+
+>> "Christmas Time".first
+=> "C" 
+>> "Christmas Time".first(5)
+=> "Chris" 
+>> "Christmas Time".last
+=> "e" 
+>> "Christmas Time".last(4)
+=> "Time"
+
+
+Dia 4: each_char (String)
+Trate um string como um array com esse pequeno número. Seguro para multi-byte também.
+1
+2
+
+>> "Snow".each_char { |i| print i.upcase }
+SNOW
+
+
+Dia 5: starts_with? e ends_with? (String)
+Claro, seria realmente fácil checar isso com uma regular expression, mas Ruby tem tudo a ver com leitura elegante. E esses métodos são realmente elegantes.
+1
+2
+3
+4
+
+>> "Peanut Butter".starts_with? 'Peanut'
+=> true
+>> "Peanut Butter".ends_with? 'Nutter'
+=> false
+
+
+Dia 6: to_time e to_date (String)
+Um pouco de amor reminiscente do to_a para strings.
+— ruby
+>> “1985-03-13”.to_time
+=> Wed Mar 13 00:00:00 UTC 1985
+>> “1985-03-13”.to_date
+=> #<Date: 4892275/2,0,2299161>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+
+
+*Dia 7: transformations!* (String)
+
+Oh, quantos. Você ainda está usando <code>Inflector.pluralize(string)</code>? Esqueça isso. Tente alguns desses métodos:
+
+<code>pluralize, singularize, camelize, titleize, underscore, dasherize, demodulize, tableize, classify, humanize, foreign_key, e constantize</code>
+
+-- ruby
+>> "reindeer".pluralize
+=> "reindeers" 
+>> "elves".singularize
+=> "elf" 
+>> "christmas_carol".camelize
+=> "ChristmasCarol" 
+>> "christmas_carol".camelize(:lower)
+=> "christmasCarol" 
+>> "holiday_cheer".titleize
+=> "Holiday Cheer" 
+>> "AdventCalendar-2006".underscore
+=> "advent_calendar_2006" 
+>> "santa_Claus".dasherize
+=> "santa-Claus" 
+>> "Holiday::December::Christmas".demodulize
+=> "Christmas" 
+>> "SnowStorm".tableize
+=> "snow_storms" 
+>> "snow_storms".classify
+=> "SnowStorm" 
+>> "present_id".humanize
+=> "Present" 
+>> "Present".foreign_key
+=> "present_id" 
+>> "Cheer".constantize
+NameError: uninitialized constant Cheer
+>> "Christmas".constantize
+=> Christmas
+
+
+Um Array de Alterações Atípicas [ Métodos de Array ]
+Dia 8: to_sentence (Array)
+Use para juntar elementos de um array em uma representação mais amigável com a língua inglesa.
+— ruby
+>> %w[Chris Mark Steven].to_sentence
+=> “Chris, Mark, and Steven”
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Você pode passar duas opções: <code>:connector</code> e <code>:skip_last_comma</code>. Eles funcionam assim:
+
+-- ruby
+>> %w[Soap Mocha Chocolate].to_sentence(:connector => '&')
+=> "Soap, Mocha, & Chocolate" 
+>> %w[Ratatat Interpol Beirut].to_sentence(:skip_last_comma => true)
+=> "Ratatat, Interpol and Beirut" 
+
+
+Dia 9: to_param (Array)
+Esse cara, caso você não saiba, é o método que o Rails chama para qualquer objeto quando tenta saber como ele deve ser representado em uma URL.
+Por exemplo, em um objeto ActiveRecord::Base:
+— ruby
+>> user = User.find(:first)
+=> # 
+>> helper.url_for :controller => ‘users’, :action => ‘show’, :id => user
+=> “/users/1”
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Agora, digamos que nós queremos sobrescrever o método de instância <code>to_param</code> do <code>User</code> para retornar <code>name</code>:
+
+-- ruby
+>> user = User.find(:first)
+=> #<User:0x28fe31c ... >  
+>> helper.url_for :controller => 'users', :action => 'show', :id => user
+=> "/users/chris"
+
+
+Legal, dito isso, a versão do to_param para Array junta elementos com /.
+— ruby
+>> helper.url_for :controller => ‘users’, :action => ‘show’, :id => %w[one two three]
+=> “/users/one%2Ftwo%2Fthree”
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+(Isso está _escaped_, claro). Isso é de tal maneira que você possa enviar e lidar facilmente com rotas que pegam qualquer coisa. "Essa discussão":https://railsforum.com/viewtopic.php?pid=3723 no RailsForum fala sobre esse tipo de rota. Você pode ou não achar isso útil.
+
+*Dia 10: to_s* (Array)
+
+Claro, você sabe que o <code>Array</code> tem um <code>to_s</code>, mas sabia que Rails o sobrescreve para aceitar um parâmetro de formato (:db)? Isso mesmo! Veja isso:
+
+-- ruby
+>> array_of_posts = Post.find(:all, :limit => 3)
+=> [#<Post:0x28c1ef8 ... >, #<Post:0x28c1de0 ... >, #<Post:0x28c1d54 ... >]
+>> array_of_posts.to_s(:db)
+=> "1,2,3" 
+>> [].to_s
+=> "" 
+>> [].to_s(:db)
+=> "null"
+
+
+Isso realmente só funciona com objetos ActiveRecord::Base, como o Rails tenta chamar #id nos elementos do array. Ao contrário de Time, esse to_s atualmente não fornece um gancho para adicionar mais formatos. Um dia? Um dia.
+Dia 11: to_xml (Array)
+Outra extensão mais ou menos específica de ActiveRecord::Base, você pode chamar to_xml em um array quando todos os elementos respondem a to_xml. Como, você sabe, um array de objetos ActiveRecord::Base.
+— ruby
+>> puts array_of_posts.to_xml
+=> “<?xml version=\”1.0\" encoding=\“UTF-8\”?>
+
+
+    … tons of xml …
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+
+
+Passe nele <code>:skip_instruct</code> para omitir a linha <code><?xml version ...</code>. Você também pode fornecer uma opção <code>:indent</code> (padrão: 2), um <code>:builder</code> (você provavelmente quer manter o padrão <code>Builder::XmlMarkup</code>), um <code>:root</code> (padrão o nome da classe, no plural e em caixa baixa, <code>posts</code> no caso), e um <code>:children</code> (nome da classe no singular - <code>post</code> para mim).
+
+*Dia 12: in_groups_of* (Array)
+
+A documentação tem isso coberto muito bem: _"Itere sobre um array em grupos de certo tamanho, preenchendo os espaços restantes com um valor especificado (<code>nil</code>, por padrão) a menos que seja <code>false</code>."_
+
+E, três exemplos. Isso é quase trapacear. Mas aí vai:
+
+<code><pre> >> %w[1 2 3 4 5 6 7].in_groups_of(3) { |g| p g }
+["1", "2", "3"]
+["4", "5", "6"]
+["7", nil, nil]
+
+>> %w[1 2 3].in_groups_of(2, '&nbsp;') { |g| p g }
+["1", "2"]
+["3", "&nbsp;"]
+
+>> %w[1 2 3].in_groups_of(2, false) { |g| p g }
+["1", "2"]
+["3"]
+
+>> %w[1 2 3 4 5 6 7].in_groups_of(3)
+=> [["1", "2", "3"], ["4", "5", "6"], ["7", nil, nil]]
+</pre></code>
+
+*Dia 13: split* (Array)
+
+Corte um array em arrays menores da mesma forma como <code>String.split</code> corta strings em arrays. Pode receber um parâmetro (um valor para cortar) ou um bloco (onde o resultado é o que vai ser usado para o corte).
+
+-- ruby
+>> %w[Tom Jerry and Mickey and Pluto].split('and')
+=> [["Tom", "Jerry"], ["Mickey"], ["Pluto"]]  
+>> %w[Chris Mark Adam Tommy Martin Oliver].split { |name| name.first == 'M' }
+=> [["Chris"], ["Adam", "Tommy"], ["Oliver"]]
+
+
+
+Algums os chamam de “Fritas em Casa” [ Métodos de Hash ]
+Dia 14: stringfy_keys e symbolize_keys (Hash)
+Esses dois métodos simples ajudam a manter os desenvolvedores preguiçosos. Nomes descritivos. Ambos os métodos retornam um novo hash mas também tem equivalentes (como symbolize_keys!) que modifica o recebedor no local.
+— ruby
+>> { ‘days’ => 25, ‘spirit’ => ‘giving’, ‘wallet’ => ‘empty’ }.symbolize_keys
+=> {:wallet=>"empty", :spirit=>"giving", :days=>25}
+>> { ‘system’ => ‘wii’, :valid_ages => 5..90 }.stringify_keys
+=> {"valid_ages"=>5..90, “system”=>"wii"}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+*Dia 15: assert_valid_keys* (Hash)
+
+Já tentou "escorregar suas próprias chaves":https://tech.rufy.com/2006/11/fatal-flaw-in-opinionated-software.html dentro de um <code>ActiveRecord#find</code> ou parecido? Rails não vai aceitar nada disso graças a <code>assert_valid_keys</code>. Use esse bad boy para espirrar "vinagre":https://www.loudthinking.com/arc/000601.html sobre suas APIs.
+
+-- ruby
+>> about_me = { :height => 71, :weight => 160, :likes => 'monster trucks'
+=> {:height=>71, :likes=>"monster trucks", :weight=>160}
+>> about_me.assert_valid_keys(:height, :weight, :age)
+ArgumentError: Unknown key(s): likes 
+
+
+Dia 16: reverse_merge (Hash)
+É como Hash#merge, mas ao contrário! Também temos reverse_merge! e reverse_update, que modificam no local. A maioria útil para configuração em massa de chaves de hash que ainda não foram configuradas.
+— ruby
+>> colors = { :foreground => ‘red’, :background => ‘black’ } 
+=> {:background=>"black", :foreground=>"red"}
+>> colors.merge(:background => ‘green’)
+=> {:background=>"green", :foreground=>"red"}
+
+doesn’t override our set colors but would add in :background
+if we didn’t already have it:
+>> colors.reverse_merge(:background => ‘green’)
+=> {:background=>"black", :foreground=>"red"}
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+
+*Dia 16: diff* (Hash)
+
+Meio estranho, mas útil. <code>Hash#diff</code> mostra quais partes do hash A mudaram ou foram removidas na transição para o hash B.
+
+Aqui, vou colocar meu nome, então mudar meu nome do meio, então totalmente jogar meu nome do meio. Em ambas as vezes (alterado e jogado fora), posso ver exatamente o que mudou.
+
+-- ruby
+>> name = { :first => 'Chris', :last => 'Wanstrath', :middle => 'Jebediah' }
+=> {:first=>"Chris", :last=>"Wanstrath", :middle=>"Jebediah"}
+>> name.diff(:first => 'Chris', :last => 'Wanstrath', :middle => 'Jonesy')
+=> {:middle=>"Jebediah"}
+>> name.diff(:first => 'Chris', :last => 'Wanstrath')
+=> {:middle=>"Jebediah"} 
+
+
+Dia 18: to_xml e from_xml (Hash)
+Ok, to_xml já foi mencionado com Array, mas aqui está uma pegadinha: from_xml. Use para tornar documentos XML em hashes amigáveis para Ruby (cof activeresource cof). Aqui vai minha brincadeira. E ei, veja! Ele até respeita arrays! Muito legal.
+— ruby
+>> Hash.from_xml ‘1’
+=> {"posts"=>{"post"=>{"id"=>"1"}}}  
+>> Hash.from_xml ‘12’
+=> {"posts"=>{"post"=>[{"id"=>"1"}, {"id"=>"2"}]}}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+
+
+<h4>Helpers Numericamente Élficos [ Métodos Numeric (Integer, Float, etc) ]</h4>
+
+*Dia 19: bytes* (Numeric)
+
+Peguei vocês, bytes! Talvez você tenha visto <code>2.days</code> ou <code>15.minutos</code> antes. Mesma coisa, mas em todos os sabores de comida de computador: bytes. (Eles vêm todos em versões no plural e singular)
+
+<code>bytes, kilobytes, megabytes, gigabytes, terabytes, petabytes, e exabytes</code>
+
+-- ruby
+>> 100.bytes
+=> 100
+>> 5.kilobytes
+=> 5120
+>> 10.megabytes
+=> 10485760
+>> 100.gigabytes
+=> 107374182400
+>> 2.terabytes
+=> 2199023255552
+>> 1.petabytes
+=> 1125899906842624
+>> 2.exabytes
+=> 2305843009213693952 
+
+
+Dia 20: dias, meses e anos (Numeric)
+Ok eu sei que eu apenas referenciei isso mas você deve ter ouvido sobre isso, mas aqui vai a lista completa de helpers numéricos no estilo 5.days (todos também vem no singular e no plural):
+seconds, minutes, hours, days, weeks, fortnights, months, years, ago / until, since / from_now
+— ruby
+>> 15.seconds
+=> 15
+>> 2.minutes
+=> 120
+>> 30.hours
+=> 108000
+>> 1.days
+=> 86400
+>> 2.weeks
+=> 1209600
+>> 4.fortnights
+=> 4838400
+>> 2.months
+=> 5184000
+>> 17.years
+=> 536479200
+>> 2.days.ago
+=> Sat Dec 16 00:34:49 -0800 2006
+>> 2.days.ago(Time.now – 3.days)
+=> Wed Dec 13 00:34:55 -0800 2006
+>> 4.weeks.since(“1985-03-13”.to_time)
+=> Wed Apr 10 00:00:00 UTC 1985
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+<div style="text-align: center">!/files/advent-elves.gif!</div>
+
+<h4>Um Inty Ligeiro [ Métodos Integer ]</h4>
+
+*Dia 21: ordinalize* (Integer)
+
+Como <code>pluralize</code> do string, <code>ordinalize</code> faz um número parecer mais oficial:
+
+-- ruby
+>> 5.ordinalize
+=> "5th"
+
+
+Dia 22: even? e odd? (e multiple_of?) (Integer)
+Por que esses não estão no Ruby? Tão incríveis e tão simples. De fato, por que tudo isso não está no Ruby? Eu discordo, eu acho.
+— ruby
+>> 2.even?
+=> true
+>> 2.odd?
+=> false
+>> 99.multiple_of? 60
+=> false
+>> 25.multiple_of? 5
+=> true
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+
+<h4>Enumerando Suas Emoções [ Métodos Enumerable (Hash, Array, etc) ]</h4>
+
+*Dia 23: group_by* (Enumerable)
+
+Muito parecido com <code>GROUP BY</code> do SQL, esse método mão-na-roda o permite agrupar elementos dentro de um enumerador de qualquer maneira arbitrária que quiser. Aqui, vou agrupar um array de hashes por suas cores de preferência.
+
+-- ruby
+>> magical_people = [ { :name => "Santa Claus",     :color => "Red" }, 
+                      { :name => "Mrs Claus",       :color => "Red" }, 
+                      { :name => "Twinkle the Elf", :color => "Green "} ]
+=> [{:name=>"Santa Claus", :color=>"Red"}, 
+        {:name=>"Mrs Claus", :color=>"Red"}, 
+        {:name=>"Twinkle the Elf", :color=>"green "}]
+
+>> magical_people.group_by { |person| person[:color] }
+=> {"Green "=>[{:name=>"Twinkle the Elf", :color=>"green "}],
+   "Red"=>[{:name=>"Santa Claus", :color=>"Red"}, 
+        {:name=>"Mrs Claus", :color=>"Red"}]} 
+
+
+Dia 24: index_by (Enumerable)
+Cara, quantas vezes você quis pegar um array e torná-lo um hash indexado por algum tipo de atributo? Como por exemplo o ID do elemento, ou seu nome? O tempo todo, certo? Novamente, nunca mais.
+— ruby
+>> beatles = [{ :first => ‘John’,  :last => ‘Lennon’ }, 
+              { :first => ‘Paul’,  :last => ‘McCartney’ }, 
+              { :first => ‘Evan’,  :last => ‘Weaver’ }, 
+              { :first => ‘Ringo’, :last => ‘Starr’ }]
+=> [{:first=>"John", :last=>"Lennon"}, 
+	{:first=>"Paul", :last=>"McCartney"}, 
+	{:first=>"Evan", :last=>"Weaver"}, 
+	{:first=>"Ringo", :last=>"Starr"}]
+>> beatles.index_by { |beatle| beatle[:first] }
+=> {"Evan"=>{:first=>"Evan", :last=>"Weaver"}, 
+    “Paul”=>{:first=>"Paul", :last=>"McCartney"}, 
+    “John”=>{:first=>"John", :last=>"Lennon"}, 
+    “Ringo”=>{:first=>"Ringo", :last=>"Starr"}}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+*Dia 25: sum* (Enumerable)
+
+É muito simples. Chame diretamente ou passe um bloco. Realmente, um ótimo atalho para <code>inject</code>.
+
+-- ruby
+>> [1,2,3,4,5].sum
+=> 15
+>> Recipe.find(:all).sum { |recipe| recipe.total_time.to_i }
+=> 1777
+
+
+(Oh, vou continuando. Não posso parar apenas no 25. Talvez eu devesse ter começado retroativamente no meio de novembro? De qualquer forma: um pouco mais).
+Enriquecimentos Metaliciamente Delicious [ Métodos de Metaprogramming ]
+Dia 26: alias_method_chain
+Se ainda não cavou internamente no Rails, aqui vai um pouco do pico: Rails usa pesadamente o pattern encapsulado em alias_method_chain. Muitos métodos que você vê (como, por exemplo, render) na realidade estão estratificados em camadas sobre camadas de outros métodos, todos afetando o comportamento de alguma maneira. Parece assustador, não é? Não! De fato você pode usar esse poder para seus próprios plugins e ferramentas poderosas.
+Digamos que você quer adicionar log ao método link_to, por alguma razão. É simples com alias_method_chain.
+def link_to_with_special_logging(args)
+  logger.debug “link_to called with args: #{args.inspect}” if logger
+  link_to_without_special_logging(args)
+end
+alias_method_chain :link_to, :special_logging
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+
+Agora <code>link_to</code> será renomeado para <code>link_to_without_special_logging</code> e <code>link_to_with_special_logging</code> será renomeado para <code>link_to</code> pelo Rails. Isso permite redefinir um método que embrulha um método existente, adicionando funcionalidade. Em seus logs você pode ver <code>_with_filters</code> e <code>_without_benchmarks</code> misturados. Esse é o motivo. Legal.
+
+*Dia 27: alias_attribute* 
+
+Já se encontrou escrevendo algo como <code>def name; title end</code> em models de Rails? Talvez <code>lias :name :title</code>? Farei algo melhor: <code>alias_attribute</code>. Ele lhe dá um método getter de atalho assim como um setter e um método de query. Limpo, também.
+
+<typo:code lang="ruby">class User < ActiveRecord::Base
+  alias_attribute :user_id, :id
+end
+
+>> user = User.find(:first)
+=> #<User:0x12622fc ... >
+>> user.id
+=> 1
+>> user.user_id
+=> 1
+>> user.user_id?
+=> true
+
+
+Dia 28: attr_accessor_with_default
+Uma adição recente ao Rails, esse método embrulha o pattern de definir um attr_accessor em uma classe e ainda conseguir configurar um valor padrão na instanciação. Ele põe tudo em um só lugar.
+class Homework
+  attr_accessor_with_default :sucks, true 
+end
+
+>> assignment = Homework.new
+=> #
+>> assignment.sucks
+=> true
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+
+
+*Dia 29: class_inheritable_reader* & *class_inheritable_writer* & amigos
+
+Tem um monte desses. O que eles fazem é configurar uma variável de classe que subclasses recebem na instanciação, mas não compartilham. Então, se uma classe Parent (Pai) tem uma variável _Name_ configurado para _Wrecker_, a classe Child (Filha) terá um _Name_ com _Wrecker_ até você mudar em Child. Essa mudança não afetará o Parent.
+
+<code>class_inheritable_reader, class_inheritable_writer, class_inheritable_array_writer, class_inheritable_hash_writer, class_inheritable_accessor, class_inheritable_array, class_inheritable_hash</code>
+
+<typo:code lang="ruby">class Momma
+  class_inheritable_hash :looks    
+  self.looks = { :hair => 'blonde', :eyes => 'blue' }
+end
+
+class Kid < Momma
+end
+
+=> {:hair=>"blonde", :eyes=>"blue"}
+>> Momma.looks
+=> {:hair=>"blonde", :eyes=>"blue"}
+>> Kid.looks
+=> {:hair=>"blonde", :eyes=>"blue"}
+>> Kid.looks.update :eyes => "brown" 
+=> {:hair=>"blonde", :eyes=>"brown"}
+>> Kid.looks
+=> {:hair=>"blonde", :eyes=>"brown"}
+>> Momma.looks
+=> {:hair=>"blonde", :eyes=>"blue"} 
+
+
+
+Os Restantes: Dois Amigos sem Amigos [ Métodos Miscelâneos ]
+Dia 30: Range#to_s(:db)
+Como os outros métodos to_s especiais, esse realmente só funciona com datas. Mas caramba, é útil.
+— ruby
+>> (7.days.ago..1.day.ago).to_s(:db)
+=> “BETWEEN ‘2006-12-11 02:06:50’ AND ‘2006-12-17 02:06:50’”
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+
+
+*Dia 31: Cálculo de Tempo*
+
+Existe um monte de maneira de calcular o tempo, mas alguns (como <code>Time.now.months_ago(2)</code>) podem ser acessados mais elegantemente a partir de seus pares baseados em números (*Dia 20* acima). Então, vou apenas passar pelos mais úteis.
+
+Para fins de posteridade, aqui está o "rdoc":https://caboo.se/doc/classes/ActiveSupport/CoreExtensions/Time/Calculations.html.
+
+-- ruby
+>> Time.days_in_month(2)
+=> 28
+>> Time.now.seconds_since_midnight
+=> 8709.840965
+
+# last_year, next_year, last_month, next_month
+>> Time.now.last_year
+=> Sun Dec 18 02:25:59 -0800 2005
+>> Time.now.next_month
+=> Thu Jan 18 02:26:41 -0800 2007
+
+# beginning_of_day, end_of_day, beginning_of_month, end_of_month
+# beginning_of_quarter, beginning_of_year
+>> Time.now.beginning_of_day
+=> Mon Dec 18 00:00:00 -0800 2006
+
+# yesterday, tomorrow, next_week(day = :monday)
+>> Time.now.tomorrow
+=> Tue Dec 19 02:28:01 -0800 2006
+>> Time.now.next_week(:friday)
+=> Fri Dec 29 00:00:00 -0800 2006
+
+# valid symbol keys for #change:
+#   year, month, mday, hour, min, sec, usec
+>> Time.now
+=> Mon Dec 18 02:33:17 -0800 2006
+>> Time.now.change(:hour => 1)
+=> Mon Dec 18 01:00:00 -0800 2006
+
+>> Time.now.in(5.days)
+=> Sat Dec 23 02:34:59 -0800 2006
+
+
+Dias em que Eu Quis Escrever Mas Alguém Já Escreveu, Melhor
+Dia 32: with_options
+Torne suas rotas DRY, a maioria pelo menos. technoweenie lidera com exemplos
+map.with_options :controller => ‘mephisto’ do |m|
+  m.article ‘:year/:month/:day/:permalink’,  :action => ‘show’
+  m.article ‘:year/:month/:day/’, :action => ‘daily’
+  m.search  ‘search/:q’,:action => ‘search’, :q => nil
+  m.tags    ‘*tags’, :action => ‘list’
+end
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+*Dia 33: blank?*
+
+Um método genérico muito legal. _why escreve sobre o conceito de <code>blank?</code> "nesse post":https://redhanded.hobix.com/inspect/objectBlank.html. A semântica do Rails, no entanto, é um pouco diferente:
+
+-- ruby
+>> 0.blank?
+=> false
+>> " ".blank?
+=> true
+>> [].blank?
+=> true
+>> {}.blank?
+=> true
+>> nil.blank?
+=> true 
+
+
+Dia 34: retornando
+Roubado de linguagens antigas, returning é um favorito com inject. Ambos Jamis e eu escrevemos sobre isso no passado. Chequem.
+Dia 35: Time#to_s(:format)
+Jogue seus helpers de Time fora e mova para a nova escola: Bruce explica como tirar vantagem do Time#to_s.
+— ruby
+>> Time.now.to_s(:time)
+=> “01:50” 
+>> Time.now.to_s(:short)
+=> “Dec 18, 2006” 
+>> Time.now.to_s(:db)
+=> “2006-12-18 01:50:42”
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+
+Oh, e aqui vai um presentinho: um pequeno hack que "permite definir formatos de datas como procs":https://pastie.caboo.se/28374.
+
+*Dia 36: mattr_accessor* e *cattr_accessor*
+
+Basicamente, <code>attr_accessor</code> para módulos e classes. Como de costume, "mais o Redhanded":https://redhanded.hobix.com/inspect/attr_accessorForClasses.html. Aviso: "cuidado":https://drnicwilliams.com/2006/08/27/so-cattr_accessor-doesnt-work-like-it-should/. Variáveis de classe não "são o que aparentam ser":https://errtheblog.com/post/22.
+
+*Dia 37: delegate*
+
+O método <code>delegate</code> funciona um pouco como <code>alias_attribute</code> por permitir apontar um método para outro lugar. Brian "pegou o furo de reportagem":https://brian.maybeyoureinsane.net/blog/2006/12/15/law-of-demeter-or-how-to-avoid-coding-yourself-into-a-corner-in-rails/ junto com algumas dicas deliciosas de OOP.
+
+*Dia 38: Symbol#to_proc*
+
+O infâme <code>Symbol#to_proc</code> é realmente muito simples. E, sabe do que mais, PragDave tem "uma explicação simples e concisa":https://blogs.pragprog.com/cgi-bin/pragdave.cgi/Tech/Ruby/ToProc.rdoc para você.
+
+-- ruby
+>> %w[apple dell hp].map { |company| company.first }
+=> ["a", "d", "h"]
+>> %w[apple dell hp].map(&:first)
+=> ["a", "d", "h"] 
+
+
+Dia 39: Proc#bind
+Emprestado em espírito do Prototype, esse cara pode mudar o valor de self para … bem, você realmente precisa experimentar por si mesmos. Descrito em A Block Costume e Counting at the Cloak N Bind.
+Dias que Você Escrever no Futuro
+Agora nos aproximamos do dia mais importante do advento: o 40o dia. É um fato pouco conhecido que antes de se tornar encarregado dos poderes da imortalidade e dar presentes, Papai Noel passou 40 dias e 40 noites no deserto construindo brinquedos de areia e suco de cactos. Esses brinquedos foram entregues a crianças por todo o mundo
+no primeiro Natal. O feriado foi um sucesso e tal, depois de receber funding de anjos investidores, o Natal como conhecemos tomou forma.
+Algum Rubyisms in Rails que eu esqueci? Me fale do seu favorito.
+Vejo vocês no ano que vem.
+
+tags: obsolete rails
+

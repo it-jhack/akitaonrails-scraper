@@ -1,0 +1,20 @@
+
+Todos os dias recebo e-mails de alguém perguntando onde encontrar meu livro Repensando a Web com Rails. Falei com meu editor e provavelmente os estoques acabaram na grande maioria das livrarias (não custa enviar e-mail para a editora).
+
+Na realidade, há algum tempo, meu editor me convidou a lançar a 2a. edição revisada do mesmo livro. Pensando no assunto, resolvi que não deveríamos republicar, mas sim lançar um livro totalmente novo. Ele concordou com a idéia, e é por isso que ninguém mais encontra o livro: porque este não será reimpresso.
+
+Então, este é o primeiro post oficial onde divulgo que sim, estou escrevendo um novo livro!
+
+O primeiro cumpriu seu papel, ajudou muitas pessoas a iniciar em Rails e a divulgar a tecnologia mais longe do que eu conseguiria sozinho. Muita gente me pergunta se eu não teria livros comigo, se poderia vendê-los.
+
+
+Como muitos sabem, eu escrevi o livro em parceria com a Brasport num esquema um pouco fora do comum: negociei que escreveria um livro grande e completo, porém, para que o preço não se tornasse inacessível, eu mesmo decidi abrir mão dos meus direitos autorais e a editora sacrificaria um pouco do seu lucro. Foi um risco casado que deu certo. E, claro, eu não ganhei um centavo com esta edição.
+“Uau, como o Akita é altruísta!” Não é bem assim :-) Não existe nada sem interesses. A diferença é que minha recompensa não é de curto prazo. Penso como um investimento: meu próprio futuro profissional será muito melhor se a comunidade e o mercado de Rails se expandir. Como ser um programador Rails num mercado sem Rails? “Se Maomé não vai à montanha, resta à montanha ir a Maomé”. Publicar o livro e auxiliar a comunidade faz parte dessa estratégia. O mesmo vale para meu site, para os eventos que vou participar/organizar e minhas ajudas esporádicas aos fóruns e mailing lists.
+O segundo livro que estou escrevendo tem o mesmo papel. O plus é que eu considero que um livro, para fazer sucesso, precisa ter conteúdo. Duh! Parece muito óbvio – e deveria ser! -, mas quem tem o hábito da leitura sabe como é difícil encontrar um bom livro. Eu particularmente sou muito chato quanto a isso. De cada 10 livros que vejo é muito se 1 valer a pena. Recebi muito feedback sobre meu livro, felizmente todos sem exceção foram muito positivos. Alguns me ajudaram apontando erros de impressão ou interpretação que podem ser encontrados nesta página de erratas.
+Considerando meu livro anterior como 1.0, estou me preparando para a versão 2.0. O livro antigo cobria Rails 1.1, meus planos obviamente contemplam Rails 2.0. Meu desafio é em como ser mais compilando menos, algo como a filosofia Rails “less is more”. Um livro melhor não se faz simplesmente adicionando mais material.
+
+Além disso, estou um pouco cansado do estilo “tutorial” (os americanos já tem dúzias desse tipo). Passo-a-passo não captura a profundidade das tecnologias muito menos suas filosofias. Quero pegar emprestado um pouco do Hal Fulton no “The Ruby Way”, um pouco de David Black em “Ruby for Rails”, de Obie Fernandez no ainda não lançado “The Rails Way”. Minha demora é na concepção de uma estrutura diferente, que não trate tudo da mesma maneira que os outros. Não gostaria de escrever apenas “mais uma referência”, apenas “mais uma tradução do api.rubyonrails.org”, novamente na mesma ordem “digite rails [projeto] para começar …”. Quero algo diferente.
+Meu objetivo será um livro que ajude um desenvolvedor a crescer, não a decorar mais uma ferramenta.  Não devo acabar de escrever tão cedo, por isso espero poder recompensar os leitores ávidos com um conteúdo de qualidade, desvinculado do objetivo de curto-prazo de lucro, senão eu apenas lançaria o antigo remendado, por que me dar ao trabalho?.
+Aguardem ;-)
+tags: obsolete my-book
+

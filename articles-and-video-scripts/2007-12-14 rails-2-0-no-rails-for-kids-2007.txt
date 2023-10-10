@@ -1,0 +1,10 @@
+
+
+
+
+Pessoal, a repercussão do Rails 2.0 está enorme! Meu screencast e tutoriais geraram um tráfego monstro para meu site. Quem quiser saber mais sobre o assunto não pode deixar de comparecer ao Rails for Kids 2007.
+Unindo o útil ao agradável, irei falar pela 3a vez ao público sobre Rails 2.0 (a primeira foi na WebDevCamp 2 semanas atrás, e o Rio on Rails sábado passado). Não percam, será provavelmente minha última palestra deste ano.
+Todos os fundos arrecadados serão destinados à instituição Cotolengo/MS que cuida de crianças carentes. 2007 foi um excelente ano! Vejos vocês lá!
+
+tags: obsolete conference
+

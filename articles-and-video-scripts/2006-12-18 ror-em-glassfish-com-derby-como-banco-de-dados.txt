@@ -1,0 +1,28 @@
+
+Do Ashish’s Weblog : No meu artigo anterior escrevi sobre colocar uma aplicação RoR para rodar no GlassFish como servidor web. Como Derby vem embutido no GlassFish, por que não tentar usá-lo como o banco de dados para a aplicação RoR?
+
+
+Colocar uma aplicação RoR para rodar com o banco de dados Derby deve ser relativamente simples. Bem, de fato é, mas só depois de pular alguns obstáculos tentando descobrir as coisas da primeira vez.
+
+ Modifique config/database.yml para algo como:
+development:
+ adapter: jdbc
+ driver: org.apache.derby.jdbc.ClientDriver
+ url: jdbc:derby://${database host}:${database port}/${database name}
+ username: ${username}
+ password: ${password}
+Derby tem um conceito de ‘nome de banco de dados’ e ‘schema’. Se ‘schema’ não é especificado ele usa o ‘username’ como padrão.
+ Crie tabela(s) no Derby. Pontos importante são:
+
+Use caixa alta para todos os nomes de tabelas e colunas
+Para criar uma coluna identidade auto-incrementável use o seguinte comando SQL:
+
+
+CREATE TABLE ${table-name} ( 
+	ID INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+	${other-columns-and-constraints} )
+Não tenho certeza qual o padrão SQL para tipos de colunas auto-incrementáveis mas isso foi um pouco doloroso para descobrir. Também se lembre que ‘DESC’ é uma palavra reservada na terminologia SQL, portanto não use isso como nome de nenhuma coluna.
+O driver jdbc do Derby deve estar no classpath por padrão do GlassFish então não deve ser necessário nenhuma modificação para isso. Entretanto, se estive rodando a aplicação RoR a partir do combo JRuby/WEBrick precisará adicionar a biblioteca derby-jdbc-driver ao classpath.
+Isso deve ser tudo sobre isso. Tente!
+tags: obsolete jruby
+

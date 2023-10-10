@@ -1,0 +1,213 @@
+
+Semana passada expliquei neste post como eu criei um mirror diretamente do trunk de desenvolvimento do Typo (que é a base do meu blog atual).
+Faltou explicar que eu também fiz mais algumas coisas, a principal delas foi acrescentar suporte a Capistrano nela. Foi bastante simples. Mas antes de mais nada, você precisa de um repositório Subversion que seja visível tanto para sua máquina de desenvolvimento quanto para o servidor onde roda sua aplicação.
+
+
+No meu caso, a RailsPlayground me deu um repositório. Em seguida, eu segui a receita do SVK para espelhar o Typo, conforme expliquei no post anterior. Com isso criei dois branches principais, um chamado /typo/mirror e outro chamado /typo/trunk. O primeiro eu nunca mexerei manualmente pois servirá como espelho fiel ao trunk oficial do Typo. Todo o meu desenvolvimento será feito no meu /typo/trunk. Para isso eu tenho que baixar um working copy local:
+1
+
+svn co https://[svn_server]/akitaonrails/typo/trunk
+
+
+Eu fiz todas as modificações que eu queria para deixar o blog conforme estava a versão antiga. A partir daqui, nenhuma novidade, apenas desenvolvimento usando SVN como qualquer outro. Quando terminei, resolvi que era hora de instalar Capistrano:
+1
+
+sudo gem install capistrano -y
+
+
+Em seguida, de dentro do meu projeto:
+1
+
+cap --apply-to
+
+
+Isso deve criar o arquivo config/deploy.rb. Aqui vai o meu arquivo final editado:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+
+# =============================================================================
+# REQUIRED VARIABLES
+# =============================================================================
+set :application, "akitaonrails"
+set :repository, "https://[svn_host]/#{application}/typo/trunk/"
+
+# =============================================================================
+# ROLES
+# =============================================================================
+role :web, "cheetah.railsplayground.net"
+role :app, "cheetah.railsplayground.net"
+role :db,  "cheetah.railsplayground.net"
+
+# =============================================================================
+# OPTIONAL VARIABLES
+# =============================================================================
+set :deploy_to, "~/apps/#{application}" # defaults to "/u/apps/#{application}"
+set :svn_username, "fabioakita"
+set :svn_password, '[svn_password]'
+set :checkout, 'export'
+set :use_sudo, false
+
+# =============================================================================
+# SSH OPTIONS
+# =============================================================================
+ssh_options[:keys] = %w(/Users/fabioakita/.ssh/id_rsa)
+ssh_options[:username] = "fakita"
+ssh_options[:paranoid] = false 
+
+# =============================================================================
+# TASKS
+# =============================================================================
+desc "Make sure that the correct production 'database.yml' is in place"
+task :before_symlink do
+  on_rollback {}
+  run "chmod 755 #{release_path}/public"
+  run "chmod 755 #{release_path}/public/.htaccess"
+  run "chmod 755 #{release_path}/public/dispatch.fcgi"
+  run "ln -s /home/#{ssh_options[:username]}/files #{release_path}/public/files"
+  run "cp /home/#{ssh_options[:username]}/apps/#{application}/etc/s3.yml #{release_path}/config/s3.yml"
+  run "cp /home/#{ssh_options[:username]}/apps/#{application}/etc/database.yml #{release_path}/config/database.yml"
+  run "cp /home/#{ssh_options[:username]}/apps/#{application}/etc/environment.rb #{release_path}/config/environment.rb"
+  run "cd #{release_path} && rake db:migrate RAILS_ENV=production"
+  run "ps ux | grep dispatch | awk '{print $2}' | xargs kill -9"
+end
+
+desc "Before setup create a directory for deployment and change access rights"
+task :before_setup do
+  sudo "test -d #{deploy_to} || mkdir -m 774 #{deploy_to}"
+end
+
+desc "Before migration, do a backup and save it remotelly at Amazon S3"
+task :before_migrate, :roles => [:app, :db, :web] do
+   # this will back up your svn repository, your code directory, and your mysql db.
+   run "cd #{current_path} && rake --trace RAILS_ENV=production s3:backup:db"
+end
+
+
+Algumas observações:
+
+Claro que eu não vou dizer onde está meu Subversion remoto, portanto vocês devem substituir [svn_host] pelo seu próprio repositório. Isso também vale para a senha, portanto, coloque a senha adequada em [svn_password].
+
+
+Essa configuração foi feita exclusivamente para minha instalação no RailsPlayground.net. Verifique se seu hosting já não possui uma receita para Capistrano. Se não me engano hosts como Joyent, Slicehost, Dreamhost, todos tem receitas próprias.
+
+
+No meu caso, eu assinei o serviço Amazon S3. É um serviço muito interessante que eu explicarei em outro post. Mas neste caso eu criei um arquivo config/s3.yml, instalei plugins para isso e acrescentei um task de Capistrano para criar um backup remoto do meu banco antes de rodar um Migration.
+
+Além disso, como meu servidor remoto possui um OpenSSH instalado, resolvi instalar lá uma chave pública para evitar que eu precise digitar minha senha o tempo todo. O procedimento para isso é o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+# na minha máquina local
+# 1. criar o par de chaves pública/privada em ~/.ssh
+ssh-keygen -t rsa
+
+# 2. enviar a chave pública para o servidor
+scp ~/.ssh/id_rsa.pub [username]@[servidor_ssh]
+
+# 3. logar no servidor remoto:
+ssh [username]@[servidor_ssh]
+
+# 4. mover para o lugar certo:
+test -d ~/.ssh || mkdir ~/.ssh
+cat ~/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod -R 700 ~/.ssh
+
+
+Com minha chave pública autorizada no servidor SSH, e com minha chave privada corretamente instalada no diretório ~/.ssh eu não preciso mais digitar minha senha. Depois disso, basta eu digitar:
+1
+
+cap deploy
+
+
+Isso tudo requer uma certa experimentação, configurar corretamente os usuários, servidores, permissões, etc. Não é necessariamente trivial, mas uma vez configurado, tudo fica simples e automático.
+Merging
+E falando em automático, como faz alguns dias desde que configurei meu espelho SVK do trunk do Typo, os desenvolvedores já comitaram algumas atualizações. Agora chegou a hora de trazer essas modificações ao meu Subversion e fazer o merge entre os branches /mirror e /trunk. Eis o procedimento. Primeiro, vamos atualizar ambos os espelhos SVK:
+1
+2
+3
+
+svk sync -s 1467 //repositories/typo 
+svk sync //repositories/typodev
+svk smerge -I //repositories/typo //repositories/typodev/mirror -m “from 1467 to 1478“
+
+
+Lembrado que da última vez, eu não baixei todas as revisões do Typo. Então, para não dar problema, eu busco a partir da última revisão que eu tinha, que era a 1467. Pelo log que ele mostra, vi que ele atualizou até a revisão mais recente (HEAD) que é a 1478. Em seguida, eu fiz um merge entre os espelhos do SVK.
+Feito isso, é hora de fazer o merge entre os branches locais /mirror e /trunk. Para isso primeiro eu preciso ver no log qual foi o momento em que o branch foi criado, para isso procuro no log usando —stop-on-copy:
+1
+2
+
+svn log --stop-on-copy https://[svn_server]/akitaonrails/typo/trunk
+svn merge -r8:HEAD https://[svn_server]/akitaonrails/typo/mirror
+
+
+O log me mostra que a revisão onde eu criei o /trunk foi a 8, portanto eu faço um merge da revisão 8 até a mais recente (HEAD). Note que eu devo estar localmente dentro do working copy do meu projeto. As modificações serão puxadas para meu diretório local, onde eu tenho a oportunidade de resolver conflitos, ajustar possíveis bugs e só então comitar tudo para meu /trunk.
+Feito isso, basta rodar novamente cap deploy para subir as modificações. Aliás, que foi exatamente o que eu fiz agora, alguns minutos antes de escrever este post. Com isso eu finalizei o primeiro ciclo de teste desta prova de conceito: de conseguir puxar as atualizações feitas no repositório remoto do Typo diretamente para dentro do meu repositório pessoal de Subversion.
+Os procedimentos explicados acima não devem ser seguidas às cegas. Espera-se que as pessoas conheçam diversos conceitos incluindo como funciona um servidor OpenSSH, como se deve utilizar corretamente o Subversion, etc. Meu objetivo é dar uma idéia de como usar essas coisas em conjunto.
+tags: obsolete
+

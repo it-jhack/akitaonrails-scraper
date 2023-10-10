@@ -1,0 +1,9 @@
+
+
+
+
+Lembram do post onde eu falei sobre a parceria Jeff Bezos/37signals? Parece que vamos começar a ver alguns spin offs. O site UnSpun acabou de ser lançado, uma aplicação Rails rodando sobre o domínio amazon.com.
+O site em si é bastante Web 2.0, muita simplicidade. É uma coleção de listas do tipo “Melhores Isso” ou “Melhores Aquilo”. Ela é alimentada pelo pessoal da Amazon Mechanical Turk (uma comunidade de pessoas que trabalham em atividades onde os computadores são ineficientes, como detectar objetos em imagens, categorizar o que é bom ou não é, traduzir textos, etc) e a comunidade UnSpun, que dá nome ao site.
+É bom encontrar aplicações Rails com pedigreé de vez em quando.
+tags: obsolete
+

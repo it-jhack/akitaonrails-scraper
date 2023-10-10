@@ -1,0 +1,10 @@
+
+
+
+
+Confreaks just released a new batch of awesome videotaped keynotes from the Goruco 2008 conference held in New York City. If you were not able to attend, that’s our second chance to take a look on what the community is doing.
+I am particularly interested in Bryan Helmkamp’s keynote on Story Driven Development with RSpec, as I am myself trying to learn the user stories feature. I can bet Chris Wanstrath’s keynote on ParseTree is a lot of fun as well.
+And if you also missed MountainWest RubyConf 2008 as well, don’t miss the videos there!
+It is only RailsConf remaining to be taped! It is a waste of resources not to do it like that as we all around the world would immensely benefit.
+tags: obsolete conference english
+

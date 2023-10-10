@@ -1,0 +1,70 @@
+
+Ontem foi lançada a versão final do Ruby 1.9.1 stable. O isso significa para nós Railers? No curto prazo, nada. Para Rubistas, significa muita coisa. Esta versão, que tinha o codenome “YARV” (Yet Another Ruby VM) veio sendo desenvolvido pelo grupo japonês do Ruby Core faz alguns anos. Dentre os principais objetivos estava melhorar bastante a performance, incorporar M17N (multilingualization), melhorar um pouco processamento paralelo (não é possível ter threads nativas por causa do Global Interpreter Lock ou GIL) no caso introduzindo Fibers.
+Para quem desenvolve Ruby puro, ferramentas de administração de sistemas, bibliotecas, finalmente irá gozar de uma virtual machine mais veloz que deve se aproximar – e em alguns casos talvez ultrapassar – o Python 2.6/3.0. Ainda não é nem de longe tão maduro quanto, mas a distância com certeza diminuiu bastante para não ser mais relevante na maioria dos casos.
+Para Railers, o Rails 2.2.2 já é compatível com a versão 1.9, mas não funcionará para criar aplicações complexas pois todas as outras Gems da comunidade ainda não estão compatíveis. Os desenvolvedores de Gems precisam começar a criar código compatível com 1.8 e 1.9 agora. (leia o artigo do Dr Nic a respeito).
+Com isso, 2009 será o ano de migração: de Ruby 1.8 para Ruby 1.9 e de Rails 2/Merb 1 para Rails 3. Devemos ver muito código de migração acontecendo no Github.
+
+
+Instalando
+Neste momento imagino que a maioria dos repositórios como Apt, Yum, MacPorts, etc ainda devem estar no máximo com a versão Release Candidate 2. Portanto, para instalar a nova versão na sua máquina, você precisará baixar diretamente do repositório oficial via subversion:
+svn export https://svn.ruby-lang.org/repos/ruby/tags/v1_9_1_0/ ruby19
+1
+2
+3
+4
+
+
+Como muita gente deve estar baixando esse código nos próximos dias, criei um mirror no Github que você pode baixar via Git:
+
+<macro:code>git clone git://github.com/akitaonrails/ruby191-stable-mirror.git ruby19
+
+Outra coisa, não jogue fora sua instalação atual de Ruby 1.8.6, instale o Ruby 1.9.1 lado-a-lado compilando da seguinte forma:
+autoconf
+./configure —prefix=/usr/local —program-suffix=1.9 
+make 
+sudo make install
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+Desta forma você ganhará executáveis como ruby19, irb19, ri19 e rdoc19 para poder usar somente quando precisar. Estou assumindo, claro, que vocês sabem como instalar compiladores e todas as outras ferramentas para que isso funcione.
+
+Para quem já usa MultiRuby, a ferramenta do Ryan Davis para testar código em múltiplas versões do Ruby ao mesmo tempo, faça o seguinte:
+
+<macro:code>
+sudo gem install ZenTest
+multiruby_setup mri:svn:tag:v1_9_1_0
+multiruby -S gem install test-unit -v=1.2.3
+
+
+A gem test-unit é necessária se você quiser testar Rails porque a antiga biblioteca test/unit que o Rails usa foi retirada do Ruby standard. E daí em diante execute comandos como script/server, rake, irb, gem, etc usando “multiruby -S” antes do comando, como no exemplo acima.
+No Windows, o Luis Lavena anunciou hoje que Tim Elliot fez um fork de seu projeto RubyInstaller e fez uma versão meio beta, funcional, de instalador para Ruby 1.9 no Windows.
+Aos Railers, o Radar blogou sobre suas primeiras experiências fazendo o Rails 2.3 (Edge) rodar no Ruby 1.9, incluindo um hack no Rack para que ele rodasse. Como eu disse: ainda não é hora de realmente desenvolver Rails no Ruby 1.9, mas é sim uma boa hora para quem quer experimentar e testar possibilidade e – principalmente – ajudar a atualizar as principais Gems para o novo Ruby.
+Mudanças
+Tirando as mudanças maiores de arquitetura, performance, existe muita coisa diferente neste Ruby. Para acompanhar o que mudou, um dos caminhos é comprar o livro (ainda em beta) do Dave Thomas, o famoso Pickaxe, Programming Ruby 1.9: The Pragmatic Programmers’ Guide.
+A lista oficial de tudo que mudou está no próprio repositório do Ruby 1.9 neste link. Mas ele não explica muita coisa. O primeiro passo, assista a apresentação do Dave Thomas e David Black da RubyConf 2008 disponível na Confreaks e também veja os slides dessa apresentação aqui.
+Anterior a essa apresentação o Bruce Williams também fez uma palestra sobre Migrando para Ruby 1.9. Vale complementar com o post de James Edward Gray II, Se preparando para Ruby 1.9. David Black também fez dois posts este mês falando sobre mais alguns pontos para tomar cuidado na nova versão.
+Como o Dave Thomas está escrevendo o novo PickAxe, seu blog também tem diversos posts com algumas dicas sobre o novo Ruby 1.9. Veja os posts:
+
+Ruby 1.9 pode checar sua identação
+Nomes de encodings que vem com o Ruby 1.9
+Se divertindo com Regular Expressions em Ruby 1.9
+Se divertindo com Procs no Ruby 1.9
+Nova sintaxe de lambda no Ruby 1.9
+Símbolos em Ruby 1.9, o fim de uma era
+Mudanças na Biblioteca Padrão do Ruby 1.9
+Se divertindo com encoding de arquivos em Ruby 1.9
+Complexos e Racionais agora no Ruby 1.9
+Pipelines usando Fibers em Ruby 1.9 – Parte II
+Pipelines usando Fibers em Ruby 1.9
+
+E ao pessoal de JRuby, fiquem tranquilos, o Charles Nutter imediatamente anunciou que a próxima versão JRuby 1.2 já conterá as bibliotecas padrão do Ruby 1.9 e deve ser lançado até o fim de fevereiro.
+tags: obsolete ruby
+

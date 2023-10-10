@@ -1,0 +1,17 @@
+
+
+
+
+Diretamente do blog da Locaweb:
+
+Você já deve ter ouvido, até mesmo nesse blog, sobre o poder do Ruby on Rails e suas vantagens para programadores iniciantes e experientes. Mas provavelmente você também deve conhecer os problemas de performance de uma aplicação Ruby rodando com Apache e CGI.
+A Locaweb inova mais uma vez disponibilizando uma plataforma mais robusta para Ruby on Rails usando Passenger, também conhecido como mod_rails. Com mod_rails você pode publicar sua aplicação RoR de maneira simples em um ambiente estável e de melhor desempenho.
+Verifique você mesmo. Estamos oferecendo um período de Trial de 3 meses aos primeiros interessados em experimentar esse novo ambiente. Para ter um Plano de Hospedagem Profissional I em plataforma Linux rodando Ruby on Rails com Passenger basta preencher o formulário abaixo e aguardar nosso contato.
+
+Seguindo a mesma tendência que a Dreamhost, a Locaweb também lançou o serviço de mod_rails para hospedagem de aplicações Rails.
+É público e notório que a reputação da Locaweb frente à comunidade Rails está ruim, graças ao suporte menos que estelar somente de CGI. Mas recentemente estive em conversas com algumas pessoas, que por enquanto apenas posso dizer que são “chaves” dentro da Locaweb, e eles me garantiram que isso vai mudar: eles querem não apenas oferecer um bom serviço de Rails, mas completamente reverter essa imagem frente à comunidade. Esse é só o primeiro passo. Errar nunca é um problema, insistir no erro sim. E não é este o caso aqui.
+Eu vi que muita gente reclamou na lista rails-br. O que foi que eu falei recentemente sobre A Derrota dos Reclamões ? Pois é, independente da reputação, a Locaweb é a maior empresa de hospedagem do país. Se eles vão dar suporte ao Rails, sabe o que isso significa? Um endosso enorme ao RoR! É assim que temos que pensar.
+Muita gente não gosta, não quer ou realmente não pode contratar hospedagens lá fora. Seja por não falar inglês, seja por não ter cartão de crédito internacional. Existem centenas de pequenos desenvolvedores que ganham a vida fazendo pequenos sites. E não há nada de errado nisso! Mas até então, mesmo eles querendo usar Rails, não tinham como. Agora eles tem a oportunidade de ganhar com a produtividade do Rails e podendo hospedar os sites de seus clientes na Locaweb, que é um nome bastante conhecido.
+Como eles mesmo disseram, isso ainda é um Trial, ou seja, eles esperam nossa ajuda: quem puder, use e envie feedbacks detalhados sobre o que poderia mudar ou melhorar. É nossa chance de dar mais um grande passo para tornar Rails ubíquito no Brasil.
+tags: obsolete locaweb passenger
+

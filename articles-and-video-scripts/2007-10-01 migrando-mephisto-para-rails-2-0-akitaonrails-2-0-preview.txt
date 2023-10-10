@@ -1,0 +1,130 @@
+
+Acabei de rapidamente migrar meu próprio blog ao novo Rails 2.0 Preview Release, literalmente eating my own dog food como diriam. Não é algo que eu recomendo fazer, mas como gosto de viver perigosamente acho que não há problemas.
+Antes de mais nada:
+
+criem um tag da sua versão atual estável. Será menos trabalhoso para voltar modificações depois.
+façam ‘rake rails:freeze:edge TAG=rel_2-0-0_PR’ duas vezes. Leiam meu artigo anterior para saber porque.
+garantam que todos os seus testes estejam passando com 100% de sucesso, será MUITO mais simples para achar o que quebrou de novo.
+
+
+
+Como todo bom samaritano, é claro que o ítem 3 quebrou minhas pernas. Eu adaptei o Mephisto ao meu gosto e como sempre faço isso às pressas nas horas vagas, meu blog se tornou um verdadeiro pulgueiro em termos de testes. Vejam os resultados antes de atualizar para Rails 2.0:
+394 tests, 784 assertions, 20 failures, 27 errors
+278 tests, 713 assertions, 27 failures, 29 errors
+27 tests, 74 assertions, 18 failures, 0 errors
+1
+2
+3
+4
+5
+6
+
+
+Depois que mudei, vejam os resultados:
+
+<macro:code>394 tests, 784 assertions, 20 failures, 27 errors
+278 tests, 706 assertions, 32 failures, 27 errors
+27 tests, 217 assertions, 14 failures, 0 errors
+
+Fica a recomendação: ATUALIZEM SUA SUITE DE TESTES. Eu mesmo vou passar por uma verdadeira faxina depois desta vergonha :-)
+Enfim, pelo menos a atualização não parece ter gerado muito mais problemas.
+Modificações
+A melhor maneira para começar é atualizar o Rails e tentar iniciar o Mongrel. A partir daí é uma caça ao stacktrace. Ver onde deu problema, abrir o arquivo e correr um passo para trás de cada vez.
+A primeira coisa que mudou, foi a dependência com ActionWebService. Acabei de dizer que ela foi retirada e o Mephisto tem um plugin chamado mephisto_xmlrpc que a utiliza.
+Pois bem, vá ao seu diretório vendor/rails recém criado e faça:
+svn export 
+https://svn.rubyonrails.org/rails/tags/rel_2-0-0_PR/actionwebservice/ 
+actionwebservice
+1
+2
+3
+4
+5
+6
+
+
+Isso trará o código necessário (se você rodou o rake anterior apenas uma vez, o activeresource não veio, mas o actionwebservice deve ter vindo).
+
+Além disso é necessário atualizar seu load_path no config/environment.rb:
+
+--- rubyconfig.load_paths += [#{RAILS_ROOT}/vendor/rails/actionwebservice/lib]
+
+Ainda nos environment, se você ainda tiver o breakpoint_server habilitado, não esqueça de desabilitar:
+
+ruby#config.breakpoint_server = true
+1
+2
+3
+4
+
+
+Isso deve resolver. Depois tive mexer no 'lib/mephisto_init.rb', onde comentei a seguinte linha:
+
+--- ruby#alias_method_chain :reset_application!, :plugins
+
+Depois disso o problema foi justamente a falta do acts_as_list, mas isso foi simples de resolver:
+
+ruby./script/plugin install acts_as_list
+1
+2
+3
+4
+5
+
+
+Passando disso, o problema a seguinte foi no plugin *acts_as_paranoid*. No arquivo 'paranoid.rb' fiz a seguinte modificação:
+
+--- ruby#options = ::ActiveRecord::Base.send(:extract_options_from_args!, args)
+options = args.extract_options!
+
+
+Ou seja, comentei a primeira e substituí pela segunda. Isso porque o método extract_options_from_args! foi substituído no ActiveSupport por um método diretamente ao Hash. Com o tempo os plugins devem ser atualizados para esses detalhes. Por ora, isso funciona.
+Felizmente o Mephisto já não usava o paginate do Rails, e sim o recomendado will_paginate. Eu tive um pequeno problema com ele mas acho que foi mais problema meu do que do plugin. Sei no fim apaguei a versão que eu tinha e reinstalei:
+./script/plugin install will_paginate
+1
+2
+3
+4
+5
+6
+7
+
+
+Finalmente, aconteceu um erro estranho num finder. Ainda não entendi qual o problema porque na realidade o erro foi acusado pelo MySQL que não gostou da query, mas teoricamente esse erro deveria ter acontecido na versão atual também. De qualquer forma, o arquivo é o 'articles_controller.rb' e o trecho é este:
+
+--- ruby@articles = site.articles.paginate(
+        article_options(:order => 'contents.published_at DESC', 
+        :select => '*', :page => params[:page], 
+        :per_page => params[:per_page]))
+
+
+O problema é no :select. Antes estava :select => ‘contents.*’. Provavelmente o will_paginate usou essas condições para gerar a query counter e colocou o conteúdo desse :select dentro da função count(). Mas isso não me parece uma dependência com o Rails. Vou investigar mais.
+Conclusão
+É meio difícil tirar grandes conclusões porque minha suite de testes estava muito ruim. Portanto é importante se atentar a isso. A grosso modo, pelo menos as funcionalidades principais parecem estar funcionando. Mas provavelmente encontrarei problemas no meio do caminho.
+Numa conclusão pouco científica eu diria que uma aplicação codificada decentemente, usando padrões do Rails 1.2 deve ter poucos problemas já que o Rails 2.0 apresenta novas convenções mas ainda suporta a maioria das antigas. Os principais problemas devem se concentrar em plugins muito velhos, pouco atualizados ou mal escritos. Nesse caso preparem-se pra ajustá-los. Os plugins mais importantes devem receber patches em breve para suportar 2.0, portanto é apenas uma questão de tempo.
+De qualquer forma, em menos de 24 horas do lançamento do Preview Release: bem vindos a uma aplicação Rails 2.0 em produção (com bugs, mas em produção)!
+Update (02/10/07)
+Desde ontem notei que estava com problemas de page caching. Por alguma razão os Sweepers não estavam realizando os expire_cache depois que um novo artigo ou um novo comentário era postado. Vasculhei um pouco, mas além de entender o porque do expire não funcionar eu ainda precisava entender como o Mephisto se construiu sobre esse mecanismo (ler código dos outros sempre é complicado).
+No fim, lembrei de uma coisa que fiz ontem: eu comentei um alias_method_chain simplesmente porque ali dava problema. Hmm … péssimo.
+Olhando melhor vi que no Rails 1.2.3, o ActionController::Dispatcher tinha um método chamado reset_application! e no novo não tinha. No lib/mephisto_init.rb (que é carregado junto com o environment.rb) ele faz um alias_method_chain desse método com ‘plugins’.
+Ainda não entendi para que serve esse método nem esse chaining dentro do Mephisto, mas o que funcionou foi acrescentar o seguinte trecho:
+
+rubyclass << Dispatcher
+(…)
+def reset_application!
+ActiveRecord::Base.reset_subclasses if defined?(ActiveRecord)
+Dependencies.clear
+
+TODO: Remove after 1.2
+    ActiveSupport::Deprecation.silence do 
+      Class.remove_class(*Reloadable.reloadable_classes)
+    end
+
+ActiveRecord::Base.clear_reloadable_connections! if defined?(ActiveRecord)
+end
+(…)
+end—-
+Muito estranho, e notem que há até um comentário TODO dizendo para retirar isso depois do 1.2 (!) Espero que nada exploda depois :-)
+Por agora ‘parece’ que isso acertou as coisas. Mas ter algo que corrige sem entender porque corrigiu é o mesmo que nada. Então minha investigação continua …
+tags: obsolete rails
+

@@ -1,0 +1,8 @@
+
+
+
+
+Alguns dias atrás o indiano Satish Talim do site rubylearning.com entrou em contato comigo. Sua idéia era entrevistar vários representantes de Ruby e Rails pelo mundo para ter uma idéia de como o assunto se disseminou. Fiquei muito contente por ele ter me escolhido para representar o Brasil. E aqui vai a primeira parte da entrevista (em 3 partes) que ele acabou de publicar. Vocês encontrarão figurinhas carimbadas como Peter Cooper, Jamis Buck e Ola Bini mas também representantes na Singapura, Polônia, Portugal, Croácia, num total de 12 países. Acho que foi uma excelente idéia para dar perspectiva a Rubistas e Railers do mundo de como as coisas estão andando.
+Falando em Ola Bini, ele acabou de lançar seu livro JRuby on Rails, pela Apress. Acabei de receber uma cópia de cortesia dele e recomendo a todos que tenham interesse de avançar para o próximo passo no capítulo de Rails vs Mundo Corporativo: usar Ruby on Rails lado a lado com aplicações Java legados. JRuby está avançando muito rápido, ganhando velocidade, performance, ficando mais estável e robusto. Não vai demorar muito para ser visto como uma boa solução. Este livro é o primeiro sobre o assunto escrito por um dos desenvolvedores, portanto a leitura ideal para os interessados no assunto.
+tags: obsolete
+

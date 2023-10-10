@@ -1,0 +1,21 @@
+
+Esta discussão começou neste artigo, continuou nesta resposta e minha contra-resposta está neste comentário. Uma das coisas que mencionei foi a participação de Avi Bryant (o criador do excelente Seaside) na RailsConf 2007, resumido neste artigo de Giles Bowkett.
+
+
+
+Avi basicamente disse:
+Eu sou do futuro. Eu sei como esta história termina. Todas as pessoas dizendo que não podem implementar Ruby em uma virtual machine rápida estão erradas. Essa machine já existe hoje, é chamada GemStone, e ela poderia certamente ser adaptada para Ruby. Ela roda Smalltalk, e Ruby essencialmente é Smalltalk. Então adaptá-la para rodar Ruby está absolutamente dentro da realidade do possível.
+E dentre os comentários há alguns interessantes, incluindo do pessoal da GemStone:
+Giles, o pessoal da GemStone não está complementa por fora da mensagem de Avi. Estamos no processo de portar Seaside para GemStone (veja aqui para detalhes) e falamos com Avi naquela sexta, antes da palestra. Ele mencionou que acha que um Ruby VM baseado em GemStone seria uma coisa legal. Ele nos disse que mencionaria GemStone na sua palestra, mas nenhum outro detalhe.
+Francamente, não havíamos pensado sobre um Ruby VM em GemStone antes de nosso encontro na sexta, mas a combinação de nossa VM e expertise de persistência OO aplicada a Ruby poderia ser interessante.
+E outra:
+Eu (Alan) trabalho para a GemStone e fiquei muito contente de ouvir Avi falar. Ambos Smalltalk e Ruby são linguagens amáveis e eu espero que a GemStone seja capaz de aplicar seu conhecimento para a evolução e adoção de Ruby e Rails.
+E Giles Bowkett disse mais abaixo:
+Eu não sei muito sobre compiladores, interpretadores e VMs, mas Rubinius é definitivamente um projeto promissor. Há uma entrevista com Evan Phoenix, o criador de Rubinius, onde ele fala um pouco sobre as similaridades entre Ruby e Smalltalk também.
+E nessa entrevista que ele menciona, Evan Phoenix diz o seguinte:
+Rubinius é uma implementação de Ruby escrita do zero. Ela é arquitetada de maneira muito similar à virtual machine do Smalltalk-80 original, mas usa um caminho diferente para várias coisas para tornar as coisas mais fáceis para Ruby. (…) Eu diria que minha maior surpresa é realmente quão perto a semântica interna de Ruby é de Smalltalk. Antes de Rubinius, eu realmente nunca vi ou programei em Smalltalk, apenas ouvi falar. Mas quanto mais eu olho como o interpretador do Smalltalk-80 original foi escrito, mais ele se parece com Ruby. Divergem em muitos pontos também, mas a semântica geral é muito próxima.
+A ligação entre Smalltalk e Ruby é muito mais estreita do que se pode pensar. E sobre Smalltalk ser 100% orientada-a-objetos, naturalmente não é bem verdade: assinalamentos em Smalltalk não é envio de mensagens, statements condicionais frequentemente são otimizadas pelo compilador para evitar envio de mensagens.
+A discussão de pure OOP é vista em diversos fórums, de diversas linguagens. A conclusão normal: ninguém se importa. Interessa se uma linguagem é 70% OOP e a outra é 90% OOP? Nada. Esqueçam esse nonsense e se preocupem com o que realmente importa.
+Smalltalk E Ruby são linguagens OOP o suficiente, produtivas o suficiente, cada uma com características que nos fazem “gostar” de cada uma (algo subjetivo), possibilitam terminar nossos projetos e tem excelentes possibilidades para o futuro, incluindo uma convergência de VMs e compartilhamento de bibliotecas e conhecimento. Tudo ótimo!
+tags: obsolete smalltalk
+

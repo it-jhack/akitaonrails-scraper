@@ -1,0 +1,11 @@
+
+
+
+
+
+Do RubyInside : Mais um mês, mais um passo acima no Índice de Comunidade de Programação TIOBE ! No mês passado “reportamos que o Ruby havia subido de 13o para 12o lugar”https://www.rubyinside.com/ruby-goes-from-13th-to-12th-most-popular-language-297.html, e agora subiu mais uma vez, para 11o. O Índice TIOBE não é a tabela mais oficial do mundo, mas é um dos mais objetivos. Ruby subiu de 27o em Setembro de 2004 para 11o agora.
+Para aqueles que não estão familiarizados com o índice:
+O Índice de Comunidade de Programação TIOBE dá uma indicação da popularidade das linguagens de programação. O índice é atualizado mensalmente. As taxas são baseadas na disponibilidade mundial de engenheiros, cursos e fornecedores. Os populares sites de procura Google, MSN e Yahoo! são usados para calcular as taxas. Observe que o índice TIOBE não é sobre a melhor linguagem de programação ou a linguagem com o maior número de linhas de códigos escritos.
+Também é interessante ver D seguindo Ruby acima na tabela. Tenho visto um pouco de barulho sobre essa linguagem ultimamente.
+tags: obsolete
+

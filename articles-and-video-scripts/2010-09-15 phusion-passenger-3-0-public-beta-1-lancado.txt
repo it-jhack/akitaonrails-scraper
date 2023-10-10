@@ -1,0 +1,49 @@
+
+
+
+
+A Phusion acabou de anunciar o primeiro beta do esperado Passenger 3.0.
+Eles já descreveram muitas das novas funcionalidades no blog deles nos últimos meses. Recomendo que leiam:
+
+Technology Preview 1: Performance – o Passenger 3 pode ser até 55% mais rápido do que o Passenger 2.2.
+Technology Preview 2: Estabilidade, Robustez, Disponibilidade, Auto-Correção – o Passenger 3 vem com diversos salva-guardas para se manter o mais estável quanto possível.
+Technology Preview 3: Fechando o buraco entre desenvolvimento e produção e repensando a palavra ‘fácil’ – descreve a diferença nos modelos do Passenger com os do Mongrel, Thin e Unicorn e quando você pode preferir um ao outro. Apresenta o Passenger Standalone que pode ser potencialmente uma melhoria sobre o Mongrel, Thin e Unicorn.
+Technology Preview 4: Novas funcionalidades e removendo coisas velhas
+
+Para quem usa RVM, nas versões anteriores a integração não era trivial – se você usa RVM e quer usar o Passenger 2.2 leia as intruções especiais para isso. Nesta nova versão eles trabalharam com o Wayne E. Seguin (criador do RVM) para garantir uma integração mais suave.
+Sem mais delongas, para instalar faça igual anteriormente:
+1
+
+gem install passenger --pre
+
+
+Daí escolha se quer instalar no Apache 2 ou NginX:
+1
+2
+
+passenger-install-apache2-module
+passenger-install-nginx-module
+
+
+Se quiser rodar a versão Standalone:
+1
+2
+
+cd /caminho_do_seu_app
+passenger start
+
+
+Esta última opção significa que em vez de rodar ./script/server ou rails s (no caso do Rails 3), executando Webrick, Mongrel ou Thin, agora você pode testar diretamente no Passenger sem precisar de configurações extras. Basta executar passenger start e pronto! Esta é minha nova funcionalidade preferida já para desenvolvimento!
+Além do já descrito nos artigos acima, o novo Passenger trás mais:
+
+a versão NginX trás SSL compilado por padrão
+suporte a NginX 0.8
+melhor suporte a Ruby 1.9.2!
+opção PassengerFriendlyErrorPages para desligar a página de backtrace de erro em caso de erro 500.
+opção PassengerDebugLogFile
+opção PassengerSpawnMethod no lugar de RailsSpawnMethod
+opção PassengerMinInstances garante que pelo menos x instâncias serão mantidas rodando uma vez que sobem, mas não garante que as instâncias subirão imediatamente depois do servidor web subir. Em vez disso existe uma opção de configuração separada para isso, chamada PassengerPreStart. O motivo da existência dessas duas opções separadas está descrito em detalhes no manual. (Leia o manual!)
+
+E este não é o fim do caminho, a Phusion tem ainda mais novidades chegando para o Passenger 3. Por enquanto baixem o beta, testem com suas aplicações e enviem feedback.
+tags: obsolete phusion
+

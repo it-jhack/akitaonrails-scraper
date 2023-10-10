@@ -1,0 +1,220 @@
+
+Last year I did a mistake: I left an open vulnerability in a client's project. Fortunately it was a short lived project with no reported breaches, but this was such a stupid oversight that I might as well bang my head in a wall because of it.
+So, let me explain the situation that might lead to this kind of vulnerability: a server-side API, serving tampered raw data to a client-side consumer that is assuming that the data is safe, and rendering it directly into the front-end.
+First of all, for the uninitiated, a XSS or Cross Site Scripting is when you allow user input to be rendered in your site without proper sanitization. For example, a simple comments section. You expect users to just fill in the usual rants, but someone pastes in a javascript and when you render this comment, it executes in all your users browsers. It can go from simple site defacing up to stealing your users private data. A nasty vulnerability.
+To avoid this, by default, Rails sanitizes every string that you throw into the view templates. You have to manually declare your string as safe if you want to render its unfiltered raw content. There are many nuances to this as scripts can come from many sources that flag it as being safe when it's not. The official Rails Guide has an entire page for Security best practices and it includes several injection vectors that you need to know.
+
+
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+class PagesController
+  ...
+  def show
+    @page = Page.find_by_slug(params[:id])
+    respond_to do |format|
+      format.html
+      format.json { render json: @page.to_json(only: [:title, :slug, :body]) }
+    end
+  end
+  ...
+end
+
+
+Simple one-liner to allow your Page URL to respond to "/pages/some-page.json" and now you can add a simple Javascript/Coffeescript to your page to load this JSON like this:
+
+1
+2
+3
+4
+5
+6
+
+$ ->
+  $.ajax
+    url: "/pages/" + $("meta[name=page]").attr("id") + ".json"
+    success: (data, textStatus, jqXHR) ->
+      body = data['body']
+      $('.ajax_body').append(body)
+
+
+And now, all hell breaks loose. If you allowed some outside user to save content with Page#create and you DID NOT manually sanitize the data your client is screwed, because different from Rails View Templates, the #to_json method does not sanitize the JSON it generates and the application is open to XSS attacks.
+The main pattern is when you have a vanilla Rails app and you quickly convert it to be used by some fancy SPA (Single Page App) that loads data from your quickly built API endpoints and fail to sanitize the data before appending to the browser's DOM.
+Fix 1: Sanitize in the Server-Side rendering
+The easiest fix for this particular problem is to remember to sanitize whatever comes out of your app. The Rails View Templates takes care of this automatically and we are spoiled by it. So we forget what needs to be done to manually sanitize a user inputted text:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+class PagesController < ApplicationController
+  before_action :set_page, only: [:show, :edit, :update, :destroy]
+  include ActionView::Helpers::SanitizeHelper
+  include ActionView::Helpers::JavaScriptHelper
+  ...
+  def show
+    ...
+    respond_to do |format|
+      ...
+      format.json do
+        json_body = escape_javascript(sanitize(@page.to_json(only: [:title, :slug, :body])))
+        render json: json_body
+      end
+    end
+  end
+
+
+Now, when you call the JSON URI "https://localhost:3000/pages/1.json", for example, you will receive this sanitized version:
+
+1
+
+{\"title\":\"Hello World\",\"body\":\"\\u003cscript\\u003ealert(\'XSS\')\\u003c/script\\u003e\"}
+
+
+Instead of the previously tampered raw body:
+
+1
+
+{"title":"Hello World","body":"\u003cscript\u003ealert('XSS')\u003c/script\u003e"}
+
+
+Fix 2: Always add a redundant XSS check in the Client-Side
+Even if you're given guarantees that the API you're consuming always provides safe data, you can't be too sure. Always assume that data that comes from outside of your domain might come compromised. It only takes one breach, one time.
+So, in the client-side I believe one of the ways is to use the "xss" module. In a Rails app, the canonical way to add it is to use Rails Assets:
+
+1
+2
+3
+4
+
+# in your Gemfile
+source 'https://rails-assets.org' do
+  gem 'rails-assets-xss'
+end
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+// in your app/assets/javascripts/application.js
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+
+//= require xss
+
+//= require_tree .
+
+
+And now, in the previously vulnerable "pages.coffee":
+
+1
+2
+3
+4
+5
+6
+
+$ ->
+  $.ajax
+    url: "/pages/" + $("meta[name=page]").attr("id") + ".json"
+    success: (data, textStatus, jqXHR) ->
+      body = filterXSS(data['body'])
+      $('.ajax_body').append(body)
+
+
+Assume that all data that comes from Ajax endpoints could be tampered, so always filter against XSS, specially if you're going to append the result into your user browser's DOM.
+I believe most modern SPA frameworks such as Ember already checks for that, but check the Model documentation of your favorite framework to be sure.
+Fix 3: Filter all User Input, regardless. Use Rack-Protection
+The usual workflow is for the Rails app to receive raw data from the user, store it in the Model table and when it needs to be rendered, let the View layer make the sanitization. Specially because if you need to parse the user data from the database, you would have to de-sanitize first.
+But if you really don't care about the raw user input (you're not making a Content Management System) and you only really care about the plain text, then you should sanitize all user input by default.
+One way to do it is to put the sanitization in the Rack Middleware layer directly, so your app only receives filtered data.
+
+1
+2
+
+# in your Gemfile
+gem 'rack-protection'
+
+
+Then add this to your "config/application.rb" application block:
+
+1
+
+config.middleware.use Rack::Protection::EscapedParams
+
+
+And that's it!
+Without this middleware, this is what a vanilla form would receive from the user when he posts a javascript into the controller:
+
+1
+2
+3
+4
+
+Started POST "/pages" for 127.0.0.1 at 2016-02-22 13:15:58 -0300
+Processing by PagesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"...", "page"=>{"title"=>"Hello 5", 
+  "body"=>"<script>alert('XSS 5')</script>"}, "commit"=>"Create Page"}
+
+
+You can see the raw javascript that, if gone unchecked through an API, will execute in the user browser after an uncaring Ajax fetches it.
+Now, with the Rack Protection middleware, your Rails app will not receive the raw javascript, instead it will come pre-escaped.
+
+1
+2
+3
+4
+
+Started POST "/pages" for 127.0.0.1 at 2016-02-22 13:16:44 -0300
+Processing by PagesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"...", "page"=>{"title"=>"Hello 6", 
+  "body"=>"&lt;script&gt;alert(&#x27;XSS 6&#x27;)&lt;&#x2F;script&gt;"}, "commit"=>"Create Page"}
+
+
+I believe there are clever ways to try to fool the escape process by using some combination of special characters, but this should cover most cases.
+What about Brakeman and other security scanners?
+If you use Brakeman it will usually warn you if you try to inject user data into a View Template or SQL query without proper sanitization. But because this is a cross-app scenario, the server app will be flagged as "secure", and you will not notice it until too late.
+So the recommendation is: do ALL 3 things I listed above.
+
+Always manually sanitize your JSON APIs in the server-side.
+Always manually sanitize your Ajax fetches in the client-side.
+Always add Rack Protection (see the documentation for other protection other than the EscapedParams and also check the Rack-Attack for further protection).
+
+Those are all easy to add security layers, and this is only one vector of attack, so better to cover all basis.
+As a bonus: do not forget to install "Bundler Audit" to check if you're not using vulnerable gems, many XSS and other vulnerabilities come from dependencies that you're not even aware of. So run Brakeman and Bundler Audit regularly against your application as well.
+You can never be too safe. Security is not binary, you're vulnerable by default. There is no such as thing as "vulnerability-free" app, no matter how many audits you ran. There are only vulnerabilities that you didn not find yet, but they're there, be assured of that.
+
+tags: ruby rails security xss
+

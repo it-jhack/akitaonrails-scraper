@@ -1,0 +1,62 @@
+
+Até hoje eu usava o Capistrano para fazer o deployment de modificações no código do meu blog. Mas resolvi fazer algo mais simples: usar hooks de git. É uma técnica já bem conhecida e muito simples, por isso acho que vale algumas dicas.
+Minha configuração é bem simples: o repositório git fica no mesmo servidor do site. Para criar um repositório privado de Git não é necessário muita coisa, basta que seu servidor seja acessível via SSH. Crie um par de chaves na sua máquina e coloque a chave pública no authorized_keys do servidor.
+
+
+Para criar um repositório git no seu servidor, logue nele e faça o seguinte:
+1
+2
+3
+
+mkdir ~/repos/meu_projeto.git
+cd ~/repos/meu_projeto.git
+git init --bare
+
+
+Pronto, agora na sua máquina local você precisa adicionar esse novo repositório remoto:
+1
+2
+
+cd meu_projeto
+git remote add origin meu_usuario@meu_dominio.com:~/repos/meu_projeto.git
+
+
+Se você já tiver um “origin” configurado (por exemplo, do github), basta colocar qualquer outro nome.
+No meu caso, de dentro do servidor, eu faço o seguinte:
+1
+
+git clone ~/repos/meu_projeto.git ~/meu_projeto
+
+
+No caso o ~/meu_projeto/public será o diretório para onde vou apontar o Phusion Passenger. Agora, toda vez que eu fizer uma modificação preciso fazer:
+
+git push origin master a partir do meu projeto na minha máquina de desenvolvimento local
+ssh meu_usuario@meu_dominio.com logar no servidor remoto
+cd ~/meu_projeto && git pull origin master para puxar as modificações
+touch ~/meu_projeto/tmp/restart.txt para reiniciar o Passenger
+
+Em vez de fazer tudo isso manualmente, posso usar um recurso chamado git hooks. O repositório remoto do git consegue executar quaisquer scripts quando sofrer alguma ação, por exemplo, um git push. Para tanto, preciso editar o arquivo ~/repos/meu_projeto.git/hooks/post-receive que será executado quando ele receber novos dados:
+1
+2
+3
+4
+5
+
+#!/bin/sh
+cd /home/meu_usuario/meu_projeto
+env -i git reset --hard 
+env -i git pull origin master
+env -i touch tmp/restart.txt 
+
+
+Esses env -i é por causa de um pequeno detalhe de como esses hooks funcionam, explicado neste blog. Além disso, não esqueça de tornar esse arquivo executável:
+1
+
+chmod +x ~/repos/meu_projeto.git/hooks/post-receive
+
+
+Eu poderia incrementar isso de diversas maneiras, por exemplo mandando ele rodar um rake db:migrate, mas para mim já está suficiente. Agora, toda vez que eu modificar alguma coisa e fizer um git push o repositório irá automaticamente atualizar o código do meu blog, de forma bem simples e zero esforço. Posso até retirar o suporte a capistrano dele.
+E para quem não sabe, repositórios do Github suportam diversos desses hooks também. Veja esta documentação deles. Você pode configurar o Github para dar um post com as informações do commit para um servidor web seu que pode reagir e fazer alguma operação, como o deployment ou rodar um serviço de integração contínua e assim por diante.
+Enfim, dá para automatizar muita coisa com isso. Aproveitem.
+tags: obsolete git
+

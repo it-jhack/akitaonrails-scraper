@@ -1,0 +1,10 @@
+
+
+
+
+Abriram as votações para as aplicações criadas durante o Rails Rumble. São 131 aplicações. Alguém do Brasil participou? Coloque nos comentários deste artigo.
+Para quem não conhece, o Rails Rumble é um concurso aberto. Este ano foi a 2a edição. A idéia é: o que se pode criar em apenas 48 horas, com no máximo 4 pessoas, a partir do zero. Ou seja, antes do evento não se pode ter uma única linha de código, nem mesmo um Jpeg pronto. A partir da meia-noite de sexta para sábado a equipe precisa fazer o web design, a implementação, a configuração do servidor e cuidar para que a aplicação não tenha bugs feios, problemas graves de performance. À meia-noite de domingo para segunda os servidores se fecham.
+A idéia é demonstrar o que é possível fazer em apenas 48 horas, usando Ruby on Rails e filosofia ágil de desenvolvimento. Este ano, foram criadas 131 aplicações em apenas 48 horas! Obviamente, 48 horas é bem pouco tempo, mas ajuda a demonstrar a quem não conhece Rails o que é possível fazer. Possíveis clientes podem encontrar bons times para contratar vendo a aplicação pronta na prática, por exemplo. Também é uma maneira de divulgar seu trabalho.
+Ano passado, por exemplo, saiu do Rails Rumble o site Pagestacker, um trabalho feito por uma equipe 100% brasileira. Dêem uma olhada nas aplicações desse ano, votem e participem.
+tags: obsolete
+

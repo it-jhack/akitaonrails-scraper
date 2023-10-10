@@ -1,0 +1,27 @@
+
+Hoje é o último dia da RubyConf 2007, que está acontecendo em Charlotte, North Carolina. 3 dias inteiros de Ruby. Grandes personalidades como o próprio Matz, Jim Weirich, Nathaniel Talbott e muitos outros palestrando sobre os mais diversos assuntos relacionados a Ruby.
+Sobre o Matz, uma frase em especial:
+“Vamos entrar no mundo corporativo. Eu não quero, mas os caras de ternos nos cercam.”
+
+
+
+Acompanhem os acontecimentos do evento pelo blog GIANT ROBOT SMASHING INTO OTHER GIANT ROBOTS :
+
+Day 1
+Day 2
+Day 3
+
+Sobre a frase do Matz, a idéia é que Ruby – que começou apenas como um hobby – ganhou dimensões que ele jamais havia esperado. E chegou a hora de Ruby amadurecer e enfrentar os problemas gigantes, Enterprisey. Para isso vamos começar a ganhar em Performance e Escalabilidade.
+No evento também estão John Lam (IronRuby), Charles Nutter e Thomas Enebo (JRuby) e Evan Phoenix (Rubinius), além de Matz e Sasada Koichi (Ruby 1.9/YARV).
+Sobre JRuby, vocês devem ter visto que a versão 1.0.2 acabou de ser lançada assim como a versão 1.1 Beta 1. Além dos esperados bug-fixes estamos num ponto excepcional: JRuby hoje já é mais rápido do que Ruby 1.8. É a implementação mais completa e veloz separada do MRI.
+Vejam este artigo de Nick Sieger – um dos Core Developers do JRuby -, demonstrando como o JRuby supera o MRI. Existem dois pequenos poréns, claro. Como todos sabem, a JVM é adaptativa e a maneira como ele auto-otimiza o código em execução, internamente, exige um pequeno período de “aquecimento”. Depois disso é que sua performance supera o MRI. Numa aplicação Rails rodando sobre JRuby isso significa um aquecimento de cerca de 250 requests. Além disso, como a JVM suporta multi-threading nativo, ele consegue aproveitar melhor múltiplos cores. Então, rodando numa máquina dual core, a JVM vai utilizar parte dos dois, enquanto um processo MRI rodará somente em um deles. Mesmo assim, os números são impressionantes, vejam o gráfico (notem o período inicial de “aquecimento”):
+
+A única implementação mais veloz do que o JRuby atual é a próxima versão do Ruby, codenome YARV. Koichi Sasada está definitivamente fazendo um excelente trabalho para o Ruby 1.9.
+Evan Phoenix palestrou sobre o Rubinius, conhecido como o “Ruby feito em Ruby”. Sua idéia é criar uma virtual machine mínima e fazer todo resto da infra-estrutura (não apenas as Core Libraries), totalmente escritas em Ruby. Este é um projeto que merece muita atenção. Ela é a chave para possibilitar múltiplas implementações de Ruby em outras plataformas e deve servir para refinar tanto IronRuby quanto JRuby no futuro. Charles e Evan – pelo menos pelos mailing lists que li – parecem estar em boa sintonia e ajuda mútuas.
+Aliás, sigam este link para ver como está simples rodar Rails sobre Glassfish. No mesmo nível de facilidade de rodar atualmente num Mongrel.
+Voltando à RubyConf, Marcel Molina repetiu a mesma palestra que ele fez na Mountain West Conf falando sobre beleza e programação. Na minha opinião estilo, elegância e beleza tem tudo a ver com a filosofia do “Ruby Way” e aconselho todos a darem uma olhada.
+Dr. Nic está lá também, e ontem aconteceu as sessões “paralelas” de mais uma RejectConf :-)
+Meu chefe, Carl Youngblood e sua empresa Confreaks está lá! Significa que em breve as palestras desta RubyConf estarão disponíveis para todos poderem assistir online, assim como eles já fizeram com a Mountain West e a Ruby Hoedown.
+Update 3AM: Acabei de colocar a link para o terceiro dia, acima.
+tags: obsolete conference
+

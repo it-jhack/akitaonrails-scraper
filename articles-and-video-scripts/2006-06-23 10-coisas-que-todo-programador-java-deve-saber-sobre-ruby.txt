@@ -1,0 +1,11 @@
+
+
+
+
+Continuando os artigos traduzidos (existe muita coisa excelente escrita lá fora), fiz uma tradução e adaptação livre da apresentação 10 Things Every Java Programmer Should Know About Ruby, por Jim Weirich.
+Acho que é uma boa oportunidade para ajudar programadores Java a entender que Ruby é mais simples do que parece. Esta apresentação não tem objetivo de atacar Java, isso é improdutivo, é importante que Ruby seja reconhecido pelos seus próprios méritos.
+
+Creative Commons License
+Esta obra está licenciada sob uma Licença Creative Commons.
+tags: obsolete
+

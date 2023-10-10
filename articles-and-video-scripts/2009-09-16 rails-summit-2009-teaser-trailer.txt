@@ -1,0 +1,21 @@
+
+
+
+
+
+Quem esteve no Dev in Rio 2009 e quem participou do Rails Summit 2008 sabe do que estou falando :-)
+
+Aqui vai a história sobre isso, diretamente pelo Tapajós
+
+Eu estava sentado junto com a galera do Rio vendo a morena passando de um lado para o outro e observando que ninguém se concentrava na palestra. Todo mundo estava fazendo a cobertura do evento no twitter e eu tive a idéia de pôr uma foto dela lá, provocando quem não veio ao evento.
+Como eu era um novo usuário do twitter e achava meio estúpido o propósito dele de dizer o que se está fazendo eu sempre tentei subverter o uso dele e tive a idéia de fazer a mesma coisa com um repositório de código. Fui lá no github, criei o projeto, coloquei uma foto e publiquei o link no Twitter.
+Nesse momento eu fui até o Chris Wanstrath (criador do github) e mostrei o projeto. Ele achou super engraçado e comentou que as pessoas achavam os usos mais estranhos possíveis para os repositórios e que isso era bem engraçado e fizemos uma pequena “aposta” que o projeto ia bombar.
+Em poucos minutos minha caixa de e-mails estava lotada de pull request com dezenas e fotos e como estava bem complicado gerenciar tudo e ainda observa-la eu resolvi dar direito de commit a algumas pessoas e o projeto ganhou vida própria.
+Meu medo era a morena ficar “P” e querer arrumar confusão. Era impossível voltar atrás! Mas felizmente ela ficou sabendo e não ligou, por isso o projeto continuou crescendo e até hoje continua sendo forkado
+Por falar em fork, o Dr. Nic foi um dos que adorou o projeto e gravou um pequeno vídeo sobre ele.
+Bem, O Rails Summit 2009 está chegando e eu estarei lá para dar continuidade ao projeto e se der tempo vou palestrar também.
+
+Assistam a outros teasers do Rails Summit 2009 em https://www.youtube.com/user/AkitaOnRails e ajudem a promover o evento!
+Não se esqueçam, o Rails Summit acontece dias 13 e 14 de Outubro, não deixem para se registrar na última hora!
+tags: railssummit2009
+

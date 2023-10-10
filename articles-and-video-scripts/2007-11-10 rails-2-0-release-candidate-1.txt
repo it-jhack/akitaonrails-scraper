@@ -1,0 +1,9 @@
+
+
+
+
+Pouco mais de um mês atrás eu havia anunciado sobre o Rails 2.0 Preview Release. Pois bem, acabou de ser anunciado o Release Candidate 1
+Conforme o Core Team recomenda: atualize seu Rails atual para 1.2.5 e verifique os logs procurando por “Deprecation Warnings” (avisos de recursos obsoletos). Exemplo, o método ActiveRecord#find_all é um clássico que está obsoleto desde que entramos no 1.2, mas agora esses recursos obsoletos serão limados na versão 2.0, retirando a gordura desnecessária.
+Quando conseguir fazer sua aplicação rodar se mais nenhum aviso, tente atualizar para o Rails 2.0 RC1. Se aparecer algum erro que você tem certeza que não é da sua aplicação, abra um Ticket descrevendo o erro. Este é o momento de ajudar a fechar bugs de última hora. O lançamento da versão 2.0 final está próxima mas ainda não tem uma data: “estará terminado quando estiver pronto”
+tags: obsolete rails
+

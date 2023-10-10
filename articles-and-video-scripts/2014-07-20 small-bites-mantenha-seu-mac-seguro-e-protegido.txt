@@ -1,0 +1,76 @@
+
+Como sabemos, segurança é uma proposição de "tudo ou nada", não existe "meio protegido". Infelizmente, a única forma de ter certeza que seu dispositivo está 100% seguro é se ele estiver sempre offline e nunca se conectar a nenhuma rede, e que sua localização tenha segurança física (literalmente, numa jaula).
+Ou seja, estamos sempre desprotegidos por padrão, parta desse princípio. O que podemos fazer é não facilitar o trabalho de quem quer invadir seus dados. Não deixe nada ao acaso, pois o máximo que vamos fazer agora é dificultar o trabalho dos outros.
+Importante:
+
+Este artigo parte do princípio que você está usando OS X Mavericks e que está constantemente baixando as atualizações de segurança.
+Não falar muito de "redes sociais" e "SaaS", onde muito da sua privacidade já está comprometida, vamos falar de alguns aspectos mas tome cuidado com Engenharia Social, mais do que hackers remotos.
+Não dá pra garantir que, depois de seguir todas as recomendações a seguir, seu Macbook está "garantidamente seguro", ele somente vai estar mais difícil de acessar, mas certamente um técnico mais motivado vai conseguir chegar onde ele quer.
+
+A razão desse artigo é porque, por padrão, seu Macbook vem razoavelmente aberto, não oferecendo nenhuma dificuldade.
+
+
+
+Para começar, mesmo se você tiver uma senha te protegendo, isso não quer dizer nada. Se eu tiver acesso físico à sua máquina:
+
+posso reiniciar sua senha através do Recovery Boot. Portanto, a primeira coisa a fazer é pelo menos colocar a senha de EFI
+posso fazer seu Macbook bootar através de outro OS X, com um HD externo ou USB key com um OS X bootável.
+posso conectar seu Macbook a outro Macbook com um cabo USB/Firewire/Thunderbolt em Target Mode e ele vai aparecer como um HD externo no outro Mac.
+
+Para dificultar isso, basta colocar uma senha no firmware EFI. Novamente, isso vai dificultar, mas eu posso quebrar o chip do firmware para desabilitar o bloqueio, assim:
+
+Fique claro, isso não é um bloqueio permanente, apenas uma forma de dificultar. Se seu antagonista realmente estiver motivado, isso vai dar a ele acesso ao seu HD. O que fazer agora?
+Vamos garantir que, mesmo que ele tenha acesso ao seu HD, ele não tenha acesso à sua partição. Para isso, desde o OS X Panther temos o File Vault para encriptar os dados do seu HD de forma transparente ao seu uso. Antigamente ele só conseguia encriptar seu diretório Home, mas o File Vault 2 oferece full HD encryption e você deve habilitá-lo se ainda não o fez. Quando fizer pela primeira vez ele vai ter mostra o recovery key, escreva à mão num papel e guarde num cofre! (sério!)
+Significa que esse é o end-game? Estamos seguros? Não, existem formas de tentar quebrar a criptografia do File Vault como você pode ver nos seguintes artigos:
+
+Decrypting Apple FileVault Full Volume Encryption
+Securing Apple’s FileVault 2 (Full Disk Encryption)
+An Analysis of Apple's FileVault 2
+
+
+Lembre-se de uma coisa: o OS X é excepcional quando se fala em modo de hibernação. Você sabe que pode simplesmente fechar a tampa da tela, sem precisar desligar o Macbook e quando reabre ele volta exatamente onde estava. Então você coloca a senha do seu usuário e boom, de volta ao trabalho. Porém, se seu disco é encriptado, ele deveria também pedir a senha para abrir o volume encriptado, mas ele não pede!
+Isso porque ele está salvo em memória! Significa que uma forma de quebrar a encriptação do seu File Vault é vasculhando a memória (RAM ou virtual memory), usando técnicas como DMA (Direct Memory Access) por Firewire - em particular essa vulnerabilidade foi consertada no OS X Lion 10.7.2. Recomendação: se estiver se movendo por locais inseguros, onde seu Mac pode ser interceptado, faça um shutdown completo!
+Bom, isso deve adicionar um nível de dificuldade, pelo menos - e note como não basta somente a parte técnica: seu comportamento em lidar com seu equipamento é boa parte do seu procedimento de segurança.
+Outra coisa que eu pessoalmente gosto de fazer apenas para adicionar uma pequena linha extra de defesa é criar um disco esparso encriptado com o Disk Utility. É a mesma coisa que seu volume já criptografado, mas dentro dele eu mantenho outro volume criptografado, com outra senha, para meus dados mais secretos. Faço a mesma coisa se preciso transportar alguma coisa num USB Key, por exemplo. Aprenda a usar discos esparsos criptografados. Digamos que você transporte alguma coisa num USB drive e ele se perca ou alguém roube, isso vai pelo menos adicionar uma camada extra que alguém iniciante não vai ter como abrir.
+
+E, obviamente, NÃO grave a senha no seu Keychain. Se gravar por acidente, abra a aplicação Keychain e apague a senha gravada.
+Se seguiu os passos anteriores aproveite e cuide de outra coisa: desabilite o usuário Guest. Seu Macbook não foi feito para emprestar para ninguém - novamente, seu comportamento! Segurança significa que seu equipamento nunca deve sair do seu controle. O Guest User é uma funcionalidade do OS X Lion 10.7.2 que vem ligado por padrão. Tecnicamente, ele usa as permissões de usuário para manter os dados do seu usuário "invisíveis" a esse usuário convidado. Porém, basta uma vulnerabilidade que você não conhece no seu sistema operacional para que esse usuário tenha acesso de "root"! Por que correr o risco?? Desabilite o Guest User agora mesmo!
+
+No System Preferences, existe um lugar onde você pode habilitar compartilhamento de recursos da sua máquina. Compartilhar arquivos, impressora, internet, etc. Espero que seja óbvio que você deve desabilitar todo e qualquer compartilhamento! Segurança e compartilhamento estão em espectros opostos.
+
+Falando em System Preferences, em "Security & Privacy" garanta que esteja configurado para pedir senha sempre que seu Macbook acordar de hibernação e nunca desabilite a checagem de chaves de aplicação. Você deve, sempre que possível, só instalar aplicativos da App Store. E se fizer download, deve deixar o OS X checar se ele é de um desenvolvedor registrado - que pode ser rastreado! Nunca instale aplicativos desconhecidos! Nunca confie em ninguém, especialmente alguém remoto da internet! (Não preciso dizer o básico, obviamente, de nunca abrir nenhum anexo de nenhum email, de nenhuma forma e de nenhum site! Vamos assumir que nenhum dos leitores aqui é minha avó)
+
+Clique em "Advanced" no fim da tela:
+
+Não preciso dizer também para manter o Java e o Flash sempre atualizados, de preferência deixe configurado para atualizar automaticamente. A última coisa que você precisa é vulnerabilidades desse tipo. A configuração também fica no seu System Preferences.
+A menos que precise muito também mantenha seu Bluetooth desligado!
+
+O ideal seria até seu Wifi estar desligado mas como não dá, pelo menos garanta que seu Firewall está ativo! Mas como só isso eu acho pouco, recomendo instalar também o aplicativo Little Snitch 3. Ele é bem chato: toda vez que qualquer coisa tentar enviar qualquer coisa ou quando qualquer coisa tentar enviar pacotes pra você, ele vai te notificar.
+Essa nem é a melhor opção pois ele só vai conseguir filtrar coisas da camada de aplicação do seu TCP, mas novamente, é apenas mais uma barreira. Você precisa se disciplicar a não simplesmente aceitar tudo, mas parar pra ver o que é e experimentar recusar tudo por padrão. Se algo importante que você queria quebrar, basta fazer de novo.
+
+Pense que alguém pode estar vendo seu Mac, seus arquivos, tudo via algum aplicativo online que tem vulnerabilidade ou um cavalo de tróia que você não está vendo. Pelo menos vamos tentar interceptar a comunicação. E os melhores não vão ser pegos nem pelo Little Snitch, e aí você precisa de algo mais parrudo, no nível do roteador, pra pegar. Mas esse é o melhor custo-benefício para o caso onde você só tem seu Macbook e precisa conectá-lo a redes estranhas o tempo todo.
+Aliás, em redes estranhas, idealmente você tem um servidor remoto de confiança para abrir uma VPN e tunelar todo seu tráfego para lá. Você pode experimentar qualquer um dos que existem como BTGuard, IPVanish, TorGuard, PrivatVPN e outros, escolha um fora da jurisdição do seu país e sem leis de cooperação, de preferência.
+Para simplesmente não ter seu tráfego snifado, pelo menos use o TorBrowser. E falando em web, vamos rapidamente só colocar um outro ponto em questão: até aqui estamos falando de acesso físico ao seu HD e ao seu Macbook, mas não se esqueça que seus dados já estão comprometidos de uma forma ou outra através das dezenas de serviços que você precisa usar diariamente como Dropbox, Github, Evernote, Pocket, Facebook, Instagram, Google.
+Para começar, tenha senhas seguras. Não preciso dizer o óbvio:
+NÃO USE A MESMA SENHA EM TUDO!!
+É uma grande estupidez! Use um gerenciador de senhas como o 1Password ou outros e gere senhas minimamente fortes e bem longas:
+
+Sendo sincero, eu também usava a mesma senha em muitos serviços, mas com o tempo vim substituindo a grande maioria. E somente nos que não tem importância ainda está senha fraca. Em todos os relevantes, que inclui tudo do Google, Dropbox, Github, Twitter, Amazon e muito mais, além da senha forte também está habilitado autenticação em 2 etapas. Hoje está bastante conveniente porque existe 1Password para iOS e Android, além de extensions para todos os navegadores e, com isso, você nunca vai precisar digitar sua senha. E para a autenticação em 2 etapas também tem aplicativos pra iOS e Android como o Authy.
+Me preocupa um pouco a implementação deles. Significa que pelo menos 1 senha está em memória, no clipboard, para podermos colar no campo de senha em algum momento. Pelo menos no caso do Mac, sabemos que desde o OS X Lion a memória virtual é criptografada por padrão. Mesmo assim, em algum lugar, em algum momento, existe uma senha aberta que "pode" ser interceptada. Mas ainda é muito melhor do que usar a mesma senha fraca em todos os lugares.
+Por outro lado, significa que basta roubar o cofre das suas senhas do 1Password E saber sua "Master Password" para ter acesso a basicamente tudo! E aí voltamos ao ponto inicial: garanta que as chances disso acontecer sejam mínimas! Se alguém roubar seu Macbook agora, e ele não estiver no mínimo com o que expliquei até aqui, qualquer um poderá extrair todas as suas senhas!
+E falando em roubar máquinas, habilite agora mesmo o serviço de Back to my Mac:
+
+O procedimento é o seguinte: se seu Macbook desaparecer ou for roubado, a primeira coisa que você precisa fazer é arranjar uma conexão com a internet e abrir seu navegador no iCloud e imediatamente enviar sinal para destruir os dados do seu notebook remotamente, se por alguma razão, o perpetrador tiver sucesso em colocar sua conta online! Além disso você deve acessar todas as suas contas de todos os seus serviços online e imeditamente trocar todas as suas senhas, sem exceção!!
+Para garantir, use um segundo serviço de redundância, o Prey Project que serve não só para Mac como Windows, Linux.
+Aliás, garanta que seus smartphones estejam sempre configurados para pedir senha e coloque a opção de apagar tudo caso erre sua senha mais de 10 vezes! Sempre tenha uma forma de destruir seus dados. E habilite também o Find my iPhone e, no caso de Android, habilite o Google Android Device Manager e configure em todos os seus dispositivos. A função é a mesma em ambas as plataformas: você precisa ter uma forma de destruir seus dados remotamente. Como seus smartphones estarão sempre online, do momento em que for roubado, você terá uma janela muito pequena para apagar tudo, não perca essa chance! Se o perpetrador for esperto, ele vai desligar o dispositivo tão logo o roube, torça para que isso não aconteça!
+Finalmente, backup! Felizmente o Mac OS X tem o recurso de Time Machine desde o OS X Leopard. A recomendação é simples: compre um HD externo, de preferência com suporte a USB 3 ou Thunderbolt (ou minimamente um Firewire 800, se seu notebook for antigo). Crie uma rotina: sempre que chegar em casa, conecte seu HD externo e deixe o Time Machine fazer seu trabalho, desconecte e coloque num cofre na sua casa (sério!).
+Desta forma, se seu Macbook for roubado, com tudo que disse até aqui:
+
+o perpetrador vai ter trabalho para acessar seus dados
+se por acaso conseguir e sua conta for logada e ficar online, o Back to my Mac e o Prey Project vão enviar uma ordem remota de auto-destruição
+
+E se você tiver um backup protegido, na sua casa, você pode imediatamente comprar um novo Macbook e não perder tempo para voltar à ativa (afinal, tempo é dinheiro!)
+Isso é o que eu faço na minha rotina. O que mais vocês costumam fazer para manter as coisas pelo menos um pouco mais difíceis de invadir?
+
+tags: obsolete mac security
+

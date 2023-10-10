@@ -1,0 +1,10 @@
+
+
+
+
+O assunto de como criar desenvolvedores acima da média e, por consequência, como conseguir equipes altamente produtivas e que realmente conseguem gerar valor real – tanto à empresa quanto ao cliente – é um tema recorrente que venho explorando nas minhas últimas palestras.
+Mas este trecho do livro Scaling Lean and Agile Development: Successful Large, Multisite and Offshore Products with Large-Scale Scrum é fantástico !! (Ah sim, acho que esse livro já é meio antigo então ele usa Subversion como proposta, mas obviamente hoje o Git colocaria ainda mais agilidade a esse processo).
+Altamente recomendável, principalmente se você tem uma empresa e pessoas de tecnologia. Cuidado, você pode estar criando um ambiente altamente desmotivador e anti-Ágil “achando” que está sendo Ágil !! Leia.
+Update: Relacionado a isso, outro erro em empresas: sistemas antiquados de avaliação e recompensa são muito ruins. Leia Mary Poppendieck explicando esse assunto.
+tags: obsolete agile
+

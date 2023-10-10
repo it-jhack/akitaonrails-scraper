@@ -1,0 +1,29 @@
+
+Hoje alguns sites ficaram inacessíveis porque o provedor de DNS Zerigo sofreu um ataque de Denial of Service (DDoS). Levaram várias horas para estabilizar.
+
+Normalmente nunca nos preocupamos com DNS porque se existe um serviço que atualmente é praticamente transparente é DNS, mas esse ataque nos relembra da importância de redundância e backup.
+
+
+Eu particularmente não fazia o backup dos meus registros no Zerigo, mas o Mathieu Martin acabou de postar um pequeno Rake task que faz backup dos registros do Zerigo e do DNSimple.
+No meu caso, copiei somente o trecho que me interessa do Zerigo:
+Sem esquecer de complementar configurando variáveis de shell, no seu .bash_profile, por exemplo:
+1
+2
+3
+
+export DNS_BACKUP_DIR=/Users/akitaonrails/.dnsbackup
+export ZERIGO_USER=fabio.akita@codeminer42.com
+export ZERIGO_KEY=27a...a42
+
+
+Para pegar a ZERIGO_KEY vá ao seu painel de administração no Zerigo e habilite nesta seção:
+
+Esse script eu coloco no meu ~/bin que tenho em meu path e com chmod +x dnsbackup.rb agora posso executar chamando o script direto. Só pra terem uma idéia, o backup baixou 23 arquivos XML.
+Uma coisa que eu gostaria agora é um script que convertesse esse formato XML de saída do Zerigo em uma de importação para o DNSimple. Já existe um projeto chamado dnsimple-importer. Assim que eu tiver um tempo quero fazer isso, ou se alguém já conhece algum que converta, por favor não deixe de mencionar nos comentários.
+Zerigo vs DNSimple
+Durante o período que o Zerigo ficou fora do ar, vi no Twitter muita gente querendo migrar para o DNSimple ou outro provedor de DNS. A palavra chave aqui é migrar. Tecnicamente, não faz sentido. Só porque o DNSimple estava no ar, não significa que ele é invulnerável a um ataque DDoS, ninguém é sem ter muita redundância.
+Não sei se é a única solução, mas não esqueçam que vocês podem ter múltiplos nameservers associados ao seu registro e domínio. Minha idéia é manter o primário no Zerigo (pessoalmente, não tenho nada contra o Zerigo, ele sempre funcionou muito bem até hoje) e contratar o DNSimple para ser meu nameserver secundário. Dessa forma meus sites só vão sair do ar se existir um ataque sincronizado de DDoS a ambos os provedores.
+Não tenho certeza mas imagino que a Amazon Web Services tenha provedor de DNS configurado em multi A-Z, ou seja, distribuído em seus múltiplos data centers geograficamente separados, o que lhe daria redundância (faz sentido?), mas não parei para ver isso. No meu caso, uso o Zerigo por causa do excelente painel de gerenciamento que permite uma edição de DNS muito mais amigável e prática do que a grande maioria dos outros provedores. Imagino que o DNSimple seja semelhante.
+Fica a dica.
+tags: obsolete
+

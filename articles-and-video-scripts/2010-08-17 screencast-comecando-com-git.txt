@@ -1,0 +1,102 @@
+
+Atualização 09/04/12: Este screencast foi liberado para visualização gratuita. Acesse este post
+Atualização 17/08: Tem uma pequena correção para quem usa Windows que não coloquei no screencast. Veja no fim do artigo.
+Como prometido, continuo com minha iniciativa de publicar screencasts, vídeo-aulas completas para que você possa aprender sobre as novas tecnologias.
+Todos devem saber que Git cresceu muito em popularidade desde 2007, quando publiquei meu primeiro artigo evangelizando Git. Depois disso publiquei outros artigos incluindo o famoso Micro Tutorial de Git
+Graças ao Github todo bom desenvolvedor que se preza tem o Git na sua caixa de ferramentas. Você, sua equipe e sua empresa só tem a ganhar aprendendo esta ferramenta.
+
+Nível: Iniciante, Intermediário
+Tema: Começando a usar a ferramenta de controle de versionamento de código, Git
+Duração: 3:17h
+Formatos:
+	
+Maior 800×600 – 510Mb (zip, Quicktime/H.264)
+iPhone 480×360 – 471Mb (zip, Quicktime/H.264)
+
+Plataformas: Linux (Ubuntu), Mac OS X, Windows 7
+Acompanha PDF com os slides usados na apresentação
+Tem organização em Capítulos
+
+
+
+E assistam na íntegra aqui:
+
+Faça download
+E se está interessado em aprender mais, leia todos os meus artigos já publicados neste blog sobre Git:
+
+Git com Smart HTTP Transport
+Deploy com Git Push
+A Controvérsia do Ticket #2033 – Ruby on Git
+Dicas de Git
+Pequena dica de Git para Windows
+Por que Git é melhor que X
+Entendendo Git e Instalando Gitorious – Git via Web
+Colaborando no Github
+Git com Sake
+Finalmente, Rails mudando de SVN para Git
+Micro-Tutorial de Git
+Git on Cygwin on Windows
+Git para Cientistas da Computação
+Ruby on Git
+Aprenda Git pelo Peepcode
+Git, muito Promissor
+Jogar Pedra em Gato Morto: Por que Subversion não Presta
+
+Atualização: Git – Cloning e pushing via https no Windows
+Li este post do Lars Vogel hoje com uma dica para quem usa Windows. Vou traduzir para facilitar. Isto é quando você quiser fazer clone ou push para repositórios Git via HTTPS (como o Github passou a suportar recentemente), por exemplo:
+1
+2
+3
+
+git clone https://vogella@github.com/vogella/de.vogella.rcp.example.git
+...
+git push https://vogella@github.com/vogella/de.vogella.rcp.example.git
+
+
+Você pode receber este erro no Windows:
+1
+2
+3
+
+error: error setting certificate verify locations:
+CAfile: /bin/curl-ca-bundle.crt
+CApath: none
+
+
+Se ver este erro para resolver é só desabilitar a verificação de SSL:
+1
+
+git config --global http.sslverify "false"
+
+
+Depois desta configuração, clone e push via https vai funcionar no Windows.
+Outra alternativa que o Vogel não testou é a seguinte:
+1
+2
+
+mkdir c:\bin\
+copy "C:\Program Files\Git\bin\curl-ca-bundle.crt" c:\bin\curl-ca-bundle.crt
+
+
+Ou:
+1
+
+git config --system http.sslcainfo \bin/curl-ca-bundle.crt
+
+
+A discussão completa sobre esse problema do msysGit pode ser encontrada aqui.
+E se estiver atrás de um proxy HTTP você pode configurar assim:
+1
+
+git config --global http.proxy https://proxy:8080
+
+
+Para checar a configuração:
+1
+
+git config --get http.proxy
+
+
+
+tags: learning beginner git screencast
+

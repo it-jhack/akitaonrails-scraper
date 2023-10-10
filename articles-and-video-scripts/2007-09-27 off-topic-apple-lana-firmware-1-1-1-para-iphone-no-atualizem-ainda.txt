@@ -1,0 +1,17 @@
+
+A Apple lançou há poucas horas o temido firmware 1.1.1. Alguns dias atrás ela anunciou que lançaria e que ele poderia dar problemas com iPhones desbloqueados (jailbreaked e SIM unlocked). NÃO ATUALIZEM AINDA!! 
+Os relatos pela web ainda são inconclusivos. Alguns dizem que o iPhone não consegue fazer ligações nem mesmo com o SIM da AT&T, alguns dizem que tiveram sucesso parcial. Outros dizem que tiveram sucesso total. Ainda não há uma conclusão! No IRC disseram que o firmware veio encriptado.
+
+
+Existem muitos métodos para o unlock, iPhoneSIMFree, iUnlock, AnySIM. Existem muitos métodos para ativar e fazer o jailbreak. iAsign, iActivator, iBrickr, iNDependence, etc. Existem fones apenas com jailbreak mas SIM unlock, existem alguns com AppTap instalado, outros não. São muitas variáveis para se levar em conta. Nas próximas 48 horas devemos ter a palavra do iPhone Dev Tem.
+Por agora: Não atualizem ainda! Esperem. Não deixem o iTunes fazer o update. Na pior das hipóteses fiquem com o firmware antigo 1.0.2. Não há nada no 1.1.1 que valha mais a pena do que o SIM unlock para nós.
+Acompanhem as discussões no AppleInsider, Engadget, MacRumors, The Unofficial Apple Weblog, Digg, Gizmodo.
+Quem quer a receita de como desbloquear, este é uma das dezenas de links com tutoriais disponíveis.
+Fiquem de olho no site do iPhone Dev Team e do iPhone SIM Free para mais novidades ‘oficiais’.
+*Update 11/10/2008:" GALERA
+Esta semana acompanhei o pessoal do iPhone Dev Team fazer jailbreak do firmware 1.1.1.
+Agora já fizeram até backport dos aplicativos do iPhone para iPod Touch, como Mail e Google Maps.
+Finalmente, o pessoal do iPhoneSIMFree, o desbloqueio comercial de GSM foi lançado para 1.1.1!! Tem vários revendedores que vendem o iPhoneSIMFree. Não comprem do site brasileiro, é mais caro. Tem uns americanos mais baratos para quem tem cartão internacional ou Paypal. Procurem no site deles.
+Parece que agora voltou a ser seguro comprar iPhones!!
+tags: obsolete iphone
+

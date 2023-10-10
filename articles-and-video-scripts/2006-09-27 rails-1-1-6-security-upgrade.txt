@@ -1,0 +1,41 @@
+
+Desde o dia 9 de agosto houve muito barulho a respeito do primeiro grande buraco de segurança no Rails. Já falei sobre ele em um post anterior mas acho importante documentar aqui, em português, sobre o que se trata. O conserto do bug traz uma funcionalidade extra que explicarei a seguir.
+O mais importante: não existe sistema 100% seguro. Como argumentei antes, sistemas são feitos por pessoas e pessoas não são perfeitas. Toda plataforma tem problemas de segurança, alguns mais graves e periódicos (ahem, Windows), outros mais raros (OpenBSD). Isso não é apenas uma desculpa, é uma realidade que todo administrador de sistemas DEVE levar em consideração na sua rotina. A discussão no link acima deve ilustrar como os nervos estavam à flor da pele. David costuma ser bastante incisivo quanto a críticas. É seu estilo e não tiro sua razão.
+
+
+Este problema, em particular, afeta o sistema de routing do Rails, permitindo execução arbitrária de código Ruby via URL. Do Rails 1.1.0 até o 1.1.5 (com exceção do 1.1.3).
+A equipe do Rails (core team) levou esse problema muito a sério e criou diversos backports para as versões afetadas. A correção pode ser baixada como um patch (arquivo diff) e aplicada às suas respectivas versões (imagino que todos saibam como aplicar um patch):
+
+Patch para Rails 1.1.0
+Patch para Rails 1.1.1
+Patch para Rails 1.1.2
+Patch para Rails 1.1.4
+Patch para Rails 1.1.5: realizar o upgrade para Rails 1.1.6
+
+A maneira mais prática, claro, é realizar um upgrade para a versão mais recente, rodar a suíte de testes de seu aplicativo (vocês fizeram testes, certo?) e corrigir as diferenças. O comando para atualizar seu Rails global para a versão mais recente é:
+sudo gem update rails —include-dependencies
+Esses patches (1.1.6) quebrarão seu aplicativo se estiver usando o sistema de Engines. Se você tiver essa dependência existe outra solução temporária: configurar seu servidor Web (Apache ou LightTPD) para bloquear as URLs maliciosas. Com o mod_rewrite no Apache esta é a regra a ser configurada no httpd.conf:
+RewriteRule ^(app|components|config|db|doc|lib|log|
+public|script|test|tmp|vendor)/ – [F]
+E no LightTPD a regra é esta:
+url.rewrite-once = ( “^/(app|components|config|db|
+doc|lib|log|public|script|test|tmp|
+vendor)/” => “index.html” )
+Durante o dia 9, o problema não foi explicado e o Core Team preferiu guardar os detalhes até que a solução completa estivesse disponível, o que aconteceu em 24 horas. Enquanto isso a mensagem que foi divulgada era que todos deveriam obrigatoriamente atualizar para a versão 1.1.5. Essa atitude é compreensível mas foi a causa da maioria das críticas. O Core Team entendeu o recado e tomará medidas para melhorar a transparência nesses casos. Uma das medidas foi começar uma nova mailing list apenas para discutir segurança, além do canal IRC #rails-security na Freenet.
+Porém, a versão 1.1.5, lançada às pressas dadas as circunstâncias, não corrigiu o problema todo. Ainda era possível executar funcionalidades internas do Rails como o breakpoint_client. No dia seguinte a versão 1.1.6 foi divulgada juntamente com esta explicação sobre o problema. Portanto todos devem levar seus ambientes para a versão 1.1.6.
+O Rails tem duas versões principais: a Edge Rails e a Gem Rails. A segunda é a versão 1.1.6 considerada estável, a Edge é a versão de desenvolvimento, onde as mais novas funcionalidades podem ser baixadas e acessadas. Quem estava na revisão 4394 ou mais recente da Edge não estava vulnerável ao problema.
+Quem usa a versão Gem também deve levar em consideração a variável RAILS_GEM_VERSION no arquivo config/environment.rb. Se estiver configurada, o Rails carregará a versão indicada mesmo havendo uma mais recente. Normalmente estamos todos “floating on gems”, como dizem. Significa que seu aplicativo roda com a versão mais recente do Gem Rails toda vez que é feito um upgrade. Para ambientes produtivos isso não é recomendável pois uma nova versão pode quebrar funcionalidades antigas. Mantenha seu suíte de testes sempre preparado e rodando.
+Com a repercussão do problema, o Core Team e a comunidade estarão muito mais atentos a futuros problemas de segurança, o que é uma coisa boa e característica de um processo dinâmico de código-aberto.
+Além da correção, a versão 1.1.6, Jeremy Evan acrescentou outra funcionalidade que a comunidade pedia há tempos. Nos logs do Rails podemos acompanhar toda a navegação pelo aplicativo, incluindo visualizar os valores que foram postados por um formulário no browser. O problema é que no log também aparece a senha digitada em um campo de login, trazendo um problema menor mas significativo: quem tiver acesso a esse arquivo de log poderá saber a senha de todos os usuários cadastrados, por exemplo. Ou pior: se for um aplicativo de e-commerce, quando o usuário digitar seu número de cartão de crédito ele também aparecerá no log.
+A nova versão estável do Rails traz um filtro para o ActionController, o filter_parameter_logging. Você precisa apenas configurar seu controller desta forma:
+filter_parameter_logging “password”
+Com isso todo campo do formulário que tiver a palavra “password”, por exemplo, será ignorada no log. Tanto [user][password] quanto [user][password_confirmation] não aparecerão no log.
+E se houver necessidade de desligar TODO o log de valores de formulário do log, podemos colocar esta configuração no config/environment.rb ou nas configurações de cada ambiente (development.rb, test.rb, production.rb):
+config.log_level = :warn
+Ou então, no controller, podemos desligar o log de valores apenas para um dos ambientes assim:
+filter_parameter_logging(“password”) 
+if RAILS_ENV == “production”
+Com estas medidas, uma coisa é certa: a comunidade Rails não está à mercê de problemas aleatórios. Todo problema encontrado será resolvido com a mesma eficácia que temos em todo grande projeto open source. Boa parte dessa eficácia será diretamente proporcional à quantidade de pessoas usando, testando e reportando esses problemas.
+Para os desenvolvedores uma recomendação: tentar usar e experimentar as versões Edge para aprender de antemão as novas funcionalidades que estarão na próxima versão estável (1.2 ou 2.0) e ajudar o Core Team reportando problemas e sugestões de correção. É assim que funciona o processo de desenvolvimento open source.
+tags: obsolete rails news
+

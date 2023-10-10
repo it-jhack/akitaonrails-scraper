@@ -1,0 +1,17 @@
+
+
+
+
+
+Ontem, dia 1o de Dezembro, recebi o prêmio de Personalidade do Ano pela revista Info Exame, votação popular. Eu já havia ficado surpreso por ter sido nomeado um dos concorrentes, sinceramente não esperava ganhar:
+Grande nome da comunidade Ruby on Rails no Brasil, Fábio Akita ajudou na adoção do framework pela primeira vez em um grande hosting, o da Locaweb, onde trabalha como gerente de produto. Akita teve 45% dos votos, contra 28% do organizador da Campus Party, Marcelo Branco, e 27% de Cazé Peçanha, VJ e mente por trás do Gengibre.
+
+“O Ruby on rails continua crescendo, e principalmente em 2009, a tecnologia contou com o aumento no interesse na adocão de metodologias ágeis. Pudemos sentir esse cenário participando de eventos em várias capitais do Brasil, do sul ao nordeste”, disse Akita.
+Em 2006, eu ainda era consultor SAP, estava em projeto. Estava estudando Ruby on Rails há alguns meses, como hobby. Procurei por alguns Railers brasileiros, mas tive pouca sorte. Basicamente inexistia uma comunidade e um mercado brasileiro para Rails. Eu tinha algumas poucas escolhas: continuar como consultor corporativo ou tentar ajudar a criar um mercado no Brasil.
+Se não me engano foi na noite do dia 13 de Abril de 2006, conversando com minha mulher, disse a ela que iria embarcar por conta própria em tentar fazer alguma coisa aqui – mal sabia ela o trabalho que isso ia dar :-) A primeira coisa seria escrever um livro sobre o assunto. O primeiro contato com a editora Brasport foi na semana seguinte.
+A primeira RejectConf se iniciou de um e-mail em 11 de Outubro de 2007, e já contou com a ajuda da Caelum, do Fabio Kung, do Danilo Sato e tantos outros que cresceram nesse mercado. Depois tive a oportunidade de viajar pelo país inteiro, literalmente do Rio Grande do Sul ao Rio Grande do Norte. Realizamos dois Rails Summit de grande sucesso. Algumas empresas finalmente começaram a despontar como a própria Caelum, Plataforma Tec, GoNow.
+Ano passado, o Ruby on Rails ganhou o Prêmio Info 2008 como Tecnologia do Ano. Este ano, eu ganhei como Personalidade do Ano. Mostra com segurança que a comunidade Rails está crescendo rápido e se tornando forte. Acho que, quase 4 anos depois, meus objetivos foram alcançados: conseguimos criar uma comunidade saudável, com valores importantes como empreendedorismo, qualidade de software, foco em pessoas, real gosto pela arte.
+
+Obrigado a todos que tem colaborado, por todo o Brasil, para tornar a comunidade Rails e Agile fortes!
+tags: award
+

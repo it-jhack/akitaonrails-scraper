@@ -1,0 +1,65 @@
+
+Mislav Marohnić criou um pequeno script que checa se sua aplicação Rails está preparada para rodar com Rails 2.0 (ainda não lançado). Espero que Mislav continue atualizando este código. De qualquer forma achei interessante porque ele também serve como um breve resumo do que vai mudar:
+
+
+
+breakpoint_server que ficava no config será substituído pelo ruby-debug
+
+
+.with_scope agora é um método privado à classe do Model
+
+
+Resources devem ser no singular, mapeando a um controller no plural
+
+
+O recurso original de Pagination não existe mais. A sugestão é utilizar o excelente will_paginate
+
+
+.push_with_attributes foi retirado das associações. Se precisar de atributos nas associações use has_many :through
+
+
+.find_first e #find_all já não deveriam ser mais usados na versão atual e finalmente serão retirados por completo. Usem find :first ou find :all em vez disso
+
+
+Hash.create_from_xml foi renomeado para Hash.from_xml
+
+
+Esta é para quem usa recursos com rotas dentro de rotas nomeadas (nested resource named routes). Se o resource user ficar dentro do resource group, a rota nomeada para new seria group_new_user_path, mas agora será prefixada como new_group_user_path
+
+
+no belongs_to, chaves-estrangeiras não serão mais determinadas pelo nome da classe mas sim pelo nome da associação, ou seja, na tabela a coluna deverá ser [nome da associação]_id
+
+
+dependências nas associações também mudaram. :dependent => true para :dependent => :destroy e :exclusively_dependent para :dependent => :delete_all
+
+
+mais métodos que já estavam deprecados e agora serão eliminados. Acredito que ninguém mais use render_action, render_text mas sim render :action e render :text
+
+
+template_root mudou para view_paths
+
+
+expire_matched_fragments foi substituído por um método mais completo, expire_fragments, que pode ser chamado com uma regex
+
+
+‘keep flash’ também foi substituído por flash.keep
+
+
+o dynamic scaffold finalmente foi eliminado. Estou falando do método de classe ‘scaffold’ que ia na definição da classe controller para gerar actions automáticas. E se não me engano o generator ‘scaffold’ a partir de agora será o atual ‘scaffold_resource’, ou seja, por padrão tudo que for gerado será RESTful
+
+
+o método image_tag não terá mais extensão padrão (que era .png), então coloque a extensão correta ao chamar este método
+
+
+o método de escrita ‘cookie’ foi retirado dos controllers, em vez disso usar atribuição direta à chave ‘cookie[chave] = value’
+
+
+muito código que nunca deveria ter estado dentro do Rails finalmente foi retirado e provavelmente serão destituídos a plugins opcionais: in-place editor, autocompleter, acts_as_list, acts_as_nested_set, acts_as_tree
+
+
+o módulo Reloadable foi retirado do Rails. Pelo visto o módulo Dependencies sozinho já é esperto o suficiente para recarregar caso eles não estejam declarados como ‘load_once’
+
+Esta lista não é completa, o Edge Rails ainda está em desenvolvimento o não deveremos ver o Rails 2.0 até o fim deste ano, ou começo do nao que vem. Ainda há muito mais a se mudar.
+Até aqui, dá para ver que muita gordura desnecessária foi eliminada, algumas APIs foram refinadas, mas nenhuma grande funcionalidade foi acrescentada a não ser facilidades sobre coisas que já existiam. Por um lado isso é bom pois não deve atrapalhar muito o que já fazemos hoje, por outro lado espero que eles consigam estabilizar, retirar mais bugs e – de preferência – aumentar um pouco a performance.
+tags: obsolete rails
+

@@ -1,0 +1,15 @@
+
+Jason Fried, da 37signals, acabou de escrever um post que sumariza o que todos nós que estamos acompanhando o fenômeno iPhone estamos sentindo. Sigam com a tradução:
+
+
+iPhone SDK, Plataforma Apple Touch, e as Próximas 2 Décadas
+O que vimos hoje foi a fagulha. A explosão continuará por 20 anos. Todos vamos sentir o calor.
+O que vimos hoje foi o começo de 2 décadas de domínio da mobilidade pela Apple. O que a Microsoft e Windows foram no desktop, Apple e Touch serão no móvel.
+E mesmo que já tínhamos plataformas móveis por algum tempo, eles nunca ganharam uma tração tão passional. Palm meio que teve isso por um tempo. Windows Mobile tem melhorado. RIM é a atual escolha para email corporativo móvel.
+Mas da mesma forma como já existiam muitos tocadores de música portáteis, não havia líderes claros. Até que a Apple apareceu no pedaço.
+A mesma coisa está acontecendo hoje no espaço móvel. Palm, Windows Mobile, Blackberry. Eles foram jogadores, mas nenhum se destacou pra valer. Ninguém conseguiu ambos o mercado corporativo e o de consumo como o Windows fez no desktop. Até que a Apple apareceu no pedaço. Pelo menos essa é o que eu acho que vai acontecer.
+A Apple tem o produto superior, o grande momentum, a qualidade, o desejo, os ganchos de negócios, os ganchos de consumidores, a experiência do consumidor, a interface, o design (interface e industrial), o tranquilo ambiente de desenvolvimento, a visão.
+E, talvez a chave secreta de tudo isso, eles tem a plataforma comercial que torna possível a um desenvolvedor de realmente vender, distribuir e atualizar seu software com apenas um botão. E não esqueçamos a revolucionária experiência do consumidor – compre um software de iPhone e ele simplesmente se instala e funciona será tão fácil como comprar música pelo iTunes Store. E tudo embrulhado num maravilhoso pacote. Um pacote que somente a Apple consegue entregar.
+Isso é algo totalmente novo. E tudo começou hoje.
+tags: obsolete 37signals apple
+

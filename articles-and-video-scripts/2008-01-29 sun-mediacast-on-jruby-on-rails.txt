@@ -1,0 +1,10 @@
+
+
+
+
+Recentemente foi lançado o website Mediacast da Sun. A novidade: ele foi escrito e está sendo servido em containers Java. Quem relata é Igor Minar em seu blog.
+O artigo dele é bastante bem balanceado. Ele rapidamente relata como começou o projeto, e quais foram os pontos fortes e fracos que ele encontrou nesse cenário, de desenvolver um website público em Rails e fazer deployment em Glassfish sobre Solaris.
+Foi um processo que parece que ele gostou muito. Eles usaram Netbeans e Glassfish em desenvolvimento e ele gostou muito. Mas, como esperado, o processo de deployment foi a parte mais cabeluda. O plugin Goldspike ainda precisa evoluir mais, a instalação usa MUITA memória RAM. Mas é um bom sinal e pelo visto a Sun continua apoiando a iniciativa JRuby.
+Parabéns a Igor e a equipe envolvida e à Sun!
+tags: obsolete jruby
+

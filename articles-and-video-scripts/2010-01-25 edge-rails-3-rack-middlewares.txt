@@ -1,0 +1,100 @@
+
+Só de curiosidade resolvi dar uma olhada no stack de Rack Middlewares no Rails 3 (aliás, acabei de subir mais uma atualização na aplicação demo Third Rail).
+Com o comando “rake middleware” você consegue avaliar o stack. No Rails 2.3.5 a ordem é esta:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+use Rack::Lock
+use ActionController::Failsafe
+use ActiveRecord::ConnectionAdapters::ConnectionManagement
+use ActiveRecord::QueryCache
+use ActiveRecord::SessionStore
+use ActionController::ParamsParser
+use Rack::MethodOverride
+use Rack::Head
+use ActionController::StringCoercion
+use Rack::Cache
+run ActionController::Dispatcher.new
+
+
+
+
+
+Já no Edge Rails 3 (25/01) está assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+use ActionDispatch::Static
+use Rack::Lock
+use Rack::Runtime
+use Rails::Rack::Logger
+use ActionDispatch::ShowExceptions
+use ActionDispatch::Callbacks
+use ActionDispatch::Cookies
+use ActionDispatch::Session::CookieStore
+use ActionDispatch::Flash
+use ActionDispatch::Cascade
+use ActionDispatch::ParamsParser
+use Rack::MethodOverride
+use ActionDispatch::Head
+use ActiveRecord::ConnectionAdapters::ConnectionManagement
+use ActiveRecord::QueryCache
+run Class
+
+
+A mudança mais notável é que agora todos os middlewares que estavam no ActionController passaram para dentro do novo ActionDispatch. O primeiro middleware é para checar se estamos querendo um arquivo estático (no public) e faz sentido ele ser o primeiro, antes mesmo do Rack::Lock que coloca a execução da aplicação num bloco synchronized.
+Em seguida o Rack::Runtime serve para colocar no header um “X-Runtime” para mostrar o tempo gasto na execução, em segundos. Do ActionDispatch o ShowExceptions serve para resgatar quaisquer exceções que acontecem na sua aplicação. Você pode escolher fazer alguma coisa com ela (por exemplo, com um “rescue_from” no controller).
+Os próximos são bem óbvios: os before e after filters que colocamos nos controllers filtros como “to_prepare”, tratamento de cookies, session em cookie, mensagens no “flash”, opção de parar a execução em cascata do Rack, parser para o query string, o MethodOverride que “engana” o Rails quando um form dá Post com o campo “_method”, para verbos como “DELETE” e “PUT”, tratamento para o verbo “HEAD” e os middlewares para gerenciamento de conexão e query cache do ActiveRecord.
+Você ainda pode configurar seus próprios middlewares ou inserí-los em qualquer lugar no meio da cadeia de execução padrão. Leia a seção Rails on Rack do Rails Guides oficial. Mas como exemplo, você precisa editar o arquivo *config/application.rb" e adicionar:
+1
+2
+3
+4
+
+config.middleware Rack::SendFile
+config.middleware.insert_before ActionDispatch::ShowExceptions, Rack::Bug
+config.middleware.insert_after ActionDispatch::Head, Rack::ShowStatus
+config.middleware.swap Rails::Rack::Logger, Rack::Logger
+
+
+Baixe o código-fonte do Edge Rails:
+1
+2
+3
+4
+5
+
+git clone git://github.com/rails/rails.git
+cd rails
+git submodule init
+git submodule update
+gem bundle
+
+
+É muito interessante navegar pelo código fonte. Os Rack Middleware, por exemplo, você vai encontrar em “actionpack/lib/action_dispatch/middleware”. Dá para aprender muita coisa só de ler os códigos, especialmente agora que eles foram reorganizados.
+O Rails 3 está praticamente batendo na porta.
+tags: obsolete rails
+

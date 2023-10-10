@@ -1,0 +1,11 @@
+
+
+
+
+Estava demorando um pouco para fazer isso, mas finalmente arranjei algum tempo para mais uma apresentação que deve complementar o do post anterior (10 coisas que todo programador Java deve saber sobre Ruby).
+Entendendo Rails é uma apresentação que toma como base o vídeo “Criando um Weblog em 15 minutos com Rails”, disponível no site oficial do Ruby on Rails na categoria “screencasts”. Porém, este vídeo ainda utiliza versões antigas do Rails.
+Nesta nova versão tomei a liberdade de fazer diversas modificações tanto para explicar melhor as funcionalidades de Rails como um todo mas também para trazer coisas mais atuais como Migrations e Ajax.
+O arquivo está em formato PDF aqui. Ela pode ser distribuída gratuitamente ou adaptada em outras apresentações contanto que os créditos sejam devidamente explicitados. Além disso baixem também o miniblog.tar.bz2 (WinRar consegue descompactar isso, em Unix é trivial), é o código-fonte completo do que mostramos na apresentação, mas encorajamos todos a seguir o procedimento da apresentação para melhor entendimento, e usar esse código-fonte quando surgirem dúvidas.
+Esta apresentação deve ajudar a divulgar Rails enquanto o livro “Repensando a Web com Rails” não fica pronto (provavelmente até julho de 2006).
+tags: obsolete rails
+

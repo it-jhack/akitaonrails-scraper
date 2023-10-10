@@ -1,0 +1,12 @@
+
+
+Em março do ano passado organizamos um encontro de Ruby on Rails e este ano vamos repetir: Barcamp Locaweb, no dia 26 de Agosto, quinta-feira, das 19hrs às 23hrs. O local será o mesmo, no Café Zim, um bar na Vila Olímpia na Rua Ramos Batista, 270. CEP: 04552-020. Fone: (11) 3044-4797, São Paulo.
+View Larger Map
+
+
+As fotos do ano passado estão disponíveis no Flickr e eu escrevi sobre como foi na época também.
+A idéia é fazer um encontro para aumentar o network do pessoal, onde os rubistas possam se conhecer, onde interessados venham nos conhecer, onde as pessoas possam expôr idéias. Tragam seus notebooks e vamos codificar um pouco também. Como desta vez estamos fazendo o evento um pouco mais tarde no ano, vai valer praticamente como um pré-RubyConf Brasil – que, aliás, será nos dias 26 e 27 de Outubro.
+
+Ano passado, por coincidência, o Barcamp acabou acontecendo bem no dia em que mais choveu naquela temporada. Achei até que ninguém ia aparecer, mas acabou enchendo o local. Este ano vamos ver se conseguimos pegar um tempo bom :-)
+tags: obsolete locaweb
+

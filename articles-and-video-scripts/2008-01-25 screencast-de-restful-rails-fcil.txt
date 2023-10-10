@@ -1,0 +1,16 @@
+
+Update 2013: Este vídeo é obsoleto, está mantido aqui por motivos históricos. Esta técnica já foi ultrapassada pelo Inherited Resources. Mas atualmente muitos programadores preferem não esconder a lógica do controller em tanta mágica de metaprogramação.
+Update 28/01: Parece que eu e o James Golick estávamos pensando a mesma coisa. Ele acabou de gravar um screencast sobre seu outro excelente plugin “attribute_fu” e eu gravei o “resource_controller”. Ele acabou de postar ambos screencasts no blog dele. Dêem uma olhada.
+Esta é a segunda tentativa de fazer um screencast (longo, 100Mb e 1 hora). Acho que meu último O Primeiro Screencast de Rails 2.0 foi razoavelmente bom, mas muito muito longe de ser suficiente. Eu agradeço a todos que viram e que ajudaram a divulgar uma das peças de maior sucesso que já fiz.
+Eu queria explorar conceitos de Restful Rails no screencast. Antes de mais nada, continuo recomendando o excelente tutorial do Geoffrey Grosenbach no Peepcode. Meu screencast não tem perto do nível de qualidade dele. Mas por outro lado como eu sei que muita gente não entende inglês suficiente bem para isso, resolvi gravar dois vídeos: uma versão em inglês e outra diferente em português com uma introdução maior aos conceitos do Restul do Rails.
+
+
+Explicação
+E eu enfatizo “Restful do Rails” porque muita gente torce o nariz quando se fala em Rails e REST na mesma frase. A isso eu respondo: favor me indicar uma implementação melhor no Rails. Enquanto só disserem “não é tão bom quanto poderia” e cruzar os braços, para mim, isso e nada é a mesma coisa. A implementação do Rails é boa o suficiente para qualquer projeto. O objetivo do Rails nunca foi 100%, sempre foi 80%, essa é a filosofia. Vivam com isso.
+Este screencast na verdade foca no plugin resource_controller do James Golick, um dos plugins mais interessantes que já vi. É uma dessas grandes idéia que – quem sabe – talvez encontre lugar no Rails Core um dia, da mesma forma como as idéias do Sexy Migrations foram incorporadas no Rails 2.0.
+O conceito é que agora tratamos as ações de um controller de uma maneira mais ou menos padronizada (pela abstração dos verbos HTTP), e isso poderia perfeitamente se refatorada para longe do dia-a-dia de desenvolvimento. Então, em vez de ter o scaffold criando um monte de código repetido em cada controller, por que não ter um controller vazio – e ainda assim totalmente funcional -, para começar?
+Outra idéia esperta foi criar helpers dinâmicos para rotas nomeadas nas views. Assim você pode mover suas views pelo projeto, e até reusá-los em diferentes seções sem ter que ficar copiando e colando diferentes rotas nomeadas entre elas. Isso é particularmente útil em controller polimórficos e rotas com namespace como mostro nesse vídeo
+
+
+tags: obsolete rails screencasts
+

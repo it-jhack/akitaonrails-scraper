@@ -1,0 +1,36 @@
+
+Como o excelente blog euPodo bem lembrou, o pequeno iPod completou hoje – 24 de outubro – 6 anos de existência.!!
+
+No link acima está o video da conferência que mostrou o primeiro iPod ao mundo. A caixinha branca com 5Gb, tela monocromática com backlight, conexão firewire e integração perfeita com iTunes. Naquela época as críticas foram as mesmas que se ouve hoje: “é muito caro, faz a mesma coisa que outros jukeboxes como os da Creative, não tem nada demais.” 
+
+Mesmo assim vendou mais de 120 milhões de unidades, o iTunes vendeu mais de 3 bilhões de músicas e do zero se criou uma das indústrias mais rentáveis da multimídia.
+
+
+O “halo effect” levou a qualidade Apple às mãos de pessoas que nunca imaginaram usar o Mac. A estratégia não poderia ser mais contundente: simplificar a linha de produtos (Portátil e Desktop, Consumer e Pro), 4 produtos. Depois o iPod como “isca”, o lançamento das Apple Store, a consolidação do iTunes, e hoje a Apple é oficialmente a fabricante de computadores mais valiosa da atualidade e a quarta maior em tecnologia atrás apenas da Cisco, Google e Microsoft. Desde ontem as ações subiram ainda mais e a empresa tem um market cap de US$ 162 bilhões, finalmente ultrapassando a IBM, Intel e Nokia.
+<object width=“425” height="355;;
+Recomendo todos assistirem o evento que deu o kickstart nessa reviravolta. Há alguns trecho do Steve dizendo coisas assim:
+“A Apple vive num ecossistema. Significa ser ajudado por outros parceiros, significa ajudar outros parceiros. E relacionamentos que são destrutivos não ajudam ninguém nessa indústria como ela é hoje.
+Precisamos deixar de lado essa noção de que para a Apple vencer, a Microsoft tem que perder. Precisamos abraçar a idéia de que para a Apple ganhar, a Apple precisa fazer um trabalho realmente bom. E se outros vão nos ajudar isso é ótimo! Porque precisamos de toda ajuda que pudermos conseguir. E se nós ferrarmos e não fizermos um bom trabalho, não será culpa dos outros, será nossa culpa.
+A era de ver isso como uma competição entre a Apple e a Microsoft acabou no que depender de mim. Isso é sobre a Apple se tornar saudável, isso é sobre a Apple conseguir fazer contribuições incríveis à indústria."
+Amém a isso. Substitua “Apple” por você mesmo e “Microsoft” por qualquer um que você veja como um “competidor”, seja menosprezando-o, seja superestimando-o.
+Isso é uma coisa que eu sempre fiz questão de levar ao pé da letra: eu já presenciei coisas idiotas, mas não existe nada mais idiota do que uma pessoa que, para parecer melhor, tenta fazer os outros parecer pior. Pelos meus artigos anteriores pode parecer que eu estou tomando partido para que o Linux pareça ruim, que a Microsoft pareça ruim. Nada disso: eu quero que a Apple fique boa. Se os outros ficam bons também, bom para eles.
+Entenderam? A pessoa está num nível, digamos, 10 e o outro está no nível 20. Em vez dela se esforçar para atingir o nível 30, tenta puxar o tapete da outra para ver se ela cai para 10. Daí fica todo mundo igual. Uau, idéia de gênio! É o pensamento mais ignóbil, retrógrado, deprimente, lamentável que existe. Pessoas que falam mal pelas costas, que agem de má-fé pelas costas, que fazem panelinhas, que só sabem criticar de maneira improdutiva em vez de colaborar. Reclamar é muito fácil. Fazer é mais difícil.
+Claro, isso não torna Steve Jobs um santo, mas de qualquer forma podemos dizer que é extremamente raro ver alguém de sua posição fazer um Mea Culpa e uma análise pública tão pé-no-chão como essa em 1997. Ele ditou um rumo, uma visão, um valor e uma missão. Ela foi seguida à risca e, em 10 anos, estão todos colhendo os frutos. Essa é a verdadeira mensagem. Em 97 ninguém entendeu nada. Agora, em 2007, as coisas finalmente fazem sentido e o Steve poderá dizer “eu disse, eu avisei”.
+
+E convenhamos: o Steve Jobs da década de 80 e começo dos anos 90, era considerado uma das pessoas mais esnobes e egocêntricas deste lado do planeta (até hoje ainda é). Com uma diferença: ele até “podia” se justificar. Ele criou a revolução digital de massa. E quanto aos tantos outros que estão por aí, pequenos seres, tentando puxar o tapete dos outros? Em vez de tentar – em vão – trazer os outros para baixo, por que não se esforçar para equiparar-se e, por que não, ultrapassá-los?
+Eu tenho dezenas de ídolos, figuras históricas, celebridades modernas e pessoas que foram meus amigos, conhecidos e até alguns inimigos. Todos eles muito superiores a mim. Eu preciso de figuras assim, longes e próximas. Foi quando meus colegas da faculdade se mostraram fluentes em inglês que eu também quis ser assim. Foi quando um colega meu demonstrou desenvoltura em Python que eu também quis aprender. Foi quando outro amigo meu demonstrou destreza em Linux que também quis aprender. Foi quando um chefe meu me mostrou o que fazia com o Mac que também queria fazer. Foi  quando reencontrei um antigo conhecido, mestre em SAP, que eu também quis aprender. E é assim que se evolui: de degrau em degrau, ajudando e sendo ajudado, nunca atacando e se defendendo.
+Se eu fosse da postura oposta poderia dizer, mais de uma década e meia atrás, eu sabia DOS, Pascal e outras pequenas coisas. Poderia ter dito não preciso saber Java. Esse tal de Delphi é uma porcaria. Visual Basic é para moças. HTML é coisa de moleque. Mac é coisa de viado. Linux é muito mal feito. Ruby, o que é isso? É a postura do “eu sei tudo, os outros não sabem de nada”, por isso mesmo, vamos xingar, vamos tentar desmoralizar, vamos ridicularizar, vamos tentar trazê-los para o mesmo nível, aqui embaixo.
+
+Para nós, Railers, é a mesma coisa. Lembrem-se de uma das primeiras apresentações de David Hansson. As quatro fases das coisas novas:
+
+Primeiro eles o ignoram
+Depois eles riem de você
+Então ele brigam contra você
+Finalmente, você vence.
+
+E isso não é apenas em termos de tecnologia, é no seu cotidiano. Parentes, pseudo-colegas, colegas de escritórios, chefes, subordinados. Nunca me incomodei de ficar puxando o tapete dos outros – isso é perda de tempo. Já tentaram puxar muitas vezes o meu. Com o tempo você fica calejado. Antigamente eu me importava mais se isso acontecia, hoje não dou a mínima porque o tempo sempre provou a mesma coisa: eu continuo subindo, os que tentaram puxar meu tapete, continuam caindo.
+Pior: essas pessoas nunca agem sozinhas. Sempre há os comparsas-ingênuos. Pessoas que acreditam que a outra está certa em ser maquiavélico. Algumas nem percebem que estão sendo usadas. Oh well, como disse no meu artigo anterior, de que adianta falar com portas?
+
+Esta é uma lição importante: olhem sempre para cima, nunca para baixo. Felizmente, a comunidade que visita meu blog – pelo menos aqueles que comentam – parece que pensam dessa maneira. Bola pra frente galera!
+tags: obsolete apple steve-jobs
+

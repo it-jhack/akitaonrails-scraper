@@ -1,0 +1,419 @@
+
+Ruby possui capacidades de meta-programação e DSL que poucos realmente exploram. Achei este artigo interessante porque ele vai passo-a-passo numa exploração de um recurso que pode ser muito útil em diversos casos de manipulação de ítens em coleções criando uma linguagem customizada para ser expressiva e simples de se entender.
+publicado por: Kevin em 26/03
+Aviso: muita mágica adiante! (e um longo artigo)
+Eu cruzei com um conceito chamado Higher-Order Messaging hoje. É uma maneira útil de permitir linguagens orientadas-a-objeto enviar uma mensagem a todos os membros de uma coleção sem ter que iterar manualmente por ela. Algo parecido com (Ruby):
+[0, 1, 2].where.nonzero? 
+=> [1, 2]
+Isso significa “Me dê o sub-conjunto de [0, 1, 2] onde o ítem seja não-zero”. Sintaxe bem natural, não é? O normal equivalente em Ruby seria:
+[0, 1, 2].select {|x| x.nonzero?}
+Que é um pouco mais comprido. Quando li o paper, imediatamente pulei para implementar o método ‘select’ em Ruby. Então me lancei para uma tarde de investigação que me levou a algumas conclusões interessantes.
+
+
+E agora?
+O nome “higher-order messaging” vem por analogia com higher-order functions, como conhecidos em linguagens funcionais. Em uma linguagem que suporta higher-order functions, uma função pode ser passada como parâmetro a outra função. A analogia, então, é que uma mensagem pode ter uma outra mensagem como parâmetro. No exemplo acima, isso provavelmente significa que você está passando a mensagem #nonzero? como parâmetro à mensagem #where; o método #where então chama #nonzero? para cada ítem do array.
+Mas espere, isso não está bem certo. Em termos de sintaxe, você está chamando #nonzero? ao resultado de #where. Isso não é exatamente ‘passar #nonzero? como parâmetro de #where’.
+Bem, “higher-order messaging” não é um bom nome. O que você realmente está fazendo é enviando uma mensagem a um objeto proxy que é retornado pelo “higher-order method”. Então, seja qual mensagem você enviar ao objeto proxy, ele envia essa mensagem a cada membro do Enumerable para o qual está servindo como proxy.
+Primeira Implementação
+Aqui vai o código:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+  # 'select' is already taken
+  def where
+    WhereProxy.new(self)
+  end
+end
+
+class WhereProxy
+  def initialize(enum)
+    @enum = enum
+  end
+
+  def method_missing(meth, *args, &block)
+    @enum.select { |x| x.__send__(meth, *args, &block) }
+  end
+end
+
+
+Esta é a primeira implementação natural. Seu objeto enumerável recebe um método #where que retorna um objeto proxy como descrito acima.
+Uma vez chegando a esse ponto, eu olhei ao redor para ver se alguém já implementou HOM em Ruby. Alguém fez, claro, e outra pessoal melhorou sobre isso. Vamos dar uma olhada neles.
+Outra Implementação
+A primeira implementação mencionada acima funciona como minha primeira implementação, mas um pouco mais generalizada. Primeiro, o autor cria uma super classe para todas as classes proxy que escreveremos (parafraseado daqui).
+1
+2
+3
+4
+5
+6
+7
+8
+
+  instance_methods.each do |method|
+    undef_method(method) unless method =~ /__(.+)__/
+  end
+
+  def initialize(obj)
+    @obj = obj
+  end
+end
+
+Isso nos economiza ter que escrever o mesmo construtor para cada classe proxy; isso também retira cada método que ele herda do Object exceto #__id__ e #__send__ (os absolutamente essenciais), então qualquer método que chamamos será passado para o objeto proxyficado (incluindo #id e #send). Para escrever uma classe proxy para um método em particular, nós fazemos uma sub-classe HigherOrderMessage e implementamos #method_missing para realmente fazer proxy das mensagens como quisermos (parafraseado novamente).
+
+rubyclass WhereProxy < HigherOrderMessage
+def method_missing(meth, *args, &block)
+@enum.select { |x| x.send(meth, *args, &block) }
+end
+end
+1
+2
+3
+4
+5
+6
+
+
+Agora que temos nossa classe proxy, podemos implementar o método que retorna uma instância disso (novamente, parafraseado):
+
+--- rubymodule Enumerable
+  def where() Where.new(self); end
+end
+
+Uma Melhora
+Ok, então isso nos faz implementar muitas classes e muitos métodos que as instanciam e retornam a instância. (Muito estilo Java). Há definitivamente um fedor de código, especialmente em Ruby. Deve haver um jeito mais curto; o segundo implementador, claro, reconhece isso. Aqui vai a segunda implementação (parafraseado):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+  instance_methods.each do |method|
+    undef_method(method) unless method =~ /__(.+)__/
+  end
+
+  def initialize(&block)
+    @block = block
+  end
+
+  def method_missing(meth, *args)
+    @block.call(meth, *args)
+  end
+end
+
+Então, o que aconteceu aqui? Agora, em vez de fazer uma sub-classe de HigherOrderMessage e implementar #method_missing, apenas passamos um bloco ao construtor, e esse método “é” nossa implementação específica de #method_missing. Nenhuma necessidade de fazer sub-classes.
+Para realmente implementar o método higher-order, retornamos uma instância de HigherOrderMessage com o código de bloco apropriado. Isso nos leva bem longe; podemos até mesmo “encadear métodos higher-order” (em termos não muito precisos) para criar alguns efeitos interessantes:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+
+  def every
+    HigherOrderMessage.new do |meth, *args|
+      self.each { |x| x.__send__(meth, *args) }
+    end
+  end
+
+  def where
+    HigherOrderMessage.new do |meth, *args|
+      self.select { |x| x.__send__(meth, *args) }
+    end
+  end
+
+  def all
+    HigherOrderMessage.new do |meth, *args|
+      self.collect { |x| x.__send__(meth, *args) }
+    end
+  end
+
+  def do_inject(start_value)
+    HigherOrderMessage.new do |meth, *args|
+      self.inject(start_value) { |a, x| a.__send__(meth, x, *args) }
+    end
+  end
+
+  def having
+    HigherOrderMessage.new do |id, *args|
+      HigherOrderMessage.new do |secid, *secargs|
+        select { |x| x.__send__(id, *args).__send__(secid, *secargs) }
+      end
+    end
+  end
+end
+
+[0,1,2,3,4].where.nonzero? 
+=> [1,2,3,4]
+[0,1,2,3,4].do_inject(0).+ 
+=> 10
+[0,1,2,3,4].having.succ < 3 
+=> [0,1]
+
+
+Pegou essa última? Isso significa “dê a cada elemento de [0, 1, 2, 3, 4] cujo valor sucessivo seja menor do que três”. Legal, não é?
+Podemos fazer ainda melhor?
+Ainda há algumas maneiras que podemos fazer melhorar, e é aqui que minha própria inovação começa. Primeiro de tudo, muitas implementações de funções de iteração parecem iguais. Podemos achar uma maneira de evitar repetir todo esse feio código de construção de bloco? O que eu quero é:
+1
+2
+3
+4
+
+  define_curried_method(:every, :each)
+  define_curried_method(:where, :select)
+  define_curried_method(:all, :collect)
+end
+
+… isto é, eu sei que #each, #select e #collect todos tem a mesma assinatura (e seus blocos também), mesmo que façam coisas diferentes. Será que não posso escrever algum meta-código para me dar versões higher-order deles? Aqui vai como fazemos:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+  private
+    def define_curried_method(name, method)
+      define_method(name) do
+        HigherOrderMessage.new do |sym, *args|
+          self.__send__(method) { |x| x.__send__(sym, *args) }
+        end
+      end
+    end
+end
+
+
+Fazendo nossa própria sintaxe de ‘define_curried_method’ um método de instância privada de ‘Module’ o coloca no mesmo nível de ‘attr_accessor’ e amigos, então agora nossos limpas, curtas definições de métodos higher-order no Enumerable funcionam como esperado.
+Outro problema é que atualmente não temos como passar um bloco ao método que estamos chamando a todos os objetos de uma coleção. Por exemplo, se temos um array de strings e queremos fazer a mesma substituição neles, eis o que precisamos:
+
+
+ruby%w[an array of strings, some with double letters].all.gsub(/(.)\1/) do |match|
+(match == ‘rr’ ? ‘ARRRR’ : match)
+end
+=> [“an”, “aARRRRay”, “of”, “strings,”, “some”, “with”, “double”, “letters”]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+</div>
+
+Bem, com algumas poucas modificações, podemos fazer isso funcionar. Há um obstáculo: ao contrário de métodos, blocos em Ruby não podem receber um bloco como seu último parâmetro, já que não tem como passar um bloco a um bloco, sintaticamente falando. Mas podemos lhe empurrar um bloco dentro de um array, e isso significa que _podemos_ passar um bloco a um bloco. O truque é que o bloco recebedor precisa saber como chamar o que lhe foi passado. Voltando à nossa imples, menos automática, implementação:
+
+--- rubymodule Enumerable
+  def all
+    HigherOrderMessage.new do |meth, *args|
+      if args.last.is_a? Proc then block = args.pop; end
+      self.collect { |x| x.__send__(meth, *args, &block) }
+    end
+  end
+end
+
+Isso é um começo, mas como o array args pega o bloco que passamos em seu último ítem? Precisamos pegar o bloco em HigherOrderMessage#method_missing e empurrá-lo ao array de argumento para o bloco:
+
+rubydef method_missing(meth, *args, &block)
+args << block if block_given?
+@block.call(meth, *args)
+end
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Ok, isso é legal e tal, mas agora perdemos a macro 'define_curried_method' "e" temos uma linha extra para escrever no bloco em cada uma de nossas implementações de métodos higher-order. Podemos corrigir nossa implementação da macro?
+
+--- rubyclass Module
+  private
+    def define_curried_method(name, method)
+      define_method(name) do
+        HigherOrderMessage.new do |sym, *args|
+          if args.last.is_a? Proc then block = args.pop; end
+          self.__send__(method) do |x|
+            x.__send__(sym, *args, &block)
+          end
+        end
+      end
+    end
+end
+
+Aí vai. Agora podemos passar blocos para nossos métodos ‘curried’, e eles funcionarão! Arrr!
+
+
+ruby%w[an array of strings, some with double letters].all.gsub(/(.)\1/) do |match|
+(match == ‘rr’ ? ‘RRRR’ : match)
+end
+=> [“an”, “aRRRRay”, “of”, “strings,”, “some”, “with”, “double”, “letters”]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+
+</div>
+
+h3. Limitações
+
+Não podemos usar a macro para implementar nosso #do_inject porque o método que ele escreve somente passa um argumento ao bloco; #inject precisa de dois argumentos em seu bloco.
+
+h3. Código final
+
+Finalmente, eis o código final (neste versão, ainda sem o 'do_inject' e 'having'. Mas isso fica como exercício):
+
+<div style="overflow: auto; width: 400px">
+--- rubyclass HigherOrderMessage
+  instance_methods.each do |method|
+    undef_method(method) unless method =~ /__(.+)__/
+  end
+
+  def initialize(&block)
+    @block = block
+  end
+
+  def method_missing(meth, *args, &block)
+    args << block if block_given?
+    @block.call(meth, *args)
+  end
+end
+
+class Module
+  private
+    def define_curried_method(name, method)
+      define_method(name) do
+        HigherOrderMessage.new do |sym, *args|
+          if args.last.is_a? Proc then block = args.pop; end
+          self.__send__(method) do |x|
+            x.__send__(sym, *args, &block)
+          end
+        end
+      end
+    end
+end
+
+module Enumerable
+  define_curried_method(:every, :each)
+  define_curried_method(:where, :select)
+  define_curried_method(:all, :collect)
+end
+
+
+
+tags: obsolete translation
+

@@ -1,0 +1,10 @@
+
+
+
+
+Eu já palestrei sobre Ruby on Rails pela Impacta e parece que o pessoal gostou, por isso estou retornando no próximo dia 5 de julho, para mostrar Rails em mais detalhes, das 9 às 18hs. O endereço é R. Árabe, 71 (próx metrô Sta. Cruz), na Faculdade Impacta Tecnologia (FIT).
+Não será um “hands-on”, ou seja, não serão exercícios práticos, mas sim uma descrição bem mais detalhada de alguns dos principais aspectos do Rails. É indicada para quem já tem experiência em programação de aplicações Web em outros frameworks e quer aprender mais sobre Ruby on Rails.
+
+Para inscrições, acesse o site deles.
+tags: obsolete conference
+

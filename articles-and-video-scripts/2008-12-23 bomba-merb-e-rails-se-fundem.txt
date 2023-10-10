@@ -1,0 +1,31 @@
+
+
+
+
+Vocês devem ter acabado de ver o anúncio: Ruby on Rails e Merb vão se juntar num único projeto. Tanto Matt Aimonetti quanto Yehuda Katz passam a ser parte do Rails Core Team, e a Engine Yard deve colaborar também.
+Sinceramente, era algo que eu não esperava tão cedo. Quer dizer, alguma coisa ia acontecer, mas não imaginei que fosse isso e nem que fosse tão cedo.
+
+Quem está acompanhando deve ter visto a animosidade entre o Rails Core e a Engine Yard. Isso vem de longa data, desde quanto o Ezra começou o projeto Merb com o discurso de que “Rails não era bom o suficiente e por isso ele resolveu fazer um framework próprio”. Desde então a Engine Yard cresceu sendo um hosting especializado em Ruby on Rails, ou seja, o negócio lucrativo deles passou a ser Rails mas o discurso com o Merb não mudou.
+Recentemente tivemos várias demonstrações hostis com a discussão das linhas de código que moveu Jeremy Kemper (bitsweat), Yehuda Katz e o próprio DHH. No caso foi a discussão sobre se Merb tinha menos linhas de código que o Rails ou não. Depois foi a discussão sobre modularidade, de que Rails era um monolito.
+Além disso, no começo do projeto Rubinius, logo quando o Passenger estava sendo anunciado, o Ezra também anunciou o projeto mod_rubinius, que foi oficialmente morto recentemente e retirado do Github. Ambos os projetos não foram para frente. O Phusion Passenger foi lançado e cumpriu a promessa de resolver o problema de deployment do Rails. Mesmo assim o discurso da EY sempre foi que Passenger não era bom para projetos grandes. O próprio Tom Mornini, CEO da EY, retrucou às provocações do Pratik Naik, depois o Ninh Bui da Phusion também respondeu.
+Vocês devem ter notado que depois do lançamento do Merb 1.0, o DHH voltou fortemente à ativa, evangelizando com nunca. Escreveu mais blog posts recentemente do que o ano passado inteiro, atualizou o site oficial do RubyOnRails.org, passou a apoiar publicamente o Passenger. Fora isso, o Rails 2.2 mal saiu e o Rails Core investiu mais tempo na integração com Rack e o Josh Peek lançou o Rails Metal como uma maneira de combater o Merb Bare. Fora alguns patches recentes para tentar melhorar o suporte a Rails Engines, também como forma de combater o Merb Slices.
+Frente a tudo isso, conversei com o Matt e em seguida ele escreveu o Merb ♡ Rails numa tentativa de quebrar o gelo. Mas neste ponto as cartas já estavam na mesa. De lá para cá muita coisa aconteceu por baixo dos panos. Resumindo, ontem decidiram que a solução seria juntar os dois projetos. O Merb deve entrar em modo de manutenção e provavelmente a melhores features devem ser mescladas no código-fonte do Rails. Eu especularia que DataMapper poderia passar a ser uma alternativa ao ActiveRecord, o suporte a dependências poderia ser melhorado e o recurso de Slices poderia substituir o antigo Rails Engines.
+Tecnicamente isso é uma boa notícia. As vantagens é que os melhores recursos do Merb estarão disponíveis no Rails 3.0 e ainda evitamos uma cisão de comunidades além de fecha a Guerra Fria e entrar num período de trégua. Por outro lado, sabendo um pouco mais do que andou acontecendo, vou segurar minhas fichas até ver como as equipes do Rails Core, do Merb Core e da Engine Yard vão se comportar de agora em diante.
+Update:
+
+Anúncio no blog oficial do Rails
+Anúncio no site oficial do Rails
+Anúncio no blog do Yehuda
+Anúncio no Merbist.com
+Anúncio no blog do Ezra
+Anúncio no blog da Engine Yard
+Anúncio no blog do Carl Lerche
+FAQ no Merbist.com
+
+*Primeiros Desenvolvimentos"
+
+Bringing Merb’s provides/display into Rails 3
+This Week in Edge Rails
+
+tags: obsolete rails merb
+

@@ -1,0 +1,34 @@
+
+Outro dia eu estava com meu HD quase todo ocupado. Obviamente eu fiquei pasmo pois eu guardo quase tudo que não é essencial nos meus HDs externos, incluindo coisas como meu iTunes Library. Então pensei, “como diabos estou com tanto espaço ocupado?”
+Abri meu GrandPerspective para dar um Raio X nos meus diretórios e encontrar quem era o culpado. Se eu trabalhasse mais com iMovie entenderia já que ele usa arquivos gigantescos. Não demorou para entender o que se passava.
+
+
+Qual não foi minha surpresa ao encontrar gigabytes de arquivos de log! De aplicações Rails! Daí a conclusão era óbvia: como eu rodava constantemente suites de teste, eles vão acumulando rapidamente dentro dos test.log em cada projeto Rails.
+Bom, vasculhar diretório a diretório de projeto seria maçante. Como estou num Mac a outra solução seria simplesmente abrir o Spotlight e usar a query “kind:log” dentro do meu diretório de projetos. Daí Command-A e Delete.
+Mesmo assim, acho que ainda dá para fazer melhor. Nos Macs o Spotlight é acessível via alguns comandos que podem ser executados via terminal, como o mdfind. É um truque velho e sempre funciona. Já que é assim, por que não aproveitar que todo Mac vem com Ruby embutido e não fazer um scriptzinho de uma vez? Foi o que fiz, criei um “delete_logs.rb” no meu home com o seguinte conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+#!/opt/local/bin/ruby
+buffer = `mdfind kind:log -onlyin ~/rails`
+list = buffer.split("\n")
+total = 0
+list.each do |file| 
+  total += File.size(file)
+  File.delete(file) 
+  print "."
+end
+puts "\nRecovered space: #{total / (1024 * 1024)}Mb"
+
+
+Finalmente, “chmod +x delete_logs.rb” e voilá, agora ficou simples de me livrar dos logs.
+tags: obsolete mac
+

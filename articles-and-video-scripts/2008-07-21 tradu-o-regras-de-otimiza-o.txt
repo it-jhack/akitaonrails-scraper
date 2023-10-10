@@ -1,0 +1,67 @@
+
+Estava lendo um artigo do GC e por acaso esbarrei com um link de um site que não entro faz algum tempo: Rules of Optimization. Para colocar em contexto, C2.com significa “Cunningham & Cunningham”.
+Estamos falando de ninguém menos que Ward Cunningham. Dentre outras coisas ele inventou o conceito de Wiki. Além disso atualmente é CTO da AboutUs.org que, segundo o Alexa Ranking é o 7o site mais famoso feito em Ruby on Rails. Ele foi recentemente entrevistado pelo Randall Schwartz e Leo Laporte para o podcast FLOSS Weekly e recomendo muito que ouçam.
+Mas estou divagando, este artigo que vou traduzir, em particular não é autoria dele :-) Enfim, aqui vai a tradução do artigo em questão:
+
+
+Rules of Optimization
+As “regras” de otimização são dispositivos retóricos feitos com a intenção de desencorajar programadores novatos de encher seus programas com tentativas inúteis de escrever código otimizado. Eles são:
+
+Primeira Regra da Otimização: Não faça
+Segunda Regra da Otimização: Não faça .. ainda
+Meça Antes de Otimizar
+
+É incerto até o presente momento, se dispositivos simpáticos como esses mudam, ou se algum dia mudarão quaisquer atitudes.
+Fonte:
+Michael Jackson (não o cantor!) costumava dizer (quando questionado sobre otimização):
+
+Não faça
+Não faça ainda (apenas para especialistas)
+
+Isso foi republicado em Programming Pearls de Jon Bentley.
+E não nos esqueçamos dessas citações famosas:
+“O melhor é o inimigo do bom.” – Voltaire
+“Mais pecados de computação são cometidos em nome da eficiência (sem necessariamente atingí-la) do que por qualquer outra razão – incluindo estupidez cega” – W.A. Wulf
+“Não devemos pensar em pequenas eficiência, digamos por 97% do tempo; Otimização Prematura é a raíz de todo mal.” – Don Knuth, que atribui a observação a Car Hoare
+
+h3. Meça Antes de Otimizar
+Todas as outras coisas sendo iguais, todos querem que seu código rode o mais rápido possível.
+Uma tentação que nunca acaba é “otimizar enquanto se vai”, escrevendo coisas a um nível mais baixo do que realmente deveria (ex. acessando diretamente arrays, usando referências a uma variável de instância em um método que pode ser sobrescrito em vez de usar um método getter, etc.) ou adicionando muitos atalhos de execução para casos especiais.
+Isso quase nunca funciona.
+Seres humanos, mesmo programadores experientes, são muito ruins em prever (chutar) onde uma computação vai engasgar.
+Portanto:
+Escreva código de acordo com restrições além de performance (claridade, flexibilidade, brevidade). Então, depois que o código já está escrito:
+
+Veja se realmente precisa acelerá-lo
+Meça o código para checar exatamente onde ele está gastando tempo
+Foque apenas nas poucas áreas de maior custo e deixe o resto em paz
+
+Existem várias maneiras de melhorar performance uma vez que você sabe onde: usar uma estrutura de dados que melhor se encaixa às suas necessidades (muitas inserções vs. muitas deleções, muito espaço vs. muito tempo, etc.), tornar seu algoritmo mais esperto (cache de resultados, tirar vantagem da ordenação, caminhar somente onde se precisa, etc), mudar para uma linguagem mais baixo nível ou mesmo implementar a área de maior custo em hardware.
+Mas se começar de qualquer jeito tentando otimizar antes de saber onde as coisas estão mais lentas, é garantido que estará tornando a eficiência de seu desenvolvimento mais pessimista.
+Quando chega a hora de otimizar um pedaço de software, sempre consiga informações métricas antes, de forma que você possa dizer onde precisa gastar seu tempo fazendo melhorias. Sem dados métricos, não existe maneira de saber com certeza se qualquer “melhoria” de fato melhorou o código (muito similar a usar Testes Unitários) para determinar quando um projeto acabou).
+Normalmente, “medir” significa conseguir medir o tempo gasto em várias rotinas ou sub-sistemas. Isso permite otimizar para velocidade. Otimizar para espaço [de memória], ou erros de cache, ou coisa assim pode ser feito, embora alguns usem um pouco de bruxaria para conseguir um bom perfil de dados.
+Otimizações não precisam ser pequenos ajustes, também. Podem ser substituições no atacado de um algoritmo O(N3) por um O(N2) ou a eliminação total nos casos mais extremos.
+Veja o artigo original para acompanhar a discussão.
+Otimize Mais Tarde
+Você Não Vai Precisar Disso aplicado a Otimização – Falk Bruegmann
+Em outras palavras, você provavelmente não saberá logo de cara se uma otimização trará algum benefício real. Apenas escreva o código da maneira mais simples (nota do Akita: não confundir “maneira mais simples” com “maneira mais suja”, ninguém disse que rápido tem que ser sujo). Se, eventualmente depois de medir você descobrir um gargalo otimize isso.
+Leiam também este artigo de duas páginas de Martin Fowler: Yet Another Optimization Article
+Codifique e depois Otimize
+Código escrito em Assembler ou C são quase impossíveis de manter. Código escrito em linguagens de script são lentos. Mas se você combinar os dois, e puder medir os scripts lentos para saber onde os gargalos estão.
+Portanto,
+Não codifique para performance. Não use uma linguagem “rápida”. Codifique visando mantenabilidade e use uma linguagem que melhore essa mantenabilidade. Então meça seu código, encontre os gargalos e substitua apenas esses pedacinhos com código-performático em linguagens-rápidas. O resultado é que seu código efetivamente executará tão rápido quanto se você tivesse otimizado ele inteirinho, mas ele será amplamente mais fácil de manter. AlternateHardAndSoftLayers
+
+Faça funcionar,
+
+faça correto,
+
+faça rápido, 
+
+faça barato.
+
+
+
+
+- (atribuído a) Alan Kay
+tags: career translation
+

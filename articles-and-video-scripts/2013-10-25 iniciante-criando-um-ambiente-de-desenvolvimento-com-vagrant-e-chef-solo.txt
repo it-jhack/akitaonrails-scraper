@@ -1,0 +1,69 @@
+
+Este artigo é mais uma anotação para mim mesmo mas deve servir para mais pessoas também. Se você ainda não sabe o que é Vagrant, leia o artigo do Nando Vieira "Usando o Vagrant como ambiente de desenvolvimento no Windows" ou assista a palestra que ele deu na Rubyconf Brasil 2013.
+Assumindo que você já sabe o que é Vagrant, resolvi explorar mais algumas de suas opções. Em particular, como subir uma nova máquina e automatizar sua configuração. Existem algumas formas, a mais simples é provisionamento via shell-scripts a mais interessante é o provisionamento usando Chef-Solo. Existem também as opções com Ansible e Puppet.
+
+
+
+Para começar a usar Chef-Solo adicione o seguinte bloco ao seu Vagrantfile:
+
+1
+2
+3
+4
+
+config.vm.provision :chef_solo do |chef|
+  chef.cookbooks_path = 'cookbooks'
+  chef.add_recipe 'main'
+end
+
+
+Então crie um diretório para seus cookbooks e comece a adicionar receitas, ou use Berks (que funciona como um Bundler para cookbooks de Chef), e pronto, quando subir sua máquina com 'vagrant up' ele vai usar esses cookbooks para automaticamente instalar e configurar tudo que você precisa. E quando quiser adicionar mais cookbooks basta executar 'vagrant provision'.
+Em particular, criei meu próprio cookbook fazendo um fork do @brennovich. Como ambiente para desenvolvimento eu instalo um Ubuntu 12.04 LTS Precise Pangolin. Eu gosto de instalar Postgresql, Mysql, Redis, MongoDB, Memcached, Ruby com RVM, Python com PIP e virtualenv, Node.js com npm, Oracle Java 1.7 e Elasticsearch.
+Além disso também prefiro usar o conjunto de dotfiles YADR. Neste processo eu só faço o clone mas não instalo porque não há uma receita e a rake task que faz isso exige prompts do usuário que ainda não dá para automatizar, então se quiser ativar o YADR, depois de logar com 'vagrant ssh', faça:
+
+1
+2
+
+cd ~/.yadr
+rake install
+
+
+Outra coisa que ainda não entendi é que a receita de RVM não está instalando os rubies. Se alguém descobrir porque não deixe de comentar.
+Para colocar tudo isso para funcionar, instale o Virtualbox ou VMWare, instale o Vagrant e comece assim:
+
+1
+2
+3
+4
+5
+
+git clone https://github.com/akitaonrails/brotodevbox.git
+cd brotodevbox
+git submodule update --init
+
+vagrant up
+
+
+Meu Vagrantfile está hardcoded para meu diretório de projetos, crie a seguinte variável de ambiente para mapear seu diretório antes de executar o Vagrant:
+
+1
+
+export SYNCED_FOLDER=/home/meudiretorio/projetos
+
+
+E se estiver usando Vmware como provider, suba assim:
+
+1
+
+vagrant up --provider=vmware_fusion
+
+
+Conclusão
+A grande vantagem de usar Vagrant, para mim, é ter um ambiente completo de desenvolvimento isolado nele mesmo. Recentemente fiz upgrade do OS X Mountain Lion para Mavericks, se não tivesse o Vagrant gastaria horas reinstalando tudo, tendo problemas com binários incompatíveis e assim por diante.
+Alguns vão preferir usar o Vim diretamente do Terminal, com tmux para garantir a sessão. Eu pessoalmente gosto de editar por fora usando MacVim e outros desenvolvedores podem executar seu editor favorito como Sublime Text 2.
+Se seu ambiente já é um Linux, não deixe de usar o Vagrant-LXC como provider que o @frehm está evoluindo, é um dos desenvolvedores mais empolgados em ajudar a tornar o Vagrant uma ferramenta essencial.
+E mesmo se estiver no OS X como eu, uma experiência que ainda vou fazer é rodar um Linux dentro do VMWare e, com a ajuda do Vagrant-LXC conseguir criar simulações de ambientes mais complexos que exigiriam múltiplas máquinas VMWare (como um cluster MongoDB, por exemplo), e com o Vagrant-LXC vou precisar só de uma máquina virtual.
+Por enquanto já fico contente de ter um ambiente de desenvolvimento estável.
+
+tags: obsolete rails
+

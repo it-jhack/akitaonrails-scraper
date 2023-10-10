@@ -1,0 +1,650 @@
+
+Este artigo inicia na Parte 1. Leia primeiro antes de continuar.
+
+Se quiser ver como essa aplicação se comporta de verdade, eu subi uma versão numa conta free do Heroku, então clique aqui e veja.
+
+
+Nesta Parte 2 vamos continuar com as seguinte seções:
+
+Seção Bônus: Markdown
+Seção Bônus: Twitter Bootstrap
+ActiveAdmin e Globalize 3
+Rotas Internacionalizadas
+Conclusão
+
+
+Seção Bônus: Markdown
+Outra coisa que quero demonstrar no caso de um aplicativo “estilo” gerenciador de conteúdo (CMS) é o cache do HTML que queremos gerar. Neste exemplo defini que o atributo Article#body terá texto no formato Markdown. Poderia ser qualquer outro formato como Textile, Creole, MediaWiki ou o qualquer outro que gere HTML. É uma forma de simplificar o processo de edição do conteúdo sem precisar de um editor WYSIWYG mais complicado como um bootstrap wysihtml5.
+Uma boa engine para converter Markdown em HTML é o RDiscount (olhe também a gem Tilt, ambos do Ryan Tomayko). Novamente, apenas adicione a seguinte gem no Gemfile:
+1
+
+gem 'rdiscount'
+
+
+Usá-lo é muito simples:
+1
+
+RDiscount.new("texto em **markdown**.").to_html #=> <p><strong>markdown</strong></p>\n
+
+
+O erro mais comum é adicionar essa lógica no controller, algo como isso:
+1
+2
+3
+4
+5
+6
+
+class ArticleController < ApplicationController
+  def show
+    @article = Article.find(params[:id])
+    @html = RDiscount.new(@article.body).to_html
+  end
+end
+
+
+Isso acarreta um processamento de conversão para cada requisição de cada usuários à mesma página. É exatamente o tipo de cenário que queremos otimizar o quanto antes. A melhor forma, nesse tipo de cenário de conversão, é gravar a versão convertida junto com a original. Por isso na migration do model Article já criamos com a coluna body e também body_html. Então só precisamos adicionar um simples callback no model:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+class Article < ActiveRecord::Base
+  attr_accessible :body, :body_html, :slug, :title, :locale, :translations_attributes
+  ...
+  before_save :generate_html
+  ...
+  def translations_attributes=(attributes)
+    new_translations = attributes.values.reduce({}) do |new_values, translation|
+      translation.merge!("body_html" => RDiscount.new(translation["body"] || "").to_html )
+      new_values.merge! translation.delete("locale") => translation
+    end
+    set_translations new_translations
+  end
+private
+  ...
+  def generate_html
+    self.body_html = RDiscount.new(self.body).to_html
+  end
+end
+
+
+Isso foi simples. Agora não precisa adicionar nada no controller e na view basta chamar diretamente o conteúdo cacheado:
+1
+
+<%= raw @article.body_html %>
+
+
+Observe também o método raw: como estamos adicionando HTML vinda de model na view, o Rails, por padrão, vai considerar esse conteúdo “perigoso” e irá escapá-lo. Não é o que queremos, queremos mesmo que o HTML seja mesclado, para isso precisamos expôr nossa intenção explicitamente dizendo que queremos o HTML “crú” (raw). Leia mais sobre essa funcionalidade no Guia Oficial.
+Em particular o método translations_attributes= merece atenção. Por causa da forma como o Globalize3 lida com a associação de traduções, ao tentarmos simplesmente adicionar massivamente múltiplas traduções, ele não executa corretamente os before_filter para cada linguagem, acaba apagando items que não são a localização configurada atualmente e grava somente um ítem em vez de gravar massivamente múltiplos. Isso particularmente quebra a funcionalidade de ActiveAdmin que vamos discutir mais abaixo.
+Para consertar isso, sobrescrevemos o método de assinalação em massa forçando o uso do método set_translations do Globalize3. Além disso também já criamos a versão HTML do campo body e gravamos de uma vez, isso porque a versão de cache do HTML no fundo é uma “tradução” e por isso não vai na tabela principal articles mas sim na implícita article_translations.
+
+Seção Bônus: Twitter Bootstrap
+Essa é completamente fora do escopo deste artigo, mas como meu código no Github está utilizando, vou apenas listar como instalei. Para quem não conhece, o Twitter Bootstrap é um conjunto de stylesheets e javascripts para estilizar rapidamente seu site, justamente para casos como este, onde o design não é importante, é basicamente um protótipo e eu queria algo menos feio do que não colocar nada. Existem diversas gems derivadas que utilizam o bootstrap, mas para o básico podemos começar adicionando as seguintes gems no Gemfile:
+1
+2
+3
+4
+5
+6
+7
+
+group :assets do
+  ...
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  gem 'therubyracer', :platforms => :ruby
+  gem 'less-rails'
+  gem 'twitter-bootstrap-rails'
+end
+
+
+Agora podemos começar a instalar os arquivos estáticos para a aplicação:
+1
+
+rails g bootstrap:install application fluid
+
+
+E depois podemos adicionar as views estilizadas para cada recurso da sua aplicação:
+1
+
+rails g bootstrap:themed Articles
+
+
+Neste ponto, ele vai criar vários arquivos desnecessários que podemos apagar e precisamos customizar bastante. Não vou copiar todo o fonte das views no arquivo, então faça o clone deste projeto no Github e aprenda lendo o código que está em app/uploads e app/views. Compare com os arquivos gerados pelo geradores acima e o que foi modificado.
+Um dos pontos importantes a lembrar quando lidamos com plugins de javascript, arquivos CSS, é não deixar sobrando require_tree . sem que você saiba para que serve. Leia meu artigo sobre Assets Pipeline para Iniciantes.
+No caso do layout principal note que adicionei bloco de .navbar para o menu principal no topo. Adicionei o yield onde os outros conteúdos vão se encaixar dentro de um .container e temos uma área de botões no rodapé num bloco .form-actions. Um cuidado sobre esta gem é que no arquivo que ele cria em app/uploads/stylesheets/bootstrap_and_overrides.css.less ele define margens no elemento body que são desnecessários, apenas remove essas definições logo no começo do arquivo.
+Note também que no meu Github todas as views de Devise que mencionamos anteriormente já estão estilizadas com o bootstrap (por isso que na seção que mencionamos sobre Devise eu faço um git checkout 0ff207… para fazer download das views traduzidas mas que ainda não tinham sido estilizadas). Agora você pode voltar ao diretório do meu projeto, fazer git checkout master e realizar a mesma cópia dos arquvos para pegar as views estilizadas.
+Um lembrete para menus é criar itens que saibam em que controller/action estamos e desabilitar o link da página atual, um exemplo é o que fiz de exemplo nesta aplicação. No arquivo app/helpers/application_helper.rb temos:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+module ApplicationHelper
+  ...
+  def navigation_links
+    links = []
+    options = params[:controller] == "welcome" ? { class: "active" } : {}
+    links << content_tag(:li, link_to(t("hello"), welcome_path), options).html_safe
+
+    options = params[:controller] == "articles" ? { class: "active" } : {}
+    links << content_tag(:li, link_to(t("articles.title"), articles_path), options).html_safe
+
+    links << content_tag(:li, link_to(t("admin.title"), admin_dashboard_path)).html_safe
+
+    content_tag(:ul, links.join("\n").html_safe, class: "nav")
+  end
+end
+
+
+E no layout em app/views/layouts/application.html.erb colocamos:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">
+        <%= t("site_name") %>
+      </a>
+      <%= navigation_links %>
+    </div>
+  </div>
+</div>
+
+
+
+ActiveAdmin e Globalize 3
+O ActiveAdmin é um excelente projeto para termos rapidamente um módulo simples de administração que consegue expôr as operações de CRUD de um model, incluindo suas validações e até elementos como upload de imagens (caso esteja usando CarrierWave, por exemplo). Por usar por baixo formtastic, customizar seus formulários também não é complicado. Instalar é simples, coloque na Gemfile:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+...
+group :assets do
+  gem 'jquery-ui-rails'
+  ...
+end
+...
+gem 'jquery-rails'
+gem 'activeadmin'
+gem 'ActiveAdmin-Globalize3-inputs'
+...
+
+
+Execute o comando:
+1
+
+rails g active_admin:install
+
+
+Uma dica para que o Assets Pipeline não falhe em produção. Precisamos declarar explicitamente os assets do ActiveAdmin. Adicione no config/application.rb:
+1
+
+config.assets.precompile += %w(active_admin.js active_admin.css)
+
+
+Agora adicione em app/admin quaisquer models que precise expor. Leia a documentação do ActiveAdmin no site deles mas como exemplo, para customizar a tabela de listagem do model Article (index) e também a página visualização de um único artigo (show), podemos escrever em app/admin/articles.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+
+ActiveAdmin.register Article do
+  index do
+    column :id
+    column :slug
+    column :title
+
+    default_actions
+  end
+
+  show do |article|
+    attributes_table do
+      row :slug
+      I18n.available_locales.each do |locale|
+        h3 I18n.t(locale, scope: ["translation"])
+        div do
+          h4 article.translations.where(locale: locale).first.title
+        end
+        div do
+          article.translations.where(locale: locale).first.body_html.html_safe
+        end
+      end
+    end
+    active_admin_comments
+  end
+  ...
+end
+
+
+O bloco show é o mais interessante. Aqui estamos usando diretamente a associação translations que o Globalize 3 adicionou ao nosso model para buscar explicitamente o conteúdo de uma localização, em vez de puxar o que o model nos der automaticamente baseado na localização. Assim colocamos ambos os conteúdo uma embaixo do outro de uma só vez.
+
+Mas e para editar os conteúdos de ambas as localizações? Para isso colocamos além do ActiveAdmin o ActiveAdmin-Globalize3-inputs e as gems de JQuery (porque vamos precisar do elemento de “Tabs”).
+Esse módulo vai utilizar as funcionalidades do ActiveRecord de accepts_nested_attributes_for para receber no mesmo formulário HTML os atributos das associações. Para isso garanta que seu modelo app/models/article.rb tem o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+class Article < ActiveRecord::Base
+  attr_accessible :body, :body_html, :slug, :title, :locale, :translations_attributes
+  ...
+  translates :title, :body, :body_html
+  accepts_nested_attributes_for :translations
+  ...
+  class Translation
+    attr_accessible :locale, :title, :body, :body_html
+  end
+
+  def translations_attributes=(attributes)
+    new_translations = attributes.values.reduce({}) do |new_values, translation|
+      translation.merge!("body_html" => RDiscount.new(translation["body"] || "").to_html )
+      new_values.merge! translation.delete("locale") => translation
+    end
+    set_translations new_translations
+  end
+  ...
+end
+
+
+Isso faz o modelo aceitar mass assignment do atributo translations_attributes, usamos o accepts_nested_attributes_for para que os helpers de formulário saibam como gerar os elementos para os atributos da associação. Uma coisa estranha pode ser o fato de estarmos sobrescrevendo a classe Article::Translation. Acredito que é um bug do Globalize 3, e sem essa modificação o mass assignment iria falhar.
+Precisamos também adicionar o JQuery UI para o ActiveAdmin. Basta alterar o arquivo app/uploads/stylesheets/active_admin.css:
+1
+2
+3
+4
+
+// Active Admin CSS Styles
+@import "active_admin/mixins";
+@import "active_admin/base";
+@import "jquery.ui.tabs";
+
+
+E também o arquivo app/uploads/javascripts/active_admin.js:
+1
+2
+
+//= require active_admin/base
+//= require jquery.ui.tabs
+
+
+Finalmente, precisamos alterar novamente o arquivo de configuração app/admin/articles.rb para adicionar o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+ActiveAdmin.register Article do
+  ...
+  form do |f|
+    f.input :slug
+    f.globalize_inputs :translations do |lf|
+      lf.inputs do
+        lf.input :title
+        lf.input :body
+
+        lf.input :locale, :as => :hidden
+      end
+    end
+
+    f.buttons
+  end
+end
+
+
+Atributos não internacionalizados como slug ficam fora, mas o resto vai dentro do bloco globalize_inputs passando o nome da associação, nesse caso translations. E dentro de cada sub-formulário precisamos de um campo escondido com a localização desse sub-formulário em particular, para isso temos o campo locale como hidden.
+
+Vale lembrar que o ActiveAdmin suporta internacionalização também. Neste aplicativo escolhi não adicionar esse suporte. É o cenário onde um único administrador controla ambas as linguagens. Mas se você tiver a situação onde cada equipe em cada país cuida da sua própria linguagem, talvez queira adicionar este suporte.
+Finalmente, como explicamos na seção sobre Markdown, para que o ActiveAdmin consiga dar POST de várias traduções ao mesmo tempo, no mesmo formulário, usando a capacidade de assinalamento em massa e accepts_nested_attributes_for, temos que sobrescrever o método translations_attributes= pois simplesmente inserir os novos registros de tradução na associação não vai funcionar, o Globalize3 vai filtrar essa lista e só vai gravar o registro da localização atual. Mas forçando o uso to método interno do Globalize3, set_translations, conseguimos gravar múltiplas traduções ao mesmo tempo.
+
+Rotas Internacionalizadas
+Deixei por último uma das coisas mais interessantes nesta aplicação. Para efeitos de SEO também queremos que as URLs sejam traduzidas. Ou seja, queremos que as seguintes URLs todas apontem para o mesmo lugar:
+1
+2
+3
+
+/users/sign_in
+/en/users/sign_in
+/pt-BR/usuarios/login
+
+
+Existem algumas gems que fazem isso, a primeira que esbarrei se chama “i18n_routing”, mas não consegui fazê-la funcionar, acredito que tenha bugs ainda. Se procurar mais vai acabar encontrando a translate_routes mas ela está obsoleta e dois outros forks passaram a atualizá-la. Uma é a route_translator, que eu não testei porque parecia ter pouca atividade. A que escolhi usar se chama rails-translate-routes. Para adicionar ao projeto, edite seu Gemfile:
+1
+
+gem 'rails-translate-routes'
+
+
+Depois de executar o comando bundle precisamos editar o arquivo config/routes.rb que controla todas as rotas. Neste estágio, ele deve ter o seguinte conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+I18nDemo::Application.routes.draw do
+  # rotas para active admin
+  ActiveAdmin.routes(self)
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  
+  # rotas de autenticação do Devise
+  devise_for :users
+  
+  # rotas pra artigos
+  resources :articles
+  
+  # pagina principal
+  get "welcome/index", as: "welcome"
+  root to: 'welcome#index'
+end
+
+
+O que queremos agora é traduzir todas as rotas públicas, incluindo as do Devise. Porém, como explicado antes, no caso do ActiveAdmin estamos no cenário onde não precisamos de telas de administração traduzidas. Então devemos modificar o arquivo para ficar assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+I18nDemo::Application.routes.draw do
+  devise_for :users
+  resources :articles
+  get "welcome/index", as: "welcome"
+  root to: 'welcome#index'
+end
+
+ActionDispatch::Routing::Translator.translate_from_file(
+  'config/locales/routes.yml', {
+    prefix_on_default_locale: true,
+    keep_untranslated_routes: true })
+
+I18nDemo::Application.routes.draw do
+  ActiveAdmin.routes(self)
+  devise_for :admin_users, ActiveAdmin::Devise.config
+end
+
+
+Uma dica é que o bloco de rotas depois do método #draw pode ser dividido. Isso é importante porque as rotas definidas antes do método #translate_from_file serão traduzidas, e as definidas no bloco abaixo (onde colocamos o ActiveAdmin), não serão.
+Este código diz que vamos colocar as traduções no arquivo config/locales/routes.yml. Então criamos esse arquivo com o seguinte conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+en:
+  routes:
+pt-BR:
+  routes:
+    welcome: bemvindo
+    new: novo
+    edit: editar
+    destroy: destruir
+    password: senha
+    sign_in: login
+    users: usuarios
+    cancel: cancelar
+    article: artigo
+    articles: artigos
+
+
+O bloco en.routes fica vazio porque como nossa aplicação está toda em inglês, por padrão, as rotas são em inglês. Agora no bloco pt-BR.routes basta colocarmos as palavras que queremos traduzir, seja ela nome de controller, de action, de resource, e a gem fará o resto. Se executarmos o comando rake routes depois de termos isso configurado, teremos:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+...
+article_pt_br GET    /pt-BR/artigos/:id(.:format)    articles#show {:locale=>"pt-BR"}
+   article_en GET    /en/articles/:id(.:format)      articles#show {:locale=>"en"}
+              GET    /articles/:id(.:format)         articles#show
+              PUT    /pt-BR/artigos/:id(.:format)    articles#update {:locale=>"pt-BR"}
+              PUT    /en/articles/:id(.:format)      articles#update {:locale=>"en"}
+              PUT    /articles/:id(.:format)         articles#update
+              DELETE /pt-BR/artigos/:id(.:format)    articles#destroy {:locale=>"pt-BR"}
+              DELETE /en/articles/:id(.:format)      articles#destroy {:locale=>"en"}
+              DELETE /articles/:id(.:format)         articles#destroy
+welcome_pt_br GET    /pt-BR/bemvindo/index(.:format) welcome#index {:locale=>"pt-BR"}
+   welcome_en GET    /en/welcome/index(.:format)     welcome#index {:locale=>"en"}
+              GET    /welcome/index(.:format)        welcome#index
+   root_pt_br        /pt-BR                          welcome#index {:locale=>"pt-BR"}
+      root_en        /en                             welcome#index {:locale=>"en"}
+...
+
+
+Já se perguntou sobre a necessidade de usar rotas nomeadas como new_article_path em vez de digitar direto /articles/New? Este é um motivo, a mesma rota nomeada vai levar em consideração o parâmetro implícito de localização e nos dar a URI traduzida correta sem que você precise alterar mais nada em nenhuma parte da aplicação! Win-win.
+Precisamos que a aplicação reconheça o parâmetro locale que virá dentro do hash params que já conhemos. Vamos colocar um before_filter no /app/controllers/application_controller.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+
+  before_filter :set_locale
+  before_filter :set_locale_from_url
+
+  private
+
+  def set_locale
+    if lang = request.env['HTTP_ACCEPT_LANGUAGE']
+      lang = lang[/^[a-z]{2}/]
+      lang = :"pt-BR" if lang == "pt"
+    end
+    I18n.locale = params[:locale] || lang || I18n.default_locale
+  end
+end
+
+
+Agora podemos ir em https://localhost:3000/en/articles ou https://localhost:3000/pt-BR/artigos e vamos chegar no mesmo local. Basta colocarmos na aplicação links para podemos trocar de linguagem em qualquer página que estivermos. Para isso usaremos o helper url_for que usará os parâmetros correntes para gerar o link correto da página atual. Precisamos adicionar em app/helpers/application_helper.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+module ApplicationHelper
+  def language_links
+    links = []
+    I18n.available_locales.each do |locale|
+      locale_key = "translation.#{locale}"
+      if locale == I18n.locale
+        links << link_to(I18n.t(locale_key), "#", class: "btn disabled")
+      else
+        links << link_to(I18n.t(locale_key), url_for(locale: locale.to_s), class: "btn")
+      end
+    end
+    links.join("\n").html_safe
+  end
+  ...
+end
+
+
+E podemos colocar, neste exemplo, na área de rodapé da aplicação. Então adicionamos ao app/views/layouts/application.html.erb:
+1
+2
+3
+4
+5
+6
+7
+
+...
+<div class="form-actions">
+  <%= language_links %>
+</div>
+
+</body>
+</html>
+
+
+Este é o resultado:
+
+
+Note que neste artigo estou mostrando apenas o exemplo de localização onde a informação vai diretamente na URL. Mas existem técnicas para manter essa informação em subdomínio, por exemplo, https://en.dominio.com e https://pt.dominio.com, ou mesmo em Cookie, ou então somente usando a configuração do próprio navegador. De todas eu ainda acho que a mais prática, simples e eficiente é manter na URL, mas isso é uma opinião que pode não ser suficiente dependendo da sua aplicação. Mas se estiver em dúvida, mantenha desta forma.
+
+Conclusão
+Como podem ver existe muita coisa que podemos fazer em aplicativos internacionalizados. Mesmo que você não esteja iniciando uma aplicação com múltiplas linguagens, não custa sempre fazer o seguinte:
+
+Garanta que todo seu ambiente é UTF8, veja a introdução do artigo novamente. Não é raro encontrar projetos com arquivos misturados entre UTF8 e Latin1 ou pior: banco de dados em Latin1 com templates em UTF8.
+Nunca coloque strings de texto em templates de views, helpers, controllers ou models: sempre separe dentro de arquivos em config/locales. Não é difícil, apenas requer disciplina.
+Mesmo que seu model futuramente tenha conteúdo traduzido, não precisa usar o Globalize3 ou semelhante caso não tenha certeza. Olhe na documentação, não é difícil acrescentar o suporte posteriormente.
+Não use funções como strftime ou outros formatadores diretamente em templates, separe em métodos helpers ou presenters.
+Quanto a regra de negócio, preste atenção quanto a operações de data e hora (time zones podem variar mesmo no mesmo país) e moeda (conversões)
+
+tags: learning rails i18n tutorial
+

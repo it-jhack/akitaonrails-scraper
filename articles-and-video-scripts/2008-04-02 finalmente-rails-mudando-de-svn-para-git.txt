@@ -1,0 +1,11 @@
+
+
+
+
+O David Hansson acabou de anunciar que todo o repositório do Rails irá migrar do atual Subversion para Git, no Github !!
+É uma excelente notícia que deve ajudar o Git ainda mais a se estabelecer como o de-facto gerenciador de código fonte para a comunidade Rails.
+Além disso, o gerenciamento de ticket tracking vai sair do Trac para Lighthouse.
+O repositório atual em SVN e o Trac serão congelados quando a migração acontecer para que nenhum svn:externals quebre, mas se você quiser o Edge Rails, terá que migrar para Git também (o que, convenhamos, não é nenhum sacrifício).
+Parabéns ao Rails Core!
+tags: subversion git rails
+

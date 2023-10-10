@@ -1,0 +1,101 @@
+
+Desde o dia 15 de julho decidi que já tinha passado da hora de mudar um pouco meu blog. Sinceramente faz tanto tempo que coloquei o tema anterior que nem me lembro mais quando foi. Historicamente, entre 2006 e 2008, se não me engano, eu usei os sistemas de blog Typo3 e Mephisto. Depois pulei para o mais simples Enki, do Xavier Shay. Com o Enki este blog já passou por dois redesigns, o último deles foi basicamente um tema de Wordpress de licença aberta que eu retirei as entranhas PHP, claro, e adaptei ao Enki.
+
+Mas agora resolvi brincar um pouco mais. E para ser “hipster” nada melhor do que abusar um pouco do Twitter Bootstrap.
+
+
+Desde que comecei a blogar as coisas mudaram bastante. Antigamente o exemplo canônico do Blog de 15 minutos era basicamente fazer um Post has_many :comments. Porém hoje em dia meu blog não tem mais que um model Post, já que comentários ou ficam no Disqus ou Facebook ou outro sistema SaaS de discussão.
+Outra parte que tinha muito código era a parte administrativa. Mas nesta nova versão estou usando basicamente o ActiveAdmin. E não é no espírito de “qualquer coisinha serve”, na verdade este admin está melhor do que eu tinha antes no Enki, com muito mais facilidade. Só isso já tira muito da complexidade de código que eu tinha antes.
+A terceira parte mais trabalhosa, sem dúvida é o front-end em si. Desta vez resolvi experimentar o Twitter Bootstrap e devo dizer que gostei muito de brincar com as ferramentas que ele oferece. Obviamente, todo programador fica com a sensação de que algumas coisas poderiam ser melhores, mas na prática o custo benefício mais do que compensa, afinal eu não sou designer. O resultado vocês podem ver aqui, e pessoalmente eu diria que comparado com o que eu tinha antes, está muito mais agradável. Mais do que isso: agora meu blog também é “responsivo” – funciona melhor em smartphones e tablets, finalmente!
+Outra novidade para mim foi usar Less em vez de Sass. Obviamente este sistema é bem simples, mas posso dizer que não senti nenhuma grande dificuldade na troca, na maior parte, tanto faz se for Less ou Sass – desde que seja um dos dois. Usei uma gem de  Twitter Bootstrap para Rails que funcionou muito bem. Assistam os episódios de fevereiro do Ryan Bates para aprender a usar.
+Para o conteúdo em si, eu sempre editei usando Textile compilado com RedCloth, mas agora eu adicionei também a opção de Markdown usando a gem RDiscount, que é a melhor opção. No blog antigo eu fazia upload das imagens do site via um model com Paperclip, mas já faz algum tempo que passei a usar CarrierWave então recomendo também.
+Há quem prefira fazer syntax highlighting de código usando o Gist do Github, existem até Rack Middleware para fazer o cache do Gist (já que ele é um serviço externo). Preferi manter o que eu já tinha antes, usando o bom e velho CodeRay (aliás, o site deles precisa de um redesign urgente também).
+O Enki cuidava ele mesmo do processo de sluggorização, transformar um título de blog como “Hello World” num slug “hello-world”. Mas desta vez preferi usar o já conhecido Friendly Id do Norman Clarke. Outra categoria de gem que já passou por vários rewrites são gerenciadores de tags. Usei o mais comum, o Acts as Taggable On do Michael Bleigh. A maioria é bem simples, basicamente um model polimórfico de Tags, uma tabela many-to-many e pronto, mas preferi usar uma gem mesmo assim.
+E é basicamente isso, para o ambiente de desenvolvimento comecei a usar mais o Guard, o Pry. Meu ambiente de teste é o mínimo, basicamente Rspec e Factory Girl. Outra coisa que estou usando é o Rails Config para configurações em YAML. Novamente, é o tipo de coisa que dá pra resolver de fato em poucas linhas de código, mas novamente, se a gem está à mão, por que não usar? Eu já sei que eu sei, não preciso reinventar a roda toda vez.
+Ainda não adicionei nada de otimização de performance, está bem básico. No máximo estou usando a gem Dalli integrada a cache de fragmento somente para cachear o novo menu de navegação de arquivos, que é bem pesada. Aliás, nesses 6 anos de existência de blog contabilizei nada menos que 863 posts! Quero acelerar pra fazer o post número 1.000 logo :-)
+Como meu blog em Enki antigo estava rodando em Ruby 1.9.2, quero ver o que acontece agora que coloquei Ruby 1.9.3 e, coincidentemente, já pude também instalar uma versão que acabou de sair do forno hoje mesmo do Passenger. E sim, em projetos de clientes usamos ou Heroku ou instalações customizadas de Unicorn, mas no meu box da WebbyNode, eu prefiro manter meu combo de NGINX e Passenger. É simples, funciona bem, nunca me deu problema, então esse eu só vou atualizando.
+Comparação
+O Enki, que eu usava, ainda é um engine de blog minimalista muito bom, se você está iniciando em Rails, é uma boa aplicação para começar a aprender o básico. Para comparar, o Enki tem o seguinte volume:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
++----------------------+-------+-------+---------+---------+-----+-------+
+| Name                 | Lines |   LOC | Classes | Methods | M/C | LOC/M |
++----------------------+-------+-------+---------+---------+-----+-------+
+| Controllers          |   486 |   421 |      13 |      44 |   3 |     7 |
+| Helpers              |   128 |   112 |       0 |      22 |   0 |     3 |
+| Models               |   449 |   366 |      11 |      62 |   5 |     3 |
+| Libraries            |  1113 |   837 |      20 |     119 |   5 |     5 |
+| Integration tests    |     0 |     0 |       0 |       0 |   0 |     0 |
+| Functional tests     |     0 |     0 |       0 |       0 |   0 |     0 |
+| Unit tests           |     0 |     0 |       0 |       0 |   0 |     0 |
+| Model specs          |   686 |   571 |       0 |       5 |   0 |   112 |
+| View specs           |   409 |   349 |       0 |       1 |   0 |   347 |
+| Controller specs     |  1181 |   987 |       0 |      25 |   0 |    37 |
+| Helper specs         |    65 |    54 |       0 |       1 |   0 |    52 |
+| Library specs        |    44 |    33 |       0 |       0 |   0 |     0 |
+| Cucumber features    |   205 |   105 |       0 |       2 |   0 |    50 |
++----------------------+-------+-------+---------+---------+-----+-------+
+| Total                |  4766 |  3835 |      44 |     281 |   6 |    11 |
++----------------------+-------+-------+---------+---------+-----+-------+
+  Code LOC: 1736     Test LOC: 2099     Code to Test Ratio: 1:1.2
+
+
+E meu novo blog agora está assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
++----------------------+-------+-------+---------+---------+-----+-------+
+| Name                 | Lines |   LOC | Classes | Methods | M/C | LOC/M |
++----------------------+-------+-------+---------+---------+-----+-------+
+| Controllers          |    61 |    56 |       4 |       7 |   1 |     6 |
+| Helpers              |     7 |     7 |       0 |       1 |   0 |     5 |
+| Models               |   104 |    80 |       4 |       6 |   1 |    11 |
+| Libraries            |    31 |    24 |       0 |       3 |   0 |     6 |
+| Model specs          |    96 |    78 |       0 |       0 |   0 |     0 |
+| Controller specs     |   106 |    91 |       0 |       0 |   0 |     0 |
+| Helper specs         |    11 |     9 |       0 |       0 |   0 |     0 |
++----------------------+-------+-------+---------+---------+-----+-------+
+| Total                |   416 |   345 |       8 |      17 |   2 |    18 |
++----------------------+-------+-------+---------+---------+-----+-------+
+  Code LOC: 167     Test LOC: 178     Code to Test Ratio: 1:1.1
+
+
+Retoques
+A única chatice que me incomodou nessa migração é que meu blog era tão antigo, muito anterior ao Rails 3, que minha pasta de uploads do Paperclip era chamada “assets”. Obviamente é o mesmo nome de pasta padrão que o Assets Pipeline, portanto precisei filtrar todos os artigos pra dar um #gsub nas URLs de imagens. Aparentemente parece que funcionou sem problemas, mas se virem artigos com imagens quebradas, por favor me avisem. Basta comentar no próprio artigo que eu recebo por email.
+Outro detalhe é que meu blog nunca foi verdadeiramente internacionalizado, como já devem ter percebido. Desta vez, como escrevi do zero, estou usando Internacionalização da forma correta. Mesmo assim ainda tem conteúdo não traduzido, mas a maior parte da estrutura que não é artigo está correto.
+Independente do backend, o que realmente tomou a maior parte do meu tempo foi o front-end. Ajustar o Twitter Bootstrap deu trabalho mais porque eu fui testando o visual à medida que implementava. Implementar sem planejar antes sempre faz gastar mais tempo. Além disso notei que tem várias coisas que eu não fazia em termos de redes sociais, por exemplo, só agora criei uma app no Facebook para linkar com este blog; só agora anexei este blog ao meu profile no Google; só agora adicionei meta tags do Facebook, etc. Tinha – e ainda tem – várias pequenas coisas que sempre ficou no to-do list e nunca andou. Vamos ver se agora eu termino de implementar.
+Ainda tem vários aspectos que eu preciso ajustar, por exemplo, colocar os logotipos de apoio – como da WebbyNode que desde quando mudei para lá, quase 2 anos atrás, nunca tive problemas, sempre funcionou sem dores de cabeça.
+O que acharam do novo design e da nova estrutura do blog? Não deixem de comentar.
+tags: obsolete
+

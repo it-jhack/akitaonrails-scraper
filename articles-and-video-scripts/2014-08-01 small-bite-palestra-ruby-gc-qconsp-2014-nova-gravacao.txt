@@ -1,0 +1,15 @@
+
+O pessoal da QConSP soltou hoje a gravação da minha palestra. Agradecimentos à organização e imagino o trabalho que minha palestra deve ter dado :-) Infelizmente o formato que eles usam é gravar o rosto do palestrante e sincronizar os slides disponibilizados em PDF.
+O problema é que minha palestra não dá pra entender se a sincronização dos slides não estiver perfeita, não tiver as animações de transição e ainda por cima no PDF não vai os vídeos que eu gravei. Então, se assistir dessa forma, não vai dar pra entender esse assunto que já não é fácil.
+Pensando nisso decidi fazer o seguinte: baixei o MP3 deles, abri o Keynote original e gravei usando ScreenFlow. Ficou quase sincronizado perfeito e deve estar muito melhor pra assistir. Acabei de subir no YouTube, então aproveitem!
+
+
+
+
+O assunto Garbage Collection não é simples, e uma palestra só não dá pra explicar todos os detalhes, mas a idéia é usar a evolução do Ruby, que saltou de Mark & Sweep, para Bitmap Marking & Lazy Sweep, para Restricted Generational GC e está próximo de evoluir pra Restricted Three Gen GC (possivelmente no 2.2).
+Quando fiz a palestra ela estava na versão 2.1.1. Já saiu a 2.1.2 que resolve o bug que eu descrevo no fim da palestra e eu atualizei os slides quando apresentei a mesma palestra na VI SECOT na UFScar Sorocaba:
+    Ruby & GCs (versão 2.1.2) - VI Secot UFScar Sorocaba  from Fabio Akita 
+Mesmo se você não for de Ruby, todos os conceitos são os mesmos que servem para discutir Garbage Collectors de Java, por exemplo, e vai melhorar sua compreensão desse assunto que, muitos acham que já entendem, mas poucos conseguem realmente compreender.
+
+tags: presentation ruby
+

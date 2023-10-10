@@ -1,0 +1,70 @@
+
+Eu estou com um hiato grande de posts no meu blog, em especial minhas compilações de notícias (o último foi em Abril!). Também estou devendo o próximo screencast da minha série, que será sobre “Deployment de Aplicações Ruby em Produção”. Podem aguardar, pouco a pouco vou tirando o atraso.
+A parte boa é que a minha falta de tempo significa que estou dando palestras continuamente pelo Brasil e também que entrei acelerado na consultoria GoNow. Isso sem contar a RubyConf Brasil que é dentro de poucos dias. Já se inscreveu?
+Agora, vamos às principais notícias das últimas semanas.
+
+
+Ruby e Ruby on Rails
+
+Extending Rails 3 with Railties – com o Rails 3 já lançado e sendo usado em produção agora é hora de expandir o ecossistema. Plugins/Gems é a forma de fazer e o Rails 3 fornece todos os ganchos e APIs que você precisa para se integrar de forma simples e limpa. Aprenda neste post como fazer isso.
+
+
+Inploy: The No Brainer Deployment Solution – este é um artigo introdutório que fiz para o blog do “Ruby Learning”:"https://www.rubylearning.com, explicando um pouco sobre o que é deployment e o que considero ser uma maneira simples e rápida para fazer isso de forma segura. Para isso apresento a ferramenta Inploy que, na maioria dos casos, substitui outros como Capistrano.
+
+
+HTML to HAML Converter – esta ferramenta é muito útil para quem usa HAML, em vez de ERB, na hora de escrever as views. Porém, muitas vezes os web designers podem não querer usar muito ou você recebeu os HTML já prontos de algum fornecedor. Em qualquer que seja o caso, você tem um monte de HTML que não quer ficar convertendo manualmente em HAML, para isso existe essa ferramenta que faz isso automaticamente.
+
+O Nando Vieira, finalmente, andou postando diversos artigos recentes explicando alguns conceitos introdutórios que todo Rubista precisa aprennder.
+
+Ruby Object Model – Self – neste ele começa explicando sobre o objeto “self” que inicialmente se parece com o “this” em linguagens como Java, mas que se comporta bem diferente disso.
+
+
+Ruby Object Model – Singleton Class – este artigo complementa o anterior, falando sobre o singleton class. Essa é a base para começar a entender sobre metaprogramação em Ruby, portanto prestem atenção a esses conceitos.
+
+
+Almost Everything is an Object – neste artigo para o Ruby Learning, ninguém menos que David Black explica como quase tudo na linguagem Ruby é um objeto e quais pontos não são objetos e porque. Novamente, conceitos que todo programador Ruby precisa aprender direito.
+
+
+Ruby Metaprogramming Course – Learn to Think in Ruby – se quiser aprender mais sobre esse assunto, você tem que se registrar no RubyLearning.com antes do dia 23 de Outubro para assistir ao curso online que explicará esse assunto. Não percam!
+
+
+Grok Podcast – as pessoas sempre me perguntam quando vai retornar o podcast que eu fazia com o Carlos Brando. Infelizmente, depois que paramos nunca mais conseguimos retomar. O problema é mesmo falta de tempo. Felizmente o Rafael Rosa Fu (mr. RubyInside) e o próprio Carlos Brando conseguiram combinar a produção de uma nova séria chamada “Grok”. A idéia não é falar especificamente de Rails mas de diversos assuntos interessantes do mundo de tecnologia e empreeendedorismo, então recomendo que assinem o feed e ouçam :-)
+
+Phusion
+O pessoal da Phusion vem trabalhando numa nova versão do Phusion Passenger há algum tempo, refinando e adicionando novas tecnologias para torná-lo ainda mais simples e robusto para a maioria das aplicações. Eles tem uma série de artigos explicando este novo lançamento:
+
+Phusion Passenger 3.0.0 RC 1 released – eles estão lançando alguns Release Candidate para testar antes de fechar a versão 3.0 final. Antes deste, eles lançaram o Beta 3, Beta 2 e Beta 1. Neste último link tem uma coletânea para outra série de artigos “Technology Preview”, explicando as tecnologias aplicadas nesta versão.
+
+
+Phusion Passenger & running multiple Ruby versions – uma coisa que ficou mais fácil nestar versão é rodar múltiplas aplicações na mesma instalação de Passenger, cada um usando uma versão de Ruby diferente usando RVM. Parece complicado, e de fato não é simples, então leia o artigo para entender os detalhes.
+
+Engine Yard
+Dentre algumas notícias dentro da comunidade internacional, a Engine Yard teve duas “baixas”.
+
+4 years at Engine Yard, what a long strange trip it’s been. – a primeira baixa foi um de seus co-fundadores, ninguém menos que Ezra Zygmuntowics, que estava desde o começo e trabalhou em diversos projetos, incluindo o controverso Merb. Ele colaborou muito para mostrar como Ruby pode escalar de verdade e como mesclar tecnologias como Erlang para ajudar nisso.
+
+
+Here’s to the Next 3 Years – a segunda baixa foi também de ninguém menos que Yehuda Katz, um dos líderes do projeto Rails 3 que era do projeto Merb e DataMapper. Ele disse que vai permanecer ativo no projeto Rails mas estará focado em melhorar o projeto SproutCore, o framework javascript criado dentro da Apple e que possibilitou produtos como o Apple Mobile Me. Podemos esperar grandes coisas vindo disso no futuro.
+
+
+Coming to America – mas nem só de baixas foram as últimas notícias. A Engine Yard também importou da Austrália o Dr. Nic Williams, que deixou sua consultoria Mocra para integrar o time da Califórnia, ajudando seus clientes e a comunidade Rails.
+
+Caelum
+A Caelum, que sempre apoiou e investiu na comunidade Rails desde o começo, continua inovando.
+
+QConSP 2010: como foi o principal evento de arquitetos e desenvolvedores no Brasil – A Caelum não pára nunca, e para provar, eles organizaram a bem sucedida primeira edição da conferência QCon no Brasil. Centenas de pessoas tiveram a oportunidade de assistir grandes nomes nacionais e internacionais em diversas plataformas e tecnologias. Parabéns à Caelum!
+
+
+Lançado Rails 3 – e apostila atualizada para download – a Caelum foi uma das pioneiras em oferecer cursos e treinamento na plataforma Ruby on Rails, e eles continuam se aperfeiçoando. Recentemente eles lançaram a apostila atualizada para Rails 3 que você pode baixar gratuitamente do site deles.
+
+
+Agenda Tech – é um site criado pelo Anderson Leite, instrutor da Caelum, junto com colaboradores da comunidade Rails que lista todos os eventos de tecnologia do Brasil inteiro. Melhor ainda, todo o código fonte está disponível no Github, portanto você pode estudá-lo e colaborar na sua evolução.
+
+
+Tectura – é um fórum de discussão para diversas linguagens e tecnologias com um objetivo de ter discussões de alto nível sobre tecnologia e agilidade. O Tectura é uma reescrita do antigo projeto de fóruns Beast. Se quer fazer um fórum igual, basta ir no Github pois a Caelum disponibilizou todo o código.
+
+
+Programador Poliglota – é o site mais recente lançado pela Caelum, que é um grande agregador de tweets categorizado por plataforma/tecnologia. Novamente, acompanhe e estude o código fonte disponível no Github.
+
+tags: obsolete
+

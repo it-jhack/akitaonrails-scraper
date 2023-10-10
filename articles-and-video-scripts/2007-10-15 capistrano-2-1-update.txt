@@ -1,0 +1,13 @@
+
+
+
+
+Esta é a semana dos lançamentos. Depois do Rails 2.0 Preview Release, do 1.2.4 e do 1.2.5 Maintenance Upgrade, é a vez do grande Capistrano ganhar sua atualização 2.1 como reportou o próprio Jamis Buck algumas horas atrás.
+Definitivamente eu gosto de Gems:
+gem update capistrano y—
+
+Muitas coisas são de infra-estrutura e não devem afetar o usuário comum de Capistrano como tirar a necessidade de um pseudo-TTY, desabilitar o wrapping de sh, melhor suporte a Windows para carregar arquivos binários. Algumas coisas são bem úteis para extender o Capistrano como carregar novas receitas diretamente de plugins em vendor/plugins. 
+
+Para mim o mais interessante é o suporte nativo agora ao GIT. Agradecimentos a Geoffrey Grosenbach, Garry Dolley e Scott Chacon. Agora ficou trivial fazer deployments a partir de repositórios GIT. Um bom sinal.
+tags: obsolete rails
+

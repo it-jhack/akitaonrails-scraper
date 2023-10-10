@@ -1,0 +1,156 @@
+
+Last week I presented ActiveResource’s capabilities to some friends.
+In summary, it’s a great library, but not perfect just yet, and should improve in the next versions. On the other hand, the majority of ‘REST’ APIs available – as they say – are not actually RESTful. Flickr and YouTube come to mind. Check out this link to learn on how to talk to Twitter. This other link to learn how to extend ActiveResource for non-REST APIs and this link to understand how to consume YouTube feeds.
+But besides that I found out a small surprise: ActiveResource is documented in a way to imply that it has working client-side validations, but it’s not fully implemented! So I decided to investigate what would it take to have it working.
+
+
+The idea is that in the REST API you can POST to an URL to call a ‘create’ method. But there is no standard equivalent for a ‘valid?’. One way of checking your ActiveResource object prior to posting is implementing class level validations in a similar way you validate ActiveRecord instances.
+The snippet that needs attention is around line 219 in this file na versão 2.0.2.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+
+class Person < ActiveResource::Base
+  self.site = "https://www.localhost.com:3000/"
+
+  protected
+
+  def validate
+    errors.add_on_empty %w( first_name last_name )
+    errors.add("phone_number", 
+      "has invalid format") unless phone_number =~ /[0-9]*/
+  end
+
+  # is only run the first time a new object is saved
+  def validate_on_create 
+    unless valid_member?(self)
+      errors.add("membership_discount", 
+        "has expired")
+    end
+  end
+
+  def validate_on_update
+    errors.add_to_base("No changes 
+      have occurred") if unchanged_attributes?
+  end
+end
+
+person = Person.new("first_name" => "Jim", 
+  "phone_number" => "I will not tell you.")
+person.save                         
+# => false (and doesn't do the save)
+person.errors.empty?                
+# => false
+person.errors.count                 
+# => 2
+person.errors.on "last_name"        
+# => "can't be empty"
+person.attributes = { "last_name" => "Halpert", 
+  "phone_number" => "555-5555" }
+person.save                         
+# => true (and person is now saved to the remote service)
+
+
+As we can see, it documents a simplification of what we have in ActiveRecord’s validation. It would do. But take a look a few lines below how it’s actually implemented:
+1
+2
+3
+4
+5
+6
+7
+
+def save_with_validation
+  save_without_validation
+  true
+rescue ResourceInvalid => error
+  errors.from_xml(error.response.body)
+  false
+end
+
+
+Get it? It doesn’t call any validation and falls back to call the original non-validated method (see documentation about  alias_method_chain for better understanding).
+It is not clear why it’s left this way because the validation.rb module seems to have everything ready for things to work as advertised in the documentation. Ticket 10985 says the same thing but it’s still opened.
+So, if you do need this feature now, it’s not difficult to have it working. We will need a small monkey patching. At config/environment.rb (or some other file in config/initializers) put this in:
+1
+
+require 'active_resource_validation' 
+
+
+And create the lib/active_resource_validation.rb file with the following content:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+module ActiveResource::RealValidation   
+  def self.included(base) # :nodoc:     
+    base.class_eval { alias_method_chain :save, :real_validation }   
+  end    
+  def save_with_real_validation # :nodoc:     
+    validate if respond_to? :validate     
+    validate_on_create if new?  && respond_to?(:validate_on_create)     
+    validate_on_update if !new? && respond_to?(:validate_on_update)     
+    valid? ? save_without_validation : false   
+  rescue ResourceInvalid => error     
+    errors.from_xml(error.response.body)     
+    false   
+  end
+end 
+
+# solves https://dev.rubyonrails.org/ticket/10985 
+ActiveResource::Base.send :include, ActiveResource::RealValidation 
+
+
+That’s it, now validations should work correctly. I took a look at the Rails trunk and this is not implemented up until today at least.
+tags: obsolete rails restful english
+

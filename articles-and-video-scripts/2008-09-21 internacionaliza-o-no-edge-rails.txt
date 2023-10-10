@@ -1,0 +1,64 @@
+
+
+Como vocês já sabem, no próximo Rails 2.2 finalmente teremos uma infra-estrutura mínima de internacionalização (i18n). Não é necessariamente uma infra completa de multilocalização (m15n) mas servirá como API para outros plugins que queiram completar suas funcionalidades como um Globalite. Vejam a apresentação do Sven Fuchs na RailsConf Europe deste ano para mais detalhes.
+Vocês também devem ter visto que eu e mais vários outros da comunidade colaboramos numa pequena aplicação de exemplo do uso do i18n. Meu fork está no Github e nossos amigos da Phusion colocaram online em http://i18n-demo.phusion.nl/.
+Pois bem, recentemente o Edge Rails sofreu algumas pequenas modificações e por isso eu ajustei a aplicação. Estou ainda esperando que os outros colaboradores atualizem suas partes, mas para português e inglês já deve estar funcionando.
+
+
+Em resumo, o que vocês precisam fazer é o seguinte:
+
+cd sua_aplicacao
+rake rails:freeze:edge
+./script/plugin install git://github.com/clemens/localized_dates.git
+1
+2
+3
+4
+5
+6
+
+
+Daí, criem um arquivo 'config/initializers/i18n.rb' e coloque o seguinte:
+
+--- ruby
+I18n.default_locale = 'pt-BR'
+I18n.locale         = 'pt-BR'
+
+
+Finalmente, acrescente o seguinte conteúdo no arquivo ‘config/locales/pt-BR.rb’:
+Note que o arquivo funciona tanto como um Hash em Ruby ou como um arquivo YAML, tanto faz um ou outro. Note também que ele segue uma estrutura hierárquica.
+Você pode usar o ‘activerecord.errors’ e ‘activerecord.messages’ exatamente como estão para as mensagens de erro. Mas modifique o ‘activerecord.models’ se precisar traduzir o nome de seus models de inglês para português, por exemplo. No trecho acima eu tenho um model de exemplo chamado ‘employee’, portanto retire e substitua pelo seu próprio model se precisar. O mesmo vale para ‘activerecord.attributes.employee’: é onde você pode traduzir cada nome de coluna.
+A parte ‘txt’ você deve retirar inteiro. No caso do aplicativo de demonstração, usamos da seguinte forma nas views:
+1
+2
+3
+4
+5
+6
+7
+
+<html>
+  <head>
+    <title><%= I18n.t 'txt.main_title' %> - <%= I18n.t 'txt.app_name' %></title>
+    <%= stylesheet_link_tag 'application' %>
+                <%= javascript_include_tag :defaults%>
+  </head>
+  ...
+
+
+Note o helper ‘I18n.t’ é ele quem traduz as mensagens baseado nas chaves. Portanto:
+
+rubyI18n.t “txt.main_title”
+1
+2
+3
+4
+
+
+Isso irá buscar o locale padrão que você configurou no initializer lá em cima, no caso 'pt-BR'. Daí ele carrega o arquivo correspondente que é 'config/locales/pt-BR.rb' e vasculha as chaves dentro assim:
+
+--- ruby{ :pt-BR => { :txt => { :main_title => "..." } } }
+
+Essa é a lógica da internacionalização no Edge Rails. O Carlos Brando explicou em seu último post sobre como tratar pluralização. O Diego Carrion também explicou como mudar dinamicamente a localização baseado nas preferências de cada usuário do seu site. Basicamente é um before_filter no ApplicationController. Dêem uma olhada.
+tags: obsolete rails
+

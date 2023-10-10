@@ -1,0 +1,15 @@
+
+
+
+
+O James Mead, do blog Floehopper publicou a respeito de um pequeno bug que pode afetar o resultado de seus testes unitários.
+Antes de mais nada rode o seguinte:
+
+>> ruby -version
+ruby 1.8.6 (2007-09-24 patchlevel 111) [i686-darwin9.2.0]
+--
+Acontece o seguinte, no Ruby 1.8.6, entre os patchlevels 0 a 7 a partir de um hook em Kernel.at_exit, uma chamada a Kernel.exit(false) resultará em 0, ou seja, que o processo completou com sucesso. Porém, o resultado correto deveria ser 1, indicando que o processo finalizou com falha.
+Isso significa que seu teste pode indicar que está terminando com sucesso quando na realidade está com erro. James apenas menciona testes que ele realizou em Rubys no Mac OS X, mas provavelmente isso aconteça em outros ambientes.
+Portanto a recomendação é: chequem e atualizem suas versões de Ruby, principalmente se você não o atualiza desde o fim de maio de 2007.
+tags: obsolete ruby
+

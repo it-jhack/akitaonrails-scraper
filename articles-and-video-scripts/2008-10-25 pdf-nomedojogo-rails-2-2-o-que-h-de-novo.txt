@@ -1,0 +1,14 @@
+
+
+
+
+Acompanhar um projeto open source dá trabalho. Felizmente com o Git as coisas são um pouco menos complicadas. Para saber tudo que está saindo de novo no Rails precisa acompanhar – diariamente – tudo que sai na lista de commits no Github.
+O problema: é muita coisa. Quem tentar fazer isso por alguns dias rapidamente vai perder a noção de tudo que está saindo. Por isso o que pessoas como um Ryan Daigle e Carlos Brando estão fazendo é importante. E se simplesmente acompanhar os commits é trabalhoso, imagine agora documentar e testar cada uma das modificações. É um trabalho hercúleo, que exige disciplina e esforço constante por um longo período de tempo. Pior: preparar versões em inglês e português é mais que o dobro do trabalho.
+
+Portanto, USD 9 pelo livro com tudo compilado, organizado e editado, é uma pechincha. Vou repetir: praticamente de graça. Felizmente o Gregg e o Jason entendem o valor desse trabalho e não desperdiçaram tempo duplicando as coisas: foram direto à fonte. A parceria EnvyCasts + Carlos Brando gerou um produto muito interessante: a dobradinha screencast + PDF. Eu já dei uma olhada no video e no PDF e posso dizer que é um produto importante para quem quer se manter informado com a próxima versão do Rails, que deve sair em poucos dias.
+Nos Estados Unidos o trabalho de pessoas como Geoffrey Grosenbach, Gregg Pollack e Jason Seifer são bem reconhecidos e recebidos. Milhares de pessoas efetivamente compram o trabalho deles, exatamente pela boa qualidade. É um ciclo virtuoso. Espero que isso aconteça no Brasil também e o trabalho de Rubistas brasileiros também seja incentivado. Muita gente dá pouco valor a PDF porque não é papel físico.
+As editoras brasileiras tem preocupações – bem fundamentadas, diga-se de passagem – de que livro em PDF não tem futuro no Brasil porque já está enraizada a cultura de piratear por aqui. Não vou me alongar porque o assunto pirataria é mais complexo do que isso e inclusive vou dizer que não sou inteiramente contra, mas isso é outro artigo.
+Nesse caso de PDF, screencasts de Rails, eu prefiro pensar assim: a maioria das pessoas que pirateiam são superficiais, não tem gosto, não tem cultura e de fato não contribuem nem geram valor, portanto a maioria desses é dispensável e ignorável: podem piratear, não faz diferença. Já as pessoas sérias, que geram receita com Rails, que querem realmente aprender para gerar valor, que participam da comunidade, tendem a entender que esse tipo de produto tem valor e efetivamente se preocupam em pagar por isso, ou seja, não são do tipo que fazem economia-porca. É para essas pessoas que material com o PDF do Carlos foi feito: para os que enxergam valor.
+O material do Peepcode mesmo, não só eu comprei tudo, mas quando entrei na Locaweb pedi – e fui atendido – para que a Locaweb comprasse tudo. De novo, dada a qualidade, esse tipo de material custa uma pechincha.
+tags: obsolete rails
+

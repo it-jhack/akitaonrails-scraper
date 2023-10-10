@@ -1,0 +1,11 @@
+
+
+
+
+O Luís Lavena anunciou ontem o Release Candidate 1 do Ruby One-Click Installer para Windows
+Esta é a versão 1.8.6-27, que eleva o Ruby no Windows ate a versão MRI 1.8.6 patchlevel 287, o que cobre inclusive as recentes falhas de segurança.
+Ainda não é a versão que usa o compilador MingW, esta versão é compatível com a anterior e é compilada sobre Visual Studio 6. Desta forma a maioria das gems que tem disponível em formato binário para Windows deve continuar funcionando.
+Só para terem uma idéia de porque esta release é importante, o último One-Click installer é de dezembro do ano passado! Essa versão já trás o RubyGem 1.2.0 por padrão e algumas outras gems como FXRuby.
+Façam o download por aqui. Como esta versão é RC1, quer dizer que quaisquer bugs, não deixem de enviar à lista. E além disso significa que em breve deve sair a versão final desta release. Uma excelente notícia para usuários Windows.
+tags: obsolete windows
+

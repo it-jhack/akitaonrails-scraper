@@ -1,0 +1,17 @@
+
+
+
+
+Aqui à boca pequena, aconteceu hoje um pequeno sorteio de 2 vagas para o Curso de Verão de Ruby on Rails.
+Só estou contando agora porque o sorteio foi fechado apenas para quem compareceu à RejectConf SP’07. As regras foram simples: ontem avisei que hoje eu enviaria uma pergunta e as primeiras duas pessoas a responder corretamente ganhariam as vagas.
+Rapidamente depois que enviei o e-mail, algumas pessoas responderam, mas quem respondeu corretamente primeiro foram:
+
+Alexandre Kenji
+João Vitor Lacerda Guimarães
+
+Parabéns aos ganhadores! E quem ainda não se inscreveu, ainda tem até este fim de semana. O curso inicia dia 26 de novembro. Corram para preencher as últimas vagas.
+Agora uma coisa engraçada: o resultado da pergunta que eu fiz já estava online. Isso mesmo, durante o evento, o Danilo Sato demonstrou um pequeno applicativo em Rails para dar nota nas palestras (para quem estava com notebook na hora). E a foto já estava no Flickr dele antes de eu enviar a pergunta ;-)
+
+Até a próxima!
+tags: obsolete
+

@@ -1,0 +1,113 @@
+
+Reia é uma implementação de um sub-conjunto da linguagem Ruby sobre o Erlang. Inicialmente é apenas uma ‘tradução’ do idioma Ruby em construções Erlang. Num segundo momento ele deve ir para a fase de emitir diretamente bytecode para o BEAM, a VM de Erlang. Essa linguagem está sendo desenvolvida por Tony Arcieri. Veja uma entrevista dele aqui. Aprenda mais sobre Reia no wiki deles. O projeto está no Github e eis um trecho de código Reia:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+
+module Ring
+  def around(procs, times)
+    pid = start(procs, erlang::self())
+    pid ! times
+    parent_loop(pid)
+  end
+    
+  def parent_loop(pid)
+    receive
+    when 0
+      nil
+    when n
+      pid ! n - 1
+      parent_loop(pid)
+    end
+  end
+      
+  def start(0, parent)
+    parent
+  end
+  def start(n, parent)
+    start(n - 1, Process.spawn(fun() { child_loop(parent) }))
+  end
+  
+  def child_loop(parent)
+    receive
+    when msg
+      parent ! msg
+      child_loop(parent)
+    end
+  end
+end
+
+
+Esse exemplo está aqui. A seguir, uma tradução de um artigo muito interessante para pensar sobre orientação a objetos.
+
+
+Tradução: artigo do Tony Arcieri
+Resposta curta: não! Resposta longa: ele talvez odeia ela menos que as outras linguagens.
+O criador do Erlang, Joe Armstrong não é fã de OOP. Ele diz que isso é uma droga! Ouch! Como alguém que está construindo uma linguagem orientada a objetos em uma plataforma iniciada pelo Joe, eu sinto na obrigação de pelo menos responder às suas preocupações. Por causa de sua forte influência de Erlang, o sistema de objetos do Reia acaba funcionando de forma muito diferente da maioria das linguagens OOP, então de certa forma isso já responde a algumas de suas preocupações.
+Vejamos:
+Objeção 1: Estruturas de dados e funções não deveriam ser colocadas juntas
+Então primeiro uma confissão: os tipos internos do Reia (que vou explicar depois) são culpados disso. Então -1 em meu placar do Joe.
+Entretanto, objetos no Reia são mais do do que apenas estruturas de dados. Isso é certamente uma reclamação sobre OOP válida para muitas linguagens: “objeto” é realmente uma palavra mais bonita para “pedação de estado” e enviar “mensagens” a um objeto é realmente só um palavreado para “fazer uma chamada a uma função”. Nesse sentido OOP acaba se parecendo bem imperativo: é apenas uma fachada bonita para chamar funções que checam e mudam estado.
+Preocupações similares foram notadas pelo autor do Clojure, Rich Hickey no seu artigo Sobre Estado e Identidade. Ele nota que na maioria das linguagens objetos que não tem identidades reais além de seus estados e que OOP, no seu núcleo, é realmente algo imperativo.
+Em Reia, todos os objetos são processos Erlang e operam concorrentemente. Cada objeto tem uma vida própria … não é apenas um pedaço amorfo de dados sentado em algum lugar na RAM, completamente à mercê de quaisquer modificações que alguma thread aleatória jogue nela.
+Chamar um método é mais do que chamadas a função. Ele usa mensagens … não mensagens metafóricas bobas, mas mensagens reais de primeira-classe. Atualmente os objetos de Reia são construídos no gen_server, então invocar um método de um objeto performa uma RPC (Remote Procedure Call) no objeto remoto.
+O criador do OOP Alan Kay é praticamente obcecado por mensagens. Ele escreveu uma vez:
+Eu imaginei objetos sendo células biológicas e/ou computadores individuais em uma rede, capazes somente de se comunicar com mensagens.
+Então mensagens vieram logo no começo – levou um tempo para entender como fazer mensageria em linguagens de programação de maneira eficiente o suficiente para ser útil. O que ele começou como mensagens em Smalltalk acabaria sendo resumida em chamadas a função nas linguagens OOP sucessoras (com C++ sendo provavelmente o exemplo mais infame).
+Reia não segue essa tradição, mas mantém uma visão centrada em mensagens do OOP que é mais próximo do que Alan Kay originalmente tinha em mente. Também li que Alan Kay clamou que não fazer objetos serem concorrentes foi um dos seus maiores erros, embora eu não tenha uma citação específica disso (se alguém se lembrar por favor deixe um comentário).
+Erlang, seu modelo de atores e seu crescimento a partir do Smalltalk certamente tem conceitos similares.
+Objeção 2: Tudo tem que ser um objeto
+Bem, essa é fácil de responder: nem tudo precisa ser um objeto! Estou certo que qualquer leitor rubista rugiria com essa afirmação. Praticamente todas as linguagens que vejo vindo de outros rubistas segue esse paradigma. Reia não.
+Reia tem três tipos fundamentais de entidades: internos, processos e objetos. Objetos podem ser imaginados como sendo um tipo de processo, mas todos os objetos respondem a um conjunto base comum de mensagens. Objetos do Reia, portanto, podem responder a uma preocupação particular de Rich Hickey sobre sistemas baseados em atores:
+Você não pode observar nada sem sua cooperação/coordenação – tornando relatórios ad-hoc ou análises impossíveis, e em vez disso, forçando cada ator a participar em cada protocolo.
+Reia implementa um sistema de herança, o que significa que você pode agrupar os protocolos que quer dar a um certo conjunto de objetos para responder juntos para superclasses. Todos os objetos vão, no mínimo, responder a um conjunto definido de métodos da superclasse Object.
+Você pode certamente fazer a mesma coisa em Erlang colocando funcionalidades comuns em um módulo “superclasse”. Reia apenas dá isso com sintaxe de primeira classe e faz parte da burocracia automaticamente.
+Reia também dá processos, que são para todos os efeitos e propósitos, idênticos a processos de Erlang. Por alguma razão, muitos puristas de OO me perguntaram se isso era necessário, sugerindo que eu retirasse isso. Reia provê funcionalidades assíncronas como parte de seu sistema de objetos … ele tem (ou vai ter) equivalentes para ‘gen_server:cast’ e ‘gen_server:reply’. Dado isso, eles argumentam, quem precisa de processos?
+Eu acho que essas pessoas não entendem que gen_server não é uma solução que serve pra tudo. Já que estou construindo uma linguagem sobre Erlang, seria idiota não expôr todo seu poder de sistema de mensagem e tentar forçar tudo em caixas de gen_server. Reia faz o oposto e provê processos que são virtualmente idênticos aos do Erlang. Reia até mesmo tem a mesma sintaxe com “!” para enviar mensagens, e ele funciona tanto para objetos quanto para processos.
+Os tipos internos do Reia são construídos sobre termos simples e imutáveis de Erlang. Eles não são objetos. Com um pouco menos de “jogue objetos ao problema”, eles podem servir para representar todos os tipos de coisas. Minha esperança seria que programadores usem mais tipos internos e menos objetos do que se faria numa linguagem OOP típica.
+Objeção 3: em linguagens OOP definições de tipos estão jogadas por todos os lados
+Culpado da acusação … tire mais um ponto do meu placar Joe. Próximo!
+Objeção 4: Objetos em estado privado
+Também culpado. Entretanto, espero que Reia ganha pontos de bônus nesse caso pela maneira como ela implementa seu estado privado. Por trás dos panos, a representação de “variáveis de instância” do Reia é puramente funcional. A forma compilada tem o estado das “variáveis de instância” (representadas como um dict) entrando num método (agora uma função) como um argumento. O estado é versionado através da forma compilada, então sempre que tiver potencial para mudança, coloca-se uma nova etiqueta. Quando o método completa, o estado final é retornado.
+Como esse estado é representado em forma puramente funcional no fundo, significa que Reia retém alguns dos benefícios do Erlang. Por exemplo: estado privado é transacional, já que o estado real do objeto não é realmente atualizado até que o despacho do método tenha acabado, da mesma forma que o estado de um gen_server não é atualizado até que um dos callbacks tenha retornado o novo estado.
+Também significa que o escopo do estado privado é limitado. Todos os casos que encontrei (como lambdas) onde eu não posso implementar modificação de estado de uma forma simples, puramente funcional, eu evitei. Lambdas são capazes de acessar o estado privado (que eles fecham no momento que são declaradas) mas eles não tem permissão para modificá-la.
+Essa aproximação tem sido mais complexa que alternativas, como dar ao dicionário de processo uma sintaxe de primeira classe. Eu poderia ter feito isso. Entretanto, compilar para uma forma puramente funcional realmente me ajudou a ver os casos extremos onde o estado estava tentando sair para escopos esquisitos. A implementação atual tem semântica precisa, fluxo de estado e funciona de uma forma não muito distante de como um programador Erlang escreveria.
+E qual o objetivo?
+Acho que essa questão é realmente o sentimento do artigo do Joe. OO é realmente usável? Consideradas certas limitações técnicas (efeitos colaterais) introduzidas por estado escondido, se torna mais difícil fazer as mesmas declarações sobre um objeto Reia que se poderia com um gen_server em Erlang (e assinalação destrutiva não ajuda muito as coisas). Existe de fato algum objeto de valor trazido à mesa?
+Os méritos de objetos não são técnicos, em minha opinião. Acho que são um bom modelo para certos tipos de pessoas para conceitualizarem problemas. Muitas pessoas realmente gostam disso. Joe tentou e disse que parecia “errado” mas para muitos parece “certo” de alguma maneira.
+Felizmente, para as pessoas que acham que parece “errado” existe essa grande linguagem chamada Erlang que você pode usar …
+O que o Joe acha de Reia?
+Eu vi o Joe Armstrong ser questionado sobre Reia em uma entrevista da Erlang Inside. Eis o que ele tinha a dizer:
+Eu não tentei – não gosto de nada mutável.
+Duh! Bem. Temo que você não verá um assinalamento-simples Reia. Guardarei isso para outro post.
+tags: obsolete reia elixir erlang
+

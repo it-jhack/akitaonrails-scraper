@@ -1,0 +1,10 @@
+
+
+
+
+O Carlos Brando acabou de noticiar sobre a versão Alpha do famoso clássico Why’s Poignant Guide to Ruby escrito, ilustrado e diagramado por ninguém menos que Why, the Lucky Stiff.
+
+Why é a epítome do Programador-Artista, no sentido literal da palavra. Além de tudo ele é um personagem fictício-real (se é que isso existe). Ninguém “sabe” quem ele é, ele não aparece à toa em eventos. É um caso onde o fato de ser recluso o torna famoso pois ele soube dar pitadas de mistério à sua existência, o que só atiça os curiosos. Ele é constantemente mencionado por outras celebridades da comunidade. Porém, o mais importante são suas contribuições. Ele tem diversos projetos open source como o famoso Hpricot, Shoes, Markaby, Hackety Hack. Pessoalmente parece ser um Rubista que realmente sabe como manipular o Ruby à sua própria vontade.
+O Carlos pegou a difícil tarefa de gerenciar a tradução da sua maior obra, o livro Why’s Poignant Guide, que é apontada por muitos como a origem do interesse e do aprendizado pela linguagem Ruby. Felizmente, dezenas de pessoas da comunidade brasileira de Ruby colaboraram – inclusive traduzindo as ilustrações, o que me surpreendeu. Segundo o Carlos, a obra está muito próxima de terminar, mas falta a última milha. Portanto, se você quiser colaborar, clique neste link e ajude. Com certeza será uma obra de grande valor à nossa comunidade.
+tags: obsolete why
+

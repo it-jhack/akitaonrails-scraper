@@ -1,0 +1,52 @@
+
+Finalmente, resolvi migrar meu blog que era em Typo para o Mephisto. Fazia algum tempo que queria fazer isso. O Typo serviu seu propósito bem, eu usava basicamente o padrão. Porém, o Mephisto tem conseguido apoio maior da comunidade, existem mais temas e plugins disponíveis. Mais do que isso, seu código é mais limpo, sua escolha de usar templates em Liquid torna as customizações mais simples, enfim, foi uma boa troca.
+Felizmente ele tem procedimentos para importar todo meu conteúdo. Isso foi até que fácil. Os passos que tomei foram os seguinte:
+
+
+Antes de mais nada, o Mephisto na versão atual só reconhece o Typo até o migration 56, portanto eu precisei regredir meu banco de dados Typo:
+1
+
+rake db:migrate VERSION=56
+
+
+Após criar meu banco de dados Mephisto, precisei acrescentar a configuração do meu banco Typo dentro do novo database.yml. No meu caso, eu fiz um dump no meu hosting, puxei o arquivo, importei no meu MySQL local, fiz o procedimento abaixo, fiz um novo dump do novo banco e joguei de volta ao banco do hosting. Não vou detalhar esses passos porque vocês podem encontrar em qualquer boa documentação MySQL. Só lembrar para criar o banco usando UTF8 e de checar o dump sobre isso também.
+Feito isso, estes são os passos:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+#1 rake db:bootstrap
+
+#2 ./script/runner “Mephisto.convert_from :typo“ -e production
+
+#3 ./script/console
+
+#4 Article.find(:all).each {|a| a.filter = 'textile_filter'; a.save }
+
+#5 Content.find(:all).each {|c| c.filter = 'textile_filter'; if c.respond_to?(:versions) and c.versions; c.versions.each {|v| v.filter = 'textile_filter'; v.save }; end; c.save }
+
+
+A primeira linha inicia o banco de dados, a segunda faz a importação. Em seguida eu entrei no console e modifiquei todos os meus textos para usar o filtro Textile. Se você usou outros filtros como Markdown, consulte o Wiki do site oficial. De qualquer forma, não tenho certeza se a linha #5 acima é realmente necessária. Façam seus testes.
+Agora é uma questão de dependências. Eles sugerem congelar o gem tzinfo, e foi o que fiz:
+1
+2
+
+sudo gem install tzinfo
+rake gems:freeze GEM=tzinfo
+
+
+Além disso, depois do primeiro teste notei que o ImageMagick do hosting Railsplayground está com algum problema. Felizmente o Mephisto permite trocar facilmente pelo RMagick. No arquivo environment.rb basta descomentar e alterar esta linha:
+1
+
+ASSET_IMAGE_PROCESSOR = :rmagick || :image_science || :none
+
+
+Como eu já estava usando Capistrano na minha instalação Typo anterior e como eu queria realmente substituir o que estava no ar, bastou copiar o arquivo config/deploy.rb e trocar o caminho do Subversion. Aliás, eu também fiz a mesma receita que descrevi anteriormente sobre o SVK. Agora meu Mephisto também está versionado e sincronizado de acordo com a fonte original, o que é importante pois o Mephisto ainda não tem versão estável, logo cada bug fix é importante. E usando SVK, subir um bug fix é praticamente automático.
+tags: obsolete
+

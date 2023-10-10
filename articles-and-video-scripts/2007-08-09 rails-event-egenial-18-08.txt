@@ -1,0 +1,100 @@
+
+
+
+
+Atualização 18/08: Espero que todos estejam assistindo as palestras da manhã. Segundo o Carlos Eduardo, as palestras estão lotadas. Não se esqueçam de aparecer na minha logo mais às 17hs.
+
+Pessoal, no sábado dia 18 de agosto o Carlos Eduardo estará promovendo um dia inteiro de palestras via TreinaTom. Palestras online com diversos colaboradores da comunidade Ruby on Rails no Brasil. Abram espaço nas suas agendas, chequem a grade de horários.
+Eu palestrarei sobre meu recém-lançado plugin Acts as Replica e um pouco sobre o assunto de rodar Rails como um aplicativo desktop em vez de apenas como website. Estou usando esta técnica em um cliente e acho que é um nicho interessante para demonstrar a versatilidade do Rails e a criatividade da comunidade. Minha palestra será das 17:00 às 18:00.
+Todas as palestras terminam com 10 minutos abertos para perguntas e respostas ao final:
+Manhã
+
+
+Horário
+Título
+Palestrante
+
+
+09:00-10:00
+Web Semântica com Ruby on Rails
+Charleno Pires
+
+
+ 
+Aplicações e Sites mais Inteligentes, aprenda como ela está mudando os processos de indexação, editoração e recuperação da informação.
+
+
+10:10-11:10
+XP + Rails = produtividade ao extremo na web
+Vinícius Manhães Teles
+
+
+ 
+Projeto Lucidus: Desenvolvendo aplicacoes web com maxima produtividade usando Extreme Programming e Ruby on Rails
+
+
+11:20-12:20
+Ruby off Rails – O outro lado da moeda
+Shairon Toledo
+
+
+ 
+Um overview da aplicabilidade da linguagem em ambiente de telefonia IP, desempenho, restrições, padrões, deploy, etc.
+
+
+
+Tarde
+
+
+Horário
+Título
+Palestrante
+
+
+13:30-14:30
+O que há de novo no Flex 3?
+Igor Costa
+
+
+ 
+Veja todas-novas funções que o Flex 3 pode oferecer e tire proveito disso.
+
+
+14:40-15:40
+Desenvolvimento orientado a componentes
+Beck Novaes
+
+
+ 
+Entenda o modelo de desenvolvimento de componentes do Adobe Flex
+
+
+15:50-16:50
+Flex nas empresas
+Rogério Oliveira (Sócio Diretor da Zellen)
+
+
+ 
+Uma nova roupagem para o velho
+
+
+17:00-18:00
+Rails Stand-Alone
+AkitaOnRails
+
+
+ 
+Introdução a Slingshot e acts_as_replica. Utilizando Rails como aplicação de desktop. Planejando sincronização de aplicações distribuídas e outros conceitos.
+
+
+18:10-19:10
+Linguagens de programação: passado, presente e futuro
+Ronaldo Ferraz
+
+
+ 
+O que você deve saber sobre linguagens de programação e como elas impactam o seu desenvolvimento e carreira; quais são-prováveis linguagens do futuro e como fazer-melhores escolhas; ambientes multi-linguagem e produtividade; o passado no futuro: ressurgência de temas; paradigmas e produtividade; a próxima grande revolução.
+
+
+tags: obsolete
+

@@ -1,0 +1,10 @@
+
+
+
+
+Eu sei, eu sei, título meio nada a ver mas só para anunciar duas notícias diferentes no mesmo post :-)
+Primeiro, eu esqueci (sorry) de publicar a segunda parte do Webcast de Rails no Windows que fiz na Locaweb. O link é este. Só se lembrem de desligar o bloqueador de pop-up do seu browser, ou de autorizar essa URL.
+Segundo, o Pierre Yager traduziu meu tutorial de Rails 2.1 para francês! Aqui vai a Parte 1 e Parte 2
+Continuo na correria, melhorando nossa offering de Rails aqui na Locaweb, um monte de coisas a se fazer para o Rails Summit. Inclusive, quem se inscreveu e ainda não recebeu e-mail, não se preocupe: vocês vão receber provavelmente a partir da semana que vem (provavelmente segunda-feira) mesmo.
+tags: obsolete locaweb
+

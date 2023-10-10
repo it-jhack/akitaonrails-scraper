@@ -1,0 +1,16 @@
+
+GIT é uma ferramenta muito nova, portanto, ao contrário do Subversion, não tem nem perto do mesmo nível de suporte multi-plataforma, integração de sistemas, nem ferramentas. GIT é o Rails do mundo de SCM (Source Code Management) ;-)
+Uma das suas deficiências é que não há nada tão simples quanto um setup.exe para instalar o Subversion ou um TortoiseSVN para gerenciar graficamente seus repositórios. Quem é do mundo Linux/Mac já está acostumado a utilizar o poderoso ambiente Unix. Sim, o Shell é mandatório para qualquer bom desenvolvedor, get over it.
+Alguns dizem que GIT não roda no Windows. Nada mais longe da verdade. Eu disse que não é tão “simples” mas nem por isso é difícil (se bobear é até mais fácil do que com o MacPorts :-). Acabei de configurar meu Windows (rodando em Parallels, claro) com GIT e ele funciona perfeitamente. Tanto o GIT normal quanto o poderoso git-svn. Como? Simples, instale Cygwin. Ele já é um pacote compilado para Cygwin.
+
+
+
+Baixe o setup do Cygwin (que deve ser menos de 500kb). Você precisa estar conectado à internet para continuar a instalação. Você escolhe “Install from Internet”, deixa o diretório padrão que ele recomenda, escolhe um servidor mirror (por exemplo, do UOL) e escolhe os pacotes.
+
+
+Aqui uma dica: escolha o pacote GIT e também escolha os pacotes subversion e subversion-perl. Não desmarque os outros que já estão recomendados. Feito isso, apenas deixe ele baixar os pacotes e vá tomar um café. Se sua internet for rápida como a minha, nem tempo para o café você vai ter. No final, ele vai instalar algo em torno de 170Mb no seu disco. Bastante pouco para hoje em dia.
+ Seu desktop agora terá um shortcut que em vez de abrir o tradicional console DOS, vai abrir um shell Bash. De lá é como se você estivesse num terminal Linux/Unix. Funciona “quase” tudo parecido. Comandos básicos como ls, ps, kill, grep, cat, tail, head, estão todos lá. Não é que ele rode tudo do Linux de forma binariamente compatível: ele apenas roda programas e ferramentas que foram previamente compiladas para essa plataforma. Ela apenas torna mais fácil portar aplicações de Linux para Windows.
+Isso dito, está tudo pronto: basta seguir os diversos tutoriais de git e se divertir. Ah sim, existe até mesmo como rodar Ruby e Rails via Cygwin, em vez de usar o famigerado One Click Installer. É a mesma coisa: abra o setup, escolha o pacote de ruby e instale. Se já tinha instalado via One Click Installer, não esqueça de retirar a variável de ambiente RUBYOPTS, conforme avisa este blog
+Para quem não pode migrar nem para Linux, nem para Mac, por diversas razões (sua empresa não deixa), Cygwin é uma alternativa.
+tags: obsolete git windows
+

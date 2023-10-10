@@ -1,0 +1,529 @@
+
+Ontem estava conversando com alguns amigos e vi um projeto que usava várias gems e plugins do Nando Vieira. Para quem não conhece, o @fnando é um rubista bastante ativo, trabalhou na WebCo e está atualmente na Locaweb. E pelo menos na nossa roda de amigos é conhecido por ser uma metralhadora de gems :-) Sem brincadeira, basta abrir o Github dele para ver isso: nada menos do que 89 repositórios. Acho que já passou da hora de eu ajudar a divulgar isso porque lá deve ter muitas coisas que muitas pessoas estão precisando mas não sabiam onde procurar.
+São muitos projetos no Github e vou pular alguns deles. Mesmo assim, acho que consegui formatar uma lista bem completa com as principais bibliotecas e ferramentas. Dividi as sub-seções em:
+
+Produtos – projetos que são mais complexos ou definem um produto.
+Curiosos – conceitos ou implementações que achei interessantes ou diferente.
+Linha de Comando – ferramentas de linha de comando, instaladas via gem, que auxiliam o desenvolvimento de projetos.
+Alternativas – bibliotecas que tem “concorrentes” ou alternativas.
+Active Record – extensões ao Active Record.
+Miscelânea – existem gems que não se encaixam nas categorias anteriores.
+
+
+
+
+Produtos
+
+Shortcuts – é um site escrito em Sinatra que lista shortcuts para diversas aplicações do Mac OS X. Para quem está aprendendo Sinatra este pode ser um aplicativo para ver de exemplo. Ele é bem simples, cada conjunto de shortcuts de aplicações está separado em arquivos YML que são carregados no Mongo DB. Ele usa o MongoMapper, então também é um bom exemplo de uso do MongoMapper. O site está online, clique aqui para ver.
+
+
+Kitabu – é um projeto completo para gerar e-Books em formato PDF a partir de textos formatados com Markdown ou Textile. O Nando usou essa ferramenta para gerar seus e-books da série How to Code. Baixe o de RDoc e Rails Application Templates para ver exemplos de e-Books que essa ferramenta consegue gerar.
+
+
+Glue – é um gerador de sites estáticos que usa HAML, SASS e entende Textile e Markdown. Ele vai criar diretórios padrão como “public/javascripts” e arquivos como “404.html”. É um projeto com objetivos parecidos com o Jekyll, mas mais simples.
+
+
+Curiosos
+
+Recurrence – é uma gem que serve para lidar com séries de datas recorrentes. Se você precisa configurar uma recorrência, por exemplo, “toda semana, às segundas, quartas e sextas, começando no dia 21/09/2008 e terminando em 01/01/2009”, fazemos assim:
+
+1
+2
+3
+4
+5
+6
+7
+
+starts = Date.parse("2008-09-21") #=> sunday
+@recurrence = recurrence(
+  :every  => :week,
+  :on     => [:monday, :wednesday, :friday],
+  :starts => starts,
+  :until  => "2009-01-01"
+)
+
+
+E o que obtemos é:
+1
+2
+3
+4
+5
+6
+
+@recurrence.events[0].to_s.should == "2008-09-22"
+@recurrence.events[1].to_s.should == "2008-09-24"
+@recurrence.events[2].to_s.should == "2008-09-26"
+@recurrence.events[3].to_s.should == "2008-09-29"
+@recurrence.events[4].to_s.should == "2008-10-01"
+@recurrence.events[5].to_s.should == "2008-10-03"
+
+
+Veja o arquivo de Rspec para exemplos de como usar.
+
+Redis-Settings – normalmente colocamos configurações de forma estática em arquivos YAML no diretório config de nossa aplicação. Para coisas mais complicadas colocamos arquivos Ruby em config/initializers. Mas normalmente é tudo estático, ou seja, se mudar alguma configuração precisamos reiniciar a aplicação. Podemos também criar uma tabela de configuração no MySQL ou outro banco, mas podemos generalizar configurações como um Hash mutável e dinâmico e, nesse caso, poderíamos pular direto para um banco de dados schema-less como Redis. E essa gem serve para isso mesmo. Ele grava configurações isoladas por namespace, em formato Json, dentro de um Redis. O exemplo de uso na própria página do Github explica bem como funciona, não poderia ser mais simples:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+require "redis/settings"
+
+# Reuse an existing Redis connection.
+Redis::Settings.configure do |config|
+  config.connection = Redis.new(:host => "localhost", :port => 6379)
+end
+
+settings = Redis::Settings.new("app") # Create settings namespaced to app
+settings[:items_per_page] = 10 # Set values
+@items_per_page = settings[:items_per_page] # Get values
+
+
+Leia a documentação, tem mais funcionalidades interessantes para Rails 3, por exemplo. E não esqueça de instalar a gem Yajl-Ruby, que é usado para lidar com Json.
+
+I18n-Js – com o Rails é razoavelmente simples lidar com sites internacionalizados, já que ele traz a infraestrutura necessária para internacionalizar strings. Dá pra usar a mesma coisa para Javascript mas esta gem traz uma conveniência extra expondo um objeto de internacionalização dentro do Javascript, tornando a tradução dinâmica. Esta gem sozinha precisaria de um artigo inteiro separado para explicá-la, então leia com atenção a página do Github que detalha bem como usá-la. Em resumo, no application.html.erb podemos ter:
+
+1
+2
+3
+4
+
+<script type="text/javascript">
+  I18n.defaultLocale = "<%= I18n.default_locale %>";
+  I18n.locale = "<%= I18n.locale %>";
+</script>
+
+
+Dentro dos arquivos Javascript podemos fazer:
+1
+
+I18n.t("hello", {name: "John Doe"});
+
+
+E para isso funcionar colocamos o arquivo de tradução normalmente dentro de config/locales/*.yml:
+1
+2
+
+en:
+    hello: "Hello {{name}}!"
+
+
+
+Browser – uma forma de detectar versões de browsers de forma simples:
+
+1
+2
+3
+
+<% if browser.ie6? %>
+  <p class="disclaimer">Your're running an older IE version. Please update it!</p>
+<% end %>
+
+
+
+Pagseguro – é a solução mais completa que integra com os serviços do Pagseguro para adicionar pagamentos no seu site. Ele lida com o callback de retorno do Pagseguro para atualizar o status dos pagamentos e te dá classes para abstrair os recursos que o Pagseguro suporta. Ele inclusive te dá suporte para testar a solução, simulando os callbacks de retorno. Novamente, este é outro projeto complexo que precisaria de um artigo inteiro só pra ele, então leia com atenção a página do Github que explicam bem como usar.
+
+
+Password Strength – é uma maneira fácil de checar se a senha que o usuário passou é fraca, média ou forte. Tem suporte tanto para validação direto no model no servidor e também validações em Javascript. Ele inclusive checa se a senha contém strings do login, ou outro campo como e-mail. Eu particularmente acho mais legal a parte em Javascript já que não acho que vale a pena recusar senhas. Mas isso deve facilitar caso você queira dar uma dica aos seus usuários sobre a qualidade da senha.
+
+
+Sinatra Basic Auth – a idéia no Sinatra é manter a coisas simples, e essa biblioteca torna fácil proteger determinadas rotas. Vale a pena transcrever o exemplo da página do Github:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+require "sinatra"
+require "sinatra/basic_auth"
+
+# Specify your authorization logic
+authorize do |username, password|
+  username == "john" && password == "doe"
+end
+
+# Set protected routes
+protect do
+  get "/admin" do
+    "Restricted page that only admin can access"
+  end
+end
+
+
+
+Colorize – facilitador para imprimir strings colorizados no STDOUT (“standard output”). Na prática, para ter mensagens coloridas no terminal ao usar métodos como o puts.
+
+
+Linha de Comando
+
+GemOpen – este é um utilitário para quem usa Linux ou Mac para facilitar o desenvolvimento. Às vezes estamos testando bibliotecas, ou debugando, ou simplesmente pesquisando e gostaríamos de abrir o diretório onde uma gem foi instalada para vasculhar seu código-fonte. Isso não é difícil de fazer, mas ficar toda hora indo pro diretório de gems é “chatinho”. Este GemOpen é uma conveniência para digitar um simples comando no Terminal, como gem open inherited_resources, por exemplo, e ele vai abrir o editor configurado na variável de sistema GEM_EDITOR já apontando para o diretório da gem. Muito útil e conveniente.
+
+
+Pez é um gerenciador de plugins para projetos Rails, ele grava os plugins em um diretório temporário e cria symlinks no diretório de plugins. A idéia é facilitar operações como atualizar os plugins. Ele instala um script de linha de comando onde você pode fazer coisas como:
+
+1
+2
+3
+4
+5
+
+# add a new plugin
+pez add git://github.com/fnando/has_cache.git
+
+# update the repository
+pez update has_cache
+
+
+
+Alternativas
+
+Spec-Js – atualmente existem diversos frameworks para testar Javascript. A forma mais tradicional é abrindo um browser de verdade como o Firefox e automatizando sua navegação para que o Javascript do site possa executar de verdade. O Selenium faz isso. Mas isso é muito lento e hoje temos alternativas que fazem testes GUI-less, ou seja, sem um browser de verdade, basicamente executando uma engine de Javascript, criando um DOM e fazendo o Javascript rodar sobre ela, enganando-a a achar que está num browser. Isso não é 100% pois podem existir pequenas diferenças, mas para a maioria dos casos deve funcionar. Um exemplo é o HtmlUnit, escrito em Java, que implementa um browser GUI-less. Daí o Celerity encapsula o HtmlUnit usando JRuby. E finalmente o Culerity integra o Cucumber com o Celerity para conseguir rodar testes de integração GUI-less.
+
+Isso para testes de integração. Para testes unitários temos ferramentas como o Blue Ridge, que encapsula a engine Rhino, escrita em Java, e o Env.js, que é uma implementação de DOM, para executar testes unitários de Javascript. O Blue Ridge permite escrever testes unitários em Javascript com um certo gosto de RSpec:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+require("spec_helper.js");
+require("../../public/javascripts/application.js");
+
+Screw.Unit(function() {
+  describe("Your application javascript", function() {
+    it("does something", function() {
+      expect("hello").to(equal, "hello");
+    });
+
+    it("accesses the DOM from fixtures/application.html", function() {
+      expect($('.select_me').length).to(equal, 2);
+    });
+  });
+});
+
+
+Tudo isso foi para dar o contexto para o Spec-Js do Nando que é um framework para testes unitários, muito parecida com o Blue Ridge, que também usa a engine Rhino, Env.js e por padrão vem com jQuery. Seus testes podem ser escritos assim:
+1
+2
+3
+4
+5
+6
+
+describe("A sample suite", function(){
+  it("increases a number", function(){
+    number += 1;
+    expect(number).toBeGreaterThan(0);
+  });
+ });
+
+
+Agora uma coisa que eu não sei dizer: não parei para comparar o Blue Ridge com o Spec.Js. Se alguém tem experiência no uso dos dois, por favor não deixem de colocar nos comentários suas impressões. Mas de qualquer forma, a idéia é que se você quer teste unitários Javascript, existem pelo menos duas boas opções no mundo Ruby. E claro, se você usa Textmate, o Nando preparou um bundle para ajudar a usar o Spec.js.
+
+Mr Postman – o Rails tem suporte para enviar e-mails, mas apenas em tempo real, ou seja, quando você manda enviar e-mails, ele tenta enviar imediatamente. Isso pode ser um ponto de contenção que prejudica a escalabilidade da aplicação. Para resolver isso devemos usar algum sistema de filas. Podemos fazer isso com o Delayed_Job ou o Resque. Ou se a única coisa que sua aplicação precisa tornar assíncrona é o envio de e-mails, o Nando fez o Mr Postman, que gerencia uma fila em uma tabela do banco de dados. A partir dela você pode criar um Cron Job ou um pequeno daemon usando a gem simple-daemon. A página do Github tem exemplos de como usar isso.
+
+
+Worker – mais um sistema simples de enfileiramento de tarefas baseado em uma tabela no banco de dados. Pode-se dizer, novamente, que é algo mais simples do que um Delayed Job.
+
+
+Chart – é um wrapper para o componente ChartDirector. Ele não mapeia todos os tipos de gráficos que o ChartDirector produz, mas você vai encontrar vários dos principais como gráficos em barra, pizza e linha.
+
+
+Active Record
+
+Validators – é uma biblioteca simples com alguns validators para models ActiveRecord de Rails 3. Apenas adicione na Gemfile do seu projeto gem “validators”. E com isso poderá fazer:
+
+1
+2
+3
+4
+5
+
+class User < ActiveRecord::Base
+  validates_email_format_of :email
+  validates_url_format_of :site
+  validates_ip_address :address
+end
+
+
+
+Normalize Attributes – é um filtro que vai rodar no before_save do ActiveRecord para normalizar os dados que os usuários enviaram. Por exemplo, transformando emails em minúsculas antes de salvar no banco.
+
+
+Formatted Attributes – às vezes você quer gravar no banco uma versão “crua” dos dados, mas quer ter acesso à versão “formatada” de forma simples. Com esta gem você cria métodos format_to_[campo] e format_from_[campo] e terá um acessores formatted_[campo] para ver ou passar a versão formatada. Veja o exemplo na página do Github.
+
+
+Marshalled Attributes – eu já precisei disso algumas vezes, e eu chamaria isso de um “mini NoSQL”. Ou seja, às vezes queremos gravar dados não-estruturados dentro de uma coluna em uma tabela de um banco de dados relacional. Por exemplo, queremos gravar um Hash que pode ter chaves diferentes em cada linha. A forma padrão de fazer isso é serializar esse objeto e gravá-la como num campo de Blob. Obviamente não dá para fazer queries que procurem dentro desse campo, mas normalmente não precisamos mesmo, é apenas para armazenar os dados que podem ser encontrados por queries usando outros campos estruturados na mesma linha. O exemplo do Nando é assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+# migration:
+create_table :pages do |t|
+  t.string    :name
+  t.text      :body
+  t.binary    :meta
+end
+
+# app/models/page.rb
+class Page < ActiveRecord::Base
+  marshaled :meta
+end
+
+@page = Page.new(:meta => {:last_comment_id => 100})
+@page.meta
+#=> {:last_comment_id => 100}
+
+
+
+Permalink – Normalmente as URLs de recursos em Rails são no formato /controller/:id por exemplo, /pages/1. Mas para garantir um SEO melhor, o correto é usar um “permalink” como /pages/my-first-article. No Rails você deve sobrescrever o método to_param do ActiveRecord para fazer isso funcionar. Daí vem a lógica de como criar um permalink que não seja repetido no banco de dados. É para isso que serve essa gem. Também lembro que existe outra gem chamada Friendly-Id, do Norman Clarke, que faz a mesma coisa. Não comparei as funcionalidades das duas gems, mas novamente a idéia é que se você precisar de algo assim existem pelo menos 2 boas opções pra isso.
+
+
+Tokens – em muitos sites, quando você se registra, recebe um e-mail com um link para ativação ou então algo como “se o link não funcionar, entre no site e digite o seguinte código para ativar”. Esse código é o que o Nando chama de token. É um código aleatório, único, atrelado a um único recurso do seu site. Mas ele tem mais funcionalidades, por exemplo, você pode usar para gerar códigos de cupons de desconto com uma data de expiração. Enfim, sempre que precisar de um código aleatório único, esta gem pode ajudar.
+
+
+Tagger – é mais uma gem que serve para lidar com tags em objetos e ActiveRecord. Existem diversas alternativas como o acts-as-taggable-on. Novamente, não fiz nenhuma comparação, mas em Rails existem diversas gems que lidam com tags. Assim como as outras esta também sabe fazer o parsing de tags em forma de lista num string, usando separadores como vírgula. Ele também serve para gerar Tag Clouds.
+
+
+Defaults – quando você cria um objeto ActiveRecord, ele gera um objeto com todos os campos vazios. Mas às vezes você gostaria que alguns campos tivessem valores padrão. Com esta gem você pode configurar que valores padrão quer em cada campo.
+
+
+Paginate – é uma alternativa ao will_paginate, que normalmente usamos quando precisamos de sub-conjuntos de dados numa listagem paginada de ActiveRecord.
+
+
+Activities – adiciona suporte a atividades em um objeto de ActiveRecord. Você precisa criar manualmente a migration para a tabela polimórfica de atividades (código no README). A partir daí basta configurar o model que quer rastrear:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+class User < ActiveRecord::Base
+  has_many :projects
+  activities_for :projects do
+    track :renamed, :if => proc {|r| !r.new_record? && r.name_changed? }, :on => :save
+    track :create
+    track :update
+    track :destroy
+  end
+end
+
+
+Toda vez que o projects mudar, essa atividade será gravada e daí você pode exibir numa página de status assim:
+1
+2
+3
+
+<% for activity in @activities %>
+  <%= render_activity @activity %>
+<% end %>
+
+
+Essa gem é bem customizável, você deve gerar as partials para cada tipo de atividade, mas isso deve ser suficiente para gerar modelos auditáveis de forma simples.
+
+Text Captcha – forma simples de adicionar uma validação em um modelo, esperando receber a resposta a captchas simples baseados em texto, em vez de imagens. Existem diversos tipos de captchas, mas o mais simples é o estilo pergunta e resposta, onde o usuário lê uma pergunta e precisa responder com outro texto. Você pode customizar o conjunto de perguntas e respostas e o model irá validar se a resposta foi digitada corretamente.
+
+
+has_friends – adiciona suporte a amizades, o começo de uma rede social onde você tem usuários que tem amigos. Ele administra o relacionamento através de um modelo próprio chamado Friendship a partir de onde você pode controlar seu status, por exemplo, alguém só se torna amigo de uma certa pessoa se ela aceitar esse relacionamento. Você ganha métodos assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+# mary accepts john's request if it exists;
+# makes a friendship request otherwise.
+mary.be_friends_with(john)
+
+# check if paul is mary's friend
+mary.friends?(paul)
+
+# if you're dealing with a friendship object,
+# the following methods are available
+friendship.accept!
+
+
+
+validates_email_format_of – extensão para ActiveRecord para validar emails de acordo com a RFC 2822 e RFC 3696.
+
+
+has_ratings – se você tem objetos que precisa dar alguma nota ou avaliação, como produtos numa loja por exemplo, esta gem deve ajudar com diversos helpers. Ele associa o usuário que deu a nota ao objeto. Você precisa criar a migration da tabela polimórfica de notas manualmente bem como as colunas extras necessárias à tabela que vai receber a nota. Tirando isso, o resto é simples.
+
+
+Formatter – quanto você cria um modelo que tem conteúdos complexos, usamos markups para facilitar a digitação desse conteúdo. Daí o correto é guardar tanto a versão original crua quanto a versão formatada em HTML. No caso de um Post de blog, podemos ter um campo chamado content e outro formatted_content, daí basta configurar esta gem assim:
+
+1
+2
+3
+4
+5
+6
+7
+
+class Post < ActiveRecord::Base
+  has_markup :content,
+    :format       => :markdown,
+    :tidy         => true,
+    :tags         => %w(p a em strong ul li),
+    :attributes   => %w(href)
+end
+
+
+Esta gem suporta Tidy, Markdown, Textile e sanitize.
+
+Miscelânea
+
+OFX – é uma coisa bem mais específica, mas se algum dia você precisar de um parser para dados em formato OFX (Open Financial Exchange), esta é a gem que vai te ajudar.
+
+
+Layout – (para Rails 3) este é mais fácil explicar com o exemplo de código:
+
+1
+2
+3
+4
+
+class PagesController < ApplicationController
+  set_layout 'site', :only => %w(faq feedback)
+  set_layout 'custom', :except => %w(faq feedback)
+end
+
+
+
+Breadcrumbs – suporte internacionalizado para breadcrumbs, que é uma forma de mostrar uma lista de seções e sub-seções à medida que você navega pelo site, para facilitar a navegação. Ele é bem customizável e você pode inclusive criar seu próprio renderizador para separar cada sub-seção.
+
+
+has_calendar – renderiza um calendário em uma tabela HTML, incluindo datas com eventos. Você pode mudar o estilo do calendário mudando o CSS. Ele usa por baixo dos panos o comando “cal” disponível em Mac OS X e Unix (não funciona em Windows, a menos que tenha um comando semelhante no Path). Com isso montar um calendário HTML é tão simples quanto fazer: <%= calendar :year => 2008, :month => 9 %>.
+
+
+Fomu – é um builder de formulários HTML, que gera labels, erros inline e mensagens “hint”, com suporte a internacionalização. Me parece uma versão mais simples de bibliotecas como Formtastic e o Simple Form
+
+
+Storage – abstrai operações de armazenamento de arquivos tanto para o file system local quanto para a Amazon S3.
+
+
+Post Commit – simplificação para enviar notificações a diversos serviços como Basecamp, Lighthouse, Twitter, etc. Ele é extensível se você precisar mais serviços do que esta ferramenta suporta e o código para enviar a notificação é parecido com isto:
+
+1
+2
+3
+4
+
+post_commit :twitter do
+  authorize :username => "johndoe", :password => "mypass"
+  post "Hi Twitter!"
+end
+
+
+
+Sinatra Subdomain – adiciona suporte ao Sinatra para entender sub-domínios e organizar conjuntos de rotas por sub-domínios, assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+require "sinatra"
+require "sinatra/subdomain"
+
+# Specify which subdomain you want
+subdomain :foo do
+  get '/' do
+    "render page for FOO"
+  end
+end
+
+# If any subdomain is set
+subdomain do
+  get '/' do
+    "render page for #{subdomain} subdomain"
+  end
+end
+
+
+
+Ink – simplesmente um wrapper de Ruby para a biblioteca Pygments de Python, que serve para gerar código-fonte colorizado (“syntax highlight”). Essa biblioteca é boa se você já está acostumado ao Pygments e gostaria de continuar usando. Caso contrário outra alternativa é usar o Coderay que é outra biblioteca de syntax hightlight mas em Ruby puro.
+
+
+Factory Seed – é uma facilitador para o Factory Girl que permite criar vários objetos usando um syntatic sugar, por exemplo:
+
+1
+2
+3
+
+@user = _1_user
+@user, @comments = _1_user_with_10_comments
+@user, @comments, @messages = _1_user_with_10_comments_and_10_messages
+
+
+
+has_layout – é semelhante à outra gem layout mas funciona para Rails 2.
+
+
+Hoptoad Widget – um widget para o Dashboard de Mac OS X que mostra as últimas mensagens do Hoptoad. Widgets são mini aplicativos escritos basicamente com HTML, CSS e Javascript. Se quiser aprender como criar um, este é um bom exemplo.
+
+tags: obsolete ruby
+

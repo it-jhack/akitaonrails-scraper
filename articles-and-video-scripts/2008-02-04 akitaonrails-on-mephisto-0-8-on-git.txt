@@ -1,0 +1,176 @@
+
+Pronto! Acabei de colocar meu site em Mephisto 0.8 e usando Git também! Vamos à história:
+
+“Em casa de ferreiro o espeto é de ferro!”
+Desde que eu comecei a usar Mephisto uma coisa me incomoda: ok, o Mephisto muda pouco mas e quando mudar? Como atualizo meu código? Eu alterei vários pequenos pontos na minha instalação para ficar como eu quero, não gostaria de ter que refazer isso tudo de novo, nem copiar tudo por cima às cegas.
+Baixar os patches e aplicar manualmente não é exatamente minha idéia de passar um bom fim de semana também. Com o repositório do Mephisto em subversion e o do meu site também em subversion, as opções são parcas, para dizer o mínimo. Como falei no meu post anterior, ano passado, quando ainda usava Typo, eu bem que tentei usar SVK. Chegou a funcionar mas a sensação era de “puxadinho”, na primeira chuva ia desabar. Muito complicado para configurar, muito complicado para manter, se eu esquecesse de anotar o número da última revision que dei merge ia dar trabalho. Nada intuitivo.
+
+
+Bom, também como anunciei no post anterior, o Mephisto migrou para Git! Viva! Chegou a hora de fazer a coisa funcionar.
+Primeiro, claro, fiz um clone do repositório deles:
+
+git clone git://activereload.net/mephisto.git git_mephisto
+1
+2
+3
+4
+5
+
+
+Depois, num subdiretório paralelo, também fiz um clone do meu site, que atualmente está num repositório subversion. Graças ao git-svn isso é trivial (mas demora beeeem mais, na primeira vez):
+
+<macro:code>
+git-svn clone https://[meu servidor svn]/akitaonrails/mephisto/trunk
+
+
+Terminado os dois downloads acima, agora tenho dois subdiretórios: um chamado git-mephisto e outro git_akitaonrails. Na realidade, ambos são clones dos repositórios remotos, clones inteiros, com histórico e tudo.
+Agora, vou adicionar o repositório remoto do mephisto ao do meu site:
+
+cd git_akitaonrails
+git remote add mephisto ../git_mephisto
+git fetch mephisto
+1
+2
+3
+4
+5
+
+
+Excelente. Com isso cadastrado eu posso puxar as mudanças do novo Mephisto para cima do código atual do meu site:
+
+<macro:code>
+git merge mephisto/master
+
+
+O problema é que isso aí vai dar UM MONTE de conflitos. Provavelmente porque os dois projetos não tem ancestral comum. Existem algumas opções, como por exemplo aplicar um patch de cada vez manualmente como sugere o Cristi Balan. Mas eu realmente não estava a fim de fazer isso manualmente. Abrir arquivo a arquivo com conflito e resolver na mão também não me pareceu muito bom. Eu dificilmente lido com arquivos de patch então também desconheço se existe alguma maneira mais trivial de resolver isso.
+Sem querer perder muito tempo, a única informação que eu sabia é que os conflitos, em cada arquivo, ficam no seguinte formato:
+1
+2
+3
+4
+5
+
+<<<<<<<
+# código antigo
+=======
+# código novo
+>>>>>>>
+
+
+Ou seja, bastava encontrar cada pedaço como o acima e escolher se eu queria ou não substituir o código antigo pelo novo. Para isso escrevi um script bem simples (daqueles que você faz em 5 min) para automatizar isso pra mim. Meu script percorre o projeto todo à procura dos conflitos, mostra no console o trecho e me dá a opção de substituir pelo código novo ou manter o antigo. Vejam o código-fonte do script no pastie
+Feito isso, agora tudo está correto. Ainda precisei manualmente apagar o gem TZInfo que estava congelada no subdiretório vendor, e também apagar os antigos plugins mephisto_* que estavam na pasta de plugins. Agora é só comitar:
+
+git commit -a -m “consertando conflitos”
+git-svn dcommit
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+O primeiro comando faz o commit localmente, no repositório Git. O segundo comando empurra todos os commits realizados localmente de volta ao meu subversion remoto.
+
+Agora, toda vez que o Mephisto for atualizado, basta fazer:
+
+<macro:code>
+git fetch mephisto
+git merge mephisto/master
+
+
+Tecnicamente, como agora ambos os branches (do mephisto, e o master do meu site) foram mesclados e tem um ancestral em comum, os próximos merges devem ser menos dolorosos. Com sorte, provavelmente nem vou precisar interferir. Vejam no gitk (um GUI excelente que é instalado junto com o git-core) o ponto de merge:
+
+Também precisava alterar meu deploy.rb, pois desde que migrei na Railsplayground de shared hosting para VPS, significa que minha receita de FastCGI estava atrasada e eu precisava mudar para Mongrel. Isso é trivial e só exigiu mudar alguns nomes de caminho de lugar. Nada demais.
+
+cap deploy
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Como Steve Jobs diria: _"boom!"_ Pronto! Meu site está no ar, rodando em *Mephisto 0.8* e agora gerenciado sobre Git.
+
+h3. Outra Idéia
+
+Só por curiosidade, façamos de conta que meu site seja atualizado por outras pessoas - como se fosse um projeto normal, onde as pessoas usam subversion. E se alguém atualizasse meu SVN, como eu pego as atualizações para dentro do meu Git local? Fácil:
+
+<macro:code>
+git-svn fetch
+git-svn rebase
+
+
+Dessa forma eu ganho as modificações, faço as minhas locais, uso ‘git commit’ para fazer o commit local e ‘git-svn dcommit’, como mostrei antes, para empurrar de volta ao repositório remoto.
+Um outro problema que eu tenho é o seguinte: meus projetos usam Piston para gerenciar plugins. Isso me impede de usar Git por enquanto porque senão eu perco esse suporte. Mas – temporariamente, enquanto ninguém faz uma solução definitiva – uma maneira de talvez transitar entre Git e Piston é o seguinte:
+
+Fazer o svn checkout normalmente
+Criar o clone git como mostrei acima
+Quanto precisar atualizar um plugin (que é algo que se faz pouco), voltamos ao working copy de subversion, fazemos:
+
+
+svn up
+piston update vendor/plugin/[seu plugin]’
+svn commit -m “atualizando plugin [seu plugin]”
+1
+2
+3
+4
+5
+6
+
+
+* Feito isso, voltamos ao working copy de Git local, e fazemos:
+
+<macro:code>
+git-svn fetch
+git-svn rebase
+
+
+Pronto! Isso faria meu Git local ganhar o plugin atualizado e o SVN continuaria com o suporte ao Piston. É uma idéia, o que acham?
+Mais Links
+Vejam meus outros artigos mais antigos onde falo sobre Git:
+
+Jogar pedra em gato morto
+GIT: Muito promissor
+Aprenda GIT pelo Peepcode
+Futuro Próximo: Thin? Git?
+
+Mephisto-Gambiarra
+Uma coisa que eu havia completamente esquecido!! Desde o ano passado, provavelmente quando eu atualizei para Rails 2.0.2, havia algum problema com o sistema de page cache no Mephisto: os sweepers simplesmente não estava limpando as página. Minha suspeita: as modificações no sistema de routing do Rails 2 confundindo o sistema de cache na hora de encontrar as páginas estáticas para eliminar.
+Agora que eu coloquei o 0.8 no ar foi que me relembrei desse bug. E no 0.8 também ainda dá no mesmo. Como não tenho tempo para debugar até o ponto exato do erro, apenas acrescentei um código forçando apagar TODOS as páginas do cache de uma vez.
+No app/models/site.rb, aproximadamente linha 230, dentro no fim do método expire_cached_pages, acrescentei:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+# GUARANTEE THAT EVERY PAGE IS ACTUALLY ERASED
+cached_pages.find(:all).each do |page|
+  file_path = File.join(RAILS_ROOT, 'public', page.url)
+  file_path.gsub!(/\/articles/, '') if file_path =~ /\/articles/
+  file_path += ".html" unless file_path =~ /\.[\w]{3,4}$/
+  File.delete(file_path) if File.exists?(file_path)
+  page.destroy
+end
+file_path = File.join(RAILS_ROOT, 'public', 'index.html')
+File.delete(file_path) if File.exists?(file_path)
+
+
+Com isso, finalmente meu site voltará a ter page cache – que faz uma diferença enorme! E toda vez que houver alguma alteração, o cache será limpo e regerado. Vamos ver se melhora!
+tags: obsolete
+

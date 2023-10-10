@@ -1,0 +1,11 @@
+
+
+
+
+O Githubber Scott Chacon fez um grande artigo/site explicando porque Git é melhor do que X (Subversion, Perforce, Mercurial, Bazaar).
+Como eu achei o artigo muito bem feito, resolvi traduzí-lo para português (pra variar :-). Então leiam e distribuam para seus amigos, colegas de trabalho e chefes:
+https://akitaonrails.com/porquegitehmelhor/
+Update: O Scott fez um post no blog do Github sobre a tradução. Ele puxou do meu repositório e colocou no seu site principal:
+https://pt.whygitisbetterthanx.com/
+tags: obsolete git translation
+

@@ -1,0 +1,11 @@
+
+
+
+
+Ontem gastei algumas horas fazendo uma exploração cirúrgica. Ainda estou só no começo. O que fiz foi criar Diffs entre as versões 1.1.6 e 1.2.4 e entre a 1.2.4 e 2.0.0 Preview Release para entender o que mudou de uma para outra.
+Claro, ler os changelogs seria mais simples, mas eu queria ter uma noção melhor do código-fonte em si. A primeira coisa aparente é o seguinte: tirando o test suite de todas, o 1.1.6 tem 3.5Mb, o 1.2.4 tem 5.4Mb e o 2.0.0_PR tem 5.6Mb. À primeira vista é isso mesmo: do 1.1.6 para 1.2.4 houve muito mais modificações. Muita coisa que será deprecado vem da versão 1.1.6 o que fortalece minha hipótese que o 2.0.0 deve dar muito menos dor de cabeça para quem quiser migrar aplicações.
+Claro, existem algumas mudanças de paradigma como ter suas views com extensão .html.erb em vez de .rhtml. Mas ambas funcionam lado-a-lado e devem ficar assim por mais um ano pelo menos, talvez até um Rails 2.5 ou 3.0 no futuro.
+No 1.2.4 veio a primeira versão do pacote ActiveResource e do paradigma RESTful. Foi nela que veio o suporta a MultiChar para habilitar UTF-8. A versão anterior usava o Prototype versão 1.5.0 Release Candidate 0, e a 1.2.4 usa a 1.5.0 final. Muitos novos métodos foram acrescentados nela. Foi quando veio uma limpeza no modo de gerenciamento de dependência, ordem de carga das bibliotecas e plugins.
+Eu ainda só analisei os diffs do pacote Railties e ActiveRecord. Ainda há um logo caminho. Quando achar coisas mais interessantes (provavelmente quando eu começar a ver em detalhes os diffs do 2.0.0) vou postando.
+tags: obsolete rails
+

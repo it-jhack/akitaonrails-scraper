@@ -1,0 +1,12 @@
+
+
+
+
+Avi Bryant cantou a bola primeiro na RailsConf 2006: “Eu sou do futuro, eu sei como essa história termina. Todas as pessoas que dizem que não é possível implementar Ruby numa virtual machine rápida estão errados. Essa máquina já existe hoje, é chamada GemStone e poderia certamente ser adaptada para rodar Ruby.”
+
+Pois bem, este dia chegou e Avi também envolvido nisso! A InfoQ entrevistou o gerente de produto Bob Walker, e é exatamente o que vocês estão pensando: uma máquina virtual Smalltalk adaptada para suportar Ruby dentro dela.
+A idéia é ter um ambiente híbrido que tanto pode ser um substituto ao MRI (drop-in replacement) como também rodar na forma tradicional de persistência do Smalltalk (image). O conceito é muito parecido com o Rubinius, a diferença é que o Rubinius ainda está escrevendo uma VM do zero enquanto a GemStone tem uma VM pronta que eles estão adaptando ao Ruby.
+Ela irá gerar bytecode de Ruby, está começando a usar as mesmas specs da linguagem que o Rubinius tem. Eles provavelmente vão ter algo mais concreto para a RailsConf 2008 que acontecerá em 29 de maio.
+Portanto, além de YARV, JRuby, IronRuby, Rubinius, MacRuby agora teremos uma versão com uma VM independente robusta, que já é eficiente em rodar Smalltalk, rodando seu primo genético, Ruby. Em breve talvez eles consigam atingir o “ponto de singularidade Rails”, ou seja, poderemos considerar que eles atingiram um ponto “bom” quando forem capazes de rodar uma aplicação não-modificada feita em Rails. Vamos ver!
+tags: obsolete smalltalk english
+

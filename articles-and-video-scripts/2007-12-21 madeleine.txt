@@ -1,0 +1,13 @@
+
+
+
+
+Eu acabei de falar sobre SimpleDB e bancos de dados não-relacionais. Este é um mundo estranho mas cheio de grandes possibilidades. Infelizmente a maioria dos programadores já cresceu num mundo dominado pelos RDBMS, as commodities da tecnologia.
+Durante a RejectConf tive o prazer de conhecer o Carlos Villela, atual ThoughtWorker que palestrou no nosso evento. Agora uma curiosidade que eu não sabia: ele foi desenvolvedor do projeto Java Prevayler.
+Prevayler é um sistema de persistência de objetos. Neste momento a maioria vai pensar “hmm, mais um ORM, mais um Hibernate” e aqui está o primeiro erro pois Prevayler nada tem a ver com RDBMS. Estamos falando de objetos, o segundo pensamento é “hmm, ODBMS, Zope Database”
+Errado novamente. Como o próprio nome diz Prevayler é baseado no conceito de Object Prevalence que o próprio Carlos explica neste artigo no IBM developerWorks de 2002. A grosso modo   você lida com persistência de objetos em memória, de maneira robusta suportado por um sistema de journaling (tipo transaction log) e um snapshot em disco. Desta forma, se o sistema cai, ele pode ser recuperado até exatamente o estado imediatamente anterior ao crash.
+Uma das características mais marcantes: prevalence é algumas ordens de grandeza mais rápido do que um RDBMS.
+Object Pravalence é um conceito, sendo a implementação mais importante o Prevayler em Java, mas outras linguagens também tem suas implementações, incluindo Ruby, que tem o projeto Madeleine, inspirado na arquitetura do Prevayler. Infelizmente não é um projeto com o mesmo nível de reconhecimento que o ActiveRecord e mereceria mais atenção para evoluir melhor.
+Por outro lado, não estou dizendo que devemos jogar fora os RDBMS e usar Prevalence para tudo. Vamos parar com esse pensamento binário “ou um ou outro”. É apenas mais uma tecnologia que merece ser estudada e que pode ser muito útil em vários cenários. Quem sabe, talvez até seja possível usar Rails + Madeleine, Merb + Madeleine em alguns casos. Alguém se habilita?
+tags: obsolete nosql
+

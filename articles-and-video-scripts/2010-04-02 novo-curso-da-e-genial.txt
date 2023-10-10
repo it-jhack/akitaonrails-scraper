@@ -1,0 +1,11 @@
+
+
+
+
+A e-Genial junto com o Silvestre Mergulhão criaram o Imersão Sys Deploy. Um curso on-line em tempo real voltado para programadores que querem aprender como instalar um servidor web do zero e como colocar suas aplicações em produção.
+
+A grade é bem completa e trás assuntos importantes como a instalação e configuração de uma VPS linux, banco com replicação, deploy com capistrano, crontab, monitoramento, servidor de smtp, backup, segurança e muito mais.
+Apesar de alguns tópicos serem voltados para o deploy de aplicações Ruby on Rails usando Passenger + Apache, o conteúdo do curso pode ser usado com extrema facilidade para o deploy de aplicações webs criadas com outras tecnologias como python/django, Java, PHP dentre outras.
+O curso começa no dia 10/04/2010 e terá uma VPS exclusiva por aluno. Inscreva-se
+tags: obsolete
+

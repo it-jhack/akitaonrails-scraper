@@ -1,0 +1,22 @@
+
+Durante este ano participei de diversos eventos, incluindo semanas de computação em diversas faculdades pelo Brasil.
+Dentre workshops, palestras de introdução ao mundo Ruby, dois temas em particular foram destaque para mim.
+O primeiro é o tema que chamei de "Startups & Software". Ela não deixa de ser uma evolução de outras palestras que fiz anos atrás como o Entenda Software da Forma Correta de 2010. A intenção é demonstrar que o raciocínio entre desenvolvimento de software, criar startups de sucesso, gerar open source de sucesso, seguem os mesmos princípios. Os dois princípios básicos sendo: "lei dos grandes números" e meu conceito pessoal que verdadeira inovação nasce de restriçoes. Assista a versão mais recente dessa palestra que apresentei online pela Eventials:
+
+
+
+
+ 
+
+O segundo tema que quase todo ano eu atualizo é sobre o Ecossistema Ruby e Rails. Esta versão qeu apresentei no evento Rupy é um pouco diferente. Ela cruza alguns dos acontecimentos da comunidade Ruby com acontecimentos gerais do mundo da tecnologia. A intenção é demonstrar porque uma comunidade como a Ruby, que praticamente saiu do zero em 2004 foi capaz de gerar um ecossistema sustentável. Quais são as características que tornaram isso possível e, a partir de todas as restrições, porque ela se moldou da forma como é hoje. Isso deve ajudar a entender para onde ela está indo a partir de agora:
+
+
+
+O terceiro eu acabei de gravar via Eventials e é sobre porque você não deve fazer search usando SQL do tipo SELECT LIKE. Entenda as melhores opções, Solr, Elasticsearch e como elas são tão simples que não vale nem a pena considerar usar SQL LIKE:
+
+ 
+
+Aproveitem!
+
+tags: obsolete presentation
+

@@ -1,0 +1,20 @@
+
+De vez em quando eu faço uma limpeza no meu notebook. Meu pobre Macbook Pro tem apenas 320GB em seu lento HD de 5400rpm. E se eu mudar para os novos Air que tem Flash significa ainda menos espaço, no máximo 250Gb. Hoje eu estava com cerca de 20Gb livres, depois da limpeza estou com quase 100Gb livre.
+A melhor ferramenta para me dizer o que limpar é o Grand Perspective. Eu já tentei outros pagos como o Daisy Disk (USD 19.95) mas o Grand – desculpem o trocadilho – ainda é grander.
+
+Ele vasculha qualquer diretório e diz rapidamente quem são os culpados por comer meu espaço em disco. Os maiores culpados no meu caso estão concentrados principalmente no iTunes. Para liberar espaço eu movi tudo para um disco externo. Só os vídeos do TED (HD) ocupavam 20GB. Movi vários video podcasts e outras coisas como audiobooks que eu já escutei, filmes que não pretendo ver de novo e mais.
+
+
+Para Usuários
+Outro culpado que eu não estava vendo eram os backups antigos de iPhone e iPad. Eu já tive iPhone 2G, 3G, 3GS, 4G e o iPad. E os backups foram se acumulando, ocupando mais de 20Gb. Para liberá-los basta abrir as preferências do iTunes, ir em “Devices”, e apagar todos os backups antigos.
+
+Quem usa bastante o iPhoto também precisa se preocupar com uma coisa: toda foto que você apaga não é “apagado” de verdade pois o iPhoto tem sua sua própria lixeira. Para realmente apagar você precisa forçar no menu principal com a opção “Empty iPhoto Trash”. O iMovie também ocupa bastante espaço, então lembre-se de copiar seus vídeos originais para um HD externo e apagar tudo que não estiver mais usando.
+
+Se você tem iPods, iPhone, lembre-se de ver o diretório “~/Library/iTunes/”. Toda vez que sai uma nova versão do iOS, o iTunes baixa as imagens pra lá. Dependendo de quando você começou a fazer atualizações, pode ter alguns Gigabytes desperdiçados lá.
+
+Para Desenvolvedores
+Para nós, desenvolvedores, uma ferramenta indispensável é o excelente Home Brew, o sucessor de instaladores como o antigo MacPorts para instalar pacotes de ferramentas Unix como Git, MySQL, MongoDB. Eu costumo sempre mantê-lo atualizado e para isso faço brew update e depois brew outdated, isso lista todas as fórmulas desatualizadas. Daí eu faço brew install [formula] para instalar as versões mais novas. O problema é que as versões antigas permanecem ocupando espaço. Para liberar esse espaço faça brew cleanup, isso deve apagar as velharias. Dependendo de quantas fórmulas você tem e quanto atualizou até agora, isso pode liberar alguns gigabytes importantes.
+A mesma coisa vale para RubyGems. Eu sempre mantenho tudo atualizado com gem update, mas isso também mantém instalado as versões antigas. Para eliminar tudo que é antigo, eu faço gem cleanup. Se você usa o excelente RVM não se esqueça que você tem um conjunto de gems por instalação de Ruby, isso sem contar as gemsets. Cuidado, você provavelmente vai acabar apagando algumas gems que não queria. Por exemplo, se tiver o Rails 3 instalado, vai apagar o Rails 2.3.x e projetos que dependiam dela irão parar de funcionar. Para consertar basta reinstalar fazendo gem install rails —version=2.3.9 por exemplo. Ou então, fazer o melhor: configurar o Bundler para cada projeto. Logo depois do “cleanup” talvez seja uma boa idéia rodar o gem pristine —all para trazer todas as gems para condições “pristinas”.
+Cuidado se você faz clone de muitos projetos do Github. Pouco a pouco esses projetos podem se acumular e rapidamente consumir centenas de megabytes. O mesmo vale para pastas como de Download. Acostume-se a mover coisas como DMGs e instaladores, ISOs para um HD externo já que não é necessário mantê-los depois que você já instalou o que precisava.
+tags: obsolete mac
+

@@ -1,0 +1,22 @@
+
+Update 2013: This screencast is obviously obsolete (this is Rails 2 and Rails is already at version 4). It’s maintained here for historical reasons.
+Page down for brazilian portuguese article
+Update 12/12: For those of you that think I was too fast in the video, I just posted a Tutorial with most of the content you can see in the screencast plus a few bonuses. I’ve split it into Part 1 and Part 2. Enjoy!
+The First Screencast
+Rails 2.0 was released officially last friday and it was a coincidence because I would present a keynote about it at our local “Rio on Rails”: http://www.rioonrails.com.br event here in Brazil. In this keynote I first presented the Rails 2.0 screencast. Tonight I decided to replay it a second time and mix an english narration over it.
+I didn’t do deep research but I think this is the very first Rails 2.0 screencast released – correct me if I am wrong. The inspiration was, of course, the Creating a Weblog in 15 minutes the original screencast by David Hansson that caused so much discussion and polemic and that ultimately made Rails recognized throughout the internet.
+The irony is that David made the real time blog programming during his keynote at FISL (Forum Internacional de Software Livre), back in 2005 here in Brazil. At that time almost no one knew what Rails was all about and very few people attended it. Now, almost 3 years later I’d like to go full cycle over it and make the very first Rails 2.0 screencast available from Brazil again. I hope this time our local development community pay more attention.
+This time Rails doesn’t have to prove itself: it’s already got past this part. 2.0 is not about revolution, it’s about a stable and steady evolution. It’s about refinement and polish, making for an even greater user experience. I am enjoying it very much.
+Without further ado, here it goes:
+
+
+
+
+
+O primeiro screencast de Rails 2.0
+Rails 2.0 foi lançado oficialmente sexta-feira passada e foi uma coincidência porque eu iria fazer uma palestra sobre isso no Rio on Rails. Nessa palestra apresentei o screencast do Rails 2.0 pela primeira vez. Esta noite decidi refazer o vídeo com narração em inglês e português (vou subir a versão em português o mais rápido possível, já está pronta).
+Eu não pesquisei em detalhes mas acho que este é o primeiro screencast sobre Rails 2.0 – me corrijam se eu estiver errado. A inspiração foi, claro, o screencast original Criando um weblog em 15 minutos do David Hansson que causou tanta discussão e polêmica e que, no final, ajudou a tornar Rails reconhecido por toda a internet.
+A ironia é que David fez a programação do blog em tempo real durante sua apresentação na FISL, em 2005 aqui no Brasil. Na época quase ninguém sabia o que era Rails e pouquíssima pessoas assistiram. Agora, quase 3 anos depois eu gostaria de fechar o ciclo e tornar o primeiro screencast de Rails 2.0 disponível a partir do Brasil novamente. Espero que desta vez nossa comunidade local de desenvolvedores prestem mais atenção.
+Desta vez Rails não precisa mais se provar: ele já passou por isso. 2.0 não é para ser uma revolução, mas sim uma estável evolução. Ele é sobre refinamento e polimento, criando uma experiência ainda melhor. Eu estou adorando.
+tags: obsolete rails screencast english
+

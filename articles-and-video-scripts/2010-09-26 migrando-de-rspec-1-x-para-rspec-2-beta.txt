@@ -1,0 +1,284 @@
+
+Com o lançamento do Rails 3, estou migrando meu blog também. Para quem não lembra, estou usando uma versão (bem) modificada do Enki que é um sistema bem minimalista. Eu já mexi tanto nele que nem dá mais para dar merge, por isso também não posso publicar o código já que tem muita coisa específica do meu blog.
+De qualquer forma, o Enki usar RSpec para seus testes e é o que estou usando também. A meu ver, existem muitos problemas com esses testes. Eu particularmente não gosto de usar specs de rotas, prefiro deixar isso pra testes de aceitação com Cucumber, por  exemplo. Outra reclamação minha é que eu acho que o Enki usa muito mais mocks do que eu gostaria. Prefiro usar factory_girl e usar os models diretamente. Esses dois pontos deram trabalho na hora de migrar para RSpec 2. Em muitos casos ou eu retirava os testes ou trocava de mocks para factories e as coisas voltavam a funcionar.
+O RSpec 2 é uma reescrita do RSpec anterior, na maior parte dos casos a API se manteve, mas algumas coisas quebraram. Vamos dar uma olhada em alguns dos pontos que eu tive que passar. Lembrando que algumas das coisas que vou dizer já haviam mudado desde o RSpec 1.3.x mas meus testes ainda estavam mais antigos do que isso.
+
+
+Para começar, eu migrei minha aplicação para o mínimo do Rails 3. Você pode ver como fazer isso comprando o Rails Upgrade Handbook do Jeremy McNally ou assistir os screencasts do Ryan Bates a respeito. Depois farei um artigo com alguns dos problemas que eu tive. Antes de mais nada, retirando um mito: não é fácil migrar de Rails 2 para Rails 3. Não é “difícil” também, eu diria que é mais “trabalhoso”. E se você não tem uma boa cobertura de testes, recomendo que antes de tentar migrar primeiro crie essa cobertura, caso contrário você vai bater mais cabeça do que deveria.
+Para instalar o RSpec 2 e outras gems de suporte, comece acrescentando isto no seu Gemfile:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+group :test, :development, :cucumber do
+  gem 'sqlite3-ruby', :require => 'sqlite3'
+  gem 'webrat'
+  gem 'database_cleaner'
+  gem 'cucumber-rails'
+  gem 'cucumber'
+  gem 'rspec-rails', "~> 2.0.0.beta.22"
+  gem 'factory_girl'
+  gem 'ruby-debug19'
+  gem 'launchy'    # So you can do Then show me the page
+end
+
+
+Algumas coisas específicas do meu projeto: estou usando sqlite3 para meus testes. Tire isso se você estiver usando MySQL ou outro banco. O RSpec 2 precisa ou do Webrat ou do Capybara. Ele não tem essa dependência pré-declarada portanto se você não colocar nenhum, não vai dar nenhum erro, mas alguns matchers não vão funcionar. Escolha um dos dois e declare no Gemfile. No meu caso estou usando Webrat.
+Se você usar o ruby-debug, preste atenção: atualize para ruby-debug19 se estiver usando Ruby 1.9.2 como é meu caso.
+Encoding
+Se você tiver comparações com strings nos seus specs, algo como isto:
+1
+
+@cadastro.cidade.should == "São Paulo"
+
+
+Você terá uma mensagem de erro do Ruby, do tipo invalid multibyte char (US-ASCII). Para corrigir isso, na primeira linha do arquivo Ruby, coloque:
+1
+
+# encoding: UTF-8
+
+
+Para entender melhor a função de encoding, leia os artigos do Yehuda Katz a respeito. Se você ainda não estudou sobre encodings no Ruby 1.9 eu já adianto: você não sabe nada sobre encodings nem sobre unicode e o assunto é mais complexo do que parece. Pior ainda: a solução de ter tudo interno como Unicode não é a melhor solução como muitos podem acreditar se vieram de Java ou outras linguagens.
+Shared Examples
+Existe uma funcionalidade no RSpec que permite que você reuse testes. Por exemplo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+describe "not logged in", :shared => true do
+  it "should not set session[:logged_in]" do
+    session[:logged_in].should be_nil
+  end
+  it "should render new" do
+    response.should be_success
+    response.should render_template("new")
+  end
+  it "should set flash.now[:error]" do
+    flash.now[:error].should_not be_nil
+  end
+end
+...
+describe "with valid URL https://enkiblog.com and OpenID authentication returning 'missing'" do
+  before do
+    stub_open_id_authenticate("https://enkiblog.com", :missing, true)
+    post :create, :openid_url => "https://enkiblog.com"
+  end
+  it_should_behave_like "not logged in"
+end
+
+
+Ou seja, declarando como describe “…”, :shared => true, você pode reusar os testes com it_should_behave_like “…”. A sintaxe no RSpec 2 mudou para esta forma:
+1
+2
+3
+
+shared_examples_for "not logged in" do
+...
+end
+
+
+Specs de Controller e de View
+O pessoal do RSpec não recomenda, mas eu pessoalmente prefiro ter a chance de testar o resultado da renderização de views dentro dos testes de controllers. Isso vem desabilitado por padrão, para habilitar, bastava declarar no começo no teste de controller assim:
+1
+2
+3
+
+describe Admin::PagesController do
+  integrate_views
+  ...
+
+
+Agora no RSpec 2 você só muda para:
+1
+2
+3
+
+describe Admin::PagesController do
+  render_views
+  ...
+
+
+Além disso, temos no RSpec também testes separados apenas para Views, normalmente na pasta spec/views. Dentro dela teríamos coisas como esta:
+1
+2
+3
+4
+5
+6
+7
+8
+
+describe "/admin/posts/new.html.erb" do
+  it "should render" do
+    assigns[:post] = Post.new
+    template.stub!(:allow_login_bypass?).and_return(true)
+    render '/admin/posts/new.html.erb'
+    response.should =~ /some text/
+  end
+end
+
+
+A sintaxe muda para:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+describe "/admin/posts/new.html.erb" do
+  it "should render" do
+    # trocar 'assigns' pelo método 'assign'
+    assign(:post, Post.new)
+    # trocar 'template' por 'view'
+    view.stub!(:allow_login_bypass?).and_return(true)
+    # não precisa duplicar porque o template já está declarado no "describe"
+    render 
+    # para o conteúdo renderizado, mudar de "response" para "rendered"
+    rendered.should =~ /some text/
+  end
+end
+
+
+Falando no response, para testar o código de retorno de uma requisição, tínhamos que fazer assim:
+1
+
+response.status.should == '405 Method Not Allowed'
+
+
+Agora, em vez de comparar a string, devemos comparar o código numérico:
+1
+
+response.status.should == 405
+
+
+Spec de Rota
+Como disse antes, eu particularmente não gosto muito de testes de rota. De qualquer forma, às vezes há situações onde eles são úteis. No RSpec antigo, podíamos fazer assim:
+1
+2
+3
+4
+5
+6
+7
+
+it 'maps show' do
+  route_for(:controller => 'admin/sessions', :action => 'show').should == "/admin/session"
+end
+
+it 'generates show params' do
+  params_from(:get, "/admin/session").should == {:controller => 'admin/sessions', :action => 'show'}
+end
+
+
+O primeiro checa se o hash passado consegue derivar para a rota. O segundo checa se a rota consegue ser decomposto no hash de parâmetros requerido.
+No Rspec novo ambos route_for e params_from não existem mais, portanto todo teste de rotas precisa ser reescrito. Agora estou chutando, mas no test/unit seria o equivalente, respectivamente, ao assert_generates e assert_recognizes. Você pode chamar essas asserções separadamente ou testar ambos juntos usando o assert_routing, que combina os dois.
+No Rspec 2 temos o matcher route_to, que justamente chama o assert_routing. Portanto poderíamos substituir os dois testes acima por apenas um, assim:
+1
+2
+3
+
+it 'routes correctly' do
+  {:get => "/admin/session"}.should route_to(:controller => 'admin/sessions', :action => 'show')
+end
+
+
+Porém, eu encontrei um problema no caso de rotas ambíguas. Por exemplo, o hash { :controller => “posts”, :action => “index” } serve tanto para a rota / (se for o “root”) quanto para /posts. Daí o route_to se confunde e eu ainda não entendi qual é a forma correta de testar. No caso, estou fazendo apenas isto:
+1
+
+{:get => "/"}.should be_routable
+
+
+Onde o matcher be_routable checa se a rota funciona.
+Miscelânea
+Uma coisa que não investiguei o porque é esta comparação:
+1
+
+response.should have_text(/#{Regexp.escape(@page.to_json)}/)
+
+
+Parece que o matcher have_text não existe mais (?) e em seu lugar podemos fazer:
+1
+
+response.should contain(/#{Regexp.escape(@page.to_json)}/)
+
+
+Outro episódio engraçado foi um teste que encontrei assim:
+1
+2
+3
+
+lambda { 
+  post :create, :post => valid_post_attributes
+}.should change(Post, :count).by(0)
+
+
+Basicamente o teste diz que o bloco deve fazer a contagem mudar por zero, ou seja, efetivamente não mudar. Isso dá problema e o RSpec diz que o teste falhou porque “esperava uma mudança de 0 mas mudou 0”. Eu twitei a respeito e logo veio uma resposta com correção, portanto esse comportamento deve estar ok na versão Edge do RSpec neste momento.
+De qualquer forma, uma maneira “mais correta”, seria escrever assim:
+1
+2
+3
+
+lambda { 
+  post :create, :post => valid_post_attributes
+}.should_not change(Post, :count)
+
+
+Ou seja, em vez de “mudar por zero” é mais correto dizer “não deve mudar”. E para deixar a coisa um pouco mais correta segundo o jeito mais atual do RSpec, devemos fazer:
+1
+2
+3
+
+expect { 
+  post :create, :post => valid_post_attributes
+}.to change(Post, :count).by(0)
+
+
+Qualquer dessas formas deveria funcionar na versão mais recente do RSpec.
+Para testar upload com gems como Paperclip podemos usar o fixture_file_upload, até então eu usava desta forma:
+1
+
+@upload = Upload.create(:avatar => fixture_file_upload('rails.png'))
+
+
+Porém, no novo Rspec fui obrigado a especificar o caminho completo. Não sei se esta é a forma correta ou se estou esquecendo de configurar alguma coisa:
+1
+
+@upload = Upload.create(:avatar => fixture_file_upload(File.join(Rails.root,'spec/fixtures/rails.png')))
+
+
+Outra coisa que não sei se é questão de configuração: para enviar e-mails em texto puro, eu estava usando um template com o seguinte nome: purchase.text.plain.erb e isso funcionava no Rails 2. Porém, no novo ActionMailer, tive que renomear para purchase.text.erb, e só assim voltou a funcionar.
+E finalmente, esta última dica não tem a ver com o Rspec e sim com o Rails 3, mas estava impedindo alguns testes: você Não pode ter um método chamado config no seu controller porque ele é reservado ao Rails. O problema é que a mensagem de erro não será muito óbvio, então já cheque agora se você tem um método com esse nome ou se um dos módulos que faz mixin no ActionController por acaso não tenta redefinir esse método. Se tiver, você vai precisar renomear para outra coisa.
+tags: obsolete rspec
+

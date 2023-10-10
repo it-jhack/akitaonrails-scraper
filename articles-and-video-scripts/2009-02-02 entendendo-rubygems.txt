@@ -1,0 +1,758 @@
+
+Iniciantes em Ruby e Rails tem alguma dificuldade de entender o que são e como usar RubyGems. Um dos problemas que muitos devem sofrer é quando uma aplicação que funcionava “quebra” sem motivo aparente. Ou então funciona na sua máquina de desenvolvimento mas “quebra” quando se coloca no servidor.
+Uma “RubyGem” ou simplesmente “Gem” é uma biblioteca, um conjunto de arquivos Ruby reusáveis, etiquetada com um nome e uma versão (via um arquivo chamado de “gemspec”). Vamos ver como eles funcionam.
+
+
+Como Ruby carrega arquivos
+Antes de mais nada será útil entender como o Ruby carrega arquivos de dependência. Para começar vejamos a forma mais simples. Se você criar um arquivo chamado “teste.rb” e outro no mesmo diretório chamado “teste2.rb”, o primeiro pode requerer o segundo com a linha:
+
+rubyrequire ‘teste2’
+1
+2
+3
+4
+
+
+Se o arquivo teste2.rb estivesse num sub-diretório, por exemplo, 'lib', a linha seria assim:
+
+--- rubyrequire 'lib/teste2'
+
+Como podemos ver o comando ‘require’ pode carregar arquivos usando caminhos relativos. Porém também podemos usar caminhos absolutos. Se você utiliza Rspec em seus projetos Rails, verá que os arquivos de teste tem linhas como esta:
+
+rubyrequire File.expand_path(File.dirname(FILE) + ‘/../spec_helper’)
+1
+2
+3
+4
+5
+6
+
+
+No caso, digamos que o arquivo que tem este comando fica dentro do seu projeto Rails em "spec/models/post.rb". O comando acima funciona assim:
+
+Primeiro, este comando: 
+
+--- rubyFile.dirname(__FILE__) + '/../spec_helper'
+
+Devolverá o caminho relativo ao arquivo ‘post.rb’: “./../spec_helper”. Então o próximo comando na cadeia:
+
+rubyFile.expand_path(“./../spec_helper”)
+1
+2
+3
+4
+
+
+Devolverá o caminho absoluto: "/Users/akitaonrails/rails/projeto/spec/spec_helper". Lembrando, isso funciona relativo ao arquivo hipotético "spec/models/post.rb", por isso funciona dizer que o arquivo "spec_helper.rb" está um diretório antes, usando "..", e daí o 'File.expand_path' consegue localizar corretamente e dar o caminho absoluto completo. Isso permite que você consiga executar arquivos de Rspec individualmente desta forma:
+
+<macro:code>ruby spec/models/post.rb
+
+Ou seja: ao comando ‘require’ ou você dá o caminho relativo a onde você está, ou dá o caminho absoluto. Existe outra possibilidade: o arquivo que você quer faz parte da biblioteca padrão do Ruby e está em um destes dois diretórios:
+/opt/ruby-enterprise/lib/ruby/1.8/
+/opt/ruby-enterprise/lib/ruby/site_ruby/1.8/
+1
+2
+3
+4
+
+
+Por exemplo, se o tal arquivo 'teste2.rb' estivesse em um destes dois diretórios, apenas dizer: require 'teste2' seria suficiente. Mas, claro, não queremos 'sujar' esses diretórios colocando coisas aleatórias. Porém isso significa que bibliotecas padrão estão acessíveis a um simples require. Por exemplo, no diretório /opt/ruby-enterprise/lib/ruby/1.8/ existe o arquivo 'base64.rb', para usá-la basta fazer:
+
+--- rubyrequire 'base64'
+
+Existe outro comando pouco usado parecido com o ‘require’, chamado ‘load’. A diferença entre os dois é que se você tentar fazer ‘require’ de um arquivo que já carregou antes, ele não será recarregado, mas o ‘load’ recarrega de forma forçada. Além disso para o ‘load’ você precisa dizer a extensão do arquivo. Por exemplo:
+
+rubyload ‘base64.rb’
+1
+2
+3
+4
+5
+
+
+Como podem imaginar, no diretório /opt/ruby-enterprise/lib/ruby/site_ruby/1.8/ existe um arquivo chamado 'rubygems.rb'. Por isso, toda vez que queremos carregar uma gem, precisamos antes fazer isto:
+
+--- rubyrequire 'rubygems'
+require 'redcloth'
+
+Isso carrega a infra-estrutura de RubyGems e a partir daí podemos pedir para carregar as Gems, como o ‘redcloth’, no exemplo acima. Em versões antigas do One-Click Ruby Installer para Windows, ele já pré-configurava a variável de sistema RUBYOPT=rubygems para não precisar ter o ‘require “rubygems”’. Porém isso causa vários conflitos inesperados e é recomendado que essa variável seja apagada.
+Outra forma de pré-carregar o RubyGems é usar a opção “-rubygems” em comandos como “irb” ou ao próprio executável “ruby”. Carregar Gems é mais do que apenas dar ‘require’ e veremos isso nas próximas seções.
+Configurando RubyGems
+Quando você instala uma distribuição de Ruby, seja compilando via código-fonte, seja usando apt-get, macports ou outro instalador, possivelmente ele já venha com o suporte a RubyGems instalado. Mas você precisa se atentar à versão. Em Debian também note que costuma-se instalar os executáveis como ‘ruby18’, ‘irb18’, ‘ri18’, ‘rdoc18’, ‘gem18’. Crie links simbólicos para torná-los mais simples assim:
+
+sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
+sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
+sudo ln -s /usr/bin/rdoc1.8 /usr/bin/rdoc
+sudo ln -s /usr/bin/ri1.8 /usr/bin/ri
+sudo ln -s /usr/bin/irb1.8 /usr/bin/irb
+1
+2
+3
+4
+
+
+Agora, execute este comando:
+
+<macro:code>gem -v
+
+Isso dirá a versão do seu RubyGems. A versão mais atual é a 1.3.1. Se for uma versão mais antiga como 1.2.0 ou 0.9.4, atualize da seguinte forma:
+sudo gem update —system
+1
+2
+3
+4
+5
+
+
+Se seu RubyGems for mais antigo que 0.8.5 será necessário fazer assim:
+
+<macro:code>sudo gem install rubygems-update
+sudo update_rubygems
+
+De qualquer forma, ao final, rode ‘gem -v’ novamente para se certificar que você agora tem a versão 1.3.1 ou superior. Já vi casos onde o RubyGems instalado é acima de 0.8.5 e mesmo assim o ‘update —system’ não funcionou e nesses casos o segundo procedimento sempre funciona. No fundo tanto faz qual dos jeitos você usar.
+Agora, vamos conhecer o ambiente. Digite o seguinte comando:
+gem environment
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+
+
+Isso dará uma saída como esta:
+
+<macro:code>
+RubyGems Environment:
+  - RUBYGEMS VERSION: 1.3.1
+  - RUBY VERSION: 1.8.6 (2008-08-08 patchlevel 286) [i686-darwin9.6.0]
+  - INSTALLATION DIRECTORY: /opt/ruby-enterprise-1.8.6-20090201/lib/ruby/gems/1.8
+  - RUBY EXECUTABLE: /opt/ruby-enterprise-1.8.6-20090201/bin/ruby
+  - EXECUTABLE DIRECTORY: /opt/ruby-enterprise-1.8.6-20090201/bin
+  - RUBYGEMS PLATFORMS:
+    - ruby
+    - x86-darwin-9
+  - GEM PATHS:
+     - /opt/ruby-enterprise-1.8.6-20090201/lib/ruby/gems/1.8
+     - /Users/akitaonrails/.gem/ruby/1.8
+  - GEM CONFIGURATION:
+     - :update_sources => true
+     - :verbose => true
+     - :benchmark => false
+     - :backtrace => false
+     - :bulk_threshold => 1000
+     - :sources => ["https://gems.rubyforge.org/", "https://gems.github.com"]
+  - REMOTE SOURCES:
+     - https://gems.rubyforge.org/
+     - https://gems.github.com
+
+
+Esta listagem é bastante auto-explicativa, mas vejamos alguns pontos importantes. Primeiro note ‘GEM PATHS’ que diz onde o RubyGems procurará por suas Gems. Ela tem um diretório global de sistema e um segundo local ao seu usuário. Por padrão, gems instaladas na sua pasta local ‘.gem’ também são válidas. Outra forma de encontrar gems é configurar a variável de sistema GEM_HOME, por exemplo, para isso valer globalmente e se você tem acesso de root ao servidor, pode adicionar ao arquivo ‘/etc /profile’ a seguinte linha:
+set GEM_HOME=/var/ruby/1.8/gems
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+
+É uma maneira de separar o repositório de gems fora da instalação do Ruby.
+
+Além disso, outra informação importante está em 'REMOTE SOURCES' que são repositórios remotos. Toda vez que você pede para instalar uma gem ele procura nesses repositórios. Tanto os repositórios como as configurações em 'GEM CONFIGURATION' ficam no seu arquivo local &tilde;/.gemrc. Se você tentar listar esse arquivo com 'cat &tilde;/.gemrc' verá algo parecido com o seguinte:
+
+<macro:code>
+--- 
+:backtrace: false
+:benchmark: false
+:update_sources: true
+:bulk_threshold: 1000
+:verbose: true
+:sources: 
+- https://gems.rubyforge.org/
+- https://gems.github.com
+
+
+Antigamente haviam poucos repositórios, sendo o principal o do RubyForge, que vem configurado por padrão. Mas a partir de 2008 o Github se tornou um repositório relevante e por isso recomenda-se, logo depois de instalar o Ruby, já fazer o seguinte:
+gem source -a https://gems.github.com
+1
+2
+3
+4
+
+
+Se isso não fosse feito, você precisa manualmente indicar o repositório no comando que instala gems, assim:
+
+<macro:code>sudo gem install akitaonrails-locarails --source https://gems.github.com
+
+Mas com o repositório remoto configurado, basta agora fazer assim:
+sudo gem install akitaonrails-locarails
+1
+2
+3
+4
+5
+6
+
+
+Note outra coisa: sempre que instalamos gems usamos o comando 'sudo' na frente para escalar os privilégios. Isso porque como vimos, o repositório local de gems fica dentro da instalação do Ruby que normalmente fica dentro de diretórios de sistema como '/usr/lib'. Se você reconfigurou esse local usando a variável GEM_HOME para um diretório onde seu usuário normal tem acesso, não precisa sudo. Da mesma forma o comando 'gem source' também não precisa de sudo pois ele edita o arquivo local '&tilde;/.gemrc'. Muita gente digita 'sudo' sem realmente entender porque está fazendo isso, então eis a dica.
+
+Agora que sabemos como instalar gems, para remover também é simples, basta fazer:
+
+<macro:code>sudo gem uninstall akitaonrails-locarails
+
+Versões de Gems
+A parte mais importante sobre gems a se ter em mente é que podemos ter diversas versões de uma mesma gem carregada em paralelo. Essa é sua grande vantagem e também a principal fonte de confusão. Vamos aprender mais um comando, digite:
+gem list
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Isso deve dar uma longa listagem com o nome de todas as gems e as versões instaladas. Essa lista varia de máquina para máquina dependendo do que você já instalou, mas um trecho dessa listagem seria assim:
+
+<macro:code>
+...
+akitaonrails-locarails (1.1.7, 1.1.6)
+akitaonrails-resource_controller (0.5.3, 0.5.2)
+...
+
+Neste exemplo temos a gem ‘akitaonrails-locarails’ versões 1.1.6 e 1.1.7. Como vimos antes, se quiséssemos carregar essa gem basta fazer o seguinte:
+
+rubyrequire ‘rubygems’
+require ‘akitaonrails-locarails’
+1
+2
+3
+4
+5
+6
+7
+
+
+Considerando que você de fato tem esta gem instalada como mostramos na seção anterior, teremos um erro parecido com este:
+
+<macro:code>LoadError: no such file to load -- akitaonrails-locarails
+        from /opt/ruby-enterprise-1.8.6-20090201/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:31:in `gem_original_require'
+        from /opt/ruby-enterprise-1.8.6-20090201/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:31:in `require'
+        from (irb):2
+
+
+Existe dois problemas aqui:
+
+O nome da gem não é o nome que o comando ‘require’ precisa
+Qual versão ele vai carregar? Se for a mais recente (1.1.7), o que fazer se minha aplicação depende de algo que só tem na anterior (1.1.6)?
+
+Primeiro, sobre o nome. Como vimos antes, as gems globais – no caso da minha máquina – se localiza no diretório /opt/ruby-enterprise-1.8.6-20090201/lib/ruby/gems/1.8/gems. Lá dentro encontraremos dois diretórios relevantes a esta gem: akitaonrails-locarails-1.1.6 e akitaonrails-locarails-1.1.7. É assim que ele guarda gems iguais de versões diferentes em paralelo.
+Se olharmos dentro da gem veremos uma estrutura de diretórios da seguinte forma:
+
+bin
+  locarails	
+  locarails.cmd
+lib
+	locarails
+		copy.rb		
+		fix.rb		
+		none.rb		
+		version.rb
+	locarails.rb
+tasks
+  …
+templates
+  …
+1
+2
+3
+4
+
+
+Esta é uma estrutura bastante simples de gem. No diretório /opt/ruby-enterprise-1.8.6-20090201/lib/ruby/gems/1.8/specifications temos arquivos como akitaonrails-locarails-1.1.7.gemspec que especifica como esta gem deve ser configurada e de quais outras gems/versões ele depende. A linha:
+
+--- rubys.default_executable = %q{locarails}
+
+Por exemplo, diz que o executável ‘bin/locarails’ deve ser copiado para o mesmo lugar onde está o interpretador ruby. No meu caso, isso fica em /opt/ruby-enterprise/bin/ruby, portanto teremos o comando /opt/ruby-enterprise/bin/locarails também.
+Outra coisa é a convenção de carga da biblioteca. Por exemplo, se pegarmos como exemplo a gem “Grit” (uma biblioteca criada pelo pessoal do Github para gerenciar repositórios Git via Ruby) teremos o diretório “grit-0.7.0” e teremos a biblioteca “lib/grit.rb”. Como o nome da gem e o nome do arquivo dentro de “lib” são o mesmo, se fizermos:
+
+rubyrequire ‘rubygems’
+require ‘grit’
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+A gem será carregada corretamente. O mesmo não acontece no caso do 'akitaonrails-locarails' pois a biblioteca se chama 'lib/locarails.rb'. Isso vai acontecer com qualquer gem que você instalar via Github pois eles prefixam o nome de todas as gems com o login do usuário que criou essa gem, de forma que duas pessoas que tenham gems de mesmo nome não entrem em conflito. Ou seja, se amanhã alguém com o login de 'fulano' criar um fork da minha gem ele poderá disponibilizá-la como 'fulano-locarails'. Desta forma, podemos ter essas duas gems instaladas lado-a-lado na mesma máquina, sem conflitos.
+
+Mas se o nome da gem e do arquivo ruby são diferentes, como carregar? Quando a convenção falha, precisamos dizer explicitamente o que queremos, assim:
+
+--- rubyrequire 'rubygems'
+gem 'akitaonrails-locarails'
+require 'locarails'
+
+Pronto, isso resolve a dúvida com nomes. Porém, o que fizemos acima, por padrão vai carregar a gem mais recente (1.1.7). Mas podemos também forçar a versão, da seguinte forma:
+
+rubyrequire ‘rubygems’
+gem ‘akitaonrails-locarails’, ‘= 1.1.6’
+require ‘locarails’
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Note o segundo parâmetro do comando 'gem'. Agora estamos dizendo para carregar a versão "1.1.6", independente se existe versão mais nova. Mas poderíamos ir mais longe: se soubéssemos que as versões mais recentes da gem tem o que queremos, mas as antigas não, poderíamos dizer ">= 1.1.6", assim tanto a 1.1.6 quanto 1.1.7 ou superiores serviriam e estaríamos sempre carregando a versão mais recente instalada na máquina. 
+
+Porém, recomenda-se fazer sua aplicação ser bem explícita quanto às versões das dependências para garantir que tudo vai funcionar. Não é porque existe uma versão mais nova que ela é automaticamente melhor, muito pelo contrário, versões mais novas podem tirar coisas que não são mais importantes mas que para sua aplicação em particular faz falta.
+
+Por outro lado se os desenvolvedores seguem a numeração de versões de forma séria, sabemos que atualizações pequenas (subir de "1.1.6" para "1.1.7") não deveria quebrar as aplicações que dependem dela pois esse tipo de modificação devem se resumir a pequenos refatoramentos, melhorias de performance, correção de bugs. Para mudanças mais bruscas, especialmente as que quebram APIs, a versão deveria subir (para "2.0", por exemplo).
+
+Nesse caso gostaríamos de dizer à nossa aplicação _"peque a versão mais recente da série 1.1.x mas não a 2.0 se um dia ela for lançada"_. Se fizermos ">= 1.1.6" ela vai pegar sempre a mais recente, inclusive uma possível 2.0, o que certamente quebraria a aplicação. Para evitar isso podemos fazer: "&tilde;> 1.1.0", isso pegará todas as versões da série 1.1 mas nunca a 2. Como o Ryan Davis colocou no "seu post":https://blog.zenspider.com/2008/10/rubygems-howto-preventing-cata.html, temos estas opções:
+
+<macro:code>
+Versão          Especificação
+3 e acima       ">= 3"
+3.y.z           "~> 3.0"
+3.0.z           "~> 3.0.0"
+3.5.z até <4.0  "~> 3.5"
+3.5.z até <3.6  "~> 3.5.0"
+
+
+Tenha isso em mente ao configurar as dependências da sua aplicação.
+Versões de Gems no Rails
+Entendendo tudo isso deve ficar óbvio agora o sistema de dependências de Gems que foi apresentado no Rails 2.1.0.
+Toda vez que criamos uma aplicação Rails, no arquivo config/environment.rb podemos declarar nossas dependências da seguinte forma:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+config.gem "rmagick",      :version => '2.8.0', :lib => "RMagick"
+config.gem "chronic",      :version => '0.2.3'
+config.gem "daemons",      :version => '1.0.10', :lib => false
+config.gem "RedCloth",     :version => '4.1.1', :lib => "redcloth"
+config.gem "ruby-openid",  :version => '2.1.2', :lib => "openid"
+config.gem "rdiscount",    :version => '1.3.1'
+config.gem "thoughtbot-paperclip", :version => '~> 2.2.0', 
+  :lib => 'paperclip',
+  :source => 'https://gems.github.com'
+
+
+Se depois de ler a seção anterior a listagem de ‘config.gem’ acima não estiver óbvia, releia as seções anteriores novamente. De qualquer forma, vamos explicar:
+
+No caso do RMagick, a gem se chama ‘rmagick’ mas a biblioteca interna se chama ‘lib/RMagick.rb’ e por isso temos a opção :lib
+No caso do chronic, tanto a gem como a biblioteca tem o mesmo nome
+
+
+No caso do daemons, fizemos ‘:lib => false’ porque queremos checar se a gem da versão especificada existe mas não queremos dar ‘require’ na biblioteca
+No último caso, queremos uma gem que está no Github, para garantir que ela será encontrada explicitamente dizemos o :source. Também sabemos que todas as gems do Github, o nome da gem é diferente do nome da biblioteca, por isso a opção :lib. Finalmente queremos qualquer versão dentro da série 2.2 por isso a opção :version => ‘˜> 2.2.0’ como explicamos na seção anterior.
+
+Tudo isso configurado, podemos usar o comando ‘rake gems’ para ver todas as gems instaladas:
+
+(in /private/tmp/teste)
+ – [I] rmagick = 2.8.0
+ – [I] chronic = 0.2.3
+    – [ ] hoe = 1.8.3
+    – [ ] rubyforge = 1.0.2
+    – [I] rake = 0.8.3
+ – [I] daemons = 1.0.10
+ – [I] RedCloth = 4.1.1
+    – [ ] echoe 
+    – [I] rake = 0.8.3
+    – [ ] rubyforge = 1.0.2
+    – [ ] highline 
+ – [ ] ruby-openid = 2.1.2
+ – [I] rdiscount = 1.3.1
+ – [I] thoughtbot-paperclip ~> 2.2.0
+    – [ ] right_aws = 1.9.0
+    – [I] thoughtbot-shoulda = 2.0.6
+    – [ ] mocha = 0.9.4
+    – [ ] right_http_connection = 1.2.4
+    – [I] rake = 0.8.3
+I = Installed
+F = Frozen
+R = Framework (loaded before rails starts)
+1
+2
+3
+4
+
+
+Neste exemplo vemos que a gem principal 'ruby-openid' não está instalada. Podemos instalar no repositório global da seguinte forma:
+
+<macro:code>sudo rake gems:install
+
+Isso instalará todas as gems que estão faltando no seu sistema. Você só pode fazer isso na sua máquina de desenvolvimento ou num servidor onde tenha acesso de root. Certamente não pode fazer isso num servidor de hospedagens compartilhadas.
+Para casos onde você sabe que não pode instalar gems no servidor, você pode usar este comando:
+rake gems:unpack:dependencies
+1
+2
+3
+4
+
+
+O primeiro comando copiará todas as gems que você precisa no diretório 'vendor/gems' do seu projeto Rails. Com isso agora você pode copiar seu projeto ao servidor. Acessando seu servidor remotamente, dirija-se ao diretório onde colocou seu projeto e de lá, remotamente, precisará executar este outro comando:
+
+<macro:code>rake gems:build
+
+Algumas gems vem com códigos-fonte em C, pois são o que chamamos de “extensões nativas”. O RMagick, RedCloth e rdiscount são alguns exemplos. Quando você faz “sudo gem install rdiscount” ele automaticamente baixa o pacote da gem, grava os arquivos no repositório local e também já tenta compilar as extensões nativas. Para tanto você precisa ter acesso a compiladores na máquina. Num Ubuntu você instala essas ferramentas fazendo:
+apt-get install build-essential
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+Num Mac você precisa instalar o pacote do XCode, que vem no DVD de instalação do Leopard ou que você pode "baixar de graça":https://developer.apple.com/technology/xcode.html do site da Apple. No caso do Windows é mais complicado e vamos ver isso na próxima seção.
+
+Vamos resumir:
+
+* Na sua máquina local, toda vez que se instala uma gem, se precisar as extensões nativas já estarão compiladas
+* Se você congelar as gems usando o comando 'rake gems:unpack:dependencies' como vimos acima, ela apenas copiará os fontes para 'vendor/gems' mas você ainda precisa rodar 'rake gems:build' *na máquina servidora remota* para garantir que tudo está compilado e funcionando. Recomenda-se acrescentar esse comando na sua receita de Capistrano caso saiba como usar.
+
+Para completar, tomando como exemplo a gem RedCloth, estes são os arquivos gerados depois que se roda o comando 'rake gems:build':
+
+<macro:code>
+./vendor/gems/RedCloth-4.1.1/ext/redcloth_scan/Makefile
+./vendor/gems/RedCloth-4.1.1/ext/redcloth_scan/redcloth_attributes.o
+./vendor/gems/RedCloth-4.1.1/ext/redcloth_scan/redcloth_inline.o
+./vendor/gems/RedCloth-4.1.1/ext/redcloth_scan/redcloth_scan.bundle
+./vendor/gems/RedCloth-4.1.1/ext/redcloth_scan/redcloth_scan.o
+./vendor/gems/RedCloth-4.1.1/lib/redcloth_scan.bundle
+
+
+Muita gente confunde o que significa “máquina de desenvolvimento” e “servidor remoto”. Portanto vou repetir aqui para garantir que isso não está confuso:
+
+Máquina de desenvolvimento: é seu desktop, seu notebook, sua máquina pessoal onde você escreve sua aplicação. Esse ambiente possivelmente está todo configurado para funcionar para você – e apenas para você. Não espere que todas máquinas de outras pessoas ou servidores estão configurados da mesma forma. Não basta “funcionar na sua máquina”, tem que funcionar no servidor também e é sua responsabilidade enquanto desenvolvedor fazer com que isso aconteça, por exemplo, configurando as dependências de gems da forma correta.
+
+
+Servidor remoto: é sua hospedagem compartilhada, sua VPS, seu servidor da intranet, ou seja, é onde a aplicação que você desenvolveu efetivamente vai rodar “em produção”. Seja um desenvolvedor limpo e especifique as dependências da maneira correta. Em alguns casos você não terá acesso ao repositório global de gems, por isso preste atenção em como o Rails pode ajudar (releia esta seção). Preste atenção: máquina de desenvolvimento != servidor remoto. Um bom desenvolvedor tem que saber configurar ambos os ambientes.
+
+Ainda falando em Rails, no arquivo config/environment.rb existe sempre uma linha como esta:
+
+rubyRAILS_GEM_VERSION = ‘2.2.2’ unless defined? RAILS_GEM_VERSION
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+*NUNCA*, repetindo, *NUNCA*, retire ou comente esta linha. Já vi muitos casos onde as pessoas simplesmente comentam esta linha e colocam no servidor sem isso. O que vai acontecer é muito simples: enquanto o servidor tiver o Rails na versão que você esperava (digamos, 2.2.2) tudo vai funcionar, mas quando for instalada uma nova versão (digamos, 2.3), sua aplicação vai falhar de maneiras inexplicáveis.
+
+Sem essa linha, sua aplicação sempre vai carregar a versão mais recente do Rails. É o mesmo caso de todas as outras gems, o Rails também é uma coleção especial de gems. Sua aplicação sempre vai funcionar numa versão específica do Rails. Para atualizar você precisa mudar essa linha manualmente, rodar sua suíte de testes que - obviamente - cobre toda sua aplicação, corrigir onde falha e só então subir para o servidor.
+
+Se seu servidor não tem a versão específica de Rails que você precisa, você pode congelar (ou vendorizar) o Rails dentro da sua aplicação usando o seguinte comando:
+
+<macro:code>rake rails:freeze:gems
+
+Isso copiará todas as gems do Rails no diretório ‘vendor/rails’ da sua aplicação. Ela sempre vai procurar primeiro esse diretório antes de procurar o Rails no GEM_HOME ou no repositório global da sua instalação de Ruby. A recomendação: se você não controla o servidor remoto, é preferível que sua aplicação sempre tenha todas as gems vendorizadas de forma que se dependa o mínimo possível do ambiente.
+Múltiplas instalações de Ruby
+Se você é como eu e tem diversas versões de Ruby instaladas (Ruby MRI, Ruby Enterprise Edition, JRuby, Ruby YARV, etc) uma coisa que vai notar é que cada uma delas terá seu próprio repositório de gems. Normalmente, a partir de cada diretório de cada distribuição de Ruby, temos ‘lib/ruby/gems’.
+Não recomendo fazer com que todas leiam as gems do mesmo lugar. Isso porque temos as extensões nativas como explicamos anteriormente. Como cada uma é compilada contra os headers da versão específica de Ruby, intercambiar gems entre versões muito diferentes de Ruby (por exemplo entre 1.8 e 1.9) pode gerar todo tipo de problemas estranhos.
+No meu caso, eu simplesmente não uso o Ruby que vem no Mac e prefiro usar o Ruby EE da Phusion. Tanto para o Ruby EE quanto para o JRuby, eu uso um sistema de links simbólicos que funciona da seguinte forma:
+Primeiro, meu Ruby EE é instalado em “/opt” na seguinte estrutura:
+
+bin
+include
+lib
+local
+ruby-enterprise → /opt/ruby-enterprise-1.8.6-20090201
+ruby-enterprise-1.8.6-20090113
+ruby-enterprise-1.8.6-20090201
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+Esse é o mesmo lugar onde o MacPorts grava suas instalações. Note que 'ruby-enterprise' é um link simbólico para uma das versões específicas do Ruby EE. Eu faço isso para poder instalar uma nova versão de Ruby EE mas tendo a opção de rapidamente voltar à versão anteriro (apenas mudando o link simbólico), caso exista algum bug inesperado.
+
+Dentro dessa distribuição, no diretório /opt/ruby-enterprise/lib/ruby temos a seguinte estrutura:
+
+<macro:code>
+1.8
+gems -> /opt/local/lib/ruby/gems
+site_ruby
+
+
+Novamente, notem que o diretório ‘gems’ na realidade é mais um link simbólico para fora. Desta maneira, diferentes versões de Ruby EE podem compartilhar o mesmo repositório. Eu poderia fazer a mesma coisa usando a variável GEM_HOME mas no meu caso particular eu preferi fazer desta forma porque tenho outras instalações de Ruby, como JRuby, que poderiam conflitar se eu esquecesse de carregar a GEM_HOME correta. Ambas as formas funcionam igualmente bem, neste caso é apenas uma preferência pessoal.
+Porém, existe um pequeno problema: toda vez que instalo numa nova versão do Ruby EE num diretório separado, não basta apenas refazer os dois links simbólicos acima. Isso porque muitas gems instalam executáveis diretamente em /opt/ruby-enterprise/bin, exemplo disso é o próprio Rails, Cucumber, Mongrel, RCov, meu próprio Locarails e muitos outros. Apenas religando o diretório de gems não é suficiente. Para garantir que tudo vai funcionar, ao final eu rodo este comando:
+sudo gem pristine —all
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+Isso literalmente "reinstalará" todas as gems usando o cache que está em /opt/ruby-enterprise/lib/ruby/gems/1.8/cache. Desta forma é como se eu tivesse reinstalado tudo via internet novamente, mas como existe esse cache local é muito mais rápido. E no final todos os executáveis e tudo mais estarão nos lugares corretos. O comando 'pristine' acima pode ser executado apenas para uma gem em particular se não quiser fazer isso com tudo.
+
+Outra coisa que pode acontecer em instalações fora do padrão, como a minha, é que os cabeçalhos de programas como MySQL não estarão facilmente acessíveis ao compilador. No meu caso, como estou usando o MySQL instalado via MacPorts, todos os códigos estão a partir do diretório /opt/local
+
+Portanto, eu faço meu comando 'pristine' ser um pouco mais complexo:
+
+<macro:code>sudo gem pristine --all -- \
+--with-mysql-dir=/opt/local/bin/mysql \
+--with-mysql-include=/opt/local/include/mysql \
+--with-mysql-lib=/opt/local/lib/mysql \
+--with-mysql-config=/opt/local/bin/mysql_config5
+
+Veja como tive que localizar cada diretório ‘dir’, ‘include’, ‘lib’ e ‘config’ que ele precisa. Alguns programas podem precisar disso caso o compilador não consiga localizar os fontes, por exemplo ImageMagick, PostgreSQL são candidatos, mas no meu caso apenas o MySQL precisa disso – ainda não descobri bem porque, mas fica a dica. Em distribuições Linux como Ubuntu, com tudo instalado via package managers como yum ou apt-get, esse problema provavelmente não deve existir.
+Já no Windows, como disse antes, existe o problema que o Windows simplesmente não tem compiladores. Na realidade é pior ainda porque o Windows é o único sistema operacional não-Unix e por isso muita coisa simplesmente inexiste nessa plataforma, por mais que a comunidade open source se esforce em tentar cobrir alguns buracos.
+Para instalar gems no Windows, sempre use a seguinte opção:
+gem install RedCloth —platform=mswin32
+Muitos desenvolvedores foram legais e prepararam uma versão especial que já vai baixar tudo pré-compilado de forma que não aconteçam erros de compilação. Já outros desenvolvedores simplesmente decidiram que o trabalho de manter essas versões pré-compiladas não vale a pena e desistiram de fazer isso. Um exemplo recente disso foi o Jamis Buck, que decidiu não compilar mais o driver Ruby de sqlite3 para Windows. Neste caso em particular, só resta aos usuários em Windows instalar uma versão antiga:
+gem install sqlite3-ruby -v=1.2.3 —platform=mswin32
+1
+2
+3
+4
+
+
+Isso causa uma série de dores de cabeça, porque normalmente podemos executar este comando:
+
+<macro:code>gem update
+
+Sem especificar uma gem em particular, este comando buscará todas as gems que estão desatualizadas e automaticamente fará a atualização. Em particular o sqlite3-ruby está desatualizado (a atual é a 1.2.4), ele vai tentar baixar a nova versão, esta versão sem binários pré-compilados tentará buscar um compilador na máquina e, sendo Windows, isso não existe e o processo vai falhar.
+Já outros desenvolvedores preferem que você vá direto ao site do projeto e baixe manualmente o arquivo com extensão “.gem” e instale manualmente. Este é o caso do RMagick de onde você pode baixar o arquivo “rmagick-2.9.1.gem” e pode instalar da seguinte forma:
+gem install rmagick-2.9.1.gem
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+
+
+Sem contar os casos mais cabeludos onde o código-fonte em C simplesmente não pode ser compilado no Windows, mesmo usando compiladores como Visual C ou MingW, exigindo alterações no código para torná-lo compatível. Esses casos são mais raros.
+
+Independente se não temos shell bash, editores de texto adequados, ferramentas como grep, o principal ponto de porque muitos Rubistas e Railers recomendam usar algum Linux ou Mac é justamente o fato de muitas gems terem problemas. Na grande maioria dos casos, com alguns truques, até que funciona, mas é bem mais confortável apenas instalar e sair usando, sem se preocupar.
+
+O mantenedor do One Click Ruby Installer é o argentino Luis Lavena. Eu "conversei com ele meses atrás":https://www.akitaonrails.com/2008/7/2/chatting-with-luis-lavena-ruby-on-windows e ele está trabalhando numa versão de Ruby que já viria com compiladores open source (como o MingW) permitindo instalar gems com extensões nativas compilando sem problemas no Windows. Existem vários problemas: compatibilidade com as gems que foram compiladas com Visual C 6 antigo, falta de voluntários para ajudar a terminar esse projeto. O Ruby no Windows tem menos suporte principalmente porque desenvolvedores de Windows tem pouco ou nenhum conhecimento de C. A maioria dos desenvolvedores em Windows não sabe usar ferramentas open source e, se tirarmos o Visual Studio, basicamente não sabem fazer mais nada. 
+
+Não entendam como uma ofensa mas como uma crítica de uma das razões de porque existem tão poucas ferramentas de desenvolvimento de qualidade no Windows. O Luis Lavena e seus amigos são raras exceções e sem eles Ruby no Windows simplesmente não existiria.
+
+Alguns pensam que basta compilar o interpretador Ruby para tudo funcionar em qualquer plataforma. Não é bem assim: existem as gems com extensões nativas no caminho.
+
+h3. RubyGems úteis e JRuby
+
+Aprender uma nova linguagem é muito mais do que simplesmente aprender uma nova sintaxe. É necessário aprender toda uma arquitetura da plataforma. RubyGems é um grande passo para que você entenda como o Ruby realmente funciona.
+
+Além de entender a arquitetura outra coisa muito importante é a imersão na cultura. Sem saber o histórico, acompanhar o dia-a-dia, é muito difícil utilizar uma tecnologia. No caso de Rails, por exemplo, sem entender o histórico não é fácil entender porque não se deve usar a gem Ferret e porque se deve optar por Sphinx, Lucene ou Xapian (nesta ordem mesmo) quando se quer implementar uma engine de procura.
+
+Também não daria para entender como e porque a gem "RDiscount":https://github.com/rtomayko/rdiscount/tree/master de Ryan Tomayko substitui a antiga BlueCloth (que se não me engano foi criado pelo lendário Why, the Lucky Stiff) para renderização de textos com markup MarkDown (dica, o primeiro é muito mais performático que o segundo).
+
+Não se saberia que RSpec (de Aslask e Chelimsky) e Shoulda (do pessoal da Thoughtbot) são as grandes estrelas no mundo de Test-Driven Development. E que gems como Webrat, ZenTest, Cucumber são excelentes auxiliares na tarefa de cobrir sua aplicação de testes.
+
+Você precisa entender que tarefas manuais sempre são ruins e que tudo que pode ser automatizado deve ser. Para isso existem duas gems importantes: Capistrano e Vlad. Faz parte da cultura Ruby não fazer trabalhos repetitivos.
+
+Consumir XML ou XHTML pode ser uma tarefa fácil ou difícil, dependendo de como você escolher fazer. Vai descobrir que o Hpricot pode ser a melhor pedida, mas também não vai querer deixar de experimentar gems como Nokogiri.
+
+Se ler apenas tutoriais antigos vai ver exemplos de código para upload de arquivos que usam a gem attachment_fu e não vai saber que existem opções mais recentes e mais atualizadas como o PaperClip (novamente, da Thoughtbot). Da mesma forma, verá códigos de autenticação antigos que usam acts_as_authenticated, restful_authentication mas existem outras alternativas como o authlogic.
+
+Se você é mais voltado para administração de sistemas, provavelmente vai esbarrar um dia no problema de precisar criar sua própria daemon. Em vez de sair procurando sobre as classes Net/Tcp, vá direto à gem chamada 'daemons', que lhe dará um bom esqueleto para não ter que começar do zero. A mesma coisa se precisar criar código para se conectar a servidores SSH. O Capistrano usa como dependência as gems net-scp, net-sftp, net-ssh e net-ssh-gateway que você pode usar isoladamente e que deve facilitar seu problema em algumas ordens de grandeza.
+
+Existem diversos drivers para bancos de dados, incluindo o sqlite3-ruby, mysql, postgresql. Historicamente o driver de MS SQL Server foi muito mal suportado, mas recentemente um desenvolvedor resolveu abraçar o problema e agora você pode instalar a gem dele da seguinte forma:
+
+<macro:code>
+gem install dbi --version 0.4.0
+gem install dbd-odbc --version 0.2.4
+gem install rails-sqlserver-2000-2005-adapter -s https://gems.github.com
+
+
+Ou configurar no config/environment.rb do seu projeto Rails da seguinte forma:
+1
+2
+3
+
+config.gem 'dbi', :version => '0.4.0'
+config.gem 'dbd-odbc', :version => '0.2.4', :lib => 'dbd/ODBC'
+config.gem 'rails-sqlserver-2000-2005-adapter', :source => 'https://gems.github.com'
+
+
+Gems para JRuby
+Entendido como é a estrutura de repositórios de gems, você pode imaginar que no JRuby é a mesma coisa. Quando você baixa o do site oficial e descompacta terá uma estrutura muito semelhante ao do Ruby padrão.
+Tendo o diretório ‘bin’ da distribuição do JRuby no seu PATH, você pode executar comandos de sistema como ‘rake’, ‘gem’, ‘rails’, ‘irb’, etc da seguinte forma:
+jruby -S gem list
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+
+Isso fará com que tudo seja executado dentro do contexto da instalação do JRuby. Como explicamos acima, muitas gems usam extensões nativas. Existe uma opção para se fazer gems nativas compatíveis tanto com JRuby quanto Rubinius usando o "suporte a FFI":https://blog.headius.com/2008/10/ffi-for-ruby-now-available.html. Mas isso ainda não é uma realidade. Na maioria dos casos você precisará instalar gems específicas de JRuby, por exemplo:
+
+<macro:code>
+jruby -S gem install jdbc-mysql
+jruby -S gem install jdbc-postgres
+jruby -S gem install jdbc-sqlite3
+jruby -S gem install activerecord-jdbc-adapter
+jruby -S gem install activerecord-jdbcmysql-adapter
+jruby -S gem install activerecord-jdbcpostgresql-adapter
+jruby -S gem install activerecord-jdbcsqlite3-adapter
+jruby -S gem install jetty-rails
+jruby -S gem install jruby-openssl
+jruby -S gem install rmagick4j
+
+
+No caso do RMagick, precisamos definir quando carregar a versão nativa ou a versão Java. É o mesmo caso do RDiscount com o BlueCloth. No Ruby, quase tudo é um objeto, incluindo Classes. E o que conhecemos como “Classe” são na realidade instâncias da classe chamada “Class” e guardadas dentro de uma constante (que começa com letra maiúscula).
+Por exemplo, se você tinha um código antigo que dependia de BlueCloth, você pode carregar o RDiscount e fazer assim:
+
+rubyBlueCloth = RDiscount
+1
+2
+3
+4
+5
+6
+7
+
+
+Pronto, assumindo que o RDiscount tenha exatamente a mesma API do BlueCloth, tudo deve funcionar. No caso do RMagick4J, ele implementa a classe do RMagick com o mesmo nome e devemos escolher como carregar assim:
+
+--- ruby
+require 'rubygems'
+gem PLATFORM == 'java' ? 'rmagick4j' : 'rmagick'
+require 'RMagick'
+
+
+O JRuby define a constante PLATFORM. Como já vimos antes usamos o comando ‘gem’ para escolher qual gem carregar e no final carregamos o arquivo ‘lib/RMagick.rb’ que ambas as gems disponibilizam.
+Como podem ver, existem dezenas de ‘gotchas’. Nenhum deles é particularmente difícil de entender e facilitará muito se você entendeu tudo que eu disse neste artigo pois é a fundação para entender como resolver seus próprios problemas. Outra coisa: seja lá qual problema você está enfrentando com gems, garantidamente alguém já teve exatamente o mesmo problema, ele foi documentado em algum blog, fórum, mailing list, wiki e com toda certeza está disponível via Google. Eu não esbarrei com absolutamente nenhum problema de Gem que já não estivesse no Google. Portanto, se você não encontrar a resposta do seu problema, é mais provável que você não soube procurar no Google do que ser um problema novo na comunidade. Pode até acontecer, mas é muito raro. Refaça sua procura no Google.
+Criando suas próprias Gems
+Está fora do escopo deste artigo mas eu digo: é muito simples. Basicamente um arquivo de gemspec, um diretório lib e um arquivo dentro dele e é isso. Nada mais do que isso.
+Existem diversos projetos que podem ajudá-lo a criar o esqueleto para uma Gem. Um dos mais conhecidos é o NewGem. Assim como o Rails cria uma estrutura padrão para projetos Web, o NewGem cria uma estrutura para RubyGems.
+Muitos o consideram um pouco “pesado” demais, criando muita coisa quando você quer criar gems muito simples. Uma das alternativa é o GemHub, criado pelo Diego Carrion para criar uma estrutura mais enxuta e já preparada para subir no Github. Outra alternativa é o Jeweler, que inclusive é a recomendação do pessoal do Github.
+Mesmo com todas essas ferramentas, não deixe de ler a documentação oficial do RubyGems, especialmente a referência de como montar uma GemSpec.
+GemSpecs bem montadas são importantes. Elas são código Ruby e portanto podem conter qualquer coisa. Porém para subir no Github você precisa que essa gemspec seja “segura” (o Github não quer, obviamente, código malicioso rodando nos servidores deles). Leia o site sobre gems do Github para ter mais detalhes.
+Para quem administra distribuições baseadas em RedHat como CentOS, Fedora, OpenSuse e outros, talvez interesse saber que você pode converter uma gem em um pacote no formato RPM usando a ferramenta gem2rpm. Isso é importante para quem administra múltiplos servidores e quer manter todos sempre atualizados baseados num repositório local de rpms, o mesmo que você provavelmente já usa para atualizar outros software como Apache, MySQL.
+E para administradores de sistemas baseados em Debian como Ubuntu, existe outra ferramenta, o dpkg-gem que converte gems em pacotes no formato DEB. Alternativa a isso é o recém-lançado servido do pessoal da Phusion, o site DebGem.com. Atualmente em estado beta gratuito mas que em breve se tornará um serviço pago. Ele é um repositório de RubyGems em formato DEB que você pode adicionar como fonte ao seu sistema apt. A partir daí você pode instalar tudo via “apt-get install xxxx”. Nada mais simples.
+Conclusão
+Como podem ver, RubyGems é um universo à parte. Na realidade é um projeto razoavelmente recente, tendo sido concebido entre 2001 e 2003, logo depois da chegada do Ruby à América e das primeiras pequenas RubyConf. Originalmente havia uma segunda opção de empacotador mas no final o formato RubyGems ganhou. Saiu da mãos de Chad Fowler, Rich Kilmer, Jim Weinrich e outros luminários da comunidade Ruby.
+Graças ao RubyGems é possível utilizar Ruby de uma maneira mais sana do que ficar importando tudo explicitamente, sem controle de versão, sem organização, sem ferramentas nem repositórios para organizar tudo. Uma boa plataforma de desenvolvimento precisa de um bom gerenciador de pacotes.
+Ainda existem diversos cantos mais ásperos que precisam de polimento no RubyGems mas o pessoal ainda está evoluindo essa tecnologia. Se não me engano é o Eric Hodel quem está tomando conta disso atualmente.
+Muitos consideram que um sistema de importação “robusto” significa ser altamente explícito. Eu particularmente acho isso uma perda de tempo, ter que declarar tudo o tempo todo. Prefiro o conceito de “smart defaults” (padrões inteligentes). Ou seja, tudo funciona de um jeito padrão e eu explicito apenas o que for exceção. Isso é “robusto” para mim e certamente o RubyGems está na direção certa. Em muitas maneiras não é diferente do que o pessoal de Linux já está acostumado com sistemas de empacotamento como yum e apt.
+Aprenda a usar a Gems da maneira correta e ela deixará de ser um problema para se tornar um grande aliado nos seus desenvolvimentos.
+tags: obsolete ruby
+

@@ -1,0 +1,49 @@
+
+Atualização 01/11: O Santiago Pastorino pediu para incluir uma dica sobre o ruby-debug, veja no fim do artigo.
+Como todos devem ter visto a versão stable Ruby 1.9.3-p0 foi lançado ontem. Para quem já usava 1.9.2 esta é uma versão de atualização sem grandes quebras de compatibilidade. Vejam na RubyInside o que há de novo.
+Quem usa RVM pode atualizar facilmente desta forma:
+1
+2
+3
+
+rvm get head
+rvm reload
+rvm install 1.9.3-p0
+
+
+Ou no meu caso, que estava acompanhando o 1.9.3 no head do repositório, pode fazer um upgrade:
+1
+
+rvm upgrade 1.9.3-head 1.9.3-p0
+
+
+Uma das novidades mais bem vindas é o novo esquema de require que tem potencial de deixar a carga de grandes frameworks com muitas dependências, como o Rails 3, até 36% mais rápida (ou mais!). Novamente, a RubyInside já havia descrito esse patch e muitos já estavam usando o 1.9.2 com o patch aplicado ou 1.9.3-head por causa dessa melhoria.
+
+
+Agora com o 1.9.3-p0 lançado a comunidade deve começar a migrar para ela especialmente pelo tempo de carga inicial menor, que facilita muito principalmente quem roda testes unitários, por exemplo, que dá uma sensação bem melhor de rapidez.
+Peguei uma aplicação Rails 3.0 pequena (menos de 4000 linhas de código, com 40% sendo testes), 71 gems, e rodei um comando simples somente para dar carga no framework e dependências, 5 vezes em cada ambiente ignorando a primeira rodada e tirando média das 4 seguintes. O comando foi basicamente este:
+1
+
+time bundle exec rails runner "puts 'hello'" 
+
+
+
+Rodando com o Ruby 1.9.2-p390 obtive: 12.740 seg.
+
+
+Rodando com o Ruby 1.9.3-p0 obtive: 4.990 seg
+
+No meu caso em particular, mais de 2x mais rápido na carga inicial!
+Obviamente sua milhagem vai variar, depende muito do tipo de projeto, dependências, initializers e outras coisas que ele precisa pré-carregar, mas podemos ver que o potencial somente deste patch já é um ganho considerável. No uso do dia a dia esses poucos segundos dá uma sensação bem melhor de conforto, e chega muito mais próximo do que era o Ruby 1.8.7. Não se trata de nada drástico mas isso deve ajudar a acelerar a migração à série 1.9 do Ruby.
+Ainda existem muitas gems que não são compatíveis com 1.9 mas hoje em dia é mais a exceção do que a regra. Vale a pena usar o 1.9.3 já em projetos para entrar em produção.
+Uma gem em particular que muitos devem usar, principalmente em testes, é o ruby-debug. Para instalar você provavelmente precisará fazer assim:
+1
+2
+
+gem install linecache19-0.5.13.gem
+gem install ruby-debug-base19-0.11.26.gem -- --with-ruby-include=/Users/akitaonrails/.rvm/src/ruby-1.9.3-p0
+
+
+Substitua “/Users/akitaonrails” pelo diretório da sua home. Você pode baixar as gems diretamente do rubyforge por enquanto. Lembrando que isso é temporário até tudo se normalizar.
+tags: obsolete ruby
+

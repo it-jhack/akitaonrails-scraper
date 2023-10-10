@@ -1,0 +1,63 @@
+
+Se todos estão prestando atenção, o Java 6 SE acabou de ser lançado com diversas novidades. Mais funcionalidades, mais performance, suporte a scripts, dentre outras coisas. E o mundo Ruby não ficou de fora. Nesse pequeno Tutorial, Jurgen Van Oosterwijck dá os primeiros passos.
+
+
+Da jroller.com : Nesse pequeno tutorial mostrarei como combinar Java 6 e JRuby para poder começar a usar o poder combinado do Ruby e Java. Antes de mais nada, comece com o download do novo Java 6, se ainda não tiver baixado. Essa versão inclui o Java Scripting Framework que permite integrar linguagens de script no código Java. Para iniciantes, tente rodar o seguinte código Java:
+ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+List factories = scriptEngineManager.getEngineFactories();
+for (ScriptEngineFactory factory : factories) {
+   System.out.println("Factory name: " + factory.getEngineName());
+}
+Que vai produzir a seguinte saída:
+Factory name: Mozilla Rhino
+Rhino é o interpretador Javascript escrito em Java. É a engine de scripting padrão no Java 6. Mas se quisermos rodar código Ruby, precisamos de um engine de script Ruby. Você pode encontrar todo tipo de engine de scripts no Scripting Project que mantém engines que atendem à especificação JSR-223. Dentre esses encontrará o JRuby.
+Dentro do arquivo jsr233-engines que o projeto fornece, encontrará um arquivo JAR para cada engine suportada. Coloque o jruby-engine.jar no seu classpath. Se olhar dentro dele, encontrará um arquivo chamado javax.script.ScriptEngineFactory in the META-INF/services. Ele contém a linha com.sun.script.jruby.JRubyScriptEngineFactory, que se refere à implementação do ScriptEngineFactory para JRuby.
+O ScriptEngineManager que você viu no código Java anterior usa um mecanismo de descoberta para encontrar todos os engines disponíveis para sua aplicação em tempo de execução. Tente rodar esse código novamente, deverá ter a seguinte saída:
+Factory name: Mozilla Rhino
+Factory name: jruby
+Ok, agora você sabe que a engine JRuby está disponível para sua aplicação. É hora de adicionar o jruby.jar ao nosso classpath, ou teremos erros em tempo de execução ao tentar rodar scripts Ruby. Você pode fazer o download do JRuby a partir do website da codehaus. (Vocês sabe usar o Google, certo?).
+Crie um arquivo chamado helloworld.rb e coloque no seu classpath (no Eclipse você pode apenas colocar o arquivo na raíz de código-fonte do seu projeto). Coloque a seguinte linha nele:
+“Hello world!”
+Vamos rodar um pequeno teste para ver se podemos rodar o código Ruby a partir da nossa aplicação com o seguinte código (apenas crie uma classe simples com um método main estático e cole o código dentro):
+ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+ScriptEngine scriptEngine = scriptEngineManager.getEngineByExtension(“rb”);
+InputStream is = ClassLoader.getSystemResourceAsStream(“helloworld.rb”);
+Reader reader = new InputStreamReader(is);
+System.out.println(scriptEngine.eval(reader));
+O código vai procurar a engine de scripts apropriada para a extensão .rb (que é o padrão do Ruby). Então ele carrega o script helloworld.rb do seu classpath, cria um Reader em volta dele e o passa ao método eval do ScriptEngine. Esse método executa o script e retorna o valor retornado pelo script.
+Nesse caso, devemos ter esta saída:
+Hello world!
+Agora, vamos tentar executar uma função que recebe um parâmetro. Crie um arquivo chamado helloworld2.rb e coloque o seguinte código Ruby:
+def sayHello(name)
+   return "Hello " + name + “!”
+end
+Agora tente rodar o seguinte código Java:
+ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+ScriptEngine scriptEngine = scriptEngineManager.getEngineByExtension(“rb”);
+InputStream is = ClassLoader.getSystemResourceAsStream(“helloworld2.rb”);
+Reader reader = new InputStreamReader(is);
+scriptEngine.eval(reader);
+Invocable invocableEngine = (Invocable)scriptEngine;
+if (invocableEngine != null) {
+   System.out.println(invocableEngine.invokeFunction(“sayHello”, “Ruby Guru”));
+}
+Ele deve produzir a seguinte saída:
+Hello Ruby Guru!
+Como exercício final, vamos tentar passar alguma coisa diferente de um String para nossa função. Crie um arquivo chamado helloworld3.rb no seu classpath e coloque o seguinte código nele:
+def sayHello(name, time)
+   return "Hello " + name + "! The time is " + time.toString + “.”;
+end
+E use o seguinte código Java para chamar o script:
+ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+ScriptEngine scriptEngine = scriptEngineManager.getEngineByExtension(“rb”);
+InputStream is = ClassLoader.getSystemResourceAsStream(“helloworld3.rb”);
+Reader reader = new InputStreamReader(is);
+System.out.println(scriptEngine.eval(reader));
+Invocable invocableEngine = (Invocable)scriptEngine;
+if (invocableEngine != null) {
+   System.out.println(invocableEngine.invokeFunction(“sayHello”, new Object[] { “Ruby Guru”, new Date()
+}
+Você pode ver que agora passamos dois valores à nossa função Ruby, sendo o segundo um objeto Date. O objeto de hora que usamos no script Ruby na realidade é um Objeto Proxy de Java. Ele redireciona as requisições ao objeto Java que passamos ao engine de script para executar seus métodos. Todos os métodos que definimos nas nossas classes Java podem ser usadas dessa maneira dentro de nosso script.
+A parte legal sobre a engine de script do Java 6 é que agora podemos substituir nossos scripts Ruby com scripts em qualquer linguagem, desde que tenhamos engines implementadas para elas. O código Java que roda nossos scripts não vão mudar nem um pouco não importa qual linguagem de scripts tenhamos escolhido usar. Graças ao mecanismo de descoberta, podemos até mesmo mudar a linguagem de script em tempo de execução.
+tags: obsolete java
+

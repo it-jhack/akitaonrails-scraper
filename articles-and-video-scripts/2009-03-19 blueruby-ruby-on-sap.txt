@@ -1,0 +1,20 @@
+
+
+
+
+Quando vi sobre o BlueRuby no ano passado, como projeto experimental, imaginei que fosse acabar como vaporware. Porém, fiquei surpreso ontem ao ver que o projeto continua em andamento!
+
+O estágio atual está com a seguinte cobertura:
+
+647 de 729 especificações de linguagem (88.8%) – Object, Class, Module, Block, Proc, …
+2670 de 4180 especificações das bibliotecas principais (63.9%) – String, Fixnum, Array, Hash, Regexp, …
+3317 de 4909 total de especificações (67.6%)
+
+Eles criaram um editor via interface Web até que bem razoável (usa tecnologia BSP). Os programas em Ruby são compilados para uma linguagem intermediária chamada BRIL (Blue Ruby Intermediate Language) que na verdade são chamadas ABAP nativas. Ou seja, os programas Ruby efetivamente rodam lado a lado com código ABAP e pode interagir naturalmente com ela. Todas as RFCs, BAPIs, está tudo acessível.
+Veja abaixo o BRIL gerado:
+
+Ainda é um projeto experimental, mas no estágio atual você já consegue ter inclusive um IRB (Interactive Ruby) via a interface Web, permitindo manipular elementos do ABAP interativamente. Acredito que isso será bastante interessante de se ver completo.
+Eles tem 2 vídeos demonstrando o Blue Ruby rodando na prática. Clique aqui e aqui
+É o Ruby entrando na veia do mundo corporativo!
+tags: obsolete sap
+

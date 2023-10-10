@@ -1,0 +1,92 @@
+
+Resolvi criar essa nova categoria tidbits para que eu possa simplesmente escrever sobre diversos assuntos sem que eles tenham necessariamente uma relação entre si. Hoje quero falar sobre 37signals, iPhones e Erlang.
+Para começar, ontem a 37signals divulgou alguns números internos sobre suas aplicações online que devem ajudar a demonstrar que tipo de exercício Rails suporta dentro da empresa dos seus criadores.
+Basecamp (Gerenciador de Projetos)
+
+2 milhões de contas
+1,3 milhões de projetos
+13 milhões de to-dos
+9,2 milhões de mensagens
+12 milhões de comentários
+
+
+
+Highrise (Gerenciador de Contatos)
+
+3,5 milhões de contatos
+1,2 milhões de anotações/comentários
+0,5 milhão de tarefas
+
+Backpack (Organizador Pessoal)
+
+Quase 1 milhão de páginas
+6,8 milhões de to-dos
+1,5 milhão de anotações
+0,8 milhão de fotos
+0,3 milhão de arquivos
+
+No geral, isso vale o seguinte (Nov. 2007:
+
+5,9 terabytes de arquivos
+0,8 terabytes de uploads
+2,0 terabytes de downloads
+30 máquinas, 100 CPUs, mais de 200Gb de RAM
+
+Ele farão um upgrade de hardware em breve para passar a ter:
+
+16 máquinas, 92 CPUs, mais de 230Gb de RAM
+
+Não se enganem, isso é bastante coisa para administrar. A primeira etapa de colocar tudo no ar é a pior, depois disso, no geral, escalar passa a ser “simplesmente” (entre aspas) adicionar um slice extra (no caso de box Linux virtualizado com Xen) ou adicionar uma máquina extra. Deployment também, uma vez configurado, é uma “simples” tarefa para o Capistrano. Imagino como deve ser o dia-a-dia de um sysadmin numa configuração dessas. Fora outras tarefas paralelas como segurança, fail-over, etc.
+E não deixem de ler a entrevista com David Hansson publicada na InfoQ a respeito do Rails 2.0.
+
+
+Falando em milhões, numa nota adicional, a Apple já vendeu este ano 5 milhões de iPhones. Em janeiro deste ano, quando anunciou o lançamento para junho, a meta de Steve era 10 milhões de iPhones vendidos até o fim de 2008. Ele já alcançou metade dessa meta, em 6 meses, e ainda nem entrou direito na Europa e outros mercados ávidos por gadgets como Japão. Muitos analistas agora estão chutando alto, como 50 milhões vendidos até 2009. 1 ano atrás esse número seria ignorado, hoje ela parece mais e mais uma realidade.
+
+Dentre outros números, nos Estados Unidos, o iPhone já vende mais que os devices baseados em Windows Mobile, ou Symbian, a caminho de morder os Blackberry. Em 6 meses já é 1 terço do market-share norte-americano. Por que isso é importante para nós, web developers? Porque o Mobile Safari é hoje o browser móvel mais usado. É o único que efetivamente permite uma navegação web móvel decente (e eis porque não interessa hoje ser 2.5 EDGE e não 3G – veja a comparação de um site alemão sobre o iPhone vs um Nokia 3G). E para os interessados em Android recomendo o artigo The Great Google gPhone Myth. O Android será um excelente OS para os smartphones ‘affordables’.
+Aliás, já recomendei antes e recomendo novamente os artigos de Daniel Eran do RoughlyDrafted como uma ótima fonte de leitura – imparcial – mas bem argumentada, densa em informações e divertida, com alguns pontos de vista bem pouco ortodoxos :-)
+
+
+E falando em futuro, Tim Bray, da Sun, publicou um micro-teste pessoal que ele fez com um script para analisar logs (pesado em I/O e Regex). Daí ele publicou os resultados de rodar o mesmo script no Ruby MRI 1.8, Ruby MRI 1.9, JRuby trunk e JRuby 1.1b. Eis os resultados:
+
+
+ 
+Elapsed
+User
+System
+
+
+Ruby 1.8.6
+59.6
+58.8
+0.8
+
+
+Ruby 1.9
+59.9
+58.8
+0.8
+
+
+JRuby 1.1b
+62.5
+63.4
+1.3
+
+
+JRuby trunk
+43.5
+44.5
+1.0
+
+
+
+Segundo Charles Nutter essa grande diferença no JRuby trunk é devido à nova implementação de um engine Regex baseado em bytes, o Oniguruma (para quem não sabe japonês, ‘oni-kuruma’ literalmente quer dizer ‘carro-do-diabo’, não me perguntem o motivo, mas é engraçado :-) De qualquer forma apenas isso representou um ganho de quase 30% em relação ao MRI, e isso porque ainda tem muito mais otimizações a serem feitas.
+
+
+Continuando a falar de Tim Bray, ele teceu alguns comentários sobre Erlang. Assim como a maioria de nós ele é um pragmático. Erlang ganhou muita atenção desde que os Pragmatic Programmer lançaram seu livro sobre ele. Essa linguagem criada na Ericsson mostra sua idade, a maioria dos programadores não gostam muito da sua sintaxe (aprendemos muitas técnicas novas nos últimos 20 anos que não existem em Erlang) mas por outro lado ela tem algo que a maioria das linguagens não tem: processamento-paralelo-massivo-através-de-primitivas-baratas-de-processos-e-comunicação-assíncrona-via mensagens-sem-uso-de-memória-compartilhada.
+Resumindo: processamento paralelo sem as dores de cabeça de threads. Primeiro, vale a pena ler sobre o prof. Edward A. Lee e porque threads são consideradas ruins. Threads usam memória compartilhada, não são determinísticas e é a fonte dos bugs mais chatos para debugar. Por outro lado processos rodam isoladamente, paralelamente e de maneira previsível. O problema: na maioria das linguagens, processos são muito mais ‘pesados’ do que threads, por isso prefere-se o segundo. Porém, linguagens como Erlang nos provocaram a buscar métodos melhores para lidar com paralelismo. Ele não resolve todos os problemas mas é uma direção interessante a se seguir para o futuro. Tim Bray gostaria de ver essas primitivas em Java ou Ruby – eu também.
+O assunto de Erlang surgiu forte esta semana justamente por causa dos rumores de que o Amazon Simple DB que eu expliquei num outro artigo poderia ter sido escrito em Erlang, assim como seu primo CouchDB.
+Sobre paralelismo, sabemos que o Google atacou o problema e saiu com o seu famoso sistema de MapReduce para processamento paralelo massivo. Na realidade o Google não “inventou” o Map/Reduce. Qualquer um que tenha estudado Ciência da Computação conhece esses dois conceitos simples de linguagens funcionais como Lisp. Existe inclusive uma versão de MapReduce em Ruby que recomendo estudar: chama-se Starfish e inclusive utiliza ActiveRecord o que deve tornar as coisas mais confortável para Railers. É um pouco diferente do que já tínhamos com Drb e Rinda.
+Em tempos de Multi-code, virtualização, paralelismo é o assunto quente em desenvolvimento de software. Eu particularmente espero que threads tenham seu uso diminuído drasticamente em favor de processos assíncronos.
+tags: obsolete rails
+

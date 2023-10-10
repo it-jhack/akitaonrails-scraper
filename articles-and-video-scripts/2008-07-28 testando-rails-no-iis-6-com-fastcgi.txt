@@ -1,0 +1,108 @@
+
+Alguns meses atrás o pessoal da Phusion resolveu o problema de muitos de nós ao lançar o combo Passenger + Ruby Enterprise Edition. Isso facilitou nosso processo de deployment com Apache 2. Mesmo assim ainda existem muitos cenários onde não podemos usar Passenger, o mais óbvio deles sendo no Windows.
+Pior: muitas vezes ainda é mandatório que o webserver seja IIS, porque se quer rodar aplicações ASP ou ASP.NET em paralelo, ou mesmo se quer reaproveitar a mesma infra-estrutura sem que o pessoal de operações precise ficar lidando com serviços externos como Apache. Além disso, normalmente a maioria não conhece – e não quer conhecer – o comportamento desses serviços, então, na dúvida, preferem não dar a opção.
+Deployment não é um assunto simples. Para uma introdução à arquitetura do Rails em termos de instalação, assista a palestra que dei na FISL 9. Mas sigam em frente para ver este tópico específico sobre IIS e Windows.
+
+
+O Problema
+Existem algumas maneiras de disponibilizar sua aplicação Rails com IIS:
+
+Configurar um Mongrel Cluster, colocar um “balanceador” na frente como Pen e fazer URL Rewrite a partir do IIS. Essa é a configuração mais complicada e que, portanto, a maioria do pessoal de operações detesta. Acho inclusive que dá para usar o próprio Proxy da Microsoft para fazer o equivalente ao mod_proxy_balancer do Apache 2.2, mas não explorei essa possibilidade.
+Existem algumas receitas para direcionar o IIS diretamente para um Mongrel usando um filtro ISAPI Rewrite como o da Helicon, que é pago, ou Ionic, que é grátis (ou o filtro URL Rewrite exclusivo do IIS 7). Porém, se eu não entendi errado, você mapeia um Site/Virtual Host do IIS diretamente para apenas um único processo Mongrel (a menos que faça o cenário acima e aponte para alguém no meio que faça o round-robin entre os mongrels do cluster). Ao que parece nenhum deles suporta uma diretiva parecida com o RewriteMap do mod_rewrite do Apache (que permite um pseudo-round-robin no Apache 2.0). Novamente, é mais uma solução mais complicada.
+Também dá para usar o próprio Apache 2 de Windows, daí a solução de Apache + Mongrel é parecida com a de Linux. Novamente, não resolve o problema de quando se quer obrigatoriamente usar o IIS.
+Finalmente, existe a solução mais recente de usar o filtro ISAPI de FastCGI da própria Microsoft. Acho que foi originalmente feito para IIS 7 mas ganhou um backport para IIS 6. De longe é a mais viável em termos de menos complicação e de conciliar com seu pessoal de operações, mas não é necessariamente o melhor. Este é este cenário que vamos explorar agora.
+
+Antes de mais nada, o principal requerimento: o IIS 6 do Windows XP não suporta wildcard mapping! Por isso este procedimento vale apenas para Windows 2003. Diferente de ASP ou PHP, onde todo script termina em .asp ou .php, no caso do Rails (e mesmo outros frameworks mais modernos), não existe essa ligação direta entre URL e extensão de arquivo, por isso precisamos de wildcard (*) para mapear tudo para o filtro ISAPI FastCGI. Mas parece que existe uma alternativa, o Wildcard Application Mapping for IIS 6, mas eu não testei isso por isso ainda não vou explorar essa possibilidade. Se alguém tiver suceso, não deixe de comentar.
+Entendendo o FastCGI
+Para quem não conhece o conceito, considere FastCGI uma “evolução” do CGI. CGI funciona assim:
+
+o usuário pede uma URL
+o webserver carrega o programa (CGI)
+o programa processa a requisição e devolve o resultado (normalmente um HTML)
+ao terminar, o programa é finalizado
+o webserver devolve o resultado ao usuário
+
+Os pontos (2) e (4) são cruciais: significa que a cada requisição é necessário recarregar o aplicativo inteiro! Isso é extremamente ruim e não é usado em sites públicos porque significa um desperdício sem igual. E como FastCGI é diferente disso? Vamos ver:
+
+o usuário pede uma URL
+o webserver checa se o programa já está carregado:
+  a) se estiver carregado repassa a requisição para ele;
+  b) se não estiver carregado, inicia o programa
+o programa processa a requisição e devolve o resultado (normalmente um HTML)
+ao terminar, o programa não é finalizado
+o webserver devolve o resultado ao usuário
+
+Perceberam a diferença? Uma vez que a aplicação inicia, ela permanece rodando e a requisição seguinte reusa o mesmo processo, em vez de passar pelo custoso processo de derrubar e recarregar toda vez. Existem várias configurações, por exemplo, pré-carregar mais de um processo para que seja possível atender requisições simultâneas. Para economizar memória, também configuramos para que, se o processo ficar inativo (sem uso) por um certo tempo (5 min, por padrão) ele deve ser finalizado. Daí a próxima requisição irá reinicializá-la e o ciclo continua.
+Eu disse acima que este não é necessariamente o melhor cenário. Isso porque a configuração padrão diz que os processos FastCGI devem morrer após 5 minutos de inatividade. Em uma aplicação de intranet, uma aplicação vai ficar mais de 5 minutos em inatividade, várias vezes ao dia. Daí, quando o usuário tentar acessar, vai ter que esperar alguns segundos até a aplicação subir novamente. Isso pode dar a má impressão de que “a aplicação é lenta.” O que não é necessariamente verdade: uma vez que ele sobe, tudo fica rápido. Para evitar isso, tome cuidado ao configurar o IdleTimeout que vamos ver mais adiante.
+Receita
+Resumidamente, os passos que vamos seguir são os seguintes:
+
+Ter o Ruby instalado (veja meu artigo anterior ou já baixe diretamente o instalador daqui)
+Fazer uma pequena modificação no arquivo cgi.rb do Ruby
+Instalar a extensão RoR IIS, que implementa uma biblioteca de fcgi
+Instalar a extensão FastCGI da Microsoft no IIS
+Configurar o FastCGI no IIS
+
+No fundo estou seguindo os passos do tutorial 10 steps to get Ruby on Rails running on Windows with IIS FastCGI, que é meio antigo. Existem peculiaridades no meio do caminho, por isso leia até o fim com muito cuidado.
+Vamos lá:
+Antes de mais nada, obviamente, tenha o Ruby instalado na sua máquina. Não importa qual dos instaladores. Se usar o antigo One-Click Installer (disponível no Rubyforge) ele ficará configurado no c:\ruby e já estará no PATH. Novamente: não esqueça de retirar a variável de ambiente RUBYOPT, que causa muitos problemas.
+Se usar o novo instalador (disponível aqui mesmo), seu Ruby estará em C:\Ruby18. Nesse caso não esqueça de manualmente configurar seu PATH:
+
+Depois disso altere o arquivo c:\Ruby18\lib\ruby\1.8\cgi.rb. Vá até a linha 559 e faça a seguinte alteração:
+1
+2
+3
+4
+5
+6
+
+# Linha 559, trocar:
+if options.delete("nph") or
+    (/IIS\/(\d+)/n.match(env_table['SERVER_SOFTWARE']) and $1.to_i < 5)
+
+# por isto:
+if options.delete("nph")
+
+
+Depois instale a extensão RoR IIS. Na instalação ele perguntará onde está instalado seu Ruby. Coloque c:\ruby ou c:\Ruby18 conforme for seu caso. Se você já tiver .NET Framework pré-instalado, ele dará um dialog box dizendo que não consegue sobrescrever o arquivo MSVCP7.DLL. Apenas ignore e siga em frente.
+No meu caso, por alguma razão estranha ele criou a seguinte estrutura:
+
+Nesse caso, copie tudo que estiver dentro do diretório C:\Ruby18\RubyForIIS\lib\ruby\site_ruby\1.8 e cole diretamente dentro do diretório C:\Ruby18\lib\ruby\site_ruby\1.8. Não sei se isso é um bug do installer, ou se é porque estou usando meu One-Click Installer mais novo. Mas feito isso, tudo deve funcionar.
+Configurando IIS 6
+Partindo do princípio que você já tem uma aplicação Rails (nem que seja uma de teste qualquer), que funciona normalmente rodando sobre Webrick ou Mongrel, vamos colocá-lo no IIS 6. No meu caso, minha aplicação está em c:\projects\fcgidemo, e trata-se de um simples scaffold sobre Rails 2.1.
+Antes de mais nada, preste atenção às permissões! Por padrão, os serviços de internet não tem permissão para escrever nesses diretórios, mas lembre-se que os diretórios log, tmp e – se estiver usando sqlite3 – db precisam de permissão de escrita.
+
+No IIS 6, crie um novo Web Site (não pode ser um Virtual Directory), com um nome qualquer.
+Abra as “Properties” do novo website no IIS. Na tab “Home Directory”, no “Local Path” deve apontar para o diretório public de sua aplicação (ex C:\projects\fcgidemo\public).
+
+Na mesma tab, abra “Application Configuration” apertando o botão “Configuration”. Lá, na seção “Wildcard Application Mapping”, clique o botão “Insert”. Como “Executable” coloque C:\WINDOWS\system32\inetsrv\fcgiext.dll. E importante: deixe a opção “Verify that file exists” desabilitado.
+
+Finalmente, agora será necessário editar um arquivo: c:\WINDOWS\system32\inetsrv\fcgiext.ini mais ou menos assim:
+
+[Types] 
+*:85358523=minha_app
+[minha_app] 
+ExePath=C:\Ruby18\bin\ruby.exe 
+Arguments=C:\minha_app\public\dispatch.fcgi 
+IgnoreDirectories=0 
+IgnoreExistingFiles=1
+QueueLength=1000 
+MaxInstances=4
+InstanceTimeout=30 
+InstanceMaxRequests=200 
+IdleTimeout=1800
+-
+A coisa funciona da seguinte forma: para cada website Rails que você colocar, anote o número que aparece na coluna Identifier:
+
+Este é o número que você coloca na seção [Types] do arquivo fcgiext.ini. No exemplo eu dei o nome para ela de “minh_app”, mas pode ser qualquer nome arbitrário. Mas este é o nome que abre a próxima seção, onde faremos configurações específicas do FastCGI dessa aplicação.
+Preste muita atenção nas diretivas ExePath e Arguments. O primeiro é o caminho completo para o executável Ruby e o segundo é o cominho completo para o arquivo “dispatch.fcgi” dentro da sua aplicação Rails.
+A diretiva IdleTimeout, como falei antes, se não for colocada provavelmente será 300 segundos (5 minutos). No caso eu coloquei 1800 para ser meia-hora. Esse valor deve ser refinado de acordo com o uso de sua aplicação, não é um valor definitivo.
+MaxInstances define a quantidade de processos Rails que podem estar ativos em paralelo ao mesmo tempo. Isso define a quantidade máxima de requisições simultâneas. Não confundir requisições simultâneas com usuários simultâneos. O primeiro significa que todos os usuários realizaram uma requisição ao servidor exatamente no mesmo segundo! Você pode ter dezenas de usuários simultaneamente acessando seu site mas não necessariamente fazendo requisições simultâneas (por exemplo, estão lendo um texto qualquer na sua página, e nesse momento ele não está requisitando nada). Novamente, tudo depende de um bom benchmark, mas se eu precisasse chutar diria para não ter mais do que 3 a 4 processos por CPU. Isso vale para Mongrels também.
+QueueLength trabalha em conjunto com MaxInstances. Digamos que você tenha, no mesmo segundo, 4 requisições sendo executadas simultaneamente (4 é o exemplo da configuração acima). Ou seja, a quinta requisição que vier logo em seguida, não terá nenhum processo disponível enquanto um dos 4 não retornar. Nesse caso ele esperará numa fila. O argumento QueueLength dita quantas requisições podem ficar esperando na fila. No caso, está em 1000. Por isso é importante que suas requisições não demorem muito. O ideal é que esteja na faixa de 1 a 2 segundos. Coisas de processamento pesado (enviar e-mails, editar imagens, processar arquivos de log, gerar relatórios complexos) são coisas que devem ser feitas num processo separado (Windows Task Scheduler, por exemplo).
+Se você não desabilitar o “Default Web Site” que já vem no IIS, precisará mudar o “TCP Port” no tab “Web Site”, senão haverá conflito de portas. Mude a porta de um dos dois, ou configure para que cada um atenda um domínio diferente. Aí já estamos falando de opções específicas de IIS e, se você for um administrador de IIS, obviamente já sabe como configurar essas coisas.
+O ideal é que, se precisar de muitas aplicações, configure cada web side para responder a um subdomínio. Por exemplo, se seu domínio interno for intranet.empresa.com, sua aplicação Rails poderia ficar em aplicacao.intranet.empresa.com ou algo assim.
+Com tudo isso feito, no caso deste exemplo, já posso acessar https://localhost:81/people (no meu exemplo eu criei um scaffold simples da entidade Person):
+
+Este foi apenas um pequeno exemplo. Apenas usando minha pequena aplicação demo, a performance de um único usuário – eu mesmo – me pareceu bastante boa :-) Claro, precisamos fazer mais testes. No Apache 2 antigo, o maior problema do FastCGI era deixar muitos zombies e defuntos para trás. Ainda quero ver até onde essa configuração pode chegar, mas imagino que para aplicações de intranet – não-públicas – deve ser o suficiente. Já existiam outros ISAPIs de FastCGI mas historicamente parece que não eram muito estáveis. O que usei neste exemplo é da própria Microsoft e, assume-se, que eles devam saber como fazer isso melhor, afinal só eles tem acesso ao código-fonte do IIS.
+tags: obsolete windows
+

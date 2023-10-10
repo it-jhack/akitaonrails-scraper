@@ -1,0 +1,229 @@
+
+Leitores brasileiros: cliquem aqui
+If you read my recent interview with Luis Lavena you’re aware that he shifted the efforts from Visual Studio 6 project style to MingW (think of it as gcc for Windows). Read the interview for the details. So I decided to give it a run and I will say right now that I am really impressed and I will show you why.
+
+
+So, this is something unusual for me, a Mac user, to write a Windows centric article :-) but it is kind of fun. So, first of all, find out a Windows box and download and install the following dependencies:
+
+One-Click Ruby Installer (yes, we need Ruby to build Ruby. This Dec, 2007 release, pretty old, we will fix that)
+Git for Windows
+Subversion for Windows (registration required)
+ZLib Extension and DLL (unzip it and copy it to windows\system32, as usual)
+
+The Git, Subversion and Ruby installers should go on without any problems. After that, just remember to take off the RUBYOPT default environment variable that is automatically set. It usually causes trouble.
+Now, we can clone from Luis’ Github repo:
+
+git clone git://github.com/luislavena/rubyinstaller.git
+1
+2
+3
+4
+5
+6
+
+
+Then, just get into the directory and build everything:
+
+<macro:code>
+cd rubyinstaller
+rake CHECKOUT=1
+
+
+This should download lots of other dependencies – so make sure you have a working internet connection – and start building the new Ruby using MingW. It’s a very awkward feeling, seeing lots of gcc lines scrolling up in a Windows command line. But it does work! It will download all the needed components, compile, and build everything. Now, we just need to package everything together, and if you have the .NET Redistributable Framework 2.0 and 3.5 (I’ll leave it to you to figure out where on Microsoft’s website to find them) you should be able to run it without any problems with this:
+
+rake package
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+If it exits with an error you may need to tweak one file. Fire up any text editor and open the _resources/installer/ruby_share.wxs_ around line 29 you should replace _"..\..\sandbox\ruby_mingw\share\man\man1\ruby.1"_ for _"..\..\sandbox\ruby_mingw\man\man1\ruby.1"_ (same thing sans 'share'). Then re-run the same rake package command.
+
+Now it should take a while compiling the installer and you will find "*pkg\ruby-1.8.6-p214.msi*". Finally, just double-click and install it. It should default to *C:\Ruby18* which will not conflict with your existing c:\ruby from the older One-Click Installer.
+
+Remember, now you have both c:\ruby and c:\Ruby18. If you run _ruby -v_ you should see:
+
+<macro:code>
+C:\>ruby -v
+ruby 1.8.6 (2007-09-24 patchlevel 111) [i386-mswin32]
+
+
+Patchlevel 111 is the December, 2007 older Ruby. Now, if you run:
+
+C:\>set PATH=c:\Ruby18\bin;%PATH%
+C:\>ruby -v
+ruby 1.8.6 (2008-07-17 patchlevel 279) [i386-mingw32]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+This will supersede the old ruby in the path and you will have access to the brand new Patchlevel 279 (which includes the latest security patches, by the way). Now just remember to change the PATH in your environment variables if you want to permanently replace the older Ruby.
+
+Let's have some fun now, shall we? Run the following:
+
+<macro:code>
+git clone git://github.com/acangiano/ruby-benchmark-suite.git 
+cd ruby-benchmark-suite
+ruby run.rb
+
+
+This will download Antonio Cangiano’s micro-benchmark suite. Bear in mind that no single benchmark can give you an absolute answer. Benchmarks are always relative indicators of something. In this case I will run the micro benchmark against the brand new Ruby and the older one, both on Windows, on the same machine, to show that the One-Click Installer developer team has done a remarkable job switching compilers and creating this Developer Kit.
+I still need to study this suite better, because lots of tests timed out, and I still don’t know why. But over the tests that did pass, the newest compilation seems roughly around 25% faster. In some individual runs sometimes it goes even over 2 or 3 times faster. So, I still don’t know at which amount exactly, but the new version is faster, that’s for sure.
+I am lazy, gimme the goodies :-)
+For those that don’t want to go through all this trouble, I am making available the installer I just built. But bear in mind that Luis, Gordon and other collaborators are still tweaking this version. It is not as complete as the older installer, but if you know what you are doing, this is an awesome version.
+
+“New (alpha) One-Click Installer”:
+“Micro-benchmark report for older Patchlevel 111”
+“Micro-benchmark report for newer Patchlevel 279”
+
+There’s one last thing. If you want to make this new build your primary Ruby distro, then you will need the newest RubyGems 1.2 as well. Just download the most recent zip file, unzip anywhere and, from the command line, type in:
+
+cd rubygems-1.2.0
+c:\Ruby18\bin\ruby setup.rb
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+
+Obviously, if you want it to be the default distro, change the PATH environmnt variable to point directly to c:\Ruby18
+
+<a name="one_click_installer_portugues"></a>
+h1. Tradução em Português
+
+Se você leu minha recente entrevista com "Luis Lavena":https://www.akitaonrails.com/2008/7/2/chatting-with-luis-lavena-ruby-on-windows já sabe que ele mudou os esforços do estilo de projeto Visual Studio 6 para "MingW":https://www.mingw.org/ (pense nisso como gcc para Windows). Leia a entrevista para mais detalhes. Então decidi testá-lo e devo dizer que estou bastante impressionado e vou mostrar porque.
+
+Então, isso é algo pouco comum para mim, um usuário de Mac, escrever um artigo sobre Windows :-) mas é divertido. Então, antes de mais nada, encontre uma máquina Windows, faça download e instale as seguintes dependências:
+
+* "One-Click Ruby Installer":https://rubyforge.org/frs/?group_id=167&release_id=17128 (sim, precisamos de Ruby para construir Ruby. Essa versão é velha, de Dezembro de 2007, vamos consertar isso).
+* "Git for Windows":https://code.google.com/p/msysgit/
+* "Subversion for Windows":https://www.collab.net/downloads/subversion/ (precisa se registrar)
+* "ZLib Extension and DLL":https://www.dll-files.com/dllindex/dll-files.shtml?zlib1 (descompacte e copie tudo parawindows\system32, como de costume)
+
+Os instaladores de Git, Subversion e Ruby devem seguir sem problemas. Depois disso, apenas se lembre de retirar a variável RUBYOPT que é automaticamente configurada. Isso causará problemas.
+
+Agora fazemos o clone do repositório Github do Luís:
+
+<macro:code>
+git clone git://github.com/luislavena/rubyinstaller.git
+
+
+Entre no diretório e construa tudo:
+
+cd rubyinstaller
+rake CHECKOUT=1
+1
+2
+3
+4
+5
+
+
+Isso deve fazer download de várias dependências - então garanta que você tem uma conexão à internet - e comece a construir o novo Ruby com MingW. É algo estranho, ver várias linhas de gcc rodando numa tela de linha de comando Windows. Mas funciona! Ele irá fazer download dos componentes necessários, compilar e construir tudo. Agora, apenas precisamos empacotar tudo junto, e se você tem o .NET Framework 2.0 e 3.5 instalados (deixarei que vocês se virem para descobrir onde fazer download no site da Microsoft), devem conseguir rodar sem nenhum problema com isso:
+
+<macro:code>
+rake package
+
+
+Se ele sair com um erro, você precisará editar um arquivo. Abra um editor de textos qualquer e modifique  resources/installer/ruby_share.wxs perto da linha 29, substituindo “..\..\sandbox\ruby_mingw\share\man\man1\ruby.1” por “..\..\sandbox\ruby_mingw\man\man1\ruby.1” (a mesma coisa menos ‘share’). Então re-execute a mesma tarefa acima.
+Deve levar um tempo para compilar o instalador e então você encontrará “pkg\ruby-1.8.6-p214.msi”. Finalmente, apenas dê duplo-clique e instale. Ele deve colocar por padrão em C:\Ruby18 o que não deve conflitar com seu c:\ruby existente do antigo One-Click Ruby Installer.
+Lembre-se, você agora tem ambos c:\ruby e c:\Ruby18. Se rodar ruby -v deverá ver:
+
+C:\>ruby -v
+ruby 1.8.6 (2007-09-24 patchlevel 111) [i386-mswin32]
+1
+2
+3
+4
+5
+6
+7
+
+
+Patchlevel 111 é o Ruby velho de dezembro de 2007. Agora, se rodar:
+
+<macro:code>
+C:\>set PATH=c:\Ruby18\bin;%PATH%
+C:\>ruby -v
+ruby 1.8.6 (2008-07-17 patchlevel 279) [i386-mingw32]
+
+
+Isso irá superimpor o ruby antigo no PATH e você terá acesso ao novíssimo Patchlevel 279 (que inclui os últimos consertos de segurança, aliás). Agora lembre-se de mudar a variável de ambiente PATH se quiser substituir permanentemente o antigo Ruby.
+Agora vamos nos divertir um pouco, certo? Rode o seguinte:
+
+git clone git://github.com/acangiano/ruby-benchmark-suite.git 
+cd ruby-benchmark-suite
+ruby run.rb
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+
+Isso irá fazer download da suíte de micro-benchmark do "Antonio Cangiano":https://antoniocangiano.com/. Tenha em mente que nenhum benchmark pode lhe dar uma resposta absoluta. Benchmarks são *sempre* indicadores relativos a alguma coisa. nesse caso rodarei o micro-benchmark contra ambas as versões, nova e velha, do Ruby, ambas no Windows e na mesma máquina, para mostrar que a equipe de desenvolvimento do One-Click Installer fez um trabalho incrível mudando de compiladores e criando o Developer Kit. 
+
+Eu ainda preciso estudar melhor esse suite porque muitos testes deram timeout antes de acabar, e ainda não sei porque. Mas sobre os testes que passaram, a nova compilação foi cerca de 25% mais rápida. Em alguns testes individuais algumas vezes ele foi 2 a 3 vezes mais rápido. Então, ainda não sei exatamente por quanto, mas a nova versão é definitivamente mais rápida.
+
+h3. Sou preguiçoso, me dê tudo pronto :-)
+
+Para aqueles que não estão a fim de passar por todos esses passos, estou disponibilizando o instalador que acabei de fazer. Mas tenha em mente que o Luis, Gordon e outros colaboradores ainda estão melhorando essa versão. Ele não é completo como o instalador antigo, mas se você sabe o que está fazendo, esta é uma versão incrível:
+
+* "Novo (alfa) One-Click Installer":https://s3.amazonaws.com/akitaonrails/files/ruby-1.8.6-p214.msi
+* "Relatório Micro-Benchmark do Patchlevel 111":https://s3.amazonaws.com/akitaonrails/files/report_111.txt
+* "Relatório Micro-Benchmark do Patchlevel 279":https://s3.amazonaws.com/akitaonrails/files/report_279.txt
+
+Existe mais uma última coisa. Se quiser que essa nova compilação seja seu Ruby primário, então você precisará do mais novo "RubyGems 1.2":https://rubyforge.org/frs/?group_id=126&release_id=23118 também. Faça o download do arquivo zip mais recente, descompacte e, da linha de comando, digite:
+
+<macro:code>
+cd rubygems-1.2.0
+c:\Ruby18\bin\ruby setup.rb
+
+
+Obviamente, se quiser que esse seja seu Ruby padrão, mude a variável de ambiente PATH para apontar diretamente para c\Ruby18.
+tags: obsolete windows
+

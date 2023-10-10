@@ -1,0 +1,123 @@
+
+Faz tempo desde minha última compilação de notícias e artigos, desde 19 de fevereiro. Vou compilar alguns dos links mais interessantes neste artigo. Quem quiser acompanhar tudo o que eu venho lendo, assine o feed do meu Google Reader e também do meu Delicious. Vamos às notícias:
+
+Oracle to Buy Sun – sem sombra de dúvidas, a notícia mais quente da semana é a aquisição da Sun pela Oracle, pela bagatela de US$ 7.4 bilhões e comprometimento de investimentos pelo próximos anos. A Sun estava sangrando faz tempo, com metas de demissão por quarter. A Oracle é uma das maiores empresas de TI do mundo, na mesma liga de uma Microsoft e SAP. Ela já havia adquirido a BEA, Siebel, J.D. Edward, Peoplesoft e agora coloca a Sun no mesmo guarda-chuva. Existem sim, aquisições boas, mas no geral eu não fico muito contente. Até a semana passada haviam os rumores que a IBM fosse levar a Sun e ninguém havia previsto a Oracle na jogada. Fica em aberto o que vai acontecer com os projetos open source como MySQL, Solaris e como fica o andamento com o Java, o andamento do OpenJDK e tudo mais. Vamos segurar o julgamento até a situação estabilizar e a Oracle começar a demonstrar alguma coisa. Mas tem aquela outra história: se você fosse um vendedor da Oracle, o que você vende? O Oracle CRM ou o Siebel? O Oracle Applications ou o JDE? O Oracle Application Server ou o Glassfish? O JDeveloper ou o NetBeans? O Oracle Database ou o MySQL? Vêem o problema da falta de foco?
+
+
+
+
+RubyGems 1.3.2 – apenas para notificar que o Eric Hodel lançou uma atualização que corrige alguns bugs das versões anteriores. Faça “gem update —system” e pronto.
+
+
+Debugging Rails 2.3.2 Apps with Rack::Bug – este plugin habilita um toolbar que aparece no browser, por cima da sua aplicação, em modo de desenvolvimento e trás várias informações sobre a action que acabou de executar. Inspirado no toolbar do Django é uma ótima ferramenta para ajudar a debugar alguns problemas.
+
+
+Book of Ruby Completed: 425 pages, 300+ Sample Programs, FREE! – mais um livro de Ruby – de graça – para ajudá-lo a aprender a linguagen. Feito pelo pessoal da SapphireSteel, a mesma por trás do plugin Ruby in Steel, que coloca suporte de Ruby no Visual Studio.
+
+
+GitHub API, take two – o pessoal do GitHub está expandindo seu serviço como uma plataforma que você pode integrar. Além de lançar um conjunto de APIs, eles também lançaram um site para desenvolvedores explicando como tirar proveito disso.
+
+
+GitHub Issue Tracker! – outra novidade no Github é o novo sistema de tickets, que você pode usar como bug tracker, inclusive ligando commits a tickets via palavras-chave nos commits. Será muito útil para muitos projetos e um concorrente ao Lighthouse.
+
+
+Using Rails Metal to decouple upload from your Rails app – na nova versão do Rails, a 2.3, temos o suporte de Rails Metal, para gerar middlewares super-leves. Um exemplo de aplicação é fazer uma aplicação Rails Metal lidar com upload em vez da aplicação Rails.
+
+
+SAP Mentor Webinar: Introduction to Blue Ruby – já tinha noticiado sobre o Blue Ruby, o projeto experimental de Ruby rodando na ABAP VM da SAP. Quem estiver interessado, esse webinar deve ser interessante, uma conversa com os autores do projeto.
+
+
+YAML Gotchas – YAML (Yet Another Markup Language) é um formato muito usado por rubistas e eu particularmente prefiro em vez de XML em muitas ocasiões. Mas ele não é necessariamente simples o tempo todo, existem muitos truques – especialmente em conversão de tipos de dados – que vale a pena saber. Esse artigo mostra muito desses truques.
+
+
+Location-based search with Sphinx and acts_as_geocodable – Sphinx é um dos melhores search engines, e um dos mais recomendados para você integrar à sua aplicação Rails. E ele também suporta pesquisa usando geo location. Você pode fazer pesquisas do tipo “encontre todos os meus amigos a 1 km de mim”. Veja nesse artigo como começar.
+
+
+Building a Queue-Backed Feed Reader, Part 1 – esse artigo é bem interessante para aprender, primeiro, como consumir feeds usando QFeedReader. Depois entender como fazer isso de forma escalável e assíncrona usando o DJ, do pessoal do Shopify. Acho que é um bom exercício para se fazer.
+
+
+JRuby Moves to Git – recentemente o projeto JRuby e muitos outros projetos relacionados foram movidos de Subversion para Git dentro do site Kenai, da Sun. Uma excelente mudança que deve aumentar a visibilidade e facilitar as interações e colaborações.
+
+
+Clone TinyURL in 40 lines of Ruby code – numa era de Twitter, acho que todos sabem para que serve um serviço como o TinyURL. Este artigo é outro ótimo exercício de como criar uma aplicação pequena, real, usando Sinatra.
+
+
+Redcar: A Programmer’s Text Editor Written in Ruby – Mais um possível bom editor de Ruby, e desta vez parcialmente também feito em Ruby. Esse projeto é promissor e também um ótimo exemplo de como criar aplicações desktop com Ruby usando GTK como toolkit gráfico.
+
+
+Saiu o Novo Selenium-on-Rails – para quem gosta de fazer testes de aceitação com Selenium, vai gostar dessa atualização, agora suportando Rails 2.3.
+
+
+Run Code Run: Hosted Continuous Integration – Integração Contínua mais e mais deixa de ser algo opcional e é considerado vital em projetos ágeis. Significa continuamente um sistema automático baixar a versão mais recente do código do repositório, rodar os testes e notificar os desenvolvedores quando tiver erros. Agora este novo serviço faz isso para projetos no Github. Um serviço muito interessante pois agora você pode criar seus projetos no Github Private, usar o próprio Issue Tracker do Github ou Lighthouse para integrar um fluxo de trabalho de correção de bugs e agora inclusive ter um sistema de integração contínua embutido. Toda a infra-estrutura que você precisa para projetos ágeis.
+
+
+All That You Might Require – neste artigo o Rick De Natale explica como o ‘require’ funciona no Ruby. Também fala de como o Rails trata disso e como funciona o ‘autoload’. Bom entender.
+
+
+Rails Template: Create a Twitter Application in Seconds – com o Twitter suportando autenticação e autorização via OAuth, veja neste exemplo como integrar sua aplicação.
+
+
+Controller Inheritance – se você está iniciando no Rails talvez não tenha notado que pode fazer controllers herdarem de outros controllers. Isso lhe dá várias possibilidades para simplificar seu código. Mas existem algumas coisas importantes para entender, como o Koziarski explica nesse artigo.
+
+
+RubyMine 1.0 Beta Released: A Solid, IntelliJ Based Ruby and Rails IDE – quem ainda está atrás de alguma IDE e não gosta nem de Eclipse, nem Netbeans, talvez ache este RubyMine interessante. Se você gosta de IntelliJ provavelmente vai gostar. Eu particularmente continuo achando desnecessário.
+
+
+How JRuby Makes Ruby Fast – neste longo artigo, Charles Nutter explica todos os detalhes sórdidos de como a JVM otimiza código Ruby. Muito instrutivo e também demonstra que não se trata de algo trivial, muito pelo contrário.
+
+
+Upgrading from Rails 1.2.3 to Rails 2.3.2 – nesse artigo o Peter Marklund dá algumas dicas de como migrar uma aplicação Rails antiga para a nova versão. Estas são apenas algumas dicas, existe muito mais para tomar cuidado. O principal: sua aplicação tem boa cobertura de testes? Senão vai ser bem difícil.
+
+
+Harsh: Another Rails Syntax Highlighter – se você precisa fazer syntax highlight de código na sua view, este plugin é uma boa opção, especialmente porque também suporta HAML. Por baixo usa Oniguruma e UltraViolet, também ótimas escolhas.
+
+
+Ruby Algorithms: Sorting, Trie & Heaps – como sempre o blog do Ilya Grigorik trás os assuntos mais avançados de Ruby e desta vez ele analisa algumas estruturas de dados muito interessantes. Boa pedida para os estudantes de ciências da computação.
+
+
+Using Git Submodules for Shared Rails Components – as versões mais recentes de Git suportam a idéia de ‘sub-módulos’. Há quem adore, há quem odeie. A idéia é ter repositórios Git embutidos em outro. Feito da forma correta pode ajudar, por exemplo, a ter seu projeto num repositório ao mesmo tempo que ele depende de plugins que estão em outro. Veja aqui como fazer isso.
+
+
+Building a Search Engine in 200ish Lines of Ruby – mais um exemplo minimalista de aplicação em Ruby. Desta vez uma engine de pesquisa que usa por baixo Hpricot, DataMapper e Sinatra. A idéia é apenas explicar o funcionamento básico de uma engine dessas, mas não de ser uma engine robusta ou mesmo performática. Serve como exercício teórico e para explicar que engines de busca não são coisas triviais como muita gente pensa.
+
+
+50+ Ruby-related Blogs to Read – o Satish Talim, do RubyLearning.org, organizou uma lista de mais de 50 blogs de rubistas que vale a pena acompanhar. Para quem gosta de saber das últimas novidades, essa é uma boa fonte para começar.
+
+
+Blogo – How One Team Built a Commercial Mac OS X App with Ruby – o Ruby está acelerando no mundo Mac. O Blogo é uma aplicação desktop, com o mesmo look & feel de qualquer outra aplicação nativa – já que usa o mesmo framework Cocoa por baixo – e foi desenvolvido usando MacRuby e HotCocoa. Veja como e se surpreenda. Num futuro próximo Ruby talvez se torne a linguagem de escolha para criar aplicações desktop, pelo menos para ser a linguagem que junta todos os componentes do framework em uma aplicação.
+
+
+Better Module Organization – o Yehuda Katz, como todos sabem, é um dos principais desenvolvedores do merge entre o Rails e o Merb. Recentemente ele andou blogando sobre melhores práticas para programar em Ruby. Uma delas é diminuir a quantidade de monkey-patches por técnicas mais “limpas”. Neste post ele fala sobre aproveitar melhor a mecânica de inclusão de módulos. Vale não só para o Rails mas qualquer projeto em Ruby.
+
+
+Another Dispatch: AbstractController – em outro artigo do Yehuda ele fala sobre a refatoração das funcionalidades do ActionController numa nova classe, o ActionDispatch, que deve servir para ser o elo comum entre o ActionController e o ActionMailer.
+
+
+Alias_method_chain In Models – neste post o Yehuda discute sobre usos não bons de alias_method_chain em models, coisas que poderiam ser solucionadas via recursos normais de OO como herança e super.
+
+
+A Walk Through the Ruby Object Model – neste excelente artigo o Vidar Hokstad discorre sobre os detalhes do sistema de objetos do Ruby em baixo nível, em como a VM organizar a hierarquia de objetos, como as mensagens trafegam entre objetos. Bom para ter uma base de como as coisas funcionam.
+
+
+ActiveRecord Optimization with Scrooge – outro artigo avançado do Ilya Grigorik falando sobre otimizações de ActiveRecord. Neste caso ele fala sobre o plugin Scrooge – eu imagino que esse nome seja devido à natureza “avarenta” do que ele faz. Quando usamos um finder, sem customização, ele sempre tráz todas as colunas da tabela. Esse plugin analiza o que realmente se usa no model e faz a query trazendo apenas as colunas que serão usadas, economizando um pouco no tráfego de dados.
+
+
+20 articles on Cucumber and a free beverage recipe! – sem dúvida Cucumber é o assunto mais quente no mundo de desenvolvimento orientado a testes e nesse post o Robby Russell faz um apanhado geral de diversos outros sites e blogs ensinando a usar o Cucumber.
+
+
+Rails template for Google app engine – como eu já havia noticiado, o Google agora suporta Java no App Engine e, por consequência JRuby e JRuby on Rails. Neste post o David Cavalera nos dá um Rails template para facilitar a criação de um esqueleto de Rails já preparado segundo as dicas do Ola Bini para deployment no App Engine. Imagino que ainda seja um pouco crú mas é um bom projeto para se colaborar e evoluir.
+
+
+performance with mysql and paginating large tables – é sempre bom não usar plugins ou ORMs sem entender o que acontece por baixo dos panos no nível do SQL. Nesse caso o Tom Fakes discute sobre como determinadas circunstâncias de uso de paginação podem ser bastante caros no MySQL.
+
+
+Show off your Mockups – um assunto que tem diversas ramificações é a integração de trabalho entre desenvolvedores e web designers que não programam nada e como fazer ambos trabalhar no mesmo projeto Rails. Esta é uma alternativa para parte do problema de colocar mockups (protótipos) dentro da hierarquia do Rails de forma a tentar facilitar um pouco o trabalho. Vale a pena analizar e ver se encaixa na sua equipe.
+
+
+Ruby 1.9’s String – como todos já deveriam saber, no Ruby 1.9 uma mudança grande é que toda String tem encoding. Neste artigo o James Edward Grey II explica o que isso significa e como manipular o encoding e o conteúdo de strings.
+
+
+Misconceptions about Unicode and UTF-8/16/32 – e falando em strings do Ruby 1.9, este artigo eu achei particularmente interessante porque explica que a maioria de nós não entendemos unicode corretamente. Por exemplo, quando vemos UTF-16 pensamos que se trata de strings onde cada caracter é representado por 16 bits (2 bytes). Este artigo explica porque isso está errado e, por exemplo, que UTF-8 pode ter caracteres representados por 2 até 4 bytes. Leia com atenção.
+
+tags: obsolete
+

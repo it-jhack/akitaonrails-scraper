@@ -1,0 +1,43 @@
+
+
+
+
+Desde minha antiga instalação do blog com o Typo, até agora com o Mephisto, uma coisa que começou a me perturbar foi a quantidade crescente de comentários Spam que apareceram no meu blog.
+No começo não havia nada, tudo limpo, apenas o comentário dos leitores do blog. De repente, começou a aparecer as boas e velhas mensagens do tipo enlarge your p&nis e similares. Foi quando eu criei uma conta no Wordpress.com para pegar uma chave Akismet. Para quem não sabe, Akismet é um serviço de filtro contra spam. Tanto o Typo quanto o Mephisto (no mundo Rails) e outros produtos como Wordpress (uma excelente plataforma, diga-se de passagem) já suportam o Akismet.
+Todo novo comentário no blog passou a ser filtrado por esse serviço. Isso cortou quase todo o Spam. Por um tempo, foi bom. Até que outra vez começou a aparecer mais e mais comentários Spam. Não tem jeito: para cada nova técnica anti-spam, os malditos script-kiddies saem com uma maneira de burlar. E eis que começa a aparecer vários spams.
+No meu novo Mephisto, ele próprio, na dúvida, não publica a mensagem mas eu fico com uma lista enorme para apagar. Algumas mensagens começaram a vazar para a homepage. Foi quando resolvi aumentar um pouco mais a proteção. Uma das formas de fazer isso é colocando um Captcha que são aquelas imagens distorcidas que – teoricamente – só humanos conseguem distinguir. Infelizmente alguns Spambots começaram a burlar alguns tipos de captchas. Outro tipo são perguntas, como operações matemáticas simples, que você precisa responder.
+Eu particularmente não gosto de nenhum desses esquemas. O captcha em forma de imagem em especial porque você gasta tempo de processamento para gerar uma imagem aleatória. E as duas eu não gosto porque é algo a mais que eu, como usuário, sou obrigado a digitar sem querer. Eu detesto digitar coisas que não preciso. Colocar um cadastro, pelo mesmo motivo, está fora de cogitação: eu detesto ter que me cadastrar para comentar, provavelmente vocês também não iam gostar.
+Foi quando eu li este post. A idéia é genial pela simplicidade. Ele chama isso de captcha-negativo ou captcha-inverso. Em vez de exigir que você digite alguma coisa, ele espera que você não digite alguma coisa. E para enganar o Spambot, eu escolhi o campo de e-mail (oops, espero que nenhum de vocês lendo seja um desses script-kiddies-abortos-da-natureza). Vocês devem ter notado que o campo de e-mail “sumiu” do formulário de comentários. Na verdade ele ainda está lá, mas com um CSS para deixá-lo escondido.
+Só que um Spambot não tem “olhos”, ele vai puxar a página, analisar, notar que existe um formulário de comentário, vai reconhecer os campos e preencher todos. Aí ele cai na armadilha: pois ele vai “enxergar” o campo de e-mail e vai preencher. Nesse caso o comentário será rejeitado. No caso do Mephisto, comecei modificando o mephisto_controller.rb:
+1
+2
+3
+4
+
+  (...)
+  @comment.save! if @comment.author_email.blank?
+  (...)
+end
+
+
+E depois o formulário, no caso particular do meu tema, eu modifiquei o template single.liquid:
+1
+2
+3
+4
+
+</dl>
+<div id="easter-egg">
+<label>Email:</label>{{ form.email }}
+</div>
+
+
+E, finalmente, acrescentei no stylesheet do meu tema:
+
+css#easter-egg { display: none; }—-
+“Mas agora como eu vou divulgar meu e-mail?” Vocês podem perguntar. Pensando no assunto foi que me caiu outra ficha: “para quê vocês querem divulgar seus e-mails?” Se for seu e-mail de verdade isso é péssimo, porque existem diversos tipos de Crawlers que vasculham diversos sites justamente em procura de e-mails para criar listas de Spam. Se seu e-mail aparece publicamente num site, ele é passível de ser registrado em alguma lista de bot (nunca se perguntou porque você recebe tanto Spam mesmo sem se registrar em sites capciosos?). Por outro lado, o site poderia exigir o e-mail porque ele quer 1) estudo de marketing (?); 2) fazer uma mala-direta interna; 3) vender seus e-mails para listas de spams (mais provável). Como eu não estou interessado em nenhuma dessas coisas, chego à conclusão que meu blog não precisa ficar mostrando seus e-mails publicamente.
+Se quiserem divulgar seus contatos, usem o campo de “Site” e publiquem seus blogs. Se quiserem falar comigo, meu e-mail já é bem público (eu recebe centenas de spams, mas o Gmail dá conta). Se quiserem falar uns com os outros, agora tenho meu Google Groups que, para todos os efeitos, é um pouco mais seguro.
+O resultado: desde que implementei este truque simples não recebi mais nenhum comentário spam. Claro que essa solução é simples demais. Alguém pode criar bots que não preenchem alguns campos aleatoriamente, ou podem criar um bot que analise o CSS e descubra o bloco escondido, mas até agora, parece que estou conseguindo barrar esses bots.
+Esses script-kiddies desperdiçam minha banda, desperdiçam o tempo de processamento do meu site, desperdiçam meu próprio tempo em ficar brigando e volta. São gente incapacitada de alguma maneira, gente anti-social, gente com claro degeneração psiquiátrica, gente que não é gente, definições certas de “abortos da natureza”. Felizmente essa espécie de parasita não tem capacidade de ‘reprodução’, portanto não deixam descendentes. Amém ao Darwin!
+tags: obsolete
+

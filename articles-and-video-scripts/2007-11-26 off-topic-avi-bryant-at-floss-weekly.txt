@@ -1,0 +1,16 @@
+
+Fiquei surpreso ao ver um nome já discutido aqui no meu blog em um dos podcasts que mais gosto.
+Avi Bryant foi o convidado no último episódio do excelente podcast FLOSS Weekly. Obviamente o assunto foi Seaside, o incrível framework que provavelmente tem a proposta mais arrojada de desenvolvimento em termos de frameworks web. Talvez isso ajude Seaside a ter um pouco mais de visibilidade.
+Os hosts são Randal Schwartz que é um guru Perl, e Leo Laporte que comanda uma produtora profissional de podcasts em áudio e video, a TWiT.tv. Depois que comecei a consumir o conteúdo dos programas do TWiT.tv fiquei muito exigente quanto à qualidade dos podcasts que ouço. E não só o TWiT quanto a Revision 3, C|Net e outras produtoras tem qualidade de rádio e TV profissional. Qualidade não apenas no calibre do equipamento que utilizam mas dos grandes nomes que participam dessas produções. Portanto recomendo todos os Top podcasts na lista do iTunes Store.
+
+
+Nos podcasts anteriores, por acaso, o entrevistado foi Jay Shirley, um evangelista de outro framework com enfoque moderno: Catalyst, que é feito em Perl. Para os programadores que não pretendem largar Perl tão cedo, este é o framework mais recomendado.
+Foi também no FLOSS Weekly onde ouvi Junio Hamano evangelizando GIT, e daí veio minha vontade de usá-lo.
+Um dos meus episódios favoritos é Eben Moglen. O que? Você se diz evangelista de open source e não conhece Eben? Ele é uma das cabeças por trás do GPL. E nesse episódio ele fala sobre o GPL v3.
+O pessoal de PHP, Python e .NET não ficaram de fora já que Rasmus Lerdorf, Guido van Rossum e Miguel de Icaza também foram entrevistados.
+Finalmente, se você puder ouvir apenas 2 episódios, garanta que sejam de Larry Augustin ou de Jimmy Walles. Jimmy não precisa de apresentações, afinal todo mundo sabe que ele é o fundador da venerável Wikipedia. Agora poucos conhecem Larry, o que é uma vergonha. E os linuxeiros deveriam agradecê-lo já que ele foi um dos responsáveis pelo atual estágio mais profissional do mundo Linux. Duas pessoas empreendedoras e de visão.
+O FLOSS Weekly começou originalmente com Leo Laporte e Chris DiBona que é Open Source Program Manager no Google. Depois o programa deu uma pausa e retornou com Randall. Apesar do nome “weekly” atualmente o programa é mais “monthly” mas mesmo assim vale a pena conferir.
+Outros programas do TWiT que eu gosto são o sempre prolífico mas informativo Steve Gibson no Security Now!. A mesa redonda do this WEEK in TECH ou do MacBreak Weekly são sempre muito agradáveis e engraçadas. Comentaristas bem informados, conversas dinâmicas, definitivamente um pessoal que compensa ouvir.
+Eu não uso mais Windows, adoro falar mal como esporte, mas não sou rebelde sem causa – é preciso perder neurônios para isso. E entre podcasts de Open Source, de Mac, Leo Laporte também tem um ótimo dedicado a Windows e assuntos Microsoft como Zune e XBox no Windows Weekly com Paul Thurrott, do Super Site for Windows e colunista no Windows IT Pro.
+tags: obsolete
+

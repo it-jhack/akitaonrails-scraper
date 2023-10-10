@@ -1,0 +1,28 @@
+
+Eu e o Carlos Brando estávamos conversando e chegamos à conclusão que passou da hora de traduzirmos o Why’s (Poignant) Guide to Ruby.
+
+O Poignant Guide é um livro obrigatório para todo Rubista. O Programming Ruby é bom, o The Ruby Way é excelente, mas nada demonstra o espírito Rubista do que o Poignant Guide (e agora todo mundo vai entender o que é Chunky Bacon :-)
+A primeira geração de Rubistas (incluindo o Why) começou com o livro do Dave Thomas, mas a segunda geração (como o Geoffrey) já começou com o Poignant Guide :-)
+
+
+O Carlos já baixou os originais do repositório oficial do Why e colocou à disposição de todos via Github.
+A idéia é a seguinte:
+
+Todo colaborador precisa ter uma conta no Github
+Quem quiser colaborar já pode fazer um “Fork” do repositório do Carlos
+Toda vez que tiver algum material pronto, fará um “Pull Request” para que ele seja avaliado e incorporado ao repositório oficial
+Usar o Google Groups primeiro para dizer o que está traduzindo e evitar que duas pessoas comecem a traduzir a mesma coisa ao mesmo tempo.
+Quando alguém pedir para traduzir da primeira vez, eu adiciono na planilha compartilhada via Google Docs. Minha experiência nessas traduções é que sem isso eventualmente alguém vai passar por cima do outro por acidente, o que não é bom.
+Por favor, faça o texto de tal maneira que não precise de revisão! O que eu vi nas outras traduções é muita gente com boa vontade mas que infelizmente a tradução pecava bastante e isso exigia muito retrabalho depois. Então eu peço encarecidamente para quem não estiver seguro, tentar ajudar de outras maneiras, por exemplo, em vez de traduzir, para ajudar para revisar.
+
+O livro é um script Ruby que pega um arquivo poignant.yml e gera o HTML sobre ele. Como era um único arquivo yaml, isso tornaria as coisas muito difíceis. Por isso eu quebrei tudo em 86 pequenas partes para facilitar nosso trabalho. Daí, para gerar o livro faça assim:
+
+rake merge_pt
+rake pt
+-
+
+CUIDADO: Como o livro é gerado por script, os trechos de yaml tem uma identação que NÃO pode ser modificada!! MUITO cuidado com isso!! Apenas mexam no conteúdo texto, sem mudar um único markup, identação, linhas em branco, etc.
+Vou avisar novamente: o Why é um artista, e como tal tem uma série de idiossincracias. Tem muita gíria. Tem muita expressão que não faz sentido em português. Tem muita coisa que exige interpretação. A idéia é manter ao máximo possível o espírito to Why. Não queremos deixar o Poignant Guide “quadrado” e sim manter seu estilo. Mais um motivo que alguém que entenda bem de inglês e sua cultura é mais indicado.
+Por outro lado, quando a tradução ficar pronta, teremos a obra-prima da literatura Ruby finalmente acessível para o deleite de toda a comunidade brasileira :-) Vamos lá pessoal, mão na massa!
+tags: obsolete why
+

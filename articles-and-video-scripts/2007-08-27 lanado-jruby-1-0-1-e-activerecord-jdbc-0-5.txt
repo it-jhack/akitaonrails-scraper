@@ -1,0 +1,66 @@
+
+JRuby continua evoluindo, desta vez são apenas pequenas correções no processamento de multiparts, alguns problemas de sockets que afetavam as bibliotecas net/*, timeout de rede de grandes pacotes e outros 28 bugs. Vejam o anúncio com os detalhes, aqui, ou já baixem a nova versão aqui.
+Ao mesmo tempo, o ActiveRecord-JDBC também foi atualizado. Arun Gupta, do blog Miles to Go …, vem blogando mais detalhes sobre JRuby, Glassfish e tem um ótimo screencast. Uma das coisas que esta nova versão faz é simplificar o database.yml. Antes, para utilizar jdbc, precisava configurar deste jeito:
+
+
+
+1
+2
+3
+4
+5
+6
+
+production:
+  adapter: jdbc
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/helloworld_development
+  username: root
+  password:
+
+
+Agora, dá para fazer simplesmente assim:
+1
+2
+3
+4
+5
+6
+
+production:
+  adapter: mysql
+  database: HelloWorld_production
+  username: root
+  password:
+  host: localhost
+
+
+Para quem já tem projetos rodando sob JRuby, basta atualizar o plugin para ganhar a nova versão:
+1
+
+jruby script/plugin install activerecord-jdbc
+
+
+Mas o filé mignon deve chegar em Novembro, antes da RubyConf, como Charles Nutter postou em seu roadmap. Dentre as principais novidades que eles tentarão implementar estão:
+
+compilador completo
+compilação AOT funcionando com jrubyc
+stdlib todo precompilado
+precompilação no gem install
+virtual filesystem-dentro-da-JVM (talvez) ou rubygems hackeado que pode rodar fora de um arquivo
+melhorias de performance que podem ser quantificadas … integração java, execução, redução de memória
+execução de bytecode yarv e compilação (talvez)
+compartilhamento AST como uma opção (compartilhamento através de runtimes) … precisa explorar compilação AOT e seu efeito (positivo?) na memória também
+real brutalização de threading, classes principais multithread-safe testável (talvez, precisa de testes pesados em sistemas com muitos-cores)
+rubificação da API Java, talvez com require ‘javax.swing’ e assim por diante
+lançamento na RubyConf
+
+Eles tem 2 meses para atingir estes objetivos, espero que consigam.
+E em paralelo a isso, a IDE NetBeans 6.0 chegou ao Milestone 10 (M10) no começo de julho e está ficando cada vez melhor. Recomendo que os interessados acompanhem o blog do seu principal desenvolvedor, Tor Norbye. NetBeans está caminhando para se tornar, provavelmente, a IDE mais importante para um suíte completa de desenvolvimento Ruby/JRuby e Rails.
+Performance
+A performance do JRuby 1.0 ainda não é nada surpreendente. Em alguns pontos ele é mais lento, em outros é mais rápido que o MRI, na média eles ficam emparelhados (o que, na realidade, já é bom o suficiente). Rodando processos pequenos, um mísero Hello World, o JRuby provavelmente ficará muito para trás, principalmente por causa do tempo de start da JVM. Era o mesmo problema quando comparávamos um programa em Java com outro em Delphi. A coisa mudou justamente quando começamos a falar de Java no servidor (J2EE, etc.) Porque aí o tempo de start acontecia uma vez só e daí por diante, técnicas como JIT e AOT davam uma turbinada, fazendo alguns processos rodar mais rápido do que equivalentes escritos em C. Com o JRuby é a mesma coisa: se você tiver uma aplicação grande em Rails, principalmente do tipo que já tem carga suficiente para justificar máquinas grandes, aí o ganho em escalabilidade será mais notável. Rodando no seu desktop, com quase nenhum acesso em paralelo, o MRI vai ‘parecer’ mais rápido.
+Em julho foi publicada uma experiência comparando a performance do pacote ActiveMessaging em MRI e do Java JMS com JRuby. É uma solução de envio de mensagens assíncronas, com um servidor ActiveMQ na outra ponta. Os resultados foram o seguinte, para 100 mensagens:
+
+Independente do tempo real, o interessante é o comportamento: o tempo de espera da implementação do ActiveMessaging no MRI, cresce linearmente, ou seja, quanto mais se aumenta o número de mensagens, mais aumenta o tempo. Já a implementação do JMS, começa mais lenta que o MRI para poucas mensagens, sobe um pouco para mais mensagens e a partir daí seu tempo não cresce apenas logaritmicamente. Ou seja, o JMS provavelmente tem complexidade O(log n), enquanto a versão do MRI tem complexidade O(n). Talvez seja só uma questão da implementação do ActiveMessaging não ser adequada, ou pode ser uma questão da versão JMS utilizar melhor processamento paralelo de threads, mas na prática, dentre as soluções disponíveis para este caso em específico, o JMS se saiu melhor. Ainda é preciso investigar mais e, claro, este resultado sozinho não serve para generalizar em torno de todo o pacote.
+tags: obsolete jruby
+

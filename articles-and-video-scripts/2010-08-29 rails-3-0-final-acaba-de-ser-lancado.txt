@@ -1,0 +1,182 @@
+
+O Rails 3 foi liberado há 1 minuto! Versão 3.0 FINAL! O DHH acabou de fazer o anúncio oficial.
+Foram quase 2 anos no forno, desde o anúncio da junção dos projetos Merb e Rails no dia 23 de dezembro de 2008.
+Muita coisa mudou desde então. O Yehuda Katz liderou esse projeto de ponta a ponta e contou com a ajuda de diversos excelentes rubistas como nossos amigos latino americanos Emilio Tagua, Santiago Pastorino e o brasileiro José Valim. Parabéns a todos os envolvidos por este grande projeto!
+
+Para instalar, claro, agora basta fazer o de sempre:
+1
+
+gem install rails
+
+
+
+
+
+Indo direto ao ponto, se você ainda está aprendendo o caminho do Rails 2.3, superficialmente não mudou muita coisa. O que você vai ver logo de imediato que está diferente são os scripts de linha de comando. Por exemplo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+# criando novo projeto em Rails 2.3
+rails meu_projeto
+
+# criando novo projeto em Rails 3
+rails new meu_projeto
+
+# fazendo scaffold em Rails 2.3
+script/generate scaffold Post title:string body:text
+
+# fazendo scaffold em Rails 3
+rails g scaffold Post title:stirng body:text
+
+# abrindo o console em Rails 2.3
+script/console
+
+# abrindo o console em Rails 3
+rails c
+
+# subindo servidor em Rails 2.3
+script/server
+
+# subindo servidor em Rails 3
+rails s
+
+
+Além disso, você deve estar acostumado a ver as configurações do projeto em config/environment.rb mas agora isso está em config/application.rb. Tirando isso, a estrutura do projeto em si é basicamente a mesma, com os mesmos diretórios. Por padrão os templates HTML ainda são em ERB, o mapeador objeto-relacional é o ActiveRecord.
+As mudanças mais drásticas de API estão no dispatcher de rotas que você configura no mesmo arquivo config/routes.rb. Os comentários lá devem ser suficientes para você entender o que mudou e as configurações antigas de rotas devem continuar funcionando.
+No caso do ActiveRecord agora temos a dependência do componente Arel que permite códigos como este:
+1
+2
+
+User.where(users[:name].eq('amy'))
+# => SELECT * FROM users WHERE users.name = 'amy'
+
+
+Mas a API do Rails 2.3, na maioria, ainda deve funcionar. Então o equivalente ao código acima seria:
+1
+
+User.all(:conditions => { :name => 'amy' })
+
+
+Outra mudança drástica é um novo módulo de ActionMailer e, nesse caso, a API antiga não deve ser mais compatível.
+Felizmente deu tempo da comunidade preparar dezenas de materiais, screencasts, tutoriais e documentação suficiente para qualquer um começar um projeto em Rails 3. A melhor forma de se exercitar, talvez seja pegar uma aplicação em Rails 2.3 e fazer o upgrade para Rails 3 e a melhor forma de fazer isso é comprar o material do Jeremy McNally, o Rails 3 Upgrade Handbook, que acompanha um PDF detalhado e a documentação para usar sua ferramenta open source rails_upgrade, que vai ajudá-lo a encontrar o que precisa ser modificado no seu projeto.
+Se quiser apresentar o Rails 3 para alguém, a melhor de fazê-lo é usar os screencasts oficiais produzidos pela EnvyLabs, de Gregg Pollack, que foram apresentados na RailsConf deste ano.
+O Ryan Bates também fez uma série em 3 partes para atualizar sua aplicação de Rails 2.3 para Rails 3:
+
+Parte 1
+Parte 2
+Parte 3
+
+Fora isso, o Ryan também fez screencasts apresentando rapidamente alguns dos novos componentes do Rails 3, como:
+
+Controllers in Rails 3
+Rack in Rails 3
+Subdomains in Rails 3
+ActiveModel
+Making Generators in Rails 3
+Generators in Rails 3
+Advanced Queries in Rails 3
+Validations in Rails 3
+ERB Blocks in Rails 3
+ActionMailer in Rails 3
+Unobstrusive Javascript
+XSS Protection in Rails 3
+Routing in Rails 3
+Active Record Queries in Rails 3
+Bundler
+Rails 3 Beta and RVM
+
+Fora isso a Engine Yard montou um site especial só para o Rails e, chamado Rails Dispatch que já colocou screencasts e material sobre:
+
+How Rails 3 Enables More Choices
+Customizing Rails Apps with Plugins
+Upgrading a Rails 2 App to Rails 3
+The Powerful New Rails Router
+Secure by Default: Rails 3 Security Strategy
+ActiveRelation: ActiveRecord Gets a Facelift
+A Whole New ActionMailer
+Library Management Gets an Update in Rails 3
+How Rails 3 Makes Your Life Better
+
+Outro componente importante do Rails 3 é sua dependência com o Bundler, o sistema de gerenciamento de RubyGems para projetos. Com ele você consegue ter um repositório isolado de gems que não atrapalham outros projetos. Além disso ele deve tornar mais fácil instalar uma aplicação em servidor de produção, com todas as dependências corretas. Pode ser um pouco estranho no começo mas vale a pena entender como funciona. O site oficial tem documentação suficiente para entender seu funcionamento.
+Além disso também temos o Rails Guides com toda a documentação em forma de Guias para facilitar seu aprendizado. Mais do que uma lista de APIs, sintaxes, o importante é entender em quais contextos usar o que. O Xavier Noria tem feito um excelente trabalho em dar manutenção em todo esse material. Espero que mais pessoas comecem a contribuir. E, claro, precisamos de uma lista de referência das APIs também e o Rails Searchable API Doc e o APIDock tem feito um excelente trabalho em tornar a consulta muito fácil para nós.
+Agora, seus maiores problemas serão em checar se as rubygems ou plugins que você depende já estão compatíveis com Rails 3. Para isso, vá ao site Rails Plugins para averiguar. Se você é desenvolvedor de gems ou plugins, não deixe de atualizar essas informações lá.
+Além de excelente líder técnico o Yehuda Katz também documentou muita coisa em seu próprio blog. Recomendo ler todos os artigos dele para entender muito da parte interna do Rails 3, por exemplo, estes artigos:
+
+Encodings, Unabridged
+The How and Why of Bundler Groups
+Ruby 1.9 Encodings: A Primer and the Solution for Rails
+Named Gem Environments and Bundler
+Ruby Require Order Problems
+Some of the Problems Bundler Solves
+SafeBuffers and Rails 3.0
+ActiveModel: Make Any Ruby Object Feel Like ActiveRecord
+The Rails 3 Router: Rack it Up
+Generic Actions in Rails 3
+
+O Kevin Faustino compilou recentemente uma lista de websites que você pode consultar sobre Rails 3. Vale a pena conferir.
+Se está interessado em livros:
+
+o Obie Fernandez deve liberar logo a versão atualizado do The Rails 3 Way
+tem também o Beginning Rails 3 do Cloves Carneiro Jr e Rida Al Barazi
+o próprio Yehuda e o Ryan Bigg vão lançar o Rails 3 in Action
+o Michael Hartl tem o Ruby on Rails Tutorial um ebook que você pode comprar ou ler a versão online de graça!
+aqui no Brasil o Rodrigo Urubatan deve lançar uma versão atualizada do seu livro também
+e o José Valim vai lançar um mais avançado, só que em inglês. Enfim, muito material.
+
+Até então, nosso ambiente padrão de desenvolvimento era o Ruby 1.8.7 e Rails 2.3.8. Finalmente podemos começar a usar Ruby 1.9.2 e Rails 3.0. Isso nos trás performance de graça, mais funcionalidades e novas possibilidade. A promessa do Rails 3 foi cumprido e tudo que precisávemos foi adicionado: mais flexibilidade, mais agnosticismo, APIs modernas, segurança por padrão, modularidade.
+Resumindo
+
+o ActiveRecord foi refatorado e dele saíram 2 novos módulos: Active Relation e Active Model. O primeiro modernizou toda a API de consulta a banco, usando Álgebra Relacional para simplificar a sintaxe e tornar mais simples integrar a qualquer banco relacional. Já o Active Model abstrai tudo que não é específico do banco, o que efetivamente torna o Rails 3 agnóstico a banco, podendo usar qualquer ORM e qualquer storage.
+
+
+todo controller do Rails 3 é essencialmente uma aplicação Rack independente. Isso torna o sistema todo muito mais modular e flexível. Aliado ao novo sistema de dispatching de rotas, você pode integrar qualquer aplicação Rack a uma aplicação Rails 3. Você pode fazer módulos em Sinatra, por exemplo, e torná-lo parte da aplicação Rails. Ao mesmo tempo o novo ActionController ficou mais modular e é possível reduzí-lo quanto quiser para torná-lo muito leve, se necessário. Por causa disso o antigo Rails Metal foi retirado porque ele deixou de ser necessário. No futuro isso vai facilitar ainda mais a produção de “Engines”, trechos MVC modulares que podem ser combinados em aplicações. Isso ainda não está no ponto que queremos, mas deve evoluir durante a série 3.×.
+
+
+Toda string agora é segura por padrão. Antes tínhamos que usar o helper h() nos templates para escapar os strings, mas agora os string são todos escapados por padrão e se não quiser, tem que fazer opt out manual com o helper raw(). Tem muito mais por trás, mas basicamente isso deve aumentar a segurança dos HTMLs produzidos pelo Rails 3.
+
+
+Falando em HTML, a ordem do dia é Javascript Não-Obstrutivo e agnóstico. Os helpers remote-alguma coisa não devem ser mais usados, em seu lugar cada helper de template tem a opção :remote => true que basicamente cria marcações nas tags geradas. Daí adapters para os mais diversos frameworks javascripts (como para Prototype, jQuery e MooTools) podem ser usados para adicionar comportamento dinâmico aos elementos. Isso deve separar melhor o código, torná-lo menos confuso e mais fácil de dar manutenção.
+
+
+Encoding de strings deve melhorar também, em combinação com o Ruby 1.9.2, ganhamos também a nova gem mysql2, do Brian Mario, que resolve os problemas de codificação erradas e também gargalos importantes de performance. Ele será o driver padrão do Rails 3 e com isso ganhamos muita coisa de graça quando usamos MySQL como storage.
+
+
+o novo Action Mailer do Mikel Lindsaar trás uma API muito mais simples, mais elegante e que torna muito mais fácil tarefas como criar layouts de e-mails, e-mails multipart, anexos e muito mais. Nunca foi tão fácil gerar e-mails.
+
+
+o antigo ActiveSupport, que é a extensão do Rails à linguagem Ruby sempre teve o problema de ser grande demais e monolítico demais. Agora você pode importar somente as partes que quer e, se quiser tudo, basta fazer require ‘activesupport/all’. Isso vai facilitar também quem cria gems que dependme do activesupport.
+
+
+já disse isso antes, mas uma parte importante do Rails 3 é a adição do Bundler. Leia a documentação. Todo projeto Rails 3 agora vem com um Gemfile onde as dependências são listadas. Antes isso ia no config/environment.rb. O Bundler não serve só para Rails e pode ser usado em qualquer projeto Ruby, incluindo outros frameworks web como o próprio Rails 2.3 ou Sinatra. É muito importante manter seus projetos organizados, especialmente para não ter dores de cabeça ao instalar em produção. E controle das versões de gems é extremamente importante.
+
+
+internamente, quase todo o código-fonte do Rails foi tocado, refatorado, refinado, e está muito mais organizado e fácil de consultar. Não tenha medo do código-fonte, tente ao máximo entrar nele para entender como as coisas funcionam. Com o Rails 3, isso é ainda mais simples.
+
+
+o Rails 3 também não dá mais suporte ao antigo Ruby 1.8.6. Somente Ruby 1.8.7 e Ruby 1.9.2 são suportados. Se você ainda usa o 1.8.6, já passou da hora de deixar de usar. A recomendação é mesmo ir para Ruby 1.9.2 de uma vez. O JRuby 1.5.x, que tem compatibilidade com o Ruby 1.8.7 e 1.9 também roda Rails 3 sem problemas. Use um Ruby moderno nos seus projetos. E, claro, não deixe de usar o RVM para organizar seu Rubies, tanto no seu ambiente de desenvolvimento quanto em servidores de produção.
+
+Enquanto isso o desenvolvimento do que será o 3.1 já está em andamento. Versões são apenas formalidades, uma barreira psicológica para as pessoas começarem a usar. Nenhum projeto de software “acaba”. Ainda há muito a ser refinado, com o feedback de projetos em produção devem surgir novos bugs, problemas de performance, enfim, software é como vinho: vai amadurecendo com o tempo. Mas isso deve ser o suficiente para elevar o ecossistema para o próximo nível.
+Divirtam-se!
+tags: obsolete rails
+

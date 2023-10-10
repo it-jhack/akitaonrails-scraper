@@ -1,0 +1,45 @@
+
+Update 2013: I’m not using the configuration described here. Go straight to YADR for a more modern set of dotfiles.
+Update 04/27/09: I made some updates that you can read about here
+
+I’ve been thinking this through for a while about what are the best tools to develop Ruby and Rails project outside of the Mac. Specially on Windows. Netbeans and Eclipse Aptana are good choices and they are evolving fast, but I always thought of Java based IDE to be heavier than necessary.
+I always say that you only need a good text editor and the terminal. But on Windows there is not that many competent editors such as Textmate. Even on the Mac, there are those who don’t want to pay for Textmate.
+Railers have recently started to talk about Emacs, including Geoffrey who just released a great  Peepcode screencast about it. Personally, I don’t feel like getting used to Emacs. It is just a personal taste thing, but I always preferred Vim.
+
+
+On the other hand I never really stopped to configure Vim decently. So I spent a couple of days researching the Web, looking for the pieces to make Vim behave more like Textmate. At Github there are many configurations. I got one that I felt more complete and I did my own fork. I spent a day converting Textmate snippets to NERDSnippets in Vim, including the bundles for Ruby, Rails, Javascript, Rspec, jQuery. The end result is something very similar, though Textmate’s snippets engine is still ahead of NERDSnippets. Jamis Buck’s FuzzyFinder adaptation is also a great replacement for Textmate’s file navigator.
+To install it on the Mac, you should not use the built-in Vim because it doesn’t come with the necessary Ruby bindings. Download MacVim. Then, in your ~/.bash_profile type in the following:
+
+alias vim=“/Applications/MacVim.app/Contents/MacOS/Vim”
+1
+2
+3
+4
+5
+6
+7
+
+
+On Windows, download "gVim":https://www.vim.org/download.php#pc. On the Mac and Linux you should have a .vimrc file and .vim folder under your home directory (ex. /Users/akitaonrails). On Windows you must have a _vimrc file and vimfiles folder also under your home directory (ex: c:\Documents and Settings\akitaonrails, on Windows XP or c:\Users\akitaonrails, on Vista and Windows 7).
+
+On the Linux and Mac, from your home directory, do:
+
+<macro:code>git clone git://github.com/akitaonrails/vimfiles.git ~/.vim
+cp ~/.vim/vimrc ~/.vimrc
+
+
+On Windows, also from your home directory, do:
+git clone git://github.com/akitaonrails/vimfiles.git vimfiles
+copy vimfiles\vimrc _vimrc
+copy vimfiles\snippets.vim.win32 vimfiles\after\plugin\snippets.vim
+-
+
+That’s it. Now, from inside Vim, do “:helptags ~/.vim/doc” (“:helptags ~/vimfiles/doc”, on Windows) and then “:help rails” to learn more about Tim Pope’s Rails.vim plugin. You can use “:help surround”, “:help nerdtree” to learn more about the other bundled plugins as well. Rails.vim gives you commands such as :Rgenerate that calls script/generate, :Rake for rake tasks, :Rscript for other script/* inside your Rails project, and so on and so forth.
+
+
+Ctrl+t is FuzzyFinder, the equivalent to Commant+T on Textmate. Then “\+p” (backslash and “p”) brings up the Nerd Tree, which resembles Textmate’s Project Drawer. You can close it with just “q”. “R” (uppercase “R”) refreshes it and “o” (lowercase “o”) opens the folder/file your cursor is currently over. Finally, while editing your Rails files you can try the very same abbreviations from Textmate. To find out all the abbreviations, take a look at the .vim/snippets folder. There you will find sub-directories for each file type. For instance, .vim/snippets/ruby-rails/hm.snippet means that if you type “hm[tab]” inside a model file, if will activate the “has_many” snippet (see on my screencast).
+To learn a little bit more about Vim editing, read the Why, oh WHY, do those #?@! nutheads use vi? article. Vim is very powerful and has lots of options that you will learn and get used to very fast.
+On the Mac, I don’t think I will be dropping Textmate any time soon, but if I need to use either Linux or Windows, that’s definitely my primary choice. On Linux it is a no-brainer, and on Windows there is basically no decent text editor built-in (Notepad should’ve been dropped as a built-in app more than a decade ago, because it is so bad).
+Do you have more cool tips on Vim to share? Don’t forget to comment.
+tags: obsolete vim screencasts
+

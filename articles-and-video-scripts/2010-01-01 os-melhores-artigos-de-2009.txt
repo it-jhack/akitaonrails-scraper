@@ -1,0 +1,56 @@
+
+Para fechar o ano de 2009 aqui vão duas listas: a primeira é a lista por quantidade de acessos segundo meu Google Analytics, e em seguida a lista dos artigos que eu pessoalmente gostei mais de escrever. Além disso não deixem de ver as coletâneas da RailsConf’09 e do Rails Summit’09.
+
+
+Top 12 Google Analytics
+
+The Best Environment for Rails on Windows
+[Off-Topic] Comprei meu Primeiro Mac, e Agora?
+Rails on Vim
+O Melhor Ambiente Windows para Rails
+Off-Topic: Devo fazer faculdade?
+[Tradução] O que faz um bom Programador?
+[Off-Topic] Net Negative Producing Programmer
+Conectando no MS SQL Server 2005
+Real Thin Restful Controller with Inherited Resources
+Entendendo Rubygems
+[Tradução] Scrum Flácido
+[Off-Topic] Maldita Lei de Regulamentação está de volta
+
+Minha Lista Pessoal
+Ruby e Rails
+
+Entendendo Rubygems
+Anatomia de uma RubyGem
+[Screencast] Controllers Restful Magros com Inherited Resources
+So, You Want to Play with Rails 3?
+
+Agilidade
+
+[Tradução] Scrum Flácido
+[Off-Topic] Net Negative Producing Programmer
+[Off-Topic] As 5 disfunções de equipes em código
+[Tradução] Conselhos para Gerentes de Desenvolvimento de Software
+[Off-Topic] Padrões, Commodities e Inovações
+[Off-Topic] Autoridade vs Responsabilidade
+[Off-Topic] Contrato de Escopo Negociável
+Screencast: Agilidade, Qualidade e Futuro
+[Off-Topic] Agilidade, Caos, Auto-Organização
+[Off-Topic] Livros de Referência 2008-2009
+[Off-Topic] Intervir ou não Intervir? O Catch-22 dos Co-Pilotos
+[Tradução] O que faz um bom programador?
+[Off-Topic] Você não entende nada de Scrum
+[Off Topic] Cuidado com o Kanban-butt
+
+Miscelânea
+
+[Off-Topic] Procurar Raciocionar Faz Bem
+[Off-Topic] O Culto da Moral Cinzenta
+[Off-Topic] Direitos do Homem
+[Off-Topic] A Argumentação através da Intimidação
+[Off-Topic] O problema das credenciais
+[Off-Topic] Obediência à Autoridade
+[Off-Topic] Restaurantes e Tecnologia
+
+tags: obsolete
+

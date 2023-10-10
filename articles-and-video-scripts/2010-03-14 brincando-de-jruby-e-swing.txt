@@ -1,0 +1,25 @@
+
+
+
+
+Pra variar resolvi me exercitar um pouco com JRuby. Na falta do que fazer, procurei pelo bom e velho exemplo canônico de uma aplicação Swing: uma Calculadora.
+O exercício foi converter o código Java ipsis-literis para Ruby. No caminho eu aproveitei e fiz algumas otimizações mínimas para tornar o código mais próximo de Ruby em vez de Java. No final, a aplicação ficou idêntica à versão original, pois usa os mesmos códigos.
+Instalem o JRuby e baixe o demo:
+1
+2
+3
+4
+5
+6
+
+git clone git://github.com/akitaonrails/jruby_calculator_demo.git
+cd jruby_calculator_demo
+javac Calculator.java
+java Calculator &
+
+jruby calculator.rb &
+
+
+Isso deve rodar ambas as versões lado-a-lado para comparar. Se encontrarem algum bug: pull request ;-)
+tags: obsolete jruby
+

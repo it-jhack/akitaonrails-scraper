@@ -1,0 +1,312 @@
+
+O Ola Bini acabou de confirmar um rumor que muitos de nós já estavam esperando: que a próxima plataforma suportada pelo Google App Engine fosse o Java, e de fato é !!
+O Google App Engine (GAE) é uma plataforma de application cloud computing que faz o serviço de hosting da sua aplicação. A primeira plataforma implementada foi o Python, que permitia rodar aplicações em Django. Agora é Java e, obviamente, significa rodar JRuby. Graças a isso, significa rodar aplicações Rails na infraestrutura do Google.
+E não percam a cobertura dos outros Thoughworkers como:
+
+John Hume e Philip Calçado sobre Clojure on GAE/J
+Sriram Narayan sobre GWT e JDO no GAE/J
+
+Também outros websites:
+
+cobertura do TechCrunch
+o blog oficial do GAE
+o review mais completo a respeito do GAE/J no Inversionism
+
+
+
+Mais interessante, como a Thoughtworks é um Google Enterprise Partner, eles também estiveram envolvidos, ou seja, o próprio Ola Bini secretamente andou testando a plataforma. Assim como no caso do Python, estamos também falando de um Java limitado. Muitas classes do JDK não existem por motivos de segurança. Portanto não espere rodar qualquer aplicaçao Java/Rails nela assim com você não podia esperar rodar uma aplicação Django normal. Tudo tem que ser adaptado ao que o GAE oferece.
+O Ola Bini explica os passos: primeiro você precisa usar o JRuby mais recente (versão 1.2). Da raíz da sua aplicação Rails você precisa:
+1
+2
+3
+
+jruby -S gem install warble
+jruby -S warble pluginize
+jruby -S warble config
+
+
+Você também deve congelar suas gems (rake gems:unpack e rake rails:freeze:gems). Feito isso, o Ola Bini recomenda limpar sua aplicação e tirar todo arquivo desnecessário. Parece que o GAE limita a aplicação a ter 1.000 arquivos. Das gems congeladas você pode apagar o ActiveRecord, testes e tudo mais que é opcional.
+A razão de tirar o ActiveRecord é que, como no caso do Django, não estaremos usando um banco de dados relacional normal (lembra quando eu dizia para se inteirarem de bancos não relacionais?). Não se esqueça de retirar o framework ActiveRecord do config/environment.rb.
+Agora precisamos alterar o config/warble.rb
+1
+2
+3
+4
+
+config.includes = FileList["appengine-web.xml", "datastore-indexes.xml"]
+config.webxml.jruby.min.runtimes = 1
+config.webxml.jruby.max.runtimes = 1
+config.webxml.jruby.init.serial = true
+
+
+A última opção está disponível no trunk do jruby-rack. Se você não colocar min = 1 e max = 1 então vai precisar dessa última opção, caso contrário o jruby-rack inicializará muitas threads para inicializar os runtimes.
+Finalmente, para usar versões mais novas das bibliotecas, precisará configurar quais bibliotecas Java serão usadas num array vazio:
+1
+
+config.java_libs = []
+
+
+Você adicionará todos os arquivos jar depois, no diretório lib. A última configuração é algo para permitir o Rails a usar o DataStore como um session store. No appengine-web.xml você deve fazer:
+1
+2
+
+<property name="jruby.management.enabled" value="false" />
+<property name="os.arch" value="" />
+
+
+Uma coisa que ainda não funciona é o ‘protect_from_forgery’ no seu app/controllers/application_controller.rb. Comente fora. Agora você precisa colocar diversos arquivos jar no diretório lib e além disso ainda vai precisar “fatiar” o jruby-complete.jar porque ele é grande demais. Você também precisa de um build mais recente do jruby-rack. Use o seguinte script para fazer tudo isso:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+#!/bin/sh
+
+rm -rf jruby-core.jar
+rm -rf ruby-stdlib.jar
+rm -rf tmp_unpack
+mkdir tmp_unpack
+cd tmp_unpack
+jar xf ../jruby-complete.jar
+cd ..
+mkdir jruby-core
+mv tmp_unpack/org jruby-core/
+mv tmp_unpack/com jruby-core/
+mv tmp_unpack/jline jruby-core/
+mv tmp_unpack/jay jruby-core/
+mv tmp_unpack/jruby jruby-core/
+cd jruby-core
+jar cf ../jruby-core.jar .
+cd ../tmp_unpack
+jar cf ../ruby-stdlib.jar .
+cd ..
+rm -rf jruby-core
+rm -rf tmp_unpack
+rm -rf jruby-complete.jar
+
+
+Isso cria dois arquivos: jruby-core.jar e ruby-stdlib.jar. Isso deve ser mais ou menos tudo que você precisa. O Ola Bini ainda foi legal de fazer uma aplicação de exemplo chamada YARBL, que é basicamente um mini blog, sem comentários nem nada demais. Ele tem um demo em https://yarubyblog.appspot.com/ e o código está, claro, no Github. Ele usou o BeeU – que garante que apenas administradores podem postar no blog – e o Bumble.
+O Bumble é um pequeno wrapper sobre o DataStore, que permite que se crie models que falam com o DataStore do Google. Ele foi feito apenas para a aplicação de demonstração, então ele é bem minimalista.
+É assim que o modelo de dados do YARBL se parece. Isso deve dar uma idéia de como gerar models com Bumble. Uma coisa a se lembrar é que o DataStore permite qualquer propriedade/atributo em entidades, então ele se encaixa bem numa linguagem como Ruby:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+class Person
+  include Bumble
+
+  ds :given_name, :sur_name, :email
+  has_many :blogs, Blog, :owner_id
+end
+
+class Blog
+  include Bumble
+
+  ds :name, :owner_id, :created_at
+  belongs_to :owner, Person
+  has_many :posts, :Post, :blog_id, :iorder => :created_at
+end
+
+class Post
+  include Bumble
+
+  ds :title, :content, :created_at, :blog_id
+  belongs_to :blog, Blog
+end
+
+
+Para usar os models para alguma coisa, você pode fazer coisas como:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+Blog.all
+
+Post.all({}, :limit => 15, :iorder => :created_at)
+
+blog = Blog.get(params[:id])
+posts = blog.posts
+
+Blog.create :name => name, :owner => @person, :created_at => Time.now
+
+Post.all.each do |p|
+  p.delete!
+end
+
+
+O Bumble é bastante intuitivo, pequeno e fácil de usar. Ainda dá para melhorar bastante e o Ola está aceitando patches em https://github.com/olabini/bumble.
+E quando se está trabalhando com o serviço de usuários do Google, você pode usar o BeeU, um framework bem pequeno para ajudar. Você basicamente ganha alguns helpers. Existem 3 diferentes métodos de filtro que podem ser usados, que são:
+
+assign_user
+assign_admin_status
+verify_admin_user
+
+Os primeiros dois criarão variáveis de instância chamados @user e @admin, respectivamente. A variável @user conterá o objeto UserService e o @admin terá true ou false. Se não estiver logado, ele levará a uma página de login. Se estiver logado mas não for administrador terá um “Not Authorized”. Esses métodos devem ser todos usados como before_filter.
+Existe um método chamado ‘require_admin’ que você pode usar para anotar métodos que devem ser protegidos apenas para acesso de administrador. Finalmente existem dois métodos que geram a URL de login e de logout, ambos vão redirecionar de volta para onde você estava quando as URLs foram geradas.
+O BeeU também está no Github do Ola em https://github.com/olabini/beeu.
+Uma vez no GAE/J, ele ainda faz verificações mais pesadas de bytecode o que torna o startup mais lento que o normal. Um runtime leva pelo menos uns 20 segundos. A boa notícia é que esses tempos parece que já foram muito piores. Mas uma vez de pé, o tempo de resposta até que é razoável, entre 120 e 500ms. E segundo o Ola isso tende a melhorar.
+Ao que tudo indica, testar sua aplicação é a parte que vai dar mais trabalho. Vamos ver onde a comunidade consegue chegar. Fora o Ola com JRuby, outras equipes vieram testando outras linguagens que rodam sobre a JVM como Groovy, Scala, Clojure e Jython.
+Vale lembrar que estamos falando do GAE, portanto não dá para assumir que tudo que funciona no Java normal vai funcionar. Segurança é uma prioridade. Segundo o Ola você pode bater em muitos ‘ClassNotFoundException’ por causa disso.
+Acesso ao File System é uma das restrições. Por enquanto chamar java.io.File#canRead em um arquivo restrito vai soltar um SecurityException, portanto precisa ter try/catches para segurar isso. No caso do JRuby foi questão de criar uma subclasse do java.io.File que embrulha isso e devolve apenas false se cair num SecurityException.
+Outra limitação: nada de threads no GAE/J. Uma das plataformas que deve sofrer mais um pouco será o Scala porque o framework web Lift depende muito de atores, implementados como pool de threads. Ainda bem que Rails é ‘shared-nothing’ por default e nunca dependeu de threads.
+Reflexão é outro ponto que deve dar vários ‘SecurityException’.
+O verificador de bytecode é bem mais restrito que em outros JDKs. Segundo o Ola é bom verificar cada canto da sua aplicação por comportamentos estranhos. Se sua aplicação gera código em runtime isso é ainda mais importante. Parece que pelo menos até agora não parece ter nenhum show-stopper para o JRuby nesse sentido.
+Como dito antes, testes serão um desafio principalmente porque o ambiente local de desenvolvimento não se comporta exatamente como em produção. Ou seja, muito das características citadas acima não são as mesmas em ambos os ambientes, o que pode ser problemático.
+Uma coisa muito ruim é que o Google usou muitos Factories Singleton, que são bem ruins para injetar novas funcionalidades, que são necessários para stubar as chamadas às APIs do Google.
+No final do dia, pelo menos enquanto o Google não aperfeiçoa o pacote, a única coisa a se fazer é rodar testes de aceitação como Selenium ou Webrat – que é longe do suficiente, claro, mas vai ter que bastar enquanto as limitações das ferramentas ficam no caminho.
+Pequeno YARBL Hello World
+Para realmente iniciar, você precisa de uma conta no App Engine. Poucos vão conseguir, no máximo 10 mil desenvolvedores por enquanto. Vá até https://appengine.google.com e tente sua sorte.
+Como eu fiz isso agora há pouco, já tenho minha conta e decidi subir a aplicação YARBL de exemplo do Ola Bini. Considerando que você já tem o JRuby instalado, com as gems do Rails também instaladas. Para isso apenas fiz:
+1
+2
+3
+4
+
+git clone git://github.com/olabini/yarbl.git
+cd yarbl
+mkdir log
+warble
+
+
+Então, baixei o SDK do App Engine para Java, descompactei e desse diretório fiz:
+1
+
+bin/dev_appserver.sh ~/Sites/rails/yarbl/tmp/war
+
+
+Isso sobe a aplicação em https://localhost:8080. Uma coisa que não se pode esquecer é editar o arquivo appengine-web.xml e colocar o nome da aplicação que você criou com sua conta no App Engine e a versão atual (tem que ser manualmente incrementada):
+1
+2
+3
+4
+
+<appengine-web-app xmlns="https://appengine.google.com/ns/1.0">
+    <application>fabioakita</application>
+    <version>1</version>
+    ...
+
+
+Feito isso, ainda do diretório do SDK basta fazer:
+1
+
+bin/appcfg.sh update ~/Sites/rails/yarbl/tmp/war/
+
+
+Ele vai pedir seu e-mail e senha do Google. O que você vai ver será algo parecido com isto:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+
+~/Applications/appengine-java-sdk-1.2.0 
+$ bin/appcfg.sh update ~/Sites/rails/yarbl/tmp/war/
+Reading application configuration data...
+2009-04-08 03:49:33.408::INFO:  Logging to STDERR via org.mortbay.log.StdErrLog
+Beginning server interaction for fabioakita...
+0% Creating staging directory
+5% Scanning for jsp files.
+20% Scanning files on local disk.
+25% Scanned 250 files.
+28% Scanned 500 files.
+31% Scanned 750 files.
+33% Initiating update.
+34% Cloning 15 static files.
+35% Cloning 772 application files.
+36% Cloned 100 files.
+37% Cloned 200 files.
+37% Cloned 300 files.
+37% Cloned 400 files.
+37% Cloned 500 files.
+37% Cloned 600 files.
+37% Cloned 700 files.
+40% Uploading 1 files.
+52% Uploaded 1 files.
+90% Deploying new version.
+95% Will check again in 1 seconds
+98% Will check again in 2 seconds
+99% Closing update: new version is ready to start serving.
+99% Uploading index definitions.
+Update complete.
+Success.
+Cleaning up temporary files...
+
+
+O que eu subi é idêntico ao que o Ola Bini tinha subido também. Vocês podem ver em https://fabioakita.appspot.com/. Por alguma razão estou vendo um comportamento estranho: você precisa dar reload 3 vezes no seu browser pra aplicação funcionar. Nas duas primeiras vezes você verá um erro HTTP 500 inesperado que ainda não investiguei a causa.
+Eu particularmente ainda questiono se esse GAE vale a pena. Você está num ambiente extremamente limitado e restrito, muito do que está acostumado não pode ser feito. Estou no #freenode falando com o pessoal do #jruby e o Yehuda acabou de falar que eles devem correr com uma versão de DataMapper que fale com o Google DataStore, o que deve facilitar a integração.
+Vamos ver o que o pessoal vai fazer. Alguns no #jruby estão falando em testar Sinatra e Ramaze. Então em breve devemos ver blog posts de mais experimentos de aplicações web de diversos frameworks rodando sobre JRuby.
+O Charles Nutter e o Nick Sieger estão pensando em maneiras de tornar todo esse processo mais transparente e simples de usar do que a receita crua que temos acima. Isto ainda é um grande “Beta”, vamos ver até onde isso vai.
+tags: obsolete jruby
+

@@ -1,0 +1,122 @@
+
+
+For quite some time I wanted to create an experiment: having user-editable view templates stored in the database instead of the filesystem.
+The Use Case is quite simple: it’s either a theme system or a website where each user can edit his own set of templates to have a customized usage of the application. In the case of a simple theming system, just adding additional view load paths would be enough. But the second case needs scalability and having a potential set of thousands of view sub-folders around never felt well.
+One solution is to have every view in a database table. If performance becomes critical, we can always add Memcached to the equation, so it shouldn’t be a problem. Now, there is another problem: we can’t just store the ERB view files directly into the database and make them user-editable. That’s because ERB executes arbitrary Ruby code, which means that the user would have access to the entire machine. Haml and other templating engines have the same feature. One of the few that implements a user-centric, restrictive templating engine is Tobias Lütke’s Liquid, created precisely for the same purpose for his Shopify.com website.
+Having that in mind, I just published the dynamic_liquid_templates plugin as an attempt to have just that. In order to get started, you can create a new Rails project and add it as a normal plugin:
+
+
+
+1
+2
+3
+4
+
+rails demo
+cd demo
+./script/generate dynamic_templates
+rake db:migrate
+
+
+You will have to require Liquid from config/environment.rb
+1
+
+config.gem "tobi-liquid", :lib => "liquid", :source => "https://gems.github.com"
+
+
+And, of course, sudo rake gems:install to have it installed if you still don’t have it. Now, create a normal Rails resource, such as ‘posts’ or whatever. You will have to modify your scaffolded controller so the ‘format.html’ calls look like this:
+1
+2
+3
+
+respond_to do |format|
+  format.html { render_with_dynamic_liquid }
+end
+
+
+If you’re inside a nested controller (such as ‘Comment belongs_to Post’), declare a method named ‘parent’, for example:
+1
+2
+3
+4
+5
+6
+
+class CommentsController < ApplicationController
+  ...
+  def parent
+    @post ||= Post.find(params[:post_id])
+  end
+end
+
+
+The plugin will use this method to refer to the proper named routes, such as post_comments_path(parent) or post_comment_path(parent, @comment) and so on. Namespaces will work too, for example:
+1
+2
+3
+4
+5
+6
+7
+
+class Admin::PostsController < ApplicationController
+  def index
+     @posts = Post.all
+     respond_to do |format|
+       format.html { render_with_dynamic_liquid(:namespace => 'admin') } 
+     end
+end
+
+
+There’s probably a better syntax for that, but it works like that too. The other thing is that your models need to be ‘liquified’ in order to be usable from inside a Liquid template. You have to declare a to_liquid method explicitly saying which columns you want exposed:
+1
+2
+3
+4
+5
+6
+
+class Post < ActiveRecord::Base
+  ...
+  def to_liquid
+    { 'title' => self.title, 'body' => self.body }
+  end
+end
+
+
+Notice that the hash keys have to be strings, and not symbols. The other thing is that the plugin will append other attributes to this hash automagically, so you can do the following from within your Liquid templates:
+1
+
+{{ 'Show' | link_to: post.show_path }}
+
+
+It adds ‘show_path’ and ‘edit_path’ to your model instances, so you can use them to create links or form actions. There are other globally assigned variables as well, such as:
+
+collection – refers to the controller collection (for index action) such as @posts
+object – referes to the controller single object (for non-index actions) such as @post
+collection_path – the named route for the index action, including nested and namespaced versions
+object_path – the named route for the non-index action, including nested and namespaced versions
+parent – if you have the ‘parent’ method in your controller, it’s exposed within Liquid
+parent_path – if you have the ‘parent’ method in your controller, it’s used for named routes
+
+And, of course, your models are properly assigned to Liquid too so, for example, ‘@posts’ is exposed as ‘posts’ to Liquid.
+Next Steps
+Now, this is just the beginning. You can create a scaffold for the DynamicTemplate model, so you have an editing interface. You can refer to the ‘spec/fixtures’ folder within the plugin for examples on how a Liquid template looks like (it’s less convenient than ERB, I can tell).
+Then you can add multi-site support to your website by adding a foreign-key to all your models, a new table such as ‘Site’ and a ‘site_id’ column in all your other models. Then, each Active Record model can have the ‘default_scope’ declared, such as:
+1
+2
+3
+4
+
+class Post < ActiveRecord::Base
+  default_scope proc { { :conditions => ["site_id", Site.current_site] } } 
+  ...
+end
+
+
+But, this is not quite possible today because ‘default_scope’ seems to not be accepting a proc just yet. Let’s hope this feature comes sooner, or we can just create yet another plugin anyway, so no big deal.
+Another thing, we can still improve it’s performance by serializing the pre-compiled template instead of the raw text version as explained in this article. I will do it this week, probably.
+Then, we need to add caching support. As I am using plain Active Record, simple config.cache_store configuration should do. And you will also want to add other features such as versioning the dynamic_templates table so the user can change his mind later on. For this one, it’s as easy as watching Ryan Bates’ recent vestal_versions screencast.
+This is just an experiment, I hope it can be useful to someone.
+tags: obsolete rails
+

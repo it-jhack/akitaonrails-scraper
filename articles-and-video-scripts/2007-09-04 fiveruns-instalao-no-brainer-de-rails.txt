@@ -1,0 +1,25 @@
+
+
+
+
+Existem várias alternativas para se instalar o pacote completo de Rails (não só o interpretador Ruby como MySQL, Apache, etc). Receitas também existem às dezenas (googlem !).
+Mas este pacote é muito interessante, com suporte tanto para Linux quanto Mac: é o FiveRuns RB-Install. Baixe um único pacote e tenha a instalação completa de tudo que você precisa, num único passo. Para quem está começando talvez seja a melhor maneira de começar.
+De uma só vez você baixa e instala o seguinte conjunto de ferramentas open source:
+
+Ruby 1.8.6
+Rails 1.2.3
+MySQL 5.0
+SQLite 3.3
+Subversion 1.4
+Apache HTTP Server 2.2 (Production mode)
+OpenSSL
+ImageMagick 6.3
+Mongrel/Mongrel Cluster
+Capistrano
+Gruff
+Rake
+RMagick
+
+Acredito que isso deve cobrir as necessidades da maioria dos projetos. O resto é uma questão de rodar ‘gem install’ ou ‘script/plugin install’. O download é da ordem de 130Mb e a instalação precisa de cerca de 430Mb de disco. Vocês precisam preencher um formulário no site deles e receber o link de download via e-mail.
+tags: obsolete rails
+

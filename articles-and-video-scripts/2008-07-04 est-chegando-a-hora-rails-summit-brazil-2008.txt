@@ -1,0 +1,15 @@
+
+
+
+
+Atualização: Não deixem de ver o post mais recente. Importante: agora somos Rails Summit LATIN AMERICA ! :-)
+Galera, eu prometi que grandes coisas estavam a caminho e finalmente vou divulgar uma das maiores: nossa própria conferência de Rails, aos moldes da famosa RailsConf!
+Vamos chamá-la de RAILS SUMMIT BRAZIL pela Locaweb e acontecerá nos dias 15 e 16 de Outubro, em São Paulo, capital. Isso mesmo: 2 dias inteiros, com 2 sessões paralelas à tarde nos dois dias!
+Mais do que isso: confirmamos nada menos do que o Auditório Elis Regina, no Anhembi, em São Paulo. Será um grande evento! Reservem nas suas agendas! Venham de todas as partes do país. As inscrições devem começar no início de Agosto, eu aviso quando chegar perto. Por tempo limitado o preço da inscrição será de R$ 300, para os dois dias, incluindo almoço. E o que vocês terão nesses dois dias?
+
+Confirmei as presenças do próprio David Hansson (somente ele será via video online, ele estará na Europa nesse dia, os outros serão presenciais); o grande Chad Fowler ; os mantenedores do JRuby, Charles Nutter e Thomas Enebo ; diretamente da Holanda, da Phusion teremos Ninh Bui e Hongli Lai ; o mantenedor do RSpec, David Chelimsky ; o criador do Github, Chris Wanstrath ; ninguém menos que Dr. Nic Williams ; o escritor do livro The Rails Way, Obie Fernandez ; também Jay Fields, da ThoughtWorks. E quem não fala inglês, não se preocupem, teremos tradução simultânea de inglês para português.
+E também muitos grandes Railers brasileiros como Manoel Lemos, da Brasigo ; Carlos Eduardo, da e-Genial ; Fabio Kung, nosso JRuby-man, da Caelum ; o grande Vinicius Teles da Improve it ; George Guimarães do Pagestacker.
+Ainda tem mais gente que está para confirmar, acompanhem o blog para mais novidades!
+Estamos fazendo o possível para criar o maior evento de Ruby on Rails que já se viu deste lado de baixo do Equador :-) para não dever nada às RailsConf oficiais! Agora contamos com todos vocês: bloguem, bloguem muito! Anunciem nas suas empresas, levem seus colegas de trabalho, de faculdade, gerentes, professores, chefes, o mais importante: espalhem! Se você ainda não conhece Ruby ou Rails, esta é a chance! Se você já conhece, agora é a chance de conhecer todos aqui que estão investindo, aprendendo e produzindo. Este é o evento para todos vocês!
+tags: railssummit2008
+

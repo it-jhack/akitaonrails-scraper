@@ -1,0 +1,36 @@
+
+O pessoal do Phusion lançou semana passada o tão esperado mod_rails que é um módulo Apache para gerenciar dinamicamente pools de processos Rails sem a necessidade de um cluster Mongrel.
+Ele deve facilitar deployment, eliminar os clássicos problemas de Fast CGI e eliminar o overhead que é gerenciar grandes clusters Mongrel. Se um processo Rails dá crash por alguma razão, o mod_rails é capaz de reiniciar um novo processo.
+Porém, antes de mod_rails, um dos integrantes do grupo Phusion, Hongli Lai saiu numa jornada mais difícil: tornar Ruby mais eficiente.
+
+
+A idéia é a seguinte: numa instalação normal com mongrel clusters, digamos que cada processo utilize cerca de 40Mb. Se seu cluster for configurado com 10 mongrels, potencialmente você terá 400Mb de uso de RAM. O uso de RAM é linear com a quantidade de processos.
+Hongli Lai não estava satisfeito com isso, mas diferente de todos, ele resolveu tentar corrigir essa situação. Sua idéia era entender porque o mongrel_cluster não usava fork e os benefícios de Copy-On-Write (COW).
+COW
+O conceito é muito simples, quando um processo faz fork de si mesmo, cria-se um processo-filho (child process). Se o processo-filho não precisar modificar (escrever) sobre os recursos originalmente herdados do processo-pai, então os mesmos recursos podem ser ‘reusados’ entre ambos os processos. Logo, se o processo-pai ocupa 40Mb, o processo-filho não usará mais que alguns kylobytes extras, em vez de criar uma nova cópia de 40Mb, somando 80Mb com os dois. No processo-filho, a memória é travada apenas para leitura.
+Agora, se o processo-filho precisar modificar alguma coisa que ele herdou, uma falha é levantada e o sistema operacional copia o trecho de memória do processo-pai para o espaço virtual do processo-filho, tornando-a destravada, e este irá modificar essa cópia, e não o original, essencialmente mantendo os dois processos isolados entre si. Nesse caso, o processo-pai continua com os 40Mb e, por exemplo, o processo-filho tem agora 2Mb de modificações em seu próprio espaço privado de memória.
+Essa estratégia de otimização é muito importante também em virtualização de servidores. Quando várias imagens inicializam, é possível usar COW para a soma do uso de memória entre as diversas máquinas virtuais seja reduzida, ‘compartilhando’ a memória que é equivalente e mantendo um espaço privado para modificações particulares de cada processo.
+Para os processos, isso é transparente, ou seja, eles ‘acham’ mesmo que tem uma cópia individual dos recursos, sem saber que podem estar compartilhados. Muita coisa em Unix funciona desta forma, porém Ruby tem um problema, chamado Garbage Collector (GC).
+GC
+Popularmente, as pessoas pensam em GCs como ‘salvadores da pátria’. Algo para nunca mais se preocupar com gerenciamento de memória manualmente. Nada mais de ponteiros, de mallocs, etc. O mundo parece melhor depois dos GCs.
+Porém, tecnologias de GC não são triviais. Aliás, muita gente ignora que existem muitos tipos diferentes de GCs. O Java Virtual Machine (JVM), sozinha, vem várias opções, sendo Generational GC a padrão, mas também tendo também parallel copying collector, concurrent mark-sweep collector, etc.
+Outros interpretadores de linguagem dinâmica, como Python, também usam o tradicional reference-counting collector. Já Ruby, usa um GC do tipo mark-and-sweep.
+Eis o pomo da discórdia: “Mark” e “Sweep” tem este nome obviamente porque é um GC de dois estágios: no primeiro o GC varre todos os objetos em memória e os “Marca” como livres ou sujos (sendo usados). No segundo ele desaloca os objetos livres para liberar memória. O problema é a forma como a fase de “Mark” é implementada: cada estrutura de objetos Ruby tem um campo para um flag. É nesse flag que o GC marca o objeto.
+Imagine Copy-On-Write: o processo-filho não utiliza quase nenhuma memória pois está reusando do processo-pai. Agora, seu GC inicia e sai ‘marcando’ quase todos os objetos como sujos. Isso dá um fault para cada objeto e o sistema operacional efetivamente tem que copiar quase tudo da memória do processo-pai de volta para o processo-filho, acabando com toda a vantagem da estratégia de COW. No final da fase de Mark do GC, o processo-filho usa muita memória.
+Portanto, COW no Ruby padrão não é eficiente.
+A Jornada
+Hongli Lai começou, então, a vasculhar opções de como fazer o GC do Ruby não realizar essa marcação em cima de cada objeto. Em vez disso, ele desenvolveu uma estrutura separada para que a fase de Mark ‘olhe’ os objetos mas não os marque. Em vez disso, que anote nessa estrutura separada se o objeto está sujo ou livre.
+Essa estrutura evoluiu de Hashes simples do próprio Ruby, depois para Sets e finalmente para bit fields. Isso porque nas primeiras versões, o Hash ocupava muito espaço em memória e não era eficiente, mas com bit fields o overhead caiu dramaticamente.
+No final de sua jornada, ele conseguiu que o fork com COW de um processo Ruby rodando Mongrel e Rails caísse até 33% em um cluster. Ou seja, se um cluster de 10 processos Mongrel, antes consumia 400Mb de RAM, agora consome somente cerca de 266Mb! Um enorme ganho, principalmente em grandes instalações.
+Em termos de impacto na performance (por agora existir uma estrutura separada de Mark), depende muito do caso (assim como a economia total de memória), mesmo assim ele chegou a ver até 8% de impacto até nenhum impacto.
+Aconselho ler a série de artigos Making Ruby’s GC copy-on-write friendly
+Enterprise Edition
+No final, eles conseguiram otimizar bastante a forma como o GC do Ruby trabalha, essencialmente possibilitar COW em Ruby e com isso economizar uso de muita memória a um custo baixo de impacto em performance.
+Agora, eles estão polindo a solução e tornando-a transparente para que não seja algo ‘sujo’ como um patch que o usuário precise aplicar manualmente ao Ruby.
+Outra coisa é fazer o mod_rails aproveitar os ganhos de COW e, em fez de subir um novo processo Rails, fazer fork + COW automaticamente.
+Parece que apenas na RailsConf 2008 eles pretendem divulgar os detalhes do produto chamado Ruby Enterprise Edition, que promete economizar até 33% do uso de memória de um pool de processos Rails rodando sob as asas do Phusion Passenger (mod_rails). Parece que eles tem uma solução campeã nas mãos.
+Esse Enterprise Edition será um super-set ao Ruby e, na realidade, é exatamente essa idéia de fork com um GC modificado e amigável à estratégia de copy-on-write. Talvez um pequeno instalador que simplifique o processo e torne tudo transparente. Uma solução de deployment de 1-click.
+Com certeza isso deve tornar o uso de Ruby on Rails ainda mais robusto e fácil de disseminar, eliminando muita complicação que iniciantes e empresas passam quando querem aprender Rails. Esperamos que o pessoal do Phusion lance algo simples, rápido e robusto.
+Kudos ao Hongli Lai pelos esforços!
+tags: obsolete ruby phusion
+

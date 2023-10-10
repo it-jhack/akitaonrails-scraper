@@ -1,0 +1,27 @@
+
+I’ve been waiting to do this upgrade once prices for reasonably sized SSDs became more affordable. I have bought the OCZ Vertex 2 240Gb (Firmware 1.24) which is good enough at around USD 450 at Amazon. There is at least one other model you should consider: some say that the Crucial RealSSD C300 256Gb is a bit better. Reviews are mixed though, so you can’t go wrong if you buy any of those.
+
+
+
+Since the new Macbook Airs came out, I’ve been itching myself to buy one. But eventually I got convinced that instead of a new notebook, I should maintain my old Mid-2009 Macbook Pro 15". Having the 2.66Ghz Core 2 Duo with 6Gb of RAM, it is well equipped, but the 5400RPM HDD is the real bottleneck.
+The whole point of an SSD is that it has no mechanical parts, should consume less power, and be some orders of magnitude faster at both reading and writing. That should take care of the I/O bottleneck, making the overall performance noticeably faster without upgrading any other components.
+Installation
+I have a USB enclosure for 2.5" drives. So I mounted my new SSD into the enclosure. The SSD came unformatted so I just opened up Disk Utility and created a new partition. Then I used SuperDuper to make a copy of my primary HDD into my new SDD. That took many hours because the USB port is not very fast.
+Then, I removed the old HDD from my notebook and plugged in the new SSD. It didn’t boot at first, so I mounted my old HDD into the USB enclosure and booted from there. Then I opened the “Startup Disk” app inside the “Systems Preference” pane and just pointed the primary disk to be the new SSD one. After a restart, it was able to boot from the SSD.
+This whole process took me all night, so I recommend reserving up to 4 hours of your time to focus on this.
+Performance
+Before I started the replacement process, I made some measurements using the old HDD. I am using a current Mac OS X 10.6.5 in a Mid-2009 Macbook Pro 5,1 15" with 2.66Ghz Intel Core 2 Duo and 6Gb of RAM (because this revision of the notebook can’t handle more than 6Gb).
+Then I got new measures with the new SSD for comparison. As I always say, benchmarks are lies, damn lies. The numbers do show a significant improvement. Overall, I am very happy with the new performance gains, but I have to say that I expected more. Maybe my expectations were just too high. Let’s go to the numbers:
+
+Every single operation is way faster. Heavyweight applications such as Photoshop opens very quickly. I didn’t measure the HDD version, but even Eclipse is taking less than 10 seconds to start up. The only test that really didn’t improve as much as I wanted was running my website unit test suite. That operation usually takes over a minute and now it is running around 10 seconds faster.
+XBench is a very well known simple benchmark tool for Macs. It has not received upgrades for SSD specific testing, but my machine jumped from an overall of 137.21 points to an astounding 224.23. That is because the Disk Test alone jumped from the old 43.04 points all the way to 293.90 points.
+
+Benchmarks aside, the general feeling is that everything is really fast. I use MacVim as my main development text editor with lots of plugins. It was very annoying because I usually had to wait a couple of seconds before everything loaded up. Now it is pretty much instantaneous, which makes my routine much more comfortable.
+Lightweight applications such as Safari, Reeder, Echofon, Preview, start up in less than a dock icon bounce. Feels really great to have everything performing so well. It may not seem like much, but 2 or even 1 second less, makes everything feel so much faster.
+Conclusion
+Bottomline is, it is still an expensive upgrade. But if you have the extra cash, instead of buying a new machine, try to upgrade both the RAM and switch from HDD to SSD. If you’re like me and do lots of disk intensive operations, you will find this a good option to buy.
+If you’re already a casual user, who only needs to check e-mail, surf the internet and write documents occasionally, chances are that you’re not gonna need this kind of upgrade. RAM should be enough (4Gb at least). But if you’re a Pro user, using heavy applications or doing serious development, then this upgrade is definitely worth while.
+I tried the 240Gb version, but as I consume lots of media, such as HD video podcasts, I feel like I need at least 350Gb. Problem is that it is difficult to find larger SSDs, and they are still too expensive to be cost-effective. So the practical limit is around 256Gb, and I think it is plenty for most people. I am still carrying around my normal LaCie 500Gb where I put heavyweight data such as movies and Parallels Desktop virtual machines.
+If you combine a 250Gb SSD with a larger Firewire-based external HDD, then you should be well equipped for anything. And the OCZ Vertex 2 is a very good choice.
+tags: obsolete mac english
+

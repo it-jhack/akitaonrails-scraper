@@ -1,0 +1,15 @@
+
+David Hansson acabou de blogar aqui e aqui. As RailsConf (America e Europe) são de longe os eventos mais importantes de Rails no mundo. Juntos com a RubyConf isso fecha a RubyCentral como a maior referência mundial de eventos de Ruby e Rails, deixando qualquer outro bem distante. Claro, não podemos esquecer dos eventos regionais americanos como a Ruby HoeDown, que contam com muitas das mesmas pessoas como Charles Nutter, Thomas Fuchs, Ezra Zygmuntowicz, etc.
+
+
+
+Mas são nas RailsConf que estão os pesos pesados como DHH, Dave Thomas, David Black. São nas RailsConf que as principais tendências da plataforma são traçadas. São patrocinadas pelos pesos pesados como O’Reilly, ThoughtWorks, IBM, Sun. E falando na Sun, o assunto é justamente ela. Faz algum tempo que eu venho evangelizando JRuby, entrevistei um dos desenvolvedores Ola Bini. Agora é o próprio DHH que posta sobre sua feliz surpresa com a Sun.
+O motivo: um dos palestrantes na RailsConf EU foi ninguém menos que Craig McClanahan. Quem é? Oras, qualquer Javeiro irá reconhecer o nome como o criador do velho Struts e do atual Java Server Faces e, claro, do servlet container Catalina (vulgo Tomcat) dois web frameworks anteriores ao Rails. E ele foi falar de Rails, não de Java.
+Além da Sun ter sido um patrocinador diamante (significa que pagam bem), a Sun também apresentou seu novíssimo NetBeans 6.0 Beta. David tambén não se esqueceu de Charler Nutter, Thomas Enebo e Ola Bini e seus esforços hercúleos com JRuby. Não se enganem, esses caras estão desenvolvendo numa velocidade que me espanta. Sem brincadeira. Vejam as diferenças de JRuby mês a mês nos últimos 12 meses e terão uma idéia.
+David também se lembra de outro assunto que já é recorrente aqui: Rails apenas como um WAR, que é explicado no próprio site da Sun, como maneira também de empurrar seu próprio Glassfish.
+A Sun está fazendo a coisa sensata: se mantendo relevante. Em vez de pisar na mesma tecla, “Java, Java, Java!”, eles estão indo para onde a maré levar. Além de finalmente tornar Java open source, além de JRuby, eles têm outros esforços para tornar a JVM mais amigável a outras linguagens dinâmicas como o próprio Groovy e Scala. Estão tornando NetBeans mais competitivo com Eclipse. E, claro, esperando vender muitos e muitos servidores Sun.
+
+As apresentações estão disponíveis no site da O’Reilly. Eu recomendaria a de Craig chamada Rails and the Next Generation Web, Making Rails More (Artificially) Intelligent, Utilizing Amazon S3 and EC2 in Rails e The Rest of REST.
+Vejam as fotos do evento no sempre excelente álbum de James Duncan Davidson, o fotógrafo oficial de todo RailsConf.
+tags: obsolete conference
+

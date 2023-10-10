@@ -1,0 +1,17 @@
+
+
+
+
+Update (26/11): Depois do Blip.tv ter apagado meus vídeos, subi os screencasts novamente no Dropbox e usei JW Player para visualizar.
+Durante Julho e Agosto de 2010 eu havia acabado de sair da Locaweb e com o tempo livre inicialmente resolvi tentar criar screencasts com qualidade mais “comercial”. Disso surgiu um “piloto” que foi uma palestra que dei na época e 3 tutoriais técnicos. A experiência foi ver se havia viabilidade comercial para screencasts desse tipo. Infelizmente a aceitação na época foi bem baixa embora eles ainda tenham saída constante até hoje, quase 2 anos depois.
+Como agora estou tempo integral dedicado à minha própria empresa Codeminer 42, realmente não pretendo voltar a produzir mais screencasts comerciais.  Por isso resolvi liberar todos os 4 screencasts gratuitamente na minha conta do Blip.tv. Você pode ir a eles diretamente através dos links abaixo:
+
+Palestra: Entenda Software da Maneira Correta
+Screencast: Instalando um Ambiente Ruby
+Screencast: Começando com Vim
+Screencast: Começando com Git
+
+Agradeço a todos que valorizaram meu trabalho comprando estes screencasts até hoje. Espero que mais pessoas tenham interesse em aprender sobre esses assuntos (e muita gente ainda não conhece). Portanto distribuam os links à vontade a seus amigos e colegas de trabalho.
+Todos os direitos são reservados e os vídeos não podem ser editados, alterados ou misturados a outros conteúdos.
+tags: learning beginner screencasts
+

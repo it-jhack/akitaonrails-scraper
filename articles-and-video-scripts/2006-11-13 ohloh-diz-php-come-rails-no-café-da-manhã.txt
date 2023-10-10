@@ -1,0 +1,17 @@
+
+Um novo website sobre projetos open source apareceu para causar alguma polêmica. É o Ohloh Eles clamam ser um site analítico de métricas de projetos open source. Mas não somente um espelho estático, mas sim um acompanhamento dinâmico de entrada de novos códigos, colaboradores de codificação, etc.
+Eles clamam ter mais de 3 mil projetos e mais de 220 milhões de linhas de código indexados e analizados. A partir daí puderam chegar a algumas conclusões.
+
+
+Na matéria PHP Eats Rails for Breakfast eles começaram a primeira polêmica. Os dados da matéria em si dão margem a amplas discussões, uma vez que não podemos dizer que os critérios usados são completamente válidos.
+O primeiro gráfico é sobre novas linhas de código sendo adicionados a projetos open source em várias linguagens:
+
+A partir disso poderíamos deduzir que a comunidade PHP é a mais ativa do momento. E isso pode ser verdade mesmo. Depois de Java, PHP é a segunda linguagem mais utilizada na Internet. E apenas por bom senso, navegando em sites como freshmeat.org ou sourceforge.net podemos ver dezenas de projetos interessantes em PHP sendo atualizados diariamente.
+Agora vejam este outro gráfico:
+
+Este gráfico mostra a quantidade de novos projetos sendo criados em cada plataforma. Agora o cenário fica interessante: existe muito mais novos projetos em Rails do que em qualquer outra plataforma. E isso não é uma surpresa. Com um pouco de especulação e bom senso podemos deduzir o seguinte: PHP existe há anos, Rails ainda é bastante novo mas recebendo muita atenção.
+Logo, é fácil concluir que os programadores Rails estão entusiasmados a criar novos projetos em Rails, muitos dos quais replicando o que já existe em PHP. Já no mundo PHP já existem dezenas de aplicativos robustos e estáveis, que estão bastante maduras mas ainda recebendo manutenção, novos módulos, correção de bugs.
+Ainda não é possível querer comparar Rails com PHP apenas olhando linhas de código produzidas.  Com certeza são dados interessantes, mas também é pedir demais que um único site queira indexar todos os projetos no rubyforge, sourceforge, tigris.org e outros sites que organizam projetos open source. Não há como saber se o Ohloh tem realmente tudo e em que proporções por linguagem.
+Os dados em si são interessantes para começar uma boa discussão, mas são completamente ineficientes para chegar a alguma conclusão inquestionável. Vamos continuar observando.
+tags: obsolete fud
+

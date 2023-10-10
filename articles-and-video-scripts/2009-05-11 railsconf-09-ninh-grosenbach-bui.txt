@@ -1,0 +1,11 @@
+
+
+
+
+RailsConf is not your “normal” tech conference. You will have people ranting, doing real rocket-science and lot’s of people having real and genuine fun. We are very lucky to have people such as Geoffrey Grosenbach, Jason Seifer, Peter Cooper, Ninh Bui and so much more to remind us that there is an upper layer to technology: geeks love to have fun.
+
+And don’t miss the awesome Rubystein, Phusion’s reimplementation of Wolsfenstein 3D in Ruby. They wanted to prove that Ruby is fast enough even to write games on it, and they succeeded in spades!
+
+A RailsConf não é sua conferência “normal” de tecnologia. Você verá pessoas reclamando, fazendo coisas realmente avançadas e muitas pessoas genuinamente se divertindo. Somos muito afortunados em ter pessoas como Geoffrey Grosenbach, Jason Seifer, Peter Cooper, Ninh Bui e tantos outros para nos lembrar que existe uma camada ainda acima da tecnologia: geeks adoram se divertir.
+tags: railsconf2009 interview english
+

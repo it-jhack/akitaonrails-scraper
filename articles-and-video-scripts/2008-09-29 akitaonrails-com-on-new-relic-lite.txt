@@ -1,0 +1,15 @@
+
+
+Faz tempo que o pessoal da New Relic vem me pedindo para eu fazer um test-drive no sistema deles e eu sempre venho “empurrando com a barriga” (sorry guys!) Mas confesso que a coisa é muito mais simples do que eu imaginava. Com o lançamento do New Relic Lite, resolvi dar uma olhada e digo que estou impressionado. Veja como é simples.
+Primeiro você deve se registrar no site da New Relic. Eles te enviarão um e-mail de ativação e um segundo email com o arquivo newrelic.yml. Uma vez registrado simplesmente entre no seu projeto e faça:
+ruby script/plugin install http://svn.newrelic.com/rpm/agent/newrelic_rpm
+Feito isso, copie o arquivo newrelic.yml anexado para dentro do seu diretório ‘config’. Se estiver usando Capistrano, faça simplemente ‘cap deploy’ e pronto! Agora entre no site deles, faça login e 2 minutos depois você já tem dados para acompanhar sua aplicação e analisar performance, pontos de gargalo e várias outras informações sobre seu servidor. Entre no artigo para ver mais screenshots de como é a aplicação. Altamente recomendado!
+
+
+A idéia é que o plugin da New Relic enviará dados constantemente aos servidores deles. Assim terá um Raio-X da sua aplicação, tanto em termos de utilização da máquina (CPU, memória, tempo de resposta), mas também saberá quais controllers estão mais pesados, como está a utilização do ActiveRecord. Muitas estatísticas, claro, estão fechadas pois você precisa pagar para ter mais detalhes (esse é o serviço). E se você tem uma aplicação importante em produção pode ser algo muito bom, pois você terá dados de produção para saber como e onde otimizar melhor sua aplicação com zero esforço.
+
+
+
+Este tipo de serviço é muito importante pois a maioria de nós não somos especialistas em monitoração e com uma ferramenta dessas podemos ir direto ao ponto. Uma outra opção interessante é que a New Relic tem parceria com o Rails Core Team e você pode escolher disponibilizar seus dados de monitoração para eles, como uma forma de colaborar para ajudá-los a saber onde melhorar o Rails. Ou seja, uma situação ganha-ganha para todos nós!
+tags: obsolete
+

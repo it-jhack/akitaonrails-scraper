@@ -1,0 +1,16 @@
+
+Click here for the brazilian portuguese version:
+I am very very proud to announce that the world-wide best selling Ruby on Rails book Agile Web Development with Rails will come to Brazil, translated into portuguese. That’s great news for our local community.
+
+The book is already translated, and will be release probably in the first quarter next year, by Bookman Editora. So the hard work was already done. But I was also contemplated with the honor to technically revise this material to make sure nothing got lost or mistaken in the translation process, which is common. Makes me very happy because 1 year and a half ago, the Rails market here in Brazil was non-existent so I made a high bet releasing the very first Ruby on Rails book with original content for the brazilian audience. And fortunately our community got traction, and now the best selling Rails book is landing here.
+This comes at a perfect timing, because I was also writing my second Rails book and the approach would be something like Dave Thomas’ book. Now I will change the direction and write a complementary book. Dave’s book explains the nuts-and-bolts of Rails 1.2. I will write a book to to only pinpoint the changes in Rails 2.0 but also detail some other subjects like important Rails plugins, gems, support tools like Capistrano and so on. So we will have books for both beginners and advanced developers in 2008 here in Brazil.
+
+
+“Agile Web Development with Rails” no Brasil!
+
+É com grande orgulho que anuncio que o best-selling mundial de Ruby on Rails, o livro Agile Web Development with Rails chegará ao Brasil. É uma grande notícia para nossa comunidade.
+O livro já foi traduzido e será provavelmente lançado nos primeiros meses do ano que vem pela Bookman Editora. Então o trabalho pesado já foi feito. Mas eu tive a honra de ser escolhido para revisar tecnicamente este material para garantir que nada se perdeu ou ficou errado durante o processo de tradução, o que é comum. Isso me deixa muito contente porque 1 ano e meio atrás, o mercado de Rails aqui no Brasil inexistia então eu apostei razoavelmente alto ao lançar o primeiro livro de Ruby on Rails com conteúdo original para o público brasileiro. Felizmente nossa comunidade ganhou tração e agora o livro best-selling de Rails está pousando aqui.
+Isso veio num timing perfeito, porque eu estou escrevendo meu segundo livro de Rails e iria ser algo na linha do livro de Dave Thomas. Agora vou mudar a direção para escrever algo complementar a esse livro. O livro do Dave explica a parte básica, o passo-a-passo. Eu escreveri um livro para não somente mostrar o que mudou no Rails 2.0 mas também detalhar aspectos como plugins Rails e gems importantes, ferramentas de suporte como Capistrano e assim por diante. Então teremos livros tanto para iniciantes quando desenvolvedores avançados em 2008 aqui no Brasil.
+Apenas quem participou do WebDevCamp SP’07 e do Rio on Rails 2007 soube dessa notícia em primeira mão e agora finalmente estou liberando para toda a comunidade. Então, aguardem os primeiros meses do ano que vem que em breve vocês terão dois livros meus – um como revisor e outro como autor – para completar sua biblioteca de Ruby on Rails ;-)
+tags: obsolete book english
+

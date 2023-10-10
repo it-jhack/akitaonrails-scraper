@@ -1,0 +1,85 @@
+
+
+
+
+O Rails 3 ainda não chegou oficialmente. Estou imaginando que os problemas recentes com o Bundler podem ter colaborado para o atraso. Por outro lado eu chutaria que eles vão anunciar a versão final na RailsConf, no próximo dia 7 de junho, ou pouco antes disso, quem sabe.
+De qualquer forma já temos o Rails 3 Beta 3 para usar. Se você seguiu meu artigo Limpando meu Ambiente de Desenvolvimento provavelmente já está usando RVM. Eu estou tentando me manter atualmente na versão 1.9.2-head, para instalar basta fazer:
+1
+
+rvm install 1.9.2-head
+
+
+E para instalar o Rails 3, faça:
+1
+
+gem install rails --pre
+
+
+Porém, não dá para começar um projeto se algumas gems principais não funcionarem, em particular andei testando algumas poucas gems e meu Gemfile está assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+
+source 'https://rubygems.org'
+
+gem 'rails', '3.0.0.beta3'
+
+# Bundle edge Rails instead:
+# gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+gem 'sqlite3-ruby', :require => 'sqlite3'
+
+gem 'devise',              :git => 'git://github.com/plataformatec/devise.git'
+gem 'inherited_resources', :git => 'git://github.com/josevalim/inherited_resources.git'
+gem 'responders',          :git => 'git://github.com/plataformatec/responders.git'
+gem 'paperclip',           :git => 'git://github.com/thoughtbot/paperclip.git', :branch => 'rails3'
+gem 'formtastic',          :git => 'git://github.com/justinfrench/formtastic.git', :branch => 'rails3'
+gem 'will_paginate',       :git => 'git://github.com/mislav/will_paginate.git', :branch => 'rails3'
+
+gem 'rdiscount'
+
+# Bundle the extra gems:
+# gem 'nokogiri', '1.4.1'
+
+# Bundle gems for certain environments:
+group :test do
+  gem 'test-unit', '>= 2.0.7'
+  gem "rspec-rails",      :git => 'git://github.com/rspec/rspec-rails.git'
+  gem 'capybara',         :git => 'git://github.com/jnicklas/capybara.git'
+  gem 'database_cleaner', :git => 'git://github.com/bmabey/database_cleaner.git'
+  gem 'cucumber-rails',   :git => 'git://github.com/aslakhellesoy/cucumber-rails.git'
+  gem 'factory_girl',     :git => 'git://github.com/danielb2/factory_girl.git', :branch => 'rails3'
+end
+
+
+Notem que estou puxando os códigos direto da fonte na maioria dos casos. Importante especialmente em projetos que ainda estão sendo ajustados pro Rails 3, alguns deles tem branches específicos. Um que me deu um trabalho maior foi o Factory Girl pois a versão da Thoughtbot está quebrada e eu só achei uma solução no fork do @danielb2. As gems da PlataformaTec parece que estão funcionando bem, como o Devise, o Inherited Resources.
+Mais importante ainda: o RSpec e o Cucumber, pelo menos para cenários simples, parecem estar funcionando adequadamente. Com esse pequeno conjunto já dá para iniciar um projeto. Para aprender mais, já dá para ler o Rails Guides e para acompanhar quais plugins/gems estão compatíveis veja o site Rails Plugins
+tags: obsolete rails
+

@@ -1,0 +1,88 @@
+
+Hoje finalmente migrei todos os comentários do meu blog para o Disqus. Não foi um processo difícil, mas gastei mais tempo do que eu gostaria procurando informações e documentação. O processo consiste de três partes:
+
+Criar uma conta no Discus e configurá-lo para seu site (essa é a parte fácil)
+Alterar o código do seu blog para que no final do seu post ele faça embed do Disqus (não é tão complicado)
+Migrar todos os comentários antigos do seu blog para o Disqus (isso deu mais trabalho)
+
+Configurar uma conta no Disqus é simples. Você vai configurar se quer que os comentários sejam moderados, com quais redes sociais quer se integrar e assim por diante. Recomendo gastar um tempo no configurador para se familiarizar com as opções.
+
+
+Modificando o Site
+Feito isso, basta modificar seu blog. No meu caso, eu uso o Enki, um dos blogs mais minimalistas e que com o Disqus fica mais mínimo ainda :-) Eu não parei ainda para realmente arrancar a tabela de comentários. Eu me restringi a mudar os templates. Dos pontos importantes, você vai querer alterar o template que renderiza o post. No local onde normalmente fica o loop que imprime comentário a comentário e depois o formulário para novo comentário, você acrescenta:
+1
+2
+3
+4
+
+<div id="disqus_thread"></div>
+<script type="text/javascript" src="https://disqus.com/forums/akitaonrails/embed.js"></script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript=akitaonrails">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+Isso é suficiente para renderizar o formulário e todos os comentários do post. Ele usar a URL da página atual para localizar os comentários. No serviço dele, seu post é um “thread” e dentro dele ficam vários “posts”. Aliás, seu blog é um “forum”. A nomenclatura é meio genérica porque imagino que eles não queiram se passar como ferramenta apenas para blogs, mas eu ficaria mais satisfeito se os nomes fossem mais triviais como “post”, “comment” e “site”. Mas enfim :-)
+Em seguida, precisei alterar o layout do site porque na coluna da direita existe um box para comentários mais recentes. Novamente, o código é simples:
+1
+2
+3
+
+<script type="text/javascript" 
+src="https://disqus.com/forums/akitaonrails/recent_comments_widget.js?num_items=8&hide_avatars=1&avatar_size=32&excerpt_length=70">
+</script>
+
+
+Nesse javascript você pode configurar coisas como quantidade de comentários que quer mostrar e qual o tamanho máximo do texto na listagem.
+Outra coisa importante, na página inicial eu mostro todos os posts mais recentes e embaixo de cada um existia um contador com o número de comentários que o post já recebeu. Para isso o Discus recomenda que você acrescente o seguinte código no final do seu layout, antes da tag </body>:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {
+        var links = document.getElementsByTagName('a');
+        var query = '?';
+        for(var i = 0; i < links.length; i++) {
+        if(links[i].href.indexOf('#disqus_thread') >= 0) {
+                query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+        }
+        }
+        document.write('<script charset="utf-8" type="text/javascript" src="https://disqus.com/forums/akitaonrails/get_num_replies.js' + query + '"></' + 'script>');
+})();
+//]]>
+</script>
+
+
+Agora, na partial que lista cada post na página principal, eu fiz a seguinte alteração:
+1
+
+<a href="<%= post_path(post) %>#disqus_thread">View Comments</a>
+
+
+Isso vai criar um link com a âncora #discus_thread. O javascript acima vai procurar por todos os links que terminam com essa âncora e então perguntará ao servidor deles pelo contador. Quando receber o resultado ele vai substituir o texto “View Comments” por algo como “5 comments and 1 reaction”.
+Migrando os dados
+Essa foi a parte fácil. Agora vem a que deu mais trabalho. Para começar, é bom se familiarizar com a documentação das APIs do Discus. Veja a versão mais recente que está no Google Groups deles. Para facilitar eu usei a gem Disqus que o Norman Clarke fez. Porém precisava de alguns pequenos ajustes por isso fiz um fork e já mandei o pull request para ele. Mas é coisa bem mínima mesmo.
+Depois de muitos testes, finalmente criei uma tarefa Rake em lib/tasks/load_discus.rake:
+Alguns conceitos que você precisa entender são:
+
+Quando você se cadastra, ganha um “user api key” que você recebe clicando neste link
+Seu site é um “forum” e ele também tem um “forum api key”
+Cada post seu é cadastrado como uma “thread” em um “forum”
+Finalmente cada comentário é um “post” em uma “thread”
+
+Para migrar você navega por todos os seus posts criando threads. Porém a API é meio confusa quanto a isso porque o procedimento que funcionou foi o que eu copiei do gist do Typo onde ele primeiro tenta ver se já existe um objeto thread para a URL do post, se não tiver cria uma nova thread e em seguida atualiza alguns dados extras. A inicialização de uma thread é, portanto, incompleta, exigindo uma segunda operação para atualizá-la. Mais do que isso, não está escrito em nenhum lugar, mas o atributo “title” parece que é importante e precisa estar igual ao que você mostra no título do seu post. Achei tudo isso bem inconsistente e acho que a documentação precisa melhorar um pouco mais.
+De qualquer forma, imagino que agora esteja tudo ok. Se alguém ver alguma inconsistência nos comentários – especialmente nos mais antigos – não deixe de me avisar.
+tags: obsolete
+

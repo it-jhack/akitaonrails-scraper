@@ -1,0 +1,23 @@
+
+O Lucas Húngaro postou as fotos do evento em Bauru. Foi um evento muito legal onde eu e o Vinícius passamos o dia evangelizando XP e Rails. Aliás, recomendo muito a quem puder assistir o Vinicius, a palestra dele é excelente!
+
+
+
+Falando em palestras, eu sei que estou bem atrasado com o material da RejectConf. Ainda não terminei de editar os vídeos. Mas aqui vão os arquivos das palestras para download.
+
+Abertura do prof. Jef sobre o CCSL
+Minha Palestra (pdf, Keynote) de abertura
+Palestra (pdf, Keynote) do Danilo Sato sobre rSpec
+Palestra (pdf, Keynote) do Eduardo Fiorezzi sobre Refactoring
+Palestra (pdf, ppt) do Myke Hamada sobre segurança na web
+Palestra (pdf) do Fabio Kung sobre JRuby
+Palestra do Vinicius sobre o Projeto Lucidus
+Palestra (pdf, ppt) do George Guimarães sobre o RailsRumble e o Pagestackr
+Palestra (pdf, Keynote) do Carlos Villela sobre a ThoughtWorks e RailsConf
+Palestra (pdf, Keynote) do Carlos Brando sobre “Fazendo a sua parte”
+
+Infelizmente já adianto que o vídeo não ficou perfeito. A câmera não é profissional e a iluminação não ajudou muito. O áudio está bom mas a imagem não está clara, então será necessário mesmo usar os arquivos acima para acompanhar.
+E esta semana, no sábado, irei palestrar no WebDevCamp, em São Paulo, na primeira palestra do dia às 9:00hs!
+Update 30/11: Acabei de subir os slides da minha apresentação em Bauru (pdf, Keynote).
+tags: obsolete
+

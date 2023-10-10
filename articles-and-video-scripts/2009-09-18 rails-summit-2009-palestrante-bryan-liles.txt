@@ -1,0 +1,21 @@
+
+
+English translation: click here
+Bryan Liles ficou bastante conhecido depois do Ruby Hoedown de 2008 com sua palestra Test All the Fucking Time cunhando o termo “TATFT”.
+
+Ele virá falar sobre boas práticas de programação, baseado numa séria que começou recentemente no seu blog Smartic.us, chamado #yerdoinitwrong (literalmente, “voceestafazendoerrado”). Veja a apresentação da série:
+#yerdoinitwrong intro from Bryan Liles on Vimeo.
+O primeiro episódio fala sobre enviar os logs do Rails para um servidor remoto usando syslog, e recomenda o excelente Splunk, que eu também gosto. Não perca os episódios.
+Não deixe de trocar figurinhas com ele durante o Rails Summit! Inscreva-se já!
+
+
+
+Speaker Bryan Liles
+Bryan Liles became very well known after his talk Test All the Fucking Time at Ruby Hoedown 2008, coining the term “TATFT”.
+
+He’ll come to talk about best practices in software development, based on the series he recentely started at his blog Smartic.us called #yerdoinitwrong. Watch his introduction to the series:
+#yerdoinitwrong intro from Bryan Liles on Vimeo.
+The first episode talks about sending your Rails logs to a remote server using syslog, and he even recommends the excellent Splunk, which I like as well. Don’t miss his episodes.
+And come to the Rails Summit to talk and exchange information with him! Register now!
+tags: railssummit2009
+

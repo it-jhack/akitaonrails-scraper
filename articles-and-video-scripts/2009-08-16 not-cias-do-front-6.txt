@@ -1,0 +1,276 @@
+
+A última série do Notícias do Front foi publicado no dia 1 de Junho. Ou seja, temos mais de 2 meses de notícias importantes acumuladas para cobrir hoje, ou seja, será um artigo longo! 
+Tentarei organizar o melhor que puder. Muita coisa legal foi discutida nesse tempo, especialmente o lançamento do Rails Summit 2009. Quem quiser acompanhar tudo o que eu venho lendo, assine o feed do meu Google Reader, meu Delicious e, claro, para as últimas novidades, sigam-me no Twitter. Vamos às notícias:
+De qualquer forma, acho que para mim, pessoalmente, a melhor notícia foi o ORKUT DECLARA MORTE AO IE6. Faz tempo que venho dizendo que a única forma do IE 6 morrer de fato é o Orkut matá-lo. Ainda não foi desta vez, mas está no caminho. Além do Orkut, semanas antes o YouTube! e o Digg também mostraram seu suporte à morte desse estorvo. (ah, sim, o site do Rails Summit avisa que não suporta IE 6 ;-)
+Outra coisa, no blog do site oficial do Rails o Matt publicou um pequeno artigo How do I learn Ruby & Rails?, que muita gente me pergunta (depois vou traduzir), mas se você está iniciando, comece por ali.
+
+
+Eventos
+
+Oxente Rails – It’s a Wrap! – a cidade de Natal, RN, teve um grande evento de Ruby e Rails, contando com membros conhecidos da comunidade brasileira como o Tapajós, Carlos Brando e internacionais como o Yehuda Katz, Jon Larkowski (da Hashrocket), Geoffrey Grosenbach (via vídeo). Evento fantástico organizado pela Tink! do Paulo Fagiani. Parabéns!
+
+
+1º RS on Rails – Agora, dia 29 de agosto de 2009, não perca este evento de Rails no Rio Grande do Sul, na PUCRS. Com o Oxente em Natal e este no RS, o Rails literalmente já cobriu o Brazil de Norte a Sul :-) Não deixe de participar!
+
+Comunidade
+
+The Importance of Executable Class Bodies – muitas linguagens tem algum nível de suporte a metaprogramação, mas a maioria delas não chega perto de Ruby. Por que? Corpo executável de Classes! Isso não é óbvio no começo, mas uma diferença grande é que você executa código durante a declaração de uma classe, completamente modificando seu comportamento. Soa estranho? Leia este artigo do Yehuda onde ele explica como isso funciona em mais detalhes. Corpo executável de classe é o “killer-feature” de Ruby que a distancia de qualquer outra linguagem dinâmica moderna.
+
+
+Python Decorators in Ruby – parece que a função de “decorators” do Python é algo que não dá para fazer em Ruby. De fato, exatamente igual não, mas neste artigo o Yehuda coloca uma prova de conceito de uma função muito semelhante em poucas linhas de código.
+
+
+Why Do Rubyists Test So Completely? – este artigo tenta cobrir sobre a cultura de testes dos rubistas, algo que desde o DHH já é incentivado desde o começo no Rails. O artigo em si não é completo e pode ser mal interpretado, recomendo muito ler os comentários que seguem no final pois a discussão é bem interessante. Para quem está iniciando, lembre-se: o fato do Ruby ser dinâmico e não ter compilação estática não é um sinal de “fraqueza”. E testes não são meros substitutos de compilação estática. São algumas das formas de interpretar o assunto da maneira incorreta.
+
+
+Benchmark entre RSpec e Shoulda – lembrem-se, benchmarks podem levar a interpretações erradas. De qualquer forma este artigo do Nando Vieira, palestrante do Rails Summit, é muito interessante pois ele compara o mesmo cenário de testes entre RSpec e Shoulda. A diferença não é pequena, por isso a razão deste destaque. O RSpec fez o Shoulda literalmente comer poeira. Novamente, vale a pena acompanhar os comentários pois há “caveats” na análise, embora nada seja conclusivo ainda.
+
+
+OndeTrabalhar.com – os bastidores desse projeto Rails – o pessoal da Caelum lançou um website muito legal, bonito, simples e útil para um problema real: clientes querem contratar profissionais, profissionais querem encontrar clientes. Este site fecha o gap. A grande maioria dos sites nacionais de empregos são feitos, sujos, cheios de bugs, simplesmente horrendos de usar (como o famigerado e tenebroso apinfo). Este artigo mostra os bastidores, como o projeto Rails foi feito, que bibliotecas foram usadas e coisas do tipo. Muito interessante.
+
+
+state machine != workflow engine – poucos programadores costumam entender o assunto de máquinas de estado ou de workflows. Este artigo pode dar uma boa introdução ao assunto.
+
+
+Get Your API Right – então você quer criar uma API RESTful? A maioria entende que isso tem algo a ver com usar os verbos PUT, DELETE além dos já conhecidos GET e POST. Mas há mais do que isso, a maioria também se esquece completamente do cabeçalho HTTP e de coisas importantes como códigos de status de retorno! Este artigo pincela o topo do iceberg nesse assunto. Nem pense em começar uma API via HTTP se não souber sequer isso. Novamente, os comentários continuam a discussão e também tem dicas interessantes.
+
+
+Mike Gunderloy’s ‘Rails Rescue Handbook’ – Very Handy! – programador ruim faz código ruim em qualquer plataforma. O problema é quando você se vê à mercê de um código Rails feito por alguém desse tipo. O que fazer? Este e-book pode lhe dar boas dicas de como começar a tratar um sistema mal feito e refatorá-lo para ficar mais simples dar manutenção. Vale a pena explorar esse tema.
+
+
+Writing An Interpreter In 15 Minutes With Ruby – está cursando Ciências da Computação? Que tal escrever um interpretador de Scheme (linguagem Lisp-like) em Ruby? Eis uma experiência interessante de se fazer.
+
+Caminhando para o Rails 3
+
+What’s New in Edge Rails: The BugMash Edition – esperem a próxima versão do Rails para corrigir dezenas de pequenos ítens, alguns bugs, alguns apenas conveniências, mas que no geral colaboram para dar aquele “polimento extra” no framework. Pessoalmente gostei de finalmente o ActiveResource ter suporte a proxy HTTP e SSL, por exemplo.
+
+
+What’s New in Edge Rails: The Hodgepodgery – eis mais algumas pequenas mudanças e correções de bug no Rails.
+
+
+What’s New in Edge Rails: Cleaner RESTful Controllers w/ respond_with – este pelo visto é o recurso que deve gerar a maior quantidade de tutoriais em blogs quando o Rails 3 for lançado, o primeiro passo para um controller mais enxuto. Foi retirado da gem inherited_resources do próprio José Valim e incorporado diretamente no Rails 3.
+
+
+What’s New in Edge Rails: Default RESTful Rendering – seguindo ao artigo anterior do Ryan, o pessoal está levando muito a sério a história de “thin-controllers” e de finalmente “dry-ificar” os controller. Difícil explicar em poucas palavras, mas lembram de como os controllers que você criava via scaffold eram enormes? Pois é, não mais. Com o recurso de Responders, tudo que era repetitivo agora se torna reusável. Confiram.
+
+
+What’s New in Edge Rails: Independent Model Validators – validators ficaram mais simples no ActiveRecord principalmente com o método ‘validates_with’, que permite separar a lógica do model em classes de validação. Mais dry-ificação e facilidade para reusar validações e tornar seu model mais limpo.
+
+
+Creating your own generators with Thor – o brasileiro José Valim contribuiu enormemente para o Rails 3 nos últimos meses. Uma das coisas mais importantes foi praticamente reescrever todos os generators do Rails. Agora eles são todos configuráveis e flexíveis, baseados no projeto Thor. Neste artigo ele explicar como você pode criar seus próprios generators agora.
+
+
+Embracing REST with mind, body and soul – neste artigo do José Valim ele explica o recursos de ‘respond_with’, ‘respond_to’ e Responders em detalhe, demonstrando como isso emagrece e organiza seus controllers, incentivando a tornar tudo mais RESTful.
+
+
+Rails Edge Architecture – neste artigo o Yehuda Katz, o principal responsável pelo refatoramento do Rails 3, explica suas idéias sobre ActionController. É um artigo mais conceitual, mas vale a pena entender.
+
+
+Rails 3: The Great Decoupling – mais um artigo conceitual do Yehuda, explicando seus refatoramentos, especialmente no ActionController.
+
+Dicas
+
+A grand piano for your violin – você já deveria saber tudo isto, mas caso queira relembrar, leia este artigo sobre bancos de dados relacionais para refrescar a memória sobre o que é um índice, chave primária, joins polimórficos condicionais, single table inheritance e algumas recomendações sobre como usar cada recurso. Must-read para iniciantes.
+
+
+Ruby 1.9 Fibers + AJAX = HTTP Binding? – importante, se você um dia quiser fazer um Chat, especialmente se quiser usar o método de polling, não use Rails: cada request bloqueia um processo inteiro de Rails, não se esqueça. Este artigo demonstra uma prova de conceito interessante usando o recurso de Fibers do Ruby 1.9 com Ajax para conseguir maior escalabilidade e concorrência. Vale a pena entender esta técnica.
+
+
+TwitterLand: 5 Twitter Data APIs In A Single Gem – todo aplicativo que se preza hoje integra com Twitter. Este artigo lista algumas das várias maneiras de se fazer isso. Parece que o novo Hello World é fazer um cliente de Twitter.
+
+
+ODF Report – Gere documentos ODF com uma gem brasileira – ODF é o formato OpenDocument, concorrente do formato docx do Microsoft Word, e que é usado em ferramentas como o OpenOffice. Esta gem brasileira encapsula algumas funcionalidades para gerar ODFs e pode ser muito útil na geração de relatórios e material que precise ser impresso ou compartilhado em múltiplas plataformas, por exemplo. Colabore com esse projeto!
+
+
+Acts_as_state_machine locking – máquinas de estado são extremamente úteis, especialmente em models que tem diferentes status dependendo de alguns eventos. Mas há um pequeno problema onde o comportamento pode não ser como o esperado. Leia este artigo para entender o que fazer.
+
+
+Construa daemons Ruby seguros com RobustThread – Daemons são processos que vivem por muito tempo em Unix. Um processo Mongrel, por exemplo, é um daemon. Aprenda a fazer daemons em Ruby com esta biblioteca. É fácil e simples.
+
+
+Ola Bini – ele publicou vários artigos recentemente, primeiro explicando a saída do Charles, Tom e Nick da Sun para integrar a equipe da Engine Yard. Explicou sobre o RE2J, seu gerador de lexer para Java. Ele melhorou o Hpricot para funcionar melhor com JRuby. Também melhorou o suporte a YAML do JRuby com o Yecht. Finalmente explicou melhor sobre sua experiência convertendo de código C para Java, e onde estão os truques. Várias melhorias significativa para o JRuby estão chegando.
+
+
+Turbocharge Your Ruby Testing with Parallel Specs – quanto mais testes você faz, mais lento fica sua suíte de testes. Dependendo do tamanho do projeto rodar os testes pode começar a levar muito tempo. Algumas soluções começaram a despontar como o Parallel Spec para rodar specs de Rspec em paralelo, diminuindo drasticamente o tempo.
+
+
+Procs, lambdas, blocks?! What’s the difference? – o Leonardo Borges é um dos palestrantes do Rails Summit e neste artigo ele explica a diferença entre Procs, Lambdas e Blocks, coisa que pode confundir muito quem está começando com Ruby.
+
+
+Make any Ruby object Rack-friendly with Rackable – Rack foi uma grande idéia para equalizar todos os frameworks web feitos em Ruby. É uma interface simples e com esta gem é ainda mais simples criar rapidamente um objeto “Rackable”.
+
+
+Web Spiders Fáceis com Anemone – web spiders ou crawlers não são novidade, já fazíamos isso anos antes até do Google aparecer. Mesmo assim ainda é um desafio fazer um bom crawler. Um bom ponto para começar, um mini-crawler, é usando o Anemone com Ruby. Claro, não espere ter um de alta performance, mas para pequenos usos pode ser suficiente.
+
+
+How Ruby Mixins Work With Inheritance – um dos grandes recursos do Ruby é seu suporte a Mixins, que permite incluir comportamentos ortogonais em runtime aos seus objetos. Mas pode não ser óbvio como isso influi na hierarquia de herança de classes e seus comportamentos. Chad Fowler, palestrante do Rails Summit, explica como isso funciona.
+
+
+HTTP PubSub: Webhooks & PubSubHubbub – callbacks de HTTP é um assunto que eu confesso que ainda não entendi completamente. Acho que este artigo é um bom lugar para começar, de ninguém menos que Ilya Grigorik, nosso palestrante no Rails Summit.
+
+
+Hirb: An Easy-to-Use View Framework for irb – o IRB é uma maneira muito prática de explorar provas de conceito de código de forma rápida. Mas às vezes pode ser difícil visualizar certas estruturas de dados. O Hirb é um tipo de “view” para essas estruturas de forma a torná-las mais legível em formato texto no seu console. Especialmente interessante quando você está vendo listas de objetos ActiveRecord ou estruturas de árvores, hashes, etc.
+
+
+Auto delta parent records in ThinkingSphinx – para quem não sabe Sphinx é um excelente engine de procura. O Thinking Sphinx é a forma de integrá-lo a uma aplicação Rails e este artigo explica como atualizar um índice de Sphinx de forma incremental em vez de recriá-lo o tempo todo.
+
+
+Cucumber scenarios that depend on Sphinx – falando em Sphinx, e como fazer testes de integração com Cucumber em cima dela? Este artigo pode ter a resposta para você.
+
+
+Getting Started with JRuby on Google App Engine – pequeno tutorial de como criar uma pequena aplicação Rack ou Sinatra e configurá-lo para funcionar bem no Google App Engine usando JRuby.
+
+
+Staticify – static caching for Ruby web applications – uma coisa que talvez não tenha caído a ficha para muita gente é que alguns acham Rails grande demais para coisas simples como um website onde a maioria do conteúdo é estático (um site institucional por exemplo). Nesse ponto as pessoas já pensam em ir direto pra HTML puro ou PHP. Mas há diversas opções importantes em Ruby, como o Staticify e outros que permite gerar conteúdo estático a partir de Ruby. É o melhor dos dois mundos, performance máxima e a flexibilidade de Ruby por trás.
+
+
+Map Fields – A Rails plugin to ease the importing of CSV files – você tem algumas dúzias de arquivos em Excel exportados em CSV (comma separated values), como importá-los ao seu banco de dados? Eis uma receita que talvez seja simples o suficiente para a maioria dos casos.
+
+
+Enforcing Ruby code quality – muitos artigos já exploraram esse tema, este é apenas mais um, sobre como utilizar ferramentas como Flay, Flog e outros para avaliar seu código, ajudando-o a refatorá-lo.
+
+
+Getting Started with YARD – o formato padrão de documentação de APIs do Ruby é o RDoc. O YARD é uma alternativa compatível com opções mais ricas de markup, proporcionando uma documentação mais atraente. Seria legal se todos começassem a adotá-la.
+
+
+Introduction to BDD with Cucumber – mais um tutorial sobre como começar com Cucumber. Se você ainda não começou, com certeza não é por falta de tutoriais. Portanto, comece!
+
+
+15 Expert Tips for Using Cucumber – boas dicas para melhorar ainda mais seu uso de Cucumber, lembrando que ele não é apenas para aplicações Rails mas para qualquer aplicação web que você queira construir cenários de testes integrados simples. Recomendo ler o artigo anterior se você ainda não conhece Cucumber muito bem.
+
+
+Initial version of DataMapper Oracle adapter – DataMapper é a melhor alternativa hoje ao ActiveRecord, em termos de alto nível de abstração (mais low level, é o Sequel). Mas há um problema: faltam bons drivers/adapters para ele. Uma boa notícia neste artigo é o suporte a Oracle aparecendo, o que deve torná-lo infinitamente mais atraente.
+
+
+A dozen (or so) ways to start sub-processes in Ruby: Part 2 – por alguma razão estranha, a nova geração de rubistas acha que Ruby é apenas para Web por causa do Rails, mas lembre-se que sua raíz foi para administração de sistemas. Uma função importante é conseguir controlar sub-processos e este artigo é uma boa introdução para isso.
+
+Dicas de Rails
+
+BigOldRailsTemplate – A Whole Dummy App in a Rails Template – Rails Template é um arquivo com diversos passos que transforma seu projeto padrão de Rails. Neste caso este script é gigantesco e já configura seu projeto inicial para ter Authlogic, Paperclip, will-paginate, Searchlogic, testes com RSpec, opção para incluir jQuery e muito mais. Muitos de nós já fazíamos isso manualmente, este template vai tornar a operação simplesmente trivial. E não se esqueçam que isso está no Github portanto você pode fazer fork e criar sua própria variedade.
+
+
+How to embed a Sinatra app inside a Rails app as a plugin – todos sabemos que para requests leves e simples, o Rails pode ser demais. Para isso temos o recurso de Rails Metal, que é um middleware Rack apenas com o mínimo do Rails (e sem muitas das facilidades), focando em performance em vez de produtividade. Muitos preferem usar Sinatra, que também é um framework Rack leve. Agora, podemos usar o Sinatra, junto com o Rails, em vez do Metal. É o que este artigo explica. E é bem simples.
+
+
+HyRes : ActiveResource that actually works! – eu não sei ainda se usaria esta biblioteca. Um dos problemas do Rails 2.x é que o ActiveRecord e ActiveResource precisam duplicar lógica, como callbacks e validadores. No Rails 3 haverá o ActiveModel que centraliza as coisas comuns para serem reusadas entre ambos, ou seja, o ActiveResource deve melhorar no futuro. Mas se agora você precisa de um ActiveResource melhor, talvez esta seja a alternativa.
+
+
+Deployment Script Spring Cleaning – Capistrano é apenas uma das maneiras de se automatizar deployment de aplicações (Rails ou não). Este artigo lista mais algumas alternativas interessantes, como o Vlad. Confira.
+
+
+Which Deployment for JRuby on Rails – artigo de introdução para que todos saibam, primeiro, que Rails roda com JRuby sem problemas. Segundo, para entender que ele roda em praticamente todos os melhores application servers java do mercado como GlassFish. Se você se interessa por Java e Rails, comece por este artigo.
+
+
+Uploadify and Rails 2.3 – precisa de uma página para fazer múltiplos uploads de uma só vez? Comece por este artigo.
+
+
+Users and Passwords – muita gente lida da forma errada com senhas de usuários em aplicações, guarda da forma errada. Plugins como o Authlogic escondem muito disso, mas é bom entender os mecanismos e conceitos por trás disso. Na realidade trata-se apenas da descrição da técnica de hash e salt que praticamente todo mundo usa.
+
+
+Securely store passwords with bcrypt-ruby; now compatible with JRuby and Ruby 1.9 – recomendo ler o artigo anterior do Koziarski antes de ler este do pessoal da Phusion. Depois de entender como armazenar senhas como hashes+salt no banco, é bom entender a diferença de algoritmos de hash e suas consequências e porque bcrypt pode ser uma opção mais razoável do que MD5/SHA1/SHA2.
+
+
+40% speedup using Nokogiri! – o Rails usa por padrão o backend de XML chamado REXML. Mas com uma única linha de configuração você pode trocá-lo pelo Nokogiri, que é compatível e até 40% mais rápido. Útil especialmente se você usa ActiveResource ou coisas assim. Performance de graça sempre é bem vindo.
+
+
+acts_as_taggable_on_steroids was REALLY slow – se você usa esse plugin, pode cair em problemas de performance com o MySQL. A solução: rodar o comando OPTIMIZE TABLE de vez em quando. Veja neste artigo os detalhes.
+
+
+Consuming OAuth intelligently in Rails – depois de criar um cliente de Twitter, o segundo Hello World hoje é fazer sua aplicação se integrar com o Twitter no backend, ou seja, permitir sua aplicação para consumir os recursos do Twitter usando OAuth para autenticação e autorização. OAuth é um padrão que está crescendo em uso para integrar aplicações e pode ser uma boa solução para aplicações federadas por exemplo. Não é difícil de entender.
+
+
+Gotcha: UTC vs Local TimeZones with ActiveResource – mais uma explicação de problemas sobre confusão de Time Zones. É bom entender isso, e siga a seguinte best practice: a menos que você saiba exatamente o que está fazendo, sempre grave os datetimes como UTC no seu banco de dados. Se sua aplicação for internacionalizável então, isso é um no-brainer.
+
+
+Deferred Javascript in Rails – um pequeno truque de carga de javascript em seu layout de Rails. Basta colocá-lo no final do layout somado a mais um pequeno truque de helper que está detalhado no artigo.
+
+
+Rack::Utils and CGI escape and unescape performance boost – escaping e unescaping de URL tem duas alternativas: CGI::Escape e o mais recente Rack::Utils::escape. Porém, temos uma terceira alternativa implementada como uma extensão nativa escrita em C que é ordens de grandeza mais rápido, o URLEscape::escape. E parece que ele é compatível com os anteriores e, portanto, fácil de usar em sua aplicação Web para ganhar performance de graça se for esse o caso. Leia o artigo para entender como fazer isso.
+
+
+Lockdown release: 1.0! – autenticação hoje tem boas alternativas como o bom e velho restful_authentication e o mais recente Authlogic. Mas autorização é mais complicado, tem diversas ramificações e eu pessoalmente não tenho nenhuma opção padrão. Este Lockdown parece ser uma opção interessante a considerar para este problema.
+
+Screencasts/Mídia
+
+Lessons Learned from Three Years of PeepCode – o Geoffrey Grosenbach apresentou em primeira mão este screencast-palestra durante o Oxente Rails, sobre empreendedorismo e sua experiência com o Peepcode nesses últimos 3 anos. Vale a pena dar uma olhada. Este artigo também tem o transcript do video para quem quiser apenas ler.
+
+
+ADVANCED COMMAND LINE – você finalmente saiu do Windows e entrou no grande mundo Unix (via Linux ou Mac). Agora seu maior medo está mais perto: a linha de comando! Veja neste screencast como na realidade ele é muito mais simples e útil do que você pensa.
+
+
+Hanselminutes Podcast 171 – The Return of Uncle Bob – não é específico para Ruby ou Rails mas é sempre divertido ouvir o bom e velho Uncle Bob. Neste podcast o Scott Hanselman conversa com ele sobre profissionalismo. Recomendado para todo programador.
+
+
+FLOSS Weekly 79: David Heinemeier Hansson – um dos podcasts que mais gosto é o FLOSS Weekly, da rede Twit.TV. O host é ninguém menos que o Perl-King,  Git-evangelist e Smalltalk-activist Randal Schwartz. Desta vez ele entrevista ninguém menos que o David Heinemeir Hansson. Eu pessoalmente gostei de ver isso porque eu conversei com o Randall durante o FISL de 2008 e sugeri a ele que fizesse isso, mas na época ele parecia que não ia fazer isso. Fico feliz que o tenha feito.
+
+
+Community Highlights: Rails Prescriptions – quer entender de verdade como funciona esse tal de “TDD”? Compre este e-book em PDF que vai lhe dar dicas valiosas para criar testes realmente decentes.
+
+
+Screencast: Easy Rails File Uploads using Ajax and jQuery – o título já diz tudo, upload de arquivos usando Ajax. Nada melhor que um screencast para aprender mais rapidamente.
+
+
+Ruby Tube – mais um agregador, só que desta vez de screencasts! Ou seja, você pode encontrar e assistir todos os grandes screencats que esta comunidade já produziu sobre Ruby, Rails e afins. E como esta comunidade é uma das que mais produz esse tipo de material, você provavelmente gastará horas e horas sem parar assistindo e aprendendo. Recomendado, e colabore com eles!
+
+
+Improving the Usability of Your Ruby on Rails Applications – Usabilidade é um assunto importantíssimo. Usabilidade raramente é algo delegado ao programador. E hoje em dia é considerado muito mais importante do que o código em si. Por isso não deixe de prestar atenção neste assunto. É a usabilidade que faz uma aplicação prevalecer ou morrer no mercado atual. Lembre-se disso.
+
+
+Clicktale + Rails = Better Usability – falando em usabilidade, recomendo muito usar o serviço Clicktale para avaliar a usabilidade das suas aplicações/websites já em produção, coletando os dados comportamentais de usuários reais para analizar o que pode ser melhorado em termos de usabilidade de forma empírica. Leve este assunto a sério!
+
+
+O Gregg Pollack, nosso palestrante no Rails Summit, tem feito muitos screencasts importantes. Entenda mais sobre Rack, Metal e Rails Middlewares. Aprenda como escalar seu banco de dados com diversas técnicas explicadas na Parte 1 e Parte 2. Finalmente, entenda como fazer testes de carga realísticos na sua aplicação, também começando pela Parte 1 e terminando na Parte 2. São técnicas até que simples, que todo programador Rails tem a obrigação de saber.
+
+Git
+
+Como desfazer commits na branch errada no Git – o Git é fantástico. Até quando você faz uma besteira não é difícil se recuperar dela. Lembre-se da dica padrão: sempre desenvolva num branch diferente do “master”, constantemente faça rebases a partir do master para pegar as últimas atualizações e no final faça um merge de volta ao master. Caso você erre num desses passos, este artigo pode ser a saída.
+
+
+Como recuperar um git rebase mal feito – mais uma vez, você fez bagunça no seu Git. Não tema, sempre há como recuperar. Aprenda mais uma técnica para isso.
+
+
+PHP.git – Finalmente! O pessoal do PHP resolveu sair do arcaico CVS para Subversion. Essa simples mudança permite utilizar o Git-SVN e foi o que eles fizeram: abriram um mirror oficial no Github para o projeto. Já não era sem tempo!
+
+
+Como migrar de SVN para GIT – alguns não sabem disso, mas como o pessoal do PHP fez no artigo acima, qualquer repositório Subversion é facilmente espelhável em Git, de forma bi-direcional! Ou seja, você pode trabalhar em qualquer um dos lados e sincronizá-los depois. É fácil e muito útil para quando você precisar naquele cliente ou empresa que só permite Subversion: use Git sem eles saberem.
+
+
+GitCasts – no mesmo modelo do RailsCasts do Ryan Bates, este do grande Scott Chacon vem ao resgate daqueles que querem aprender Git, com material simples e didático.
+
+Windows
+
+Community Highlights: IronRuby – esta é a entrevista do Jimmy Schementi, desenvolvedor-líder do projeto IronRuby. Para quem não lembra é o Ruby que roda sobre o CLR do .NET. Eles fizeram progressos a passos largos nos últimos meses e estão num ponto muito interessante com uma performance absurda comparada com versões anteriores e caminhando para se tornar quase totalmente compatível. Não deixem de acompanhar.
+
+
+Comparing the performance of IronRuby, Ruby 1.8 and Ruby 1.9 on Windows – nesta análise compara-se o Ruby 1.8.6 compilado com o antigo Visual C++ 6 contra o novo Ruby 1.9 e o IronRuby 0.9. O interessante é ver como o IronRuby evoluiu e está muito próximo ao Ruby 1.9. Este artigo foi contestado pelo Luis Lavena, pois não se comparou a nova geração do Ruby 1.8.6 compilado com MingW32, que é o resultado do próximo artigo.
+
+
+A faster Ruby on Windows is possible – esta análise compara o Ruby 1.8.6 no Windows compilado com o MingW32 contra o antigo compilado com o obsoleto Visual C++ 6. Os resultados são gritantes, o MingW32 é ordens de grandeza melhor, o que justifica porque o Luis Lavena tem concentrado esforços em criar um Ruby Installer com MingW32.
+
+
+SQLite3/Ruby 1.2.5 Released! – algum tempo atrás o Jamis Buck desistiu de manter a biblioteca SQLite3-ruby para Windows. Isso foi um problema para usuários de Windows pois o comando de gem update sempre quebrava e você era forçado a instalar manualmente a versão mais antiga. O Luis Lavena assumiu a bronca e lançou uma versão mais nova para Windows, inclusive usando o recurso de Fat Binaries (que tem múltiplos binários de múltiplas plataformas embutido). Excelente!
+
+
+RubyInstaller: Getting Started with Rails and MySQL – está desenvolvendo em Windows e quer saber como configurar o MySQL para funcionar direito nessa plataforma? Veja estas dicas do Luis Lavena.
+
+Novos Bancos de Dados
+
+How to install MongoDB on OS X – este banco de dados não-relacional está mais e mais ganhando tração. Veja neste tutorial como instalar no Mac OS X. Particularmente não sei se gosto muito disso, prefiro via MacPorts, mas esta é a forma de instalar versões mais novas.
+
+
+Getting Started With MongoMapper and Rails – é muito simples criar uma aplicação Rails que usa o MongoDB em vez de MySQl com esse wrapper. Aprenda como.
+
+
+Ruby, Rack and CouchDB = lots of awesomeness – mais e mais o CouchDB está sendo usado com Ruby e Rails. Neste artigo o Matt Aimonetti demonstra a criação de um Logger básico com Rack e CouchDB.
+
+
+FALANDO UM POUCO SOBRE COUCHDB – você já ouviu falar tanto de CouchDB mas ainda não tem idéia do que se trata? O Marcos Tapajós, outro palestrante do Rails Summit, explica do que se trata. Explicação bem didática e fácil de entender.
+
+
+How not to do CouchDB Views – você ainda nem começou a entender direito o que são Views. Talvez por isso mesmo é bom já ver um anti-pattern logo no começo.
+
+
+MongoMapper, The Rad Mongo Wrapper – mais um artigo sobre integrar MongoDB com Rails com este wrapper que torna fácil o mapeamento de objetos. Para quem está interessado, é um bom começo. Eu gosto como ele dá um ar de ActiveRecord a um objeto do Mongo.
+
+tags: obsolete
+

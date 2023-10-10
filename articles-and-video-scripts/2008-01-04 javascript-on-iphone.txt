@@ -1,0 +1,10 @@
+
+I was looking for a way to develop for the iPhone. Myself and Marcus both tried the Toolchain (which has a lot of quirks) and we still have to learn Objective C (not a bad thing at all, but the it means that I can’t do anything immediate right now).
+Fortunately someone decided a different approach, he create the project Jiggy and this is very nice because it’s basically a Javascript runtime to run in the iPhone.
+I’ve compiled a very quick screencast just do introduce you to the platform. You can download it through RapidShare or see the streaming (click in the article to see more).
+
+
+Online Videos by Veoh.com
+I hope you all start using it so we can have more documentation, tutorials, examples. The iPhone is already BIG. I don’t care that it doesn’t have GPS, a better camera or whatnot. Buy a N75. The iPhone is great, you have to own one to understand (and I certainly do). Apple will release the official SDK in february, until then this is possibly the best way to develop simple apps to run natively.
+tags: obsolete iphone
+

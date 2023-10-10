@@ -1,0 +1,274 @@
+
+O assunto não é nada novo, mas como caí nele esses dias resolvi anotar. Faz algum tempo que estou só desenvolvendo usando Vagrant, se ainda não conhece vale a pena ler o artigo Usando o Vagrant como Ambiente de desenvolvimento Windows do Nando Vieira sobre isso.
+Em resumo é basicamente uma forma simples de configurar seu VirtualBox. Porém com isso vem alguns problemas, um deles é executar testes de aceitação, especialmente com Selenium. Isso porque o Vagrant vai subir um servidor VirtualBox headless, sem modo gráfico. E sem isso não dá para os testes abrirem o Firefox. Você pode executar em modo headless mas é mais divertido ver o Firefox abrindo e executando seus testes.
+Para que isso funcione é simples: basta executar o Selenium em modo servidor e fazer a execução do Vagrant chamá-lo pela sua rede. Vamos passo a passo.
+
+
+
+Assumindo que você já tem seu projeto Rails, vamos adicionar o seguinte no seu Gemfile:
+
+1
+
+gem 'capybara', :group => :test
+
+
+Agora execute bundle para instalar a gem. Por padrão ele vai instalar o selenium-webdriver. Você pode usar o Capybara com o PhantomJS usando a gem Poltergeist mas em particular eu tive um problema onde nos mesmos specs que o Selenium executava perfeitamente no caso do Poltergeist eu estava recebendo erros de NotImplementedError que ainda não consegui debugar a causa.
+Estou assumindo que seu projeto já tem Rspec configurado. Como normalmente o arquivo spec/spec_helper.rb já tem a linha Dir[Rails.root.join("spec/support/*/.rb")].each {|f| require f}, basta colocar as configurações num arquivo no diretório spec/support. Então podemos começar criando o arquivo spec/support/capybara.rb:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+require 'capybara/rails'
+require 'capybara/rspec'
+
+# Use this driver to start firefox with a profile called firebug, where you can leave firebug installed.
+# In OSX, run '/Applications/Firefox.app/Contents/MacOS/firefox-bin -p' to create a profile.
+Capybara.register_driver :selenium_firebug do |app|
+  Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => "firebug")
+end
+
+Capybara.javascript_driver = :selenium
+
+
+Agora vamos criar outro arquivo, spec/support/capybara_remote.rb
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+
+# SELENIUM_SERVER is the IP address or hostname of the system running Selenium
+# Server, this is used to determine where to connect to when using one of the
+# selenium_remote_* drivers
+SELENIUM_SERVER = "10.0.1.8"
+
+# SELENIUM_APP_HOST is the IP address or hostname of this system (where the
+# tests run against) as reachable for the SELENIUM_SERVER. This is used to set
+# the Capybara.app_host when using one of the selenium_remote_* drivers
+SELENIUM_APP_HOST = "127.0.0.1"
+SELENIUM_APP_PORT = 3001
+
+# CAPYBARA_DRIVER is the Capybara driver to use, this defaults to Selenium with
+# Firefox
+CAPYBARA_DRIVER = "selenium_remote_firefox"
+
+# At this point, Capybara.default_driver is :rack_test, and
+# Capybara.javascript_driver is :selenium. We can't run :selenium in the Vagrant box,
+# so we set the javascript driver to :selenium_remote_firefox which we're going to
+# configure.
+Capybara.javascript_driver = :selenium_remote_firefox
+
+RSpec.configure do |config|
+
+  config.before(:each) do
+    if selenium_remote?
+      Capybara.server_port = SELENIUM_APP_PORT
+      Capybara.app_host = "https://#{SELENIUM_APP_HOST}:#{Capybara.server_port}"
+    end
+  end
+
+  config.after(:each) do
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+    Capybara.app_host = nil
+  end
+
+  # Determines if a selenium_remote_* driver is being used
+  def selenium_remote?
+    !(Capybara.current_driver.to_s =~ /\Aselenium_remote/).nil?
+  end
+end
+
+# CapybaraDriverRegistrar is a helper class that enables you to easily register
+# Capybara drivers
+class CapybaraDriverRegistrar
+
+  # register a Selenium driver for the given browser to run on the localhost
+  def self.register_selenium_local_driver(browser)
+    Capybara.register_driver "selenium_#{browser}".to_sym do |app|
+      Capybara::Selenium::Driver.new(app, :browser => browser)
+    end
+  end
+
+  # register a Selenium driver for the given browser to run with a Selenium
+  # Server on another host
+  def self.register_selenium_remote_driver(browser)
+    Capybara.register_driver "selenium_remote_#{browser}".to_sym do |app|
+      Capybara::Selenium::Driver.new(app, :browser => :remote, :url => "https://#{SELENIUM_SERVER}:4444/wd/hub", :desired_capabilities => browser)
+    end
+  end
+end
+
+# Register various Selenium drivers
+CapybaraDriverRegistrar.register_selenium_remote_driver(:firefox)
+
+
+Importante é modificar as constantes SELENIUM_SERVER para ser o IP da sua máquina local e o SELENIUM_APP_PORT para ser a porta onde o Capybara vai carregar o servidor de teste para o Firefox conectar. Essa mesma porta você deve configurar no seu arquivo VagrantFile e adicionar a seguinte linha:
+
+1
+
+config.vm.forward_port 3001, 3001
+
+
+Importante: use uma porta que não conflite com nada. No caso não use o famigerado "3000" porque você provavelmente vai ter seu servidor de desenvolvimento carregado nela, mas tirando isso pode ser qualquer outra porta. Com esse mapeamento o firefox local fora do Vagrant vai conseguir conectar simplesmente carregando https://127.0.0.1:3001.
+Uma última modificação é entender a seguinte situação: quando executamos specs, o Rspec vai sempre vai executar cada teste dentro de uma transação e dar rollback ao final para não poluir o teste seguinte. Mas quando o Capybara subir o servidor de testes para o Selenium/Firefox conectar as transactions não vão funcionar. Uma solução comum é usar o database_cleaner e trocar a estratégia de "transaction" para "truncation".
+Mas existe uma forma mais simples que já foi publicada pela PlataformaTec. Nesse caso não precisamos do database_cleaner e consideramos o fato que o Capybara cria uma thread para subir o servidor e nesse caso podemos compartilhar a conexão de banco que já existe na nova thread e para isso podemos simplesmente criar um arquivo como spec/support/database_sharing.rb com o seguinte:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+class ActiveRecord::Base
+  mattr_accessor :shared_connection
+  @@shared_connection = nil
+
+  def self.connection
+    @@shared_connection || retrieve_connection
+  end
+end
+
+# Forces all threads to share the same connection. This works on
+# Capybara because it starts the web server in a thread.
+ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
+
+
+Só para garantir abra seu spec/spec_helper.rb e garanta que a seguinte configuração está com o valor certo:
+
+1
+2
+3
+4
+5
+
+RSpec.configure do |config|
+  ...
+  config.use_transactional_fixtures = true
+  ...
+end
+
+
+Isso garante que continuamos usando a estratégia de "transaction" e não precisamos carregar mais uma gem extra.
+Finalmente, agora precisamos baixar o Selenium Server. Vá para o site oficial e baixe a versão mais recente que, no caso da época deste artigo é a versão 2.31.0. Considerando que você já tem Java configurado na sua máquina local (fora do Vagrant), podemos executar o servidor simplesmente fazendo:
+
+1
+
+java -jar selenium-server-standalone-2.31.0.jar
+
+
+Pronto, agora basta criar suas features. Existem dezenas de tutoriais. Em particular, leia esta página do Wiki do Devise para autenticação integrando direto no Warden. Com isso já podemos executar os specs de aceitação do Capybara de dentro do seu box Vagrant e ver o Firefox executando na sua máquina host local.
+Como último toque, vamos assumir que você está usando o excelente Travis-CI como seu servidor de integração contínua. É o mesmo problema, como executar o Selenium num box headless? Nesse caso não precisamos mesmo "ver" o Firefox e para isso basta fazer esta configuração no seu arquivo .travis.yml:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+language: ruby
+rvm:
+  - 1.9.3
+before_script:
+  - cp config/database.yml.sample config/database.yml
+  - bundle exec rake db:create db:migrate db:test:prepare
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+script:
+  - bundle exec rake spec
+
+#whitelist
+branches:
+  only:
+    - master
+
+
+Isso deve ser o suficiente para que o Travis consiga executar seus specs de aceitação normalmente. Se por acaso você optar pelo Poltergeist, o Travis já tem os binários do PhantomJS instalados então não há o que se preocupar.
+
+tags: obsolete rails
+

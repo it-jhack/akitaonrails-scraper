@@ -1,0 +1,163 @@
+
+Update 11/06: A maneira mais fácil de instalar as coisas é como mencionei no update anterior: instalar as gems e baixar os pacotes pré-compilados. Porém, às vezes bugs são encontrados e corrigidos mas demoram um pouco para se refletir nas gems. Um exemplo foi o que o Caffo me reportou hoje. O Hongli imediatamente me respondeu que no trunk do Github está corrigido, nesse caso, sigam este artigo que diz como baixar e instalar tudo diretamente do Github. Lembrando, o Passenger funciona em praticamente toda plataforma, mas o Ruby EE ainda não compila no OS X (eles estão trabalhando nisso).
+Update 09/06: Finalmente o pessoal da Phusion atualizou o site e as bibliotecas, agora está bem mais fácil. Siga pelo site deles e para o Ruby EE siga aqui
+O Ninh e o Hongli chegaram só ontem de São Francisco, direto da Apple :-)
+Por causa disso, eles ainda não tiveram tempo de publicar as novas gems do Passenger, portanto quem estiver tentando instalar via gem install passenger provavelmente receberá a versão 1.0.5.
+Não só isso, a maioria dos tutoriais apenas está repetindo o básico: como instalar o Passenger, mas parece que todo mundo se esqueceu do patch de copy-on-write para o interpretador Ruby, batizado (de propósito) como “Ruby Enterprise Edition”.
+Nenhum deles foi empacotado nas versões finais, mas estão disponíveis no Github do Hongli. Agora vou demonstrar como pegar o Passenger mais recente e também o Ruby Enterprise Edition.
+
+
+Passenger
+Para pegar a versão mais nova do Passenger, você precisa pegar do Github:
+
+git clone git://github.com/FooBarWidget/passenger.git
+1
+2
+3
+4
+5
+6
+
+
+Ele requer Ruby instalado na sua máquina e mais duas dependências:
+
+<macro:code>
+sudo port install asciidoc
+sudo port install doxygen
+
+
+No caso do Doxygen verifique seu sistema operacional e siga pelo site deles. A instrução que dei acima assume que você está em OS X e com MacPorts instalado. Se for Ubuntu, use ‘sudo apt-get install asciidoc doxygen’.
+Feito isso, a partir do diretório onde fez o clone do projeto, faça:
+
+rake package
+sudo gem install pkg/passenger-1.1.0.gem
+1
+2
+3
+4
+5
+6
+7
+
+
+O primeiro comando vai gerar a gem e o segundo vai instalar a nova gem. 
+
+Agora use o seguinte comando para instalar o módulo no Apache:
+
+<macro:code>
+passenger-install-apache2-module
+
+
+Siga as instruções e ao final, apenas acrescente este trecho à sua configuração do Apache 2 (assumindo que você sabe o que é isso):
+
+LoadModule passenger_module /opt/local/lib/ruby/gems/1.8/gems/passenger-1.1.0/ext/apache2/mod_passenger.so
+PassengerRoot /opt/local/lib/ruby/gems/1.8/gems/passenger-1.1.0
+PassengerRuby /opt/local/bin/ruby
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+
+Pronto, tecnicamente com isso você deve ter o novíssimo Phusion Passenger, por enquanto chamado de 1.1.0 mas que provavelmente será liberado como 2.0. 
+
+h3. Ruby Enterprise Edition
+
+Agora a segunda parte do show: o "Enterprise Edition":https://www.rubyenterpriseedition.com. Como eu já "disse antes":https://www.akitaonrails.com/2008/4/19/o-que-ruby-enterprise-edition, isso nada mais é do que um conjunto de modificações no Garbage Collector do Ruby MRI 1.8. Leiam a "série":https://izumi.plan99.net/blog/index.php/2008/01/14/making-ruby’s-garbage-collector-copy-on-write-friendly-part-7/ do Hongli em seu blog para mais detalhes.
+
+Em resumo, ele otimiza o algoritmo de Mark & Sweep para que ele não somente permita copy-on-write, o que significa redução no consumo de RAM em, na média, 33%, como também um aumento na performance do GC de até 20%.
+
+Por uma série de razões não técnicas, o patch da Phusion ainda não entrou no trunk oficial do Ruby MRI, por isso, vocês podem baixar o fork deles diretamente:
+
+<macro:code>
+git clone git://github.com/FooBarWidget/rubyenterpriseedition.git
+
+
+Por enquanto, a compilação ainda não funciona no OS X (eles me prometeram que vão trabalhar nisso). Se você estiver em FreeBSD nem precisará compilar nada (ele já vem com o binário pronto). Windows também não vai funcionar. Por agora, é somente para quem tem Linux/BSD. Eu fiz o teste num Ubuntu 8.04 Server dentro de uma VMWare. Depois da instalação atualizei meus pacotes com o apt-get para instalar o build-essential, bison, git, openssl, openssh-server, ruby, rake, autoconf, libssl-dev.
+
+cd rubyenterpriseedition
+git checkout origin/release
+rake package
+1
+2
+3
+4
+5
+6
+7
+
+
+Não esqueça de mudar para a branch 'origin/release' que é onde está o código necessário para gerar o empacotamente. A task rake irá gerar um tarball com nome parecido com: ruby-enterprise-1.8.6-20080507.tar.gz. No mesmo diretório podemos continuar assim:
+
+<macro:code>
+tar xvfz ruby-enterprise-1.8.6-20080507.tar.gz
+cd ruby-enterprise-1.8.6-20080507
+sudo ./installer
+
+
+Ele abre um menu em texto a partir de onde ele primeiro fará uma checagem de dependências. Se você instalou todos os pacotes via apt-get como mencionei acima, o teste deverá sair em verde com o seguinte status:
+
+Checking for required software…
+
+GNU C++ compiler… found at /usr/bin/g++
+Zlib development headers… found
+OpenSSL development headers… found
+
+1
+2
+3
+4
+5
+6
+7
+
+Target directory
+
+Where would you like to install Ruby Enterprise Edition to?
+(All Ruby Enterprise Edition files will be put inside that directory.)
+
+[/opt/ruby-enterprise-1.8.6-20080507] : 
+-----------------------------------------
+
+Compiling and optimizing the memory allocator for Ruby Enterprise Edition
+In the mean time, feel free to grab a cup of coffee.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+O que ele vai fazer é criar uma nova distribuição de Ruby, (no exemplo, no diretório /opt/ruby-enterprise-1.8.6-20080507). Isso demora uns poucos minutos. Ao final, você terá um novo Ruby com o patch aplicado, e para testar podemos fazer assim:
+
+<macro:code>
+cd /opt/ruby-enterprise-1.8.6-20080507/bin
+./ruby -v 
+>> ruby 1.8.6 (2008-03-03 patchlevel 114) [i686-linux]
+./ruby -e "puts GC.copy_on_write_friendly?"
+>>true
+
+
+Como podem ver é o 1.8.6 com o patchlevel mais recente. Aliás, um pequeno disclaimer, não atualizem para Ruby 1.8.7 imediatamente. Alguns parecem achar que ele pode quebrar alguma coisa. O de sempre: em desenvolvimento? Sem problema, atualize. Em produção? Em time que está ganhando é melhor não mexer, fique no 1.8.6.
+O último script que rodei no exemplo acima demonstra que o GC deste novo Ruby de fato está habilitado para copy-on-write. Agora, você pode inclusive colocar esse diretório com precedência no $PATH se quiser usá-lo como seu Ruby padrão. Só lembre que as gems das quais suas aplicações dependem precisam estar dentro desta nova distribuição. Para quem não sabe, comandos como ‘gem’ ficam em /opt/ruby-enterprise-1.8.6-20080507/bin. As gems em si, depois de instaladas ficam em /opt/ruby-enterprise-1.8.6-20080507/lib/gems/1.8./gems e assim por diante.
+Se não quiser alterar seu $PATH, não tem importância, você pode continuar usando a mesma distribuição Ruby que já usava antes. Porém, para fazer apenas suas aplicações inicializadas pelo Passenger usar o novo Ruby, basta acrescentar esta linha na sua configuração do Apache:
+
+RailsRuby /opt/ruby-enterprise-1.8.6-20080507/bin/ruby
+-
+Pronto! Com isso, agora seu Apache 2 está configurado com o novíssimo Passenger e já habilitado para tirar proveito das otimizações de copy-on-write do Ruby Enterprise Edition! De qualquer forma, a documentação do Passenger é bastante completa. Há muita coisa que você pode configurar no seu Apache e eu recomendo que se leia essa documentação em detalhes.
+Em breve eles irão liberar as gems, instalador, documentação atualizada e novidades no site deles, o problema é mesmo tempo. Semana que vem acontecerá o RubyEnRails Amsterdam no dia 10 e eles vão participar.
+tags: obsolete passenger
+

@@ -1,0 +1,35 @@
+
+
+
+
+Como todos sabem, o Leopard vem pré-instalado com Ruby 1.8, RubyGems, Rails 1.2, etc. O segundo ‘service pack’ 10.5.2 acabou de sair e já instalei o meu (dica: depois de instalar o 10.5.2, ele vai reiniciar e logo em seguida rode o Software Update novamente para instalar o Leopard Graphics Update). 
+Eu acabei de rodar o XBench e esse update deu pequenos pontos extras de performance. CPU, Floating Point, Threads, Memory, OpenGL, Graphics, tudo ficou um pouquinho mais rápido. Parece que a cada novo upgrade eles conseguem espremer alguns ciclos extras. Performance grátis nunca é ruim ;-) Recomendo.
+Para nós, Rubistas, algumas novidades também: eles atualizaram o RubyGems para 1.0.1 e RubyCocoa para 0.13.1, que são as versões mais recentes, além de um bugfix com a variável LDSHARED que causava problemas, por exemplo, com RubyInline.
+Agora eu não sei se foi no 10.5.1 ou 10.5.2 mas hoje que me ocorreu checar a versão do próprio Ruby. Eu acabei de reinstalar meu sistema – troquei meu Macbook por um Macbook Pro ;-) e por mania eu sempre instalo o Ruby via MacPorts. Vejamos a diferença de versão do Ruby instalado pela Apple e do Ruby do MacPorts, respectivamente:
+1
+2
+3
+4
+5
+6
+7
+
+/usr/bin/ruby --version
+ruby 1.8.6 (2007-09-24 patchlevel 111) 
+[universal-darwin9.0]
+
+/opt/local/bin/ruby --version
+ruby 1.8.6 (2007-09-23 patchlevel 110) 
+[i686-darwin9.1.0]
+
+
+Pois é, a versão da Apple está um patchlevel mais atualizado :-)
+Para quem acabou de comprar um Mac que já veio com Leopard e quer rodar Rails 2.0, é simples. Primeiro instale a atualização 10.5.2 – para já ganhar o novo Rubygems que o Rails 2 exige -, e em seguida:
+1
+
+gem install rails
+
+
+Isso aí ;-)
+tags: obsolete apple
+

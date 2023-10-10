@@ -1,0 +1,101 @@
+
+Yesterday I wrote a detailed summary of everything I’ve done in the year of 2008 and I think it is important to translate it into English so everybody else outside of Brazil can see how we’ve been evolving.
+This was a very busy year. I was always a quiet guy. On the other hand I always hated routine, I always hated do only the things everybody else were doing. I’ve changed perspectives several times. On the late 80’s I’ve toyed with DOS and standalone local systems. On the early 90’s it was client-server. Mid-90’s multimedia, CD-ROMs, publicity agencies. Late 90’s it was the first Internet wave. Early XXI century, enterprisey, SAP, Java. 3 years ago my Ruby on Rails journey began, first the portuguese book, then the blog, then throwing out the enterprise world for freelancing in Rails. This year, Locaweb, Rails Summit.
+By 2006, right after I taught myself Rails, it was obvious that this was a worthwhile path. But, back then there was no market for Ruby in Brazil. Some people that started before me were already giving up. I had 2 options: try outside of Brazil or create a new market from scratch here. Obviously, I chose the less easy path. Fortunately more and more people joined and the community grew fast.
+And before I go on, the good news! Next week, December, 3rd, Ruby on Rails will receive the “Info Award 2008” for software development, and I will be there on the behalf of David Hansson. For those of you who are not from Brazil, the “Info Exame” magazine is “the” single largest IT magazing in Brazil. So you can imagine that this is an important award and a big win for the entire Ruby community. This is a key milestone and I congratulate the efforts of the entire community for it.
+
+
+This month we also had David Hansson’s interview published in the magazine. It was kind of fun because it was first supposed to be published in October, to coincide with Rails Summit. But all of a sudden DHH went offline and myself and the journalist were helpless. So it was delayed and fortunately we were able to get this month’s edition.
+
+Last friday, November 28th, it was my last talk of the year, at the “Encontro de TI” event. In total, it was no less than 13 (my lucky number) talks, mini-lectures, speeches. I’ve been at several country side cities in São Paulo, then Rio Grande do Sul, Santa Catarina, Ceará. And I’ve been in the USA, attending and blogging about RailsConf Portland and QCon San Francisco.
+17/04 – (PDF) My journey started at FISL, the largest open source event in Latin America. My flight was delayed, and I lost my scheduled talk. Fortunately we were able to get another room on the other day. Read my report to see how it ended.
+26/04 – My second talk was organized by Impacta, one of the largest private IT education and training networks in Brazil. It was a long, productive morning presenting Ruby on Rails. Unfortunately I forgot where I saved the presentation slides.
+07/05 – This episode is not directly related to talks, but definitively related to Rails. Some of you will remember that my passport had expired and Brazil was going through a national wide system transition that delayed the whole process for months. So I was going to miss RailsConf because of that. But thanks to Vinicius Teles, I traveled to Niterói, Rio de Janeiro, to, literally give blood for Rails :-) In summary: because of another healthy crisis over there, people who donated blood would get a shortcut to get a new passport. It was surreally lucky for me. Read it here and here
+27/05 – (Articles) RailsConf Portland! That was my first RailsConf and the 2nd time I travel to the USA. My 1st time was Miami, circa 2000. RailsConf was awesome, I’ve met lots of interesting people, I got new friends, networking was amazing. Read my Memories and listen to the outstanding interviews I was able to record there.
+09/06 – I barely got back from RailsConf, I just started at Locaweb as the new Linux Product Manager. My first goal: implement Ruby on Rails on the shared hosting systems. Second goal: organize the first big Rails event in Brazil. Piece of cake … Not! ;-)
+03/07 – 22/07 – 05/08 – Lot’s of new stuff in July at Locaweb. First, we released New pricing plans for the shared hosting. We also started sponsoring RubyLearning.org. And we finally released Rails in the shared hosting plans. And the work is just starting.
+05/07 – (Booklet/PDF) Back to Impacta, this time for a Show Day – an entire day lecturing about the Ruby language and a little bit of Rails. Very heavy content for a single day, hope everybody enjoyed.
+22/08 – The first Happy Hour for São Paulo Railers :-) We gathered several Railers in a bar for a night of beer and geeky discussions. We have to have more of that.
+09/09 – (PDF) This was the wee that started my real talks marathon: literally one talk every week until the end of the year! The first destination was the Claretiano College, in Batatais, country side of São Paulo. This time I decided to change my usual pitch. Instead of talking about just Ruby or Rails, I explained about Killing the Average. I will translate that to English as soon as I have the time, but I explained the science behind networks and how people organize and evolve beyond the average. Teacher Luciano first saw my screencast-talk online, about the translation of Ryan Davis original Hurting Code for Fun and Profit. This “Killing the Average” subject would become the backbone for my next talks. The students from Batatais were really cool, they came to São Paulo to visit Locaweb’s facilities and even started their own Rails blog: Batata On Rails.
+16/09 – (PDF) Now the trip would be to Ribeirão Preto, another country side city in São Paulo, for a free software event at USP (University of São Paulo). This was a more technically focused talk about Ruby and Rails. It also marked my usage of screencasts instead of live demonstrations. I think it is better than leaving it to Murphy to decide to crash my demo in the middle of the presentation :-) I demonstrated stuff such as ActiveScaffold so people would be surprised by what can be done with dynamic languages.
+27/09 – (PDF) Another long trip, this time to Xanxerê, a small western country side city in Santa Catarina. Long trip, but worthwhile. The Unoesc (Universidade Oeste de Santa Catarina) organized the Boot II event, geared towards Java, but they were kind for inviting me. I did a very long presentation there where I explained that, even though I am a Ruby “Evangelizer”, I would not use the bad technique of bashing competitores in order for Ruby to show up as the better choice. On the contrary, I am totally a pro-“polyglot” programmer. So I demonstrated a little bit of JRuby, first manipulating Swing objects, then deploying a Rails application over Glassfish. I hope they understood what can be accomplished when you mix 2 great technologies.
+08/10 – (PDF) Now, São Carlos, another country-side city in São Paulo, they would have their yearly IT event in the following week, but I would be able to join because of Rails Summit, so they were kind enough to invite me a week earlier for a lecture about Ruby and Rails. Again I emphasized my point of aiming beyond average. This is specially important for students: they are too young to limit themselves. Hope I was able to express the message.
+15/10 – 16/10 – (PDF) And in the middle of all this, I still had to organize Rails Summit Latin America! This project started exactly on the first day I joined Locaweb this year, in June. So it was less than 4 months to put the pieces together and assemble a big event for more than 500 people and more than 20 speakers, 14 of them being foreigners. Read the series of articles. Summarizing: the event surpassed our wildest expectations. My talk was intended to be very basic and explain the foundation of the Ruby language and the structure of Rails so that people who were just starting would be able to grasp what we were talking during the event.
+23/10 – (PDF) The Summit was a success and it was over, but not me, next week I drove to Rio Claro, another country side city in São Paulo, for the Seccomp event at Unesp (Universidade do Estado de São Paulo). It would be a workshop, in this case I detailed further about the Ruby language itself before diving into Rails magic. When you show just Rails it feels too black magic for many people, but explaining metaprogramming before that makes the transition a little bit easier. The students impressed me for their effort.
+25/10 – (PDF) Two days later, another talk, this time for the InterCon event, organized by iMasters magazing and by my long time friend Luli Radfahrer. Of course I couldn’t decline that. This is an event for internet-related people in general, I think most of them more on the web design side, instead of the programming one. So there were not coding sessions of any kind. As usual I prefer not to dive too deep into coding as this makes people bored too fast. I prefer to explain the eco-system, how Rails evolved, who are driving the evolution, the known cases and so on. I show just 15 minutes of coding.
+01/11 – (PDF) The Fratech consulting firm released the Brazilian branch of the famous website InfoQ and was kind enough to invite me to be Ruby editor. Two of my friends are editors too, Maurício de Diana (Agile) and Carlos Mendonça (.Net). Locaweb is the founding sponsor. This saturday launch event had Floyd Marinescu himself, well known to me from the time I used to read TheServerSide.com. It was a more Agile geared event so my talk didn’t have one single line of code – like I did at Claretiano – I made one comparison that I never saw anyone else doing so explicitly: explaining that the best case study for Agile methodologies are the Open Source projects in general. Every open source project is, by definition, an Agile project. I will write more about this later.
+14/11 – (PDF) Finally, a chance to visit the Northeast of Brazil: people from Fortaleza organized Ceara On Rails. It was a one evening event on friday. I landed on thursday so I could visit the night parties there, which I enjoyed a lot. Again, my talk was about averages and agile philosophy and how Rails can help. I think many people got new ideas from there. On the other hand, I was a little bit sad to return to São Paulo so soon. I was hoping to stay there all weekend.
+15/11 – (Interviews) The reason for my early travel back from Fortaleza, was because I had to be back at São Paulo to depart to San Francisco. Busy saturday, let me tell you. We were a group of 9 people from Locaweb, and we attended QCon all week. My 3rd time in the USA, the 2nd in the same year. I definitively have to remove the “quiet” lable from my profile. Fantastic week, lot’s of very interesting people, lot’s of interviews, people to meet. Busy week.
+27/11 – (PDF) This was an event I wasn’t aware of until the very day of my talk. It is called “IT Summit” (translated) and it was an interactively organized event, where people online could vote on who they wanted to do the talks. So I was very flattered to know I was chosen. This was an informal kind of talk, not many people, closer to me, and this time I risked a live demo of Ruby. As expected Murphy annoyed me a bit :-) That’s why I prefer screencasts.
+This was a very short summary of some of the things I did this year. After the Info Award party next week, I think I can finally go back to “normal”, almost vacation considering that I had time for nothing this year. Beyond the talks, beyond blogging, beyond podcasting weekly, beyond organizing events, I still have my full time day job too! I definitively need ‘git clone akita’.
+In total, I think I spoke to 1,5k people face to face! Download my talks, in PDF, from  Slideshare
+Videos
+The PDFs linked above were exported from my original Apple Keynote files. Most of them had videos, but many are repeated between the talks, so I decided to link them all together here. I will try to describe some of them.
+For Seccomp, Rio Claro, I did the more in-depth explanation of the Ruby language:
+
+0_IRB.mov
+1_basico.mov
+2_Tipos.mov
+3_Metodos.mov
+4_Classes.mov
+5_Objetos.mov
+6_Blocos.mov
+7_Builder.mov
+8_Require.mov
+
+For the Boot II event, in Xanxerê, about JRuby:
+
+glassfish_rails.mov
+jruby-swing.mov
+
+This video was sent by the RailsEnvy guys for the Rails Summit, with portuguese subtitles that I’ve added:
+
+RailsSummit_Leg.mov
+
+More videos, but the names are pretty much self explanatory:
+
+Intro_Rails.mov
+Intro_Ruby.mov
+locarails.mov
+ActiveResource.mov
+ActiveScaffold.mov
+Ruby_Basico.mov
+helloworld.mov
+
+The Message conveyed from my Talks
+This is nostalgic, but after all this, I think it is worth going back to my first blog post. I wrote the following on 2006, April 26th at 1:53AM:
+
+(Translation) Let’s see where this community can get. (or, “let’s see where the rabbit hole goes” :-)
+
+Ruby on Rails can be a lot or nothing, it will all depend on how the market will face the news. Lot’s of things we can do now. To start, by learning it.
+
+I will post about the main subjects on the platform here and I hope everybody contribute with ideas and suggestions, or even critics and opinions.
+
+Unfortunately there are many challenges to surpass. First, we have literally zero materials about Rails in portuguese. No Brazilian websites either. So, when I say “beginning from scratch”, I really mean it.
+
+The biggest challenge will be to convince the market. This is not something we can do overnight. It means we will not be able to leave the Java legacy behind just yet. We will start a transition period where we will have to do both in parallel.
+
+The pioneers always walk the toughest path, but the reward for them will be bigger too. This is the meaning of ‘investment’.
+““if you’re going to talk the talk, you’ve got to walk the walk” :-) In short, those were my talks this year, all of them with the following themes:
+
+Killing the Average. Most people do what most people do. By definition, they put themselves in the “average”, which, again by definition, means “mediocrity”. The message is: get out of mediocrity. It is the only way to protect yourself from the future. Do what everybody else does is exactly like being a lemming: one following the other down the cliff.
+
+
+Open Source is important. A tip for the companies: you want beyond average programmers? Look for them in the hundreds of open source projects. An open source programmer has to be good. He must know how to communicate. Certificates, diplomas, means nothing: open source means meritocracy, you earn respect, you can’t buy it. Open source is Agile by definition. A programmer that does more than what the day job requires is exposed to more options, more ideas and is more creative.
+
+
+It is impossible to have real Successful projects without an Agile culture and philosophy. Forget the “out-of-the-box” methodologies you buy from the consulting next door. Start from the beginning: understand and absorb the Agile Manifesto. Understand the values and ideal, without which successful Agile projects are impossible to have. Read my article sobre isso. I’ll try to translate those articles later.
+
+
+Dynamic Languages are growing. Not only Ruby, many other dynamic languages are gaining more and more space in the Application market. In the system level, Java-like languages will still be used. But we have to understand that in Web Application, productivity is way more important than raw performance. What good it is to have milliseconds of advantage and being 6 months late on the market?
+
+
+Everybody repeating “Rails doesn’t scale” are morons. Two choices here: if the guy really believes this, he is a very very amateur programmer who never did anything worthwhile in his career. If the guy doesn’t believe this and still talks about this as a joke, this guy is a dipshit. Smart people don’t hire dipshits. The joke was fun at the beginning. It is old now. Want to show off? Put a banana hanged in your neck. To you, here goes 2 slides I showed in my last talk:
+
+
+
+And this year, by coincidence, I found my motto printed in a cool t-shirt from TNG:
+
+The year is not over yet! Let’s close it with golden keys!
+tags: award obsolete english
+

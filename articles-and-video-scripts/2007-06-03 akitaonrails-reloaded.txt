@@ -1,0 +1,138 @@
+
+Meu pobre Blog estava carente de atenção faz meses. Acabei de terminar a primeira etapa de upgrade. Minha idéia é usar meu próprio blog como sandbox para alguns testes. Duas coisas que eu instalei para a Surgeworks semana passada foram o Subversion com suporte a SVK e a configuração de uma aplicação Rails com Capistrano. E resolvi que meu blog poderia ter o mesmo tratamento.
+
+
+O Subversion nem preciso mencionar: qualquer projeto tem necessidade de ser versionado, não importa seu tamanho. Que seja um HelloWorld ou um Basecamp, todos precisam de controle de código-fonte. Se você ainda não sabe usar, ou assumiu que não precisa, pode mudar de idéia. Existem diversos bons no mercado como o lendário CVS e outros mais de nicho como Mercurial, Darcs. Mas eu recomendo Subversion (SVN), mesmo porque muitos projetos novos do mundo Ruby estão sendo mantidos em SVN.
+O SVK é menos conhecido. Se você ainda não conhece SVN será muito difícil começar a entender SVK, e nesse caso sugiro pular este tópico e aprender SVN primeiro. Quem conhece SVN por outro lado deve entender a seguinte situação: digamos que no seu diretório ‘vendor/plugins’ se instale alguns plugins. Por enquanto tudo bem. Se sua intenção não é mexer lá, basta dar update de vez em quando e rodar os testes unitários para garantir que nada quebrou. Se quebrar, você força o update de volta à revision anterior. O problema: você precisa manter um controle da revision estável (caso esteja baixando do trunk remoto) e caso queira modificar o plugin, não vai poder dar commit de volta.
+Minha idéia com o SVK: criar um mirror local do projeto remoto. Dessa forma eu poderia sincronizar com o trunk remoto, me dando todas as novas funcionalidades e correções e ainda poderia desenvolver sobre esse projeto, realizando commits locais e ganhando toda a proteção de um SVN local. Sem mais delongas, eis o que eu fiz:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+# Criando o repositório local
+svk mkdir //repositories -m Creating Initial SVK Repository
+
+# Criando um mirror do Typo no repositório local
+svk mirror https://svn.typosphere.org/typo/trunk/ //repositories/typo
+
+# Sincronizando apenas a partir da revisão 1466 (a mais recente)
+# Isso porque na revisão 172 ele às vezes trava
+svk sync -s 1466 //repositories/typo
+
+# Criando o projeto no Subversion local
+svn mkdir https://[servidor]/akitaonrails/typo -m ““
+
+# Criando o mirror
+svn mkdir https://[servidor]/akitaonrails/typo/mirror -m ““
+
+# Criando um mirror local também do projeto no Subversion local
+svn mirror https://[servidor]/akitaonrails/typo //repositories/typodev
+
+# Sincronizando do Subversion local
+svk sync //repositories/typodev
+
+# Realizando um merge inicial entre os dois repositórios locais
+svk smerge --baseless -m “Initial mirror sync“ //repositories/typo //repositories/typodev/mirror
+
+# Cria uma cópia do mirror em um branch de desenvolvimento
+svn cp https://[servidor]/akitaonrails/typo/mirror https://[servidor]/akitaonrails/typo/trunk -m "Inicial copy"
+
+
+Isto cria a base das sincronzições. A partir daqui, eu devo fazer checkout do repositório https://[servidor]/akitaonrails/typo/trunk. Updates e commits vão todos lá também.
+Agora digamos que o pessoal do Typo tenha criado algo novo ou atualizado a base de código. O que fazer?
+1
+2
+3
+4
+5
+
+# Este comando agora sincroniza do trunk de ambos os Subversions
+svk sync --all
+
+# Com isto podemos checar o que mudou entre os dois trunks:
+svk smerge -m “teste de merge“ //repositories/typo //repositories/typodev/mirror
+
+
+Isto justifica porque só devemos trabalhar no /trunk e nunca no /mirror: para todos os efeitos, o /mirror deve continuar idêntico ao repositório remoto. Agora, basta realizar um merge normal entre dois branches de um mesmo Subversion. A partir do working copy do /trunk fazemos:
+1
+
+svn merge -r [last revision]:HEAD https://[servidor]/akitaonrails/typo/mirror
+
+
+Ponto importante: no smerge —baseless inicial a revisão remota era 1466. No nosso cenário hipotético, o pessoal do Typo criou novas coisas e agora está na revisão 1501, por exemplo, este é o HEAD. Para trazer a partir da revisão 1466, apenas substituímos last_revision_> por 1466 e ele vai trazer as atualizações de lá. Da próxima vez, o last_revision será 1501, e assim por diante. Na dúvida, veja os logs!
+Por hoje é o bastante. Se alguém tiver a paciência ou mesmo já tentou este procedimento, não deixe de deixar feedback. É a primeira vez que tento esta estratégia e estou curioso para saber se a idéia realmente se sustenta!
+Para os desavisados: eu não quero um vendor checkout. Essa estratégia é a usada atualmente mas não traz os benefícios de um mirror com suporte a merge. Prestem atenção ao conceito antes de dizer “ah, isso é trivial”
+A documentação em torno do SVK é muito ruim. Em distros derivados de Debian é muito simples instalar: apt-get install svk. No Mac a coisa é um pouco menos simples: eu sugiro usar o bom e velho MacPorts e rodar sudo port install svk. Em alguns casos, ele vai entrar em loop infinito no passo Configuring svk. Nesse momento você deve dar Ctrl+C para sair. O que ele precisa é o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+# desinstalar o p5-pathtools, provavelmente ele vai reclamar 
+# de dependências
+sudo port uninstall p5-pathtools -f
+
+# se reclamar, então desinstale as dependências
+sudo port uninstall p5-app-cli
+sudo port uninstall p5-getopt-long
+sudo port uninstall p5-pathtools -f
+
+# limpe o cache
+sudo port clean svk
+sudo port clean p5-pathtools
+
+# o problema parece ser a configuração do CPAN
+# caso o Perl seja recém instalado pelo MacPorts
+perl -MCPAN -e shell
+
+# todo mundo sabe configurar o CPAN, então não
+# vou detalhar. Depois é só continuar normalmente
+sudo port install -f p5-pathtools
+sudo port install -f svk
+
+
+Já no Windows, não tenho nem idéia. Como o SVK é um conjunto de scripts Perl, imagino que funcione. Provavelmente o Subversion binário de Windows já vem instalado com bindings de Perl. Talvez funcione sem grandes problemas.
+Da próxima vez, vou detalhar como configurei meu Capistrano para funcionar bem com meu hosting da RailsPlayground.net. Até mais!
+tags: obsolete
+

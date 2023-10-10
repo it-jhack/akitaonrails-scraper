@@ -1,0 +1,326 @@
+
+Para quem acha que toda a estrutura de diretórios, ambientes, etc que o Rails cria é muita coisa, o Pratik Naik fez um experimento muito interessante: criou uma aplicação Rails de uma única página em apenas um único arquivo Ruby muito curto e fácil de entender.
+Para deixar as coisas ainda mais simples, ele ligou tudo com o Thin , o web server que promete ser uma alternativa mais leve e adaptável do que o atual Mongrel; e também Rack , que deve se tornar a interface universal para todo web server HTTP em Ruby (Merb já usa, mod_rubinius deve usar). Continue lendo para ver como ficou:
+
+
+O código é basicamente assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+
+require 'rubygems'
+require 'thin'
+require "action_controller"
+require 'dispatcher'
+
+# configuração (substitui config/environment.rb)
+ActionController::Base.session = { 
+        :session_key => "_myapp_session", 
+        :secret => "alguma frase secreta com pelo menos 30 chars" }
+ActionController::Routing.use_controllers! ['home']
+ActionController::Dispatcher.unprepared = false
+Dependencies.mechanism = :require
+
+class ActionController::Dispatcher
+  def prepare_application
+  end
+end
+
+# Suas rotas (substitui config/routes.rb)
+ActionController::Routing::Routes.draw do |map|
+  map.root :controller => 'home'
+  map.connect ':controller/:action/:id'
+end
+
+# Sua aplicação (substitui app/controllers)
+class ::HomeController < ActionController::Base
+  def index
+    render :text => "fuck you to your face"
+  end
+  
+  def hello
+    render :text => params.inspect
+  end
+end
+
+# Adaptador para Thin, usando Rack
+class LifoAdapter
+  def call(env)
+    rack_response = Rack::Response.new
+    rack_request = Rack::Request.new(env)    
+    cgi = Rack::Adapter::Rails::CGIWrapper.new(
+                rack_request, rack_response)
+    ActionController::Dispatcher.dispatch(cgi,
+                ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS, 
+                rack_response)    
+    rack_response.finish
+  end
+end
+
+# Rodando a aplicação
+Thin::Server.start('0.0.0.0', 3000) do
+  use Rack::CommonLogger
+  run LifoAdapter.new
+end
+
+
+Apenas salve como um arquivo .rb qualquer e rode. Inspirado nessa idéia, o Pratik encapsulou isso num projeto que chamou de TinyRails e o código está, claro, no GitHub :-) De fato, o código é tão curto que posso colá-lo aqui:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+
+require 'rubygems'
+require 'thin'
+require "action_controller"
+require 'dispatcher'
+ 
+# Rails pwned
+ActionController::Base.session = { 
+        :session_key => "_myapp_session", 
+        :secret => "some secret phrase of at least 30 characters" }
+ActionController::Routing.use_controllers! ['home']
+ActionController::Dispatcher.unprepared = false
+Dependencies.mechanism = :require
+ 
+ActionView::Base.cache_template_loading = true
+ 
+def routes(&block)
+  ActionController::Routing::Routes.draw do |map|
+    map.instance_eval(&block)
+  end
+end
+ 
+class ActionController::Dispatcher
+  def prepare_application
+  end
+end
+ 
+def controller(name, &block)
+  klass = Object.const_set("#{name.camelize}Controller", 
+        Class.new(ActionController::Base))
+  klass.class_eval(&block)
+end
+ 
+# Me wants views
+ActionController::Base.view_paths = 
+        [File.join(File.dirname(__FILE__), "views")]
+ 
+# Make Thin Happy
+class LifoAdapter
+  def call(env)
+    rack_response = Rack::Response.new
+    rack_request = Rack::Request.new(env)    
+    cgi = Rack::Adapter::Rails::CGIWrapper.new(rack_request, 
+                rack_response)
+    ActionController::Dispatcher.dispatch(cgi,
+                ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS, 
+                rack_response)    
+    rack_response.finish
+  end
+end
+ 
+def start
+  use Rack::CommonLogger
+  run LifoAdapter.new
+end
+
+
+Finalmente, veja como utilizar o TinyRails e ainda substituindo ActiveRecord pelo DataMapper que é outro ORM em Ruby (por sinal, tanto ActiveRecord quanto DataMapper são Enterprise Design Patterns descritos pelo Martin Fowler):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+
+# thin -p 3000 -r modelz.rb start
+ 
+require 'tinyrails'
+require 'data_mapper'
+ 
+DataMapper::Database.setup({ :adapter => 'sqlite3', 
+        :database => 'modelz.sqlite3' })
+ 
+class User
+  include DataMapper::Persistence  
+  property :name, :string
+ 
+  # Create babies wearing a condom
+  table.create!
+ 
+  # Create a user if the table is empty when loaded
+  unless User.count > 0
+    create :name => "lifo"
+  end
+end
+ 
+routes do
+  root :controller => 'home'
+  resources :users
+end
+ 
+# Application code
+controller "home" do
+  def index
+    render :inline => '<%= link_to "Users", users_path %>'
+  end
+end
+ 
+controller "users" do
+  def index
+    @users = User.all
+ 
+    respond_to do |format|
+      format.html
+      format.yaml { render :text => @users.to_yaml }
+    end
+  end
+end
+ 
+start
+
+
+Have fun! :-)
+tags: obsolete rails
+

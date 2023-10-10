@@ -1,0 +1,10 @@
+
+
+
+
+Aproveitando o embalo do lançamento do Rails 1.2.1, mais uma boa notícia: a tradução em português do excelente livro Getting Real atingiu versão RC1 (Release Candidate 1).
+Por enquanto o texto continuará restrito apenas aos colaboradores que já estavam trabalhando nisso. Essa versão significa que TODOS os capítulos foram traduzidos. Agora o que resta é o processo de revisão, para tirar erros de concordância, ortografia e gramática.
+Foram 68 dias desde que convoquei os colaboradores. Infelizmente minhas expectativas era de ter chegado à versão final antes do fim do ano. Mas antes tarde do que nunca.
+Estamos próximos. Em breve teremos a versão online publicada para que todos possam ler.
+tags: obsolete 37signals getting-real
+

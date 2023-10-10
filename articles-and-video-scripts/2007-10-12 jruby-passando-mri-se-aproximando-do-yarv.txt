@@ -1,0 +1,11 @@
+
+
+
+
+Pelo visto não fui só eu quem não dormiu, Charles Nutter publicou agora há pouco alguns resultados – bem preliminares – de performance comparando JRuby, MRI (o Ruby oficial do Matz) e o YARV (o próximo Ruby, versão 1.9).
+Charles fez várias modificações na engine do JRuby usando annotations de Java (um dos motivos deles terem abandonado a compatibilidade com Java 1.4). E pelo visto a mudança gerou bons resultados. Pelo menos nos testes não-científicos com o basicão algoritmo de Fibonacci, o JRuby já ultrapassou o MRI e está colando no YARV.
+Em outro teste, ele rodou a comparação contra testes que foram otimizados para YARV. Novamente, JRuby tomou a dianteira do MRI e vai se aproximando de YARV. As coisas definitivamente estão ficando muito interessantes, muito rápido! Ainda há outras áreas em que o JRuby perde do MRI, é para onde as atenções do Charles devem se voltar nas próximas semanas.
+De qualquer forma não são tudo flores exatamente agora. Há poucos minutos, Ola Bini também postou mais detalhes de performance, com um conjunto muito mais extenso de testes e, na maioria JRuby ganha do MRI e onde ele perde não perde tão feio. Mas há um porém: a performance de Rails sobre JRuby está uma droga :-) É o que ele chama de mistério pois nas dezenas de testes individuais JRuby é melhor que MRI, mas em Rails especificamente ele é muito pior e ainda não se achou o motivo do que está causando uma degradação generalizada tão grande.
+Falta pouco :-)
+tags: obsolete jruby
+

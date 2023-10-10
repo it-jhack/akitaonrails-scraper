@@ -1,0 +1,111 @@
+
+
+Michael Koziarski fez uma palestra muito legal sobre performance que você pode assistir na gravação do evento Paris on Rails 2008. E ele escreveu um artigo sobre isso recentemente que achei bom traduzir aqui. Vamos lá:
+
+
+Uma das coisas mais ruins sobre pessoas discutindo sobre performance de aplicações web é a medida chave utilizada. Requisições por segundo parece a métrica óbvia para se utilizar, mas ela tem várias características sutis que envenenam o discurso e levam os desenvolvedores ainda mais fundo em buracos do coelho, persegindo ganhos irrelevantes. A métrica nos previne fazer comparações A/B ou discutir melhorias potenciais sem fazer aritméticas mentais que parecem acima da capacidade de muitos de nós.
+Em vez de falar de requisicões por segundo, nós devemos sempre nos focar na duração de uma dada requisição. É o que nossos usuários percebem, e é a única coisa que nos dá uma notificação.
+Eu devo começar a discussão dizendo que muito disso não se aplica à discussão de problemas de performance na escala de um Facebook, Google ou Yahoo. É o seguinte: estatisticamente falando, nenhum de vocês está construindo aplicações que vão operar nessa escala. Desculpe se não sabia disso, mas você não está construindo o próximo Google :-).
+Eu também devo dizer que requisições por segundo é uma métrica realmente interessante quando se considera o throughput de um cluster inteiro. Mas throughput não é performance.
+
+Diminuindo retornos marginais
+O maior problema que tenho com requisições por segundo é o fato que desenvolvedores parecem incapazes de saber quando parar de otimizar suas aplicações. Como requisições por segundo se tornam maiores e maiores, as melhorias se tornam menos e menos relevantes. Isso nos leva a pensar que derrotamos o tal do pareto enquanto desperdiçamos quantidades ainda maiores de tempo dos funcionários.
+Vamos pegar duas melhorias de performance e compará-los usando ambas duração e req/s.
+
+
+Patch
+ Antes
+ Depois
+ Melhoria
+
+
+A
+	120 req/s
+	300 req/s
+	180 req/s
+
+
+B
+	3000 req/s
+	4000 req/s
+	1000 req/s
+
+
+Como pode ver, quando usamos a métrica de req/s, a mudança B parece como uma GRANDE economia. Ela melhora a performance em 1000 req/s em vez do parco 180. Dê um aumento a esse cara! Mas vejamos o que acontece quando mudamos para durações:
+
+
+Patch
+ Antes
+ Depois
+ Melhoria
+
+
+A
+	8.33 ms
+	3.33 ms
+	5 ms
+
+
+B
+	0.33 ms
+	0.25 ms
+	0.08 ms
+
+
+Você vê que a mudança real em duração em B é miseravelmente pequena. 8% de um milissegundo! As chances são que as melhorias vão desaparecer no barulho estatístico quando comparado à latência da rede, ou a conexão de internet do seu usuário.
+Deltas se tornam sem sentido
+Um caso especial da minha primeira reclamação é que com requisições por segundo os deltas são tem sentido sem conhecer os pontos de começo e fim. Como mostrei acima, uma mudança de 1000 req/s pode ser algo pequeno, mas também pode ser um enorme ganho de performance. Veja este próximo exemplo:
+
+
+Antes
+ Depois
+ Diferença
+
+
+1 req/s
+	1001 req/s
+	1000 req/s
+
+
+Quando expressado em durações você pode ver que isso fez uma grande diferença.
+
+
+Antes
+ Depois
+ Diferença
+
+
+1000 ms
+	0.99 ms
+	999.01 ms
+
+
+Então 1000 req/s pode ser tanto irrelevante, ou fantástico. Durações não tem esse problema. 0.02 ms é obviamente questionável, e 999.01 ms é uma melhoria óbvia.
+Esse problema normalmente se expressa quando as pessoas dizem “essa mudança tomou 50 req/s da minha aplicação”. Sem os números de antes e depois, não podemos dizer se isso é grande coisa, ou se o cara precisa respirar fundo e voltar a trabalhar.
+Os números não batem
+Finalmente, requisições por segundo não se emprestam bem à aritmética, e fazem desenvolvedores tomarem decisões idiotas. O caso mais comum que vejo é quando comparamos web servers para colocar na frente de aplicações Rails. O raciocínio é mais ou menos assim:
+Nginx faz mais de 9000 req/s e o Apache apenas 6000 req/s!! É melhor eu usar Nginx a menos que eu queira pagar uma taxa de 3000 req/s.
+Quando as pessoas fazem essa comparação eles parecem acreditar que por trocar de nginx para apache suas aplicações vão de 100 req/s para 3100 req/s. Como sempre, durações nos dizem outra história.
+
+
+Apache
+ Nginx
+ Diferença
+
+
+6000 req/s
+	9000 req/s
+	3000 req/s
+
+
+0.16 ms
+	0.11 ms
+	0.05 ms
+
+
+Então podemos ver que as chances são de ganhos de 5% de um milissegundo na troca. Talvez essa melhoria seja válida para sua aplicação, mas vale a pena pela complexidade adicional?
+Conclusão
+Duração é uma métrica mais útil e mais honesta quando se compara mudanças de performance na sua aplicação. Requisições por segundo é muito usado para descartamos totalmente, mas por favor não a use quando estiver falando sobre performance da sua aplicação web ou bibliotecas.
+Update: nos comentários do post original, alguém mencionou sobre sizing de hardware e que req/s afeta isso, mas a resposta é óbvia. Segundo o koz: “custo de hardware não é contínuo. Então sua melhoria de 10% no throughput provavelmente não te economiza 10%. Das duas uma, ou você já está no limite da sua capacidade, e nesse caso a economia significa um novo servidor a menos (considerável), ou você tem capacidade sobrando, e nesse caso a economiza é zero”.
+tags: obsolete
+

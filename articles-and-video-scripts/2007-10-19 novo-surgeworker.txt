@@ -1,0 +1,12 @@
+
+
+
+
+Já era para ter anunciado isso antes mas o assunto do evento eclipsou um pouco as coisas :-)
+O Carlos Brando é nosso terceiro brasileiro Surgeworker, se juntando à minha equipe junto com o Marcus Derencius, para trabalhar em tempo integral nos projetos lá de fora no esquema home-office. Haleluia à Internet e ao mundo globalizado.
+Espero que as coisas continuem expandindo assim. Esperar sentado e de braços cruzados é muito cômodo. “Não vou aprender Rails agora porque o mercado ainda não pede.” Como sempre digo, quando pedir já será tarde. Ao contrário dos Estados Unidos – como sempre – está difícil encontrar bons Railers. E não digo isso especificamente sobre conhecimentos de Rails, mas maturidade de mercado em geral. Ninguém tem mais do que 3 anos em Rails. Mas pelo menos os últimos 5 ou 10 anos precisa ter sido enfrentando projetos cabeludos.
+Enfrentar, sem abraçar, o mundo ‘Enterprisey’ faz parte do aprendizado. Gerenciar projetos, coordenar equipes, resolver bugs: delivery. É algo que só se aprende na unha, pulando de galho em galho. 10 anos de rotina não trazem isso, só 10 anos de muita porrada. O Carlos – recém-saído do mundo .NET – ainda vai aprender muito de Rails, mas seu background em projetos deve lhe dar a bagagem para perseguir esse caminho.
+Antes dele eu cheguei a entrevistar outras pessoas que por diferentes motivos não puderam integrar a equipe. Nenhum dos que eu entrevistei eram ruins e possivelmente poderão integrar minha equipe em breve.
+Bem vindo Carlos!
+tags: surgeworks obsolete
+

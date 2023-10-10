@@ -1,0 +1,876 @@
+
+
+So, here it goes, Part 2 of my Rails 2.1 Tutorial. Start from Part 1 if you didn’t read it already.
+Disclaimer: If you like this tutorial and you’d like to translate to your own local language, ask me for the original Textile files through my e-mail.
+
+
+Has Finder and Named Scopes
+Another idea that was incorporated is has_finder.
+To understand named_scopes we have to understand, first and foremost, how the ActiveRecord::Base’s #find method actually works. The basic idea is that it receives a hash with options inside it. We know them already, as :conditions, :order, :limit, etc.
+Gems such as has_finder have brought the idea of merging those hashes into one. So, if we have 2 finder hashes, each of which with its own :conditions option, it would seem natural that we could combine those 2 into a single cohesive query. That’s the purpose of the new named_scope feature in Rails 2.1.
+To showcase it, let’s first add some dumb test data into our fixtures files. First test/fixtures/posts.yml:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+
+post_one:
+  title: Hello World
+  body: MyText
+  created_at: <%= (Time.now - 1.week).to_s(:db) %>
+  updated_at: <%= (Time.now - 1.week).to_s(:db) %>
+
+post_two:
+  title: Hello Brazil
+  body: MyText
+  created_at: <%= (Time.now - 2.weeks).to_s(:db)%>
+  updated_at: <%= (Time.now - 2.weeks).to_s(:db)%>
+
+post_three:
+ title: Hello RailsConf
+ body: MyText
+ created_at: <%= (Time.now).to_s(:db)%>
+ updated_at: <%= (Time.now).to_s(:db)%>
+ 
+post_four:
+ title: Rails 2.1
+ body: 
+ created_at: <%= (Time.now).to_s(:db)%>
+ updated_at: <%= (Time.now).to_s(:db)%>
+
+post_five:
+ title: RailsCasts
+ body: 
+ created_at: <%= (Time.now - 1.week).to_s(:db)%>
+ updated_at: <%= (Time.now - 1.week).to_s(:db)%>
+
+post_five:
+ title: AkitaOnRails
+ body: 
+ created_at: <%= (Time.now).to_s(:db)%>
+ updated_at: <%= (Time.now).to_s(:db)%>
+
+
+Then, test/fixtures/comments.yml:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+
+DEFAULTS: &DEFAULTS
+  created_at: <%= Time.now.to_s(:db) %>
+  updated_at: <%= Time.now.to_s(:db) %>
+
+comment_one:
+  post: post_one
+  body: MyText1
+  <<: *DEFAULTS
+
+comment_two:
+  post: post_one
+  body: MyText2
+  <<: *DEFAULTS
+
+comment_three:
+  post: post_one
+  body: MyText3
+  <<: *DEFAULTS
+
+comment_four:
+  post: post_one
+  body: MyText4
+  <<: *DEFAULTS
+  
+comment_five:
+  post: post_two
+  body: MyText5
+  <<: *DEFAULTS
+
+
+Finally, the restful_authentication already created some fixture data to populate the User model, but it forgot one small formatting option at around line #9, where it should’ve been (notice the missing :db parameter in the #to_s method):
+1
+
+remember_token_expires_at: <%= 1.days.from_now.to_s :db %>
+
+
+If you did everything correctly, at the command line again you should be able to run:
+
+rake db:fixtures:load
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+
+Now, let's reconfigure our Post model by editing the app/models/post.rb file:
+
+--- ruby
+class Post < ActiveRecord::Base
+  has_many :comments
+  named_scope :empty_body, :conditions => "(body = '' or body is null)"
+  named_scope :this_week, :conditions => ["created_at > ?", 1.week.ago.to_s(:db)]
+  named_scope :recent, lambda { |&#42;args| {:conditions => 
+        ["created_at > ?", (args.first || 2.weeks.ago).to_s(:db)]} }
+end
+
+
+The first one should be pretty straightforward. In order to understand that, let’s now open the ‘script/console’ (I also recommend, from another Terminal window, start tailing the log/development.log file):
+
+>> Post.empty_body
+=> …
+>> Post.empty_body.count
+=> 2
+1
+2
+3
+4
+5
+6
+7
+
+
+If we take a look at the log file, we should see this:
+
+<macro:code>
+SELECT * FROM `posts` WHERE ((body = '' or body is null)) 
+
+SELECT count(*) AS count_all FROM `posts` WHERE ((body = '' or body is null))
+
+
+So that’s exactly the same as running this in older Rails:
+
+>> Post.find(:all, :conditions => “(body = ’’ or body is null)”)
+=> …
+>> Post.count(:conditions => “(body = ’’ or body is null)”)
+=> 2
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+So, what's the whole point? Let's now run another example:
+
+<macro:code>
+>> Post.empty_body.this_week
+=> ...
+>> Post.empty_body.this_week.count
+=> 2
+
+
+They generate the following SQL statements:
+
+SELECT * FROM `posts` WHERE ((created_at > ‘2008-05-18 09:03:19’) AND ((body = ’’ or body is null)))
+SELECT count(*) AS count_all FROM `posts` WHERE ((created_at > ‘2008-05-18 09:03:19’) AND ((body = ’’ or body is null)))
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+
+That's the purpose of 'named scopes': to actually put meaningful 'names' to a particular 'scope' that can than be easily chained to create more complex meanings. 
+
+Even when calling 'count', it is not doing the wrong thing, which is fetch every required objects, storing them in a list and then read the list's size. 
+
+You can see that it is quite smart on how to join those conditions. And you can chain in as many as you want - of course, you have to experiment, but also be careful on over-using this feature.
+
+There are a few caveats that was also explained by "Ryan Bates":https://railscasts.com/episodes/108 and I'd like to mention them:
+
+* The 'this_week' named_scope is wrong. You can see the '1.week.ago' command. Understand that this only runs once in the life-cycle of this class. Meaning that until you restart the Ruby VM, that command will run once and only once. So, today is "18th, May 2008". This value gets stored in the class definition. And let's say that you were able to maintain your Rails apps online for months. After months, the stored value will still be "18th May 2008".
+
+* The 'recent' named_scope shows how to do it the correct way. If you need dynamic parameters in order to perform the query, you should put it in a block. A second warning is to be aware that the :conditions key is only one in a Hash of options. We have to put the :conditions pair inside the lambda's bracket, but it has its own brackets as well to denote the hash itself (the brackets are optional if they don't cause ambiguity).
+
+The trick about the splat (&#42;args) is to be able to have a 'default' value, in case the developer doesn't provide any date. That way, we can use it like this:
+
+<macro:code>
+>> Post.recent.count
+=> 4
+>> Post.recent(2.days.ago).count
+=> 3
+
+
+Which generates this SQL:
+
+SELECT count(*) AS count_all FROM `posts` WHERE (created_at > ‘2008-05-11 09:17:49’)
+SELECT count(*) AS count_all FROM `posts` WHERE (created_at > ‘2008-05-23 09:17:51’)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+named_scopes opens up several creative and meaningful ways to organize complex queries into smaller and cohesive chunks. There's probably more caveats to this usage, but we will find out soon enough. Explore as much as you can, because this is really helpful.
+
+h2. Optimized Eager Loading
+
+And speaking of finders, there is another not so loudly publicized change. Let's take a look at this:
+
+<macro:code>
+Post.find(:all, :include => [:comments])
+
+
+Until Rails 2.0 we would see something like the following SQL query in the log:
+
+SELECT `posts`.`id` AS t0_r0, `posts`.`title` AS t0_r1, `posts`.`body` AS t0_r2, `comments`.`id` AS t1_r0, `comments`.`body` AS t1_r1 FROM `posts` LEFT OUTER JOIN `comments` ON comments.post_id = posts.id
+1
+2
+3
+4
+5
+6
+7
+
+
+But now, in Rails 2.1, the same command will deliver different SQL queries. Actually at least 2, instead of 1. _"And how can this be an improvement?"_ Let's take a look at the generated SQL queries:
+
+<macro:code>
+SELECT `posts`.`id`, `posts`.`title`, `posts`.`body` FROM `posts` 
+
+SELECT `comments`.`id`, `comments`.`body` FROM `comments` WHERE (`comments`.post_id IN (130049073,226779025,269986261,921194568,972244995))
+
+
+The :include keyword for Eager Loading was implemented to tackle the dreaded 1+N problem. This problem happens when you have associations, then you load the parent object and start loading one association at a time, thus the 1+N problem. If your parent object has 100 children, you would run 101 queries, which is not good. One way to try to optimize this is to join everything using an OUTER JOIN clause in the SQL, that way both the parent and children objects are loaded at once in a single query.
+Seemed like a good idea and actually still is. But for some situations, the monster outer join becomes slower than many smaller queries. A lot of discussion has been going on and you can take a look at the details at the tickets 9640, 9497, 9560, L109.
+The bottom line is: generally it seems better to split a monster join into smaller ones, as you’ve seen in the above example. This avoid the cartesian product overload problem. For the uninitiated, let’s run the outer join version of the query:
+
+mysql> SELECT `posts`.`id` AS t0_r0, `posts`.`title` AS t0_r1, `posts`.`body` AS t0_r2, `comments`.`id` AS t1_r0, `comments`.`body` AS t1_r1 FROM `posts` LEFT OUTER JOIN `comments` ON comments.post_id = posts.id ;
++
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+| t0_r0     | t0_r1           | t0_r2  | t1_r0     | t1_r1   |
++-----------+-----------------+--------+-----------+---------+
+| 130049073 | Hello RailsConf | MyText |      NULL | NULL    | 
+| 226779025 | Hello Brazil    | MyText | 816076421 | MyText5 | 
+| 269986261 | Hello World     | MyText |  61594165 | MyText3 | 
+| 269986261 | Hello World     | MyText | 734198955 | MyText1 | 
+| 269986261 | Hello World     | MyText | 765025994 | MyText4 | 
+| 269986261 | Hello World     | MyText | 777406191 | MyText2 | 
+| 921194568 | Rails 2.1       | NULL   |      NULL | NULL    | 
+| 972244995 | AkitaOnRails    | NULL   |      NULL | NULL    | 
++-----------+-----------------+--------+-----------+---------+
+8 rows in set (0.00 sec)
+
+
+Pay attention to this: do you see lots of duplications in the first 3 columns (t0_r0 up to t0_r2)? Those are the Post model columns, the remaining being each post’s comment columns. Notice that the “Hello World” post was repeated 4 times. That’s what a join does: the parent rows are repeated for each children. That particular post has 4 comments, so it was repeated 4 times.
+The problem is that this hits Rails hard, because it will have to deal with several small and short-lived objects. The pain is felt in the Rails side, not that much on the MySQL side. Now, compare that to the smaller queries:
+
+mysql> SELECT `posts`.`id`, `posts`.`title`, `posts`.`body` FROM `posts` ;
++
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+| id        | title           | body   |
++-----------+-----------------+--------+
+| 130049073 | Hello RailsConf | MyText | 
+| 226779025 | Hello Brazil    | MyText | 
+| 269986261 | Hello World     | MyText | 
+| 921194568 | Rails 2.1       | NULL   | 
+| 972244995 | AkitaOnRails    | NULL   | 
++-----------+-----------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT `comments`.`id`, `comments`.`body` FROM `comments` WHERE (`comments`.post_id IN (130049073,226779025,269986261,921194568,972244995));
++-----------+---------+
+| id        | body    |
++-----------+---------+
+|  61594165 | MyText3 | 
+| 734198955 | MyText1 | 
+| 765025994 | MyText4 | 
+| 777406191 | MyText2 | 
+| 816076421 | MyText5 | 
++-----------+---------+
+5 rows in set (0.00 sec)
+
+
+Actually I am cheating a little bit, I manually removed the created_at and updated_at fields from the all the above queries in order for you to understand it a little bit clearer. So, there you have it: the posts result set, separated and not duplicated, and the comments result set with the same size as before. The longer and more complex the result set, the more this matters because the more objects Rails would have to deal with. Allocating and deallocating several hundreds or thousands of small duplicated objects is never a good deal.
+But this new feature is smart. Let’s say you want something like this:
+
+>> Post.find(:all, :include => [:comments], :conditions => [“comments.created_at > ?”, 1.week.ago.to_s(:db)])
+1
+2
+3
+4
+5
+
+
+In Rails 2.1, it will understand that there is a filtering condition for the 'comments' table, so it will not break it down into the small queries, but instead, it will generate the old outer join version, like this:
+
+<macro:code>
+SELECT `posts`.`id` AS t0_r0, `posts`.`title` AS t0_r1, `posts`.`body` AS t0_r2, `posts`.`created_at` AS t0_r3, `posts`.`updated_at` AS t0_r4, `comments`.`id` AS t1_r0, `comments`.`post_id` AS t1_r1, `comments`.`body` AS t1_r2, `comments`.`created_at` AS t1_r3, `comments`.`updated_at` AS t1_r4 FROM `posts` LEFT OUTER JOIN `comments` ON comments.post_id = posts.id WHERE (comments.created_at > '2008-05-18 18:06:34') 
+
+
+So, nested joins, conditions, and so forth on join tables should still work fine. Overall it should speed up your queries. Some reported that because of more individual queries, MySQL seems to receive a stronger punch CPU-wise. Do you home work and make your stress tests and benchmarks to see what happens.
+Partial Updates, and Dirty Objects
+In the old days, whenever we wanted to update just one attribute we would do:
+1
+2
+3
+
+p = Post.find(:first)
+p.title = "New Title"
+p.save
+
+
+Now, let’s see the old SQL that was generated:
+
+UPDATE `posts` SET `title` = ‘New Title’, `body` = “MyText”, `created_at` = “2008-05-25 14:59:21”, `updated_at` = ‘2008-05-25 18:14:55’ WHERE `id` = 130049073
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+See the 'problem'? It rewrites every single attribute from the model, even though they didn't change at all. This has two practical effects:
+
+* Increases the database load on mass updates
+* Guarantees that the model is consistent (memorize this part, I'll get back to it!)
+
+To solve the first problem, a new feature was added. Let's see how does the generated SQL update looks like now, in Rails 2.1:
+
+<macro:code>
+UPDATE `posts` SET `title` = 'New Title', `updated_at` = '2008-05-25 18:14:55' WHERE `id` = 130049073
+
+
+See the difference? It only updates the attributes we’ve actually changed and the updated_at timestamp column, leaving the others alone. So, out of the box, all your updates should behave like that. We even have some new methods to ‘ask’ the model what’s happening before actually saving it to the database:
+
+>> p = Post.find(:first)
+=> …
+>> p.title = “Another Title”
+=> “Another Title”
+>> p.changed?
+=> true
+>> p.changed 
+=> [“title”]
+>> p.changes
+=> {"title"=>[“New Title”, “Another Title”]}
+>> p.title_changed?
+=> true
+>> p.title_was     
+=> “New Title”
+>> p.title_change
+=> [“New Title”, “Another Title”]
+>> p.title_will_change!
+=> “Another Title”
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+
+
+I think it's pretty obvious what each method is doing. There is now an "ActiveRecord::Dirty":https://caboo.se/doc/classes/ActiveRecord/Dirty.html module that was added to the ActiveRecord::Base class. Now there are ways to ask the model itself (#changed?, #changes) or ask each attribute individually by just appending the _changed?, _was and so forth.
+
+This all looks fine and dandy, but remember: we addressed the first bullet in my list. There is a second problem: *data consistency*.
+
+The problem arises when we consider that 2 users could be updating the same model at the same time!! In the older version, this could also happen and the strategy was: _"the last one to update wins."_ Which could not be the best way but at least we could be assured that every attributed in the model would make sense at least from the point of view of one of the users.
+
+With this new feature, User A updates 1 attribute., then User B updates 2 different attributes in the same row, and now we have 3 potentially inconsistent columns merged into the same row. This can get out of hand very fast.
+
+Database concurrency is not a novel thing. We know at least 2 tricks to make this work, one is "*Pessimistic Locking*":https://api.rubyonrails.org/classes/ActiveRecord/Locking/Pessimistic.html, where the first user acquires a lock from the database and avoids any other user to edit the same row at once. But in a web based system, this is obviously not recommended. The second option is "*Optimistic Locking*":https://api.rubyonrails.org/classes/ActiveRecord/Locking/Optimistic.html.
+
+The way to enable it is to add a column named 'lock_version' of type integer and with the default initial value of '0'. Now:
+
+* User A and User B loads the same row. 
+* User A finished his work first and then updates the row. 
+* The 'lock_version' column is incremented to 1. 
+* Then User B finishes and tries to update, but his operation will fail because the generated SQL update command will search for 'lock_version = 0', but it now changed to '1'. 
+
+That way we effectively block undesired updates and we give the user a second chance to reload User A's changes and re-evaluate his own changes.
+
+This is something to be used sparingly only when it makes sense. Don't go adding 'lock_version' columns at every single table like crazy. Another thing, if for some good particular reason you don't like this new Partial Updates, you can disable it at environment.rb like this:
+
+--- ruby
+ActiveRecord::Base.partial_updates = false # the default is true
+
+
+There are several other small performance enhancements, take a look at Nimble. Also see Ryan Bates and Ryan Daigle on this.
+More ActiveRecord Goodies
+For the next examples, let’s open script/console for another neat new feature:
+
+>> Post.first # 1
+=> …
+>> Post.last  # 2
+=> …
+>> Post.empty_body.first       # 3
+=> …
+>> Post.empty_body.recent.last # 4
+=> …
+>> Post.all            # 5
+=> …
+>> Post.empty_body     # 6
+=> …
+>> Post.empty_body.all # 7
+=> …
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+
+ActiveRecord has 3 new facilitators, #first, #last, and #all, instead of typing find(:first), find(:last), or find(:all). The good part: they work with *named_scopes* as well! Let's take a look at the generated SQL to understand what they are doing:
+
+<macro:code>
+// 1
+SELECT * FROM `posts` LIMIT 1
+// 2
+SELECT * FROM `posts` ORDER BY posts.id DESC LIMIT 1
+// 3
+SELECT * FROM `posts` WHERE ((body = '' or body is null)) LIMIT 1
+// 4
+SELECT * FROM `posts` WHERE ((created_at > '2008-05-11 19:55:33') AND ((body = '' or body is null))) ORDER BY posts.id DESC LIMIT 1
+// 5
+SELECT * FROM `posts` 
+// 6
+SELECT * FROM `posts` WHERE ((body = '' or body is null)) 
+// 7
+SELECT * FROM `posts` WHERE ((body = '' or body is null)) 
+
+
+I’ve numbered both the Rails method calls and the generated SQLs for you to follow above. It is pretty straightforward. The new thing here is the :last option. It actually sorts the result set using its primary key then get the last one. Be careful on what do you mean with “last”, in this case it means “the biggest primary key” and not something as “the last updated record”. For that, it’s better to create a new namedscoped named ’lastupdated’ for example.
+Another new feature in Rails 2.1 is the support for has_one :through associations. In this case I am sorry but I don’t really have a good use case for it in this demo, but I will try something just for the sake of exercising the feature.
+First, let’s create two new scaffolds:
+
+./script/generate scaffold Company name:string
+./script/generate scaffold Role
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+Then, edit the db/migrate/20080526004326_create_roles.rb (again, your timestamp will be different) this way:
+
+--- ruby
+class CreateRoles < ActiveRecord::Migration
+  def self.up
+    change_table :roles do |t|
+      t.belongs_to :company
+    end
+  end
+
+  def self.down
+    change_table :roles do |t|
+      t.remove_belongs_to :company
+    end    
+  end
+end
+
+
+The name of the migration is a little bit misleading because we already have another migration that created the ‘roles’ table. This time we’re just adding a new column. Now it is time to create the associations. Here they go:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+# app/models/company.rb
+class Company
+  has_many :roles
+  has_many :users, :through => :roles
+end
+
+# app/models/role.rb
+class Role
+  belongs_to :user
+  belongs_to :company
+end
+
+# app/models/user.rb
+class User
+  has_many :roles
+  has_one :company, :through => :roles, :order => 'created_at DESC'
+  ...
+end        
+
+
+Now, let’s open the script/console again to exercise those new associations:
+
+>> admin = Role.create(:name => “Administrator”)
+=> …
+>> acme = Company.create(:name => “Acme LLC”)
+=> #<Company id: 1, name: “Acme LLC”, created_at: “2008-05-26 00:45:43”, updated_at: “2008-05-26 00:45:43”>
+>> admin.company = acme
+=> …
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+First, we just created a new Role and a new Company and associated them together.
+
+<macro:code>
+>> user = User.find(:first)
+=> ...
+>> user.roles << admin
+=> ...
+>> user.save
+=> true
+
+
+Now, we found one of the users in our database and associated the new role with it.
+
+>> admin.reload
+=> …
+>> admin.user
+=> …
+>> admin.company
+=> #<Company id: 1, name: “Acme LLC”, created_at: “2008-05-26 00:45:43”, updated_at: “2008-05-26 00:45:43”>
+>> user.company
+=> #<Company id: 1, name: “Acme LLC”, created_at: “2008-05-26 00:45:43”, updated_at: “2008-05-26 00:45:43”>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Now comes the interesting bit. First we reloaded the role just to be safe. We can see that it is properly associated with the user and the new company.
+
+But the interesting part is that the user is directly associated with only one Company through its Role. The part to be careful about is that this user can actually "has many" other roles. That's the the has_one class method supports most of the finder's options including :conditions and, in the above example, :order. It will always limit the result set to 1 and get the first row if there are multiple, so beware possible business errors if you don't add enough tests to this.
+
+h2. ActiveResource Enhancements
+
+We've been exercising in the 'blog' project that we started in the "Rolling with Rails 2":/2007/12/12/rolling-with-rails-2-0-the-first-full-tutorial tutorial. But there is another very small one we create on "part 2":/2007/12/12/rolling-with-rails-2-0-the-first-full-tutorial-part-2 called 'blog_remote'. Now we are going to use this one to show some new features of ActiveResource.
+
+First of all, if you got until here, you are in the 'blog' project directory. Start mongrel there with the usual './script/server'. This should load up in the default port 3000 (if you didn't change your environment).
+
+From another terminal, get to the 'blog_remote' project where we will exercise some more Rails 2.1:
+
+<macro:code>
+cd ../blog_remote
+cp -R ../blog/vendor/rails vendor/rails
+
+
+Because the ‘blog_remote’ uses Rails 2, we have to freeze Edge Rails as well. This will not be necessary after you update your system-wide Rails gems when they are released, but for now, this would do.
+You will remember that we have an app/models/post.rb like this one:
+1
+2
+3
+
+class Post < ActiveResource::Base
+  self.site = 'https://akita:akita@localhost:3000/admin'
+end
+
+
+It served to highlight the HTTP authentication that comes bundled with Rails 2.0. But if you’re like me, you probably didn’t like that much the fact that you had to concatenate the username and password along with the URL. There has been alternatives to that, but on Rails 2.1 we can now finally do:
+1
+2
+3
+4
+5
+6
+
+class Post < ActiveResource::Base
+  self.site = 'https://localhost:3000/admin'
+  self.user = 'akita'
+  self.password = 'akita'
+  self.timeout = 5 # this is IMPORTANT!
+end
+
+
+This should make things easier to maintain. But the most interesting bit is the #timeout configuration. This is very important because the default HTTP timeout is 60 seconds. So, if for some reason the remote application is unavailable, your app would wait for as much as 1 full minute before raising an exception.
+But you can imagine that this really doesn’t scale, because it would quickly lock every Rails instance you have for a minute. Benchmark your remote queries, make them small and try to make the smallest timeout possible for your app. More information here and, of course, we recommend that you do remote calls as little as possible in a publicly facing website. Cache what you can instead of going out all the time for every request.
+To test if everything is running (assuming you already have the ‘blog’ project running), from ‘blog_remote’, open ‘script/console’:
+
+>> Post.find(:all)
+=> […]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+
+You should see the objects coming down the pipe, from the 'remote' blog project. Refer to my Rails 2.0 tutorial to understand how it was assembled.
+
+h2. Even More
+
+There are hundreds of changes in Rails 2.1, several enhancements. One particular thing I like is the optimization on routing. Oleg Andreev has the "scoop":https://www.novemberain.com/2008/1/17/routes-recognition. This should be pretty transparent for us.
+
+Lot's of ActiveRecord tests were cleaned up by John Barnette, Documentation received a serious revamp thanks to Pratik Naik. ActiveRecord's attributes are now less expensive, and so on and so forth.
+
+"Redemtion in a Blog":https://blog.codefront.net/2008/02/06/living-on-the-edge-of-rails-6-better-performance-git-support-and-more/ has also been following every single change in Edge and I'd like to borrow some of the most interesting tidbits that they reported.
+
+One interesting tidbit is resource aliasing. Now you can do this in your config/routes.rb:
+
+--- ruby
+map.resources :comments, :as => 'comentarios'
+
+
+That way https://your_site/comentarios should behave the same as https://your_site/comments. This is probably a good thing for SEO oriented web developers. You can find even more resource aliasing goodies in Carlos Brando’s plugin Custom Resource Name which should work in older versions of Rails. And speaking of mappings, now you can also do this:
+1
+2
+
+map.new_session :controller => 'sessions', :action => 'new'
+map.root :new_session
+
+
+So ‘map.root’ now accepts a symbol as an argument to define the root path.
+Ryan Bates complained (and made a fix) for this particular fields_for usage:
+1
+2
+3
+4
+
+<% fields_for "project[task_attributes][]", task do |f| %>
+  <%= f.text_field :name, :index => nil %>
+  <%= f.hidden_field :id, :index => nil %>
+<% end %>
+
+
+Notice the :index => nil that makes it look ‘dirty’. Now you can simply do this:
+1
+2
+3
+4
+
+<% fields_for "project[task_attributes][]", task, :index => nil do |f| %>
+  <%= f.text_field :name %>
+  <%= f.hidden_field :id %>
+<% end %>
+
+
+And we have another handy shortcut in views. Instead of doing this:
+1
+2
+3
+
+<% form_for(:person) do |f| %>
+  <%= render :partial => 'form', :locals => { :form => f } %>
+<% end %>
+
+
+We can now do a shorter version:
+1
+2
+3
+
+<% form_for(:person) do |f| %>
+  <%= render :partial => f %>
+<% end %>
+
+
+Which is significantly more readable and maintainable than the older version. Both should keep working in Rails 2.1, though.
+Then, for those projects that makes intensive use of file downloading, we now have a better way to handle big file transfer without locking down a whole Mongrel instance:
+1
+
+send_file '/path/to.png', :x_sendfile => true, :type => 'image/png'
+
+
+The old ‘send_file’ method now accepts the :x_sendfile header configuration. For what I understood, it instructs web servers such as Apache and LightTPD to handle the file transfer while leaving the Rails instance alone to handle other requests. This technique has been explained by John Guenin before, and it required you to install a plugin. But in Rails 2.1 this is now built-in as well.
+Conclusion
+Rails 2.1 brings lots of enhancements and optimizations that are very welcome. If you’re already using Rails 2, this upgrade should work almost out of the box. Again, if you’re at Rails 1.2 or below, there is not reason to not try this upgrade.
+Instead of asking “Should/Can I upgrade my projects to Rails 2.1?” you should actually ask youself “Do I have full and throughly complete tests?” If you do, fine, you should be able to easily upgrade and see what your tests tell you. If there are only a small number of bugs, you should be able to fix them in a day or less. But if you don’t have full test coverage, first you should invest in making tests that covers everything, and only then think about upgrading.
+The performance optimizations alone should be enough to justify upgrading to Rails 2.1.
+tags: obsolete rails tutorial english
+

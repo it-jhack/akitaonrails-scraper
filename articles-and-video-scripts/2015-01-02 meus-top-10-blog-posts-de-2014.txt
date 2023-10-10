@@ -1,0 +1,30 @@
+
+A seguir, uma lista dos 10 posts que foram mais acessados no meu blog em 2014.
+
+[Off-Topic] Carreira em Programação - Codificar não é Programar
+The New Kid on the Block for Ruby Servers: Raptor!
+Aprendendo Ruby e Rails, Livros e Guias
+[Small Bites] IDEs e Editores, como escolher?
+[Off-Topic] NÃO Faça o que Você ("ACHA") que Ama
+Web Components é uma Revolução?
+Usando Polymer com Rails
+[Heroku Tips] S3 Direct Upload + Carrierwave + Sidekiq
+[Off-Topic] Agile: a Verdade por trás do Método
+Swift para Rubistas, Rápida Introdução
+
+
+
+
+E a seguir os posts mais acessados que eu publiquei em anos anteriores a 2014:
+
+[Screencast] Começando com Git
+[Off-Topic] Comprei meu primeiro Mac, e agora?
+Internationalização (I18n) Mínima em Rails 3.2 - Parte 1
+Asset Pipeline para Iniciantes
+Quais são algumas das piores práticas para aplicações Ruby on Rails?
+[Heroku Tips] Enciclopédia do Heroku
+
+Lembrando que 2014 também foi o ano que publiquei meu post #1000, foram nada menos que 9 anos publicando neste blog! Obrigado a todos que me acompanham frequentemente!
+
+tags: obsolete blog
+

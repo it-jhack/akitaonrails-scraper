@@ -1,0 +1,33 @@
+
+Do Rails Engines : Com a chegada próxima do Rails 1.2, achei que seria uma grande oportunidade de revisitar a maneira que os plugins engines operam internamente. No último ano ou um pouco mais, o plugin de engines causaram certo distúrbio (e ganharam alguns admiradores, mas a despeito de alguns mal entendidos e opiniões, as pessoas ainda acham eles úteis.
+Entretanto, Rails está sempre mudando, assim como o plugin de engines que precisa mudar também …
+
+
+Engines 1.2: Engines já eram
+Quando o Rails 1.2 for lançado, a noção de ‘instalar uma engine’ se tornará sem sentido. Deixe-me tornar isso mais claro – não haverá mais distinção significante entre uma engine e um plugin. Para entender as implicações disso, vamos olhar o que distinguia um engine de um plugin em primeiro lugar.
+Init_engine.rb se foi – o controle da ordem de carga do plugin vai no núcleo do Rails
+A única funcionalidade que distinguia um engine de um plugin era a substituição do init.rb do plugin por um init_engine.rb. Só isso. Todo o resto era apenas coisas extras que um plugin poderia conter. A razão porque isso foi necessário era porque o plugin de engine precisava ser carregado antes de qualquer outro plugin que usasse suas funcionalidades, mas o Rails por si só não podia garantir isso. Então, Engines.start tomava essa responsabilidade, e a noção de ‘uma engine’ em vez de ‘um plugin’ nascia.
+Felizmente, agora podemos fazer isso nativamente no Rails. Com o lançamento do engines 1.2, init_engine.rb se vai em favor de usar o array suportado config.plugins:
+1
+2
+3
+4
+5
+6
+
+#  (in environment.rb)
+  Rails::Initializer.run do |config|
+    # other stuff
+    config.plugins = ["engines", "your_plugin", "another_plugin", "and_so_on"]
+    # etc ...
+  end
+
+
+Eles são todos apenas plugins agora
+Uma vez com o plugin de engines carregado, qualquer plugin com diretórios app, db ou public_asset podem automaticamente tirar vantagem das funcionalidades que o plugin de engines fornece, sem qualquer trabalho extra de você. Controller em seu seu_plugin/app/controllers simplemente funcionam. Stylesheets, javascripts e imagens no subdiretório seu_plugin/public_assets estão disponíveis automaticamente usando helpers normais do Rails que você já deve ter se acostumado.
+Plugins até contém migrations e routes, todos compartilhados com sua aplicação principal de uma maneira que promove desenvolvimento mais eficiente sem ficar no seu caminho ou colocando peso em sua aplicação.
+E agora … ?
+Nenhuma dessas funcionalidades foi oficialmente lançada ainda (precisamos do Rails 1.2 antes de podermos fazer isso), mas você pode brincar agora puxando o branch 1.2 de lançamento. Tenha em mente que nunca é uma boa idéia rodar código candidato para lançamento em ambientes de produção, naturalmente.
+Publicarei mais informações sobre as mudanças e novas funcionalidades sobre Engines 1.2 aqui nos próximos dias; se ainda não fez, cadastre o feed RSS. Feliz codificação!
+tags: obsolete rails
+

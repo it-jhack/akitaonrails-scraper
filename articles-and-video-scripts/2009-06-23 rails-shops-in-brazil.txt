@@ -1,0 +1,8 @@
+
+
+
+
+Uma coisa que eu vi nos vários eventos em várias cidades do Brasil, foi que mais e mais pequenas empresas ou mesmo departamentos governamentais estão avançando em Ruby on Rails. Até nos lugares mais inusitados. Muitos me perguntam para recomendar empresas que desenvolvem em Rails. Aqui fica a questão, você trabalha ou tem uma empresa que desenvolve Rails, dá cursos de Rails, ou tem equipes trabalhando full-time em Rails?
+Deixe seu comentários neste post, com nome da empresa, contato, descrição do que fazem, website, etc para que todos possam saber. De qualquer parte do Brasil.
+tags: obsolete english
+

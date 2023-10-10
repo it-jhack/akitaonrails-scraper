@@ -1,0 +1,9 @@
+
+
+
+
+Pessoal, conheçam o Piers Harding. Ele foi um colaborador importante na concepção do meu livro Repensando a Web com Rails, junto com Zed Shaw, David Hansson e Yukihiro Matsumoto. Ele tem um blog chamado Where on Earth is Piers? …Now além do seu blog no site oficial de desenvolvedores da SAP, a SAP Developers Network.
+Ele é um consultor e desenvolvedor sênior do mundo SAP desde 1990. Dentre seus vários trabalhos estão justamente uma família de conectores que ele já fez para Perl, Python e agora Ruby. Eu fiz um capítulo extra no meu livro exclusivamente sobre a história e importância da SAP e como fazer para que aplicativos Ruby on Rails conversem com esta plataforma.
+Eu enviei um exemplar do livro para ele na Inglaterra e ele foi bastante gentil em enviar uma foto para nós. Estou aguardando as confirmações de recebimento do Zed, David e Matz ainda. Acho importante que o resto do mundo veja que nós brasileiros também não estamos para trás nesse movimento.
+tags: obsolete my-book
+

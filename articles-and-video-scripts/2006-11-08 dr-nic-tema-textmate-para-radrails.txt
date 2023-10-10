@@ -1,0 +1,22 @@
+
+ Dr. Nic fez novamente: depois dos templates à la Textmate agora ele atualizou um tema para RadRails para torná-lo ainda mais parecido com o venerado Textmate. Tudo para tornar a vida do programador Windows mais agradável ainda.
+O RadRails vem com o tema padrão do Eclipse: fundo branco, letras pretas, fonte Courier New. Mas o Tema-Textmate para RadRails vai deixar as coisas mais interessantes. Faça o download do link anterior, descompacte em qualquer lugar e siga estas instruções:
+
+
+
+No RadRails vá para File > Import
+Sob General, selecione Preferences e clique em Next
+Navegue até o arquivo epf descompactado acima
+Selecione o checkbox Import All e aperte em Finish
+
+Esse tema automaticamente procurará pela fonte Microsoft Consolas. Se você não for desenvolvedor de Visual Studio baixe neste link, descompacte e copie as fontes para a sua pasta de fontes dentro do diretório do Windows. Para o lançamento do novo Windows Vista a Microsoft desenvolveu uma nova famíia de fontes, que agora conta com Calibri, Constantia, Consolas, Candara e outros. São fontes especialmente preparadas para utilizar todo o pontencial do sistema de ClearType. Ou seja, para quem utiliza monitores de LCD as coisas ficam muito mais agradáveis. É altamente recomendável usar o Consoles como fonte de tamanho fixo em vez do antiquado e desagradável Courier New. Mas se você não conseguir ou não quiser instalar a nova fonte, precisa mudar a seleção de fonte no RadRails:
+
+Vá para Window > Preferences …
+Vá para General > Appearance > Color and Fonts
+Selecione Basic > Text Font
+Clique em Change …
+Selecione outra fonte de tamanho fixo e aperte OK
+
+Somado aos templates que publiquei ontem, o RadRails lhe proporcionará uma experiência muito semelhante ao Textmate. Mas meu conselho: nada substitui – ainda – o verdadeiro Textmate. Se puder adquirir um Mac, sugiro que o faça. Não só pelo editor mas por todo o resto do ambiente.
+tags: obsolete
+

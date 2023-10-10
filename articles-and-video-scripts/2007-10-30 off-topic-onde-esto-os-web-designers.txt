@@ -1,0 +1,22 @@
+
+Por onde andam os bons Web Designers? Mais especificamente, os designers Web 2.0?
+
+
+
+Já digo logo de cara: sou um péssimo designer :-) Sempre gostei de design. Já trabalhei em/para agências publicitárias como F/Nazca, Almap, Newcomm, etc junto a excelentes profissionais de design. Meu primeiro chefe é publicitário e professor da Escola de Comunicação e Artes da USP. Posso dizer que tenho gosto pela arte mas não tenho o talento nem o preparo para tal.
+
+Talvez por causa disso sempre vejo com muito ceticismo quando alguém se diz ‘designer’. Na minha concepção, um bom designer é, antes de tudo, um pesquisador. Devora livros de arte, museus, trabalhos de design, enfim, mantém-se muito atualizado. Design segue uma moda, tendências. Só a partir de uma boa pesquisa é possível sair com conceitos, concepções.
+A tendência no design web agora é o que chamam de “Web 2.0”. Independente dos detalhes dessa definição, que poucos conseguem realmente descrever, não é difícil reconhecer um website com design Web 2.0. Nossa venerável 37signals é um exemplo.
+
+Estou à procura de um bom Web Designer. Que seja meio artista, meio programador. Meio artista porque é um trabalho que envolve “criação”, envolve “conceitos”. Meio programador porque eu espero que um bom Web Designer entenda de web semântica. Um piloto exclusivo de Dreamweaver não serve: ele precisa trazer sua criação ao nível do XHTML e CSS. O melhor exemplo que encontrei no Brasil foi a turma da Visie. Nunca trabalhei com eles mas pelo menos os exemplos que vi deles me convenceram.
+
+Fora eles, onde estão os web designers? Eu fiz uma procura extensiva. Literalmente olhei páginas e páginas de Google, atrás de designers brasileiros. Talvez eu tenha procurado nos lugares errados, feito a pesquisa errada – e é justamente isso que eu espero que alguém me corrija.
+
+Mas depois de muitas horas – muitas mesmo – vasculhando, eu não encontrei nada! Absolutamente nada! Todos os sites/blogs/portfolios que encontrei me levaram a uma conclusão: os “web designers” brasileiros se influenciaram pela primeira coisa que usaram quando acessaram a internet pela primeira vez: a página dos provedores! E definitivamente copiar uma UOL ou um Terra é um péssimo começo. No Brasil se consolidou muito fortemente esse conceito de “portal” e eu acho isso péssimo. Agora todo site – que nem é um portal – tem cara de UOL.
+Pior do que o péssimo gosto no design: pouquíssimos conseguem se livrar do Dreamweaver e derivados. Muitos dizem em seus currículos que entendem de XHTML e CSS, mas não tem idéia do que é web semântica, da real utilização dessa ferramentas além de simplesmente separar tags e estilos.
+
+Não, não tenho nada contra o Dreamweaver. Eu uso há anos, desde a versão 1.0. Porém, ele deixa de ser útil quando usado como muleta. Assim como todo bom IDE: use para ganhar produtividade, mas saiba exatamente o que ele está fazendo por baixo. Não importa que ferramenta que se use, mas se o HTML final foi inusável, não serve.
+Enfim, estou procurando designers Web 2.0 para a Surgeworks. Alguém conhece algum? :-)
+
+tags: obsolete surgeworks
+

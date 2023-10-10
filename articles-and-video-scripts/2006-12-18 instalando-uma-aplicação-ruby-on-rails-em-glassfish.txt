@@ -1,0 +1,47 @@
+
+Do Ashish’s Weblog : Existem algumas maneiras de rodar uma aplicação Ruby on Rails (RoR) em um servidor Java EE. Uma delas é criar um arquivo WAR contendo a aplicação RoR com a adaptação de código apropriada entre o servidor de aplicação e a aplicação ruby. Sobre como desenvolver e instalar uma aplicação RoR no GlassFish – um servidor de aplicação Java EE 5 open source – siga os seguintes passos:
+
+
+
+ Instale o servidor de aplicação GlassFish
+ Instale o JRuby
+ Instale o Framework Rails gems install rails -y (se estiver atrás de um proxy use set HTTP_PROXY=https://${http-proxy-host}:${http-proxy-port}/)
+ Instale o activerecord-jdbc com gems install activerecord-jdbc
+ Instale o driver database/jdbc (para mysql https://mysql.com/)
+ Gere sua aplicação RoR (https://rubyonrails.org/)
+ Modifique database.yml
+development:
+	adapter: jdbc
+	driver: com.mysql.jdbc.Driver (for mysql)
+	url: jdbc:mysql://${database-hostname}/${db-schema}
+	username: ${username}
+	password: ${password}
+ Modifique o environment.rb adicionando:
+require ‘active_record/connection_adapters/jdbc_adapter’
+ Faça o check out do projeto rails-integration a partir do svn://rubyforge.org/var/svn/jruby-extras/trunk/rails-integration, recompile e coloque o rails-integration-${version}-SNAPSHOT.jar dentro do WEB-INF/lib. 
+ Modifique o template web.xml (veja as referências abaixo) com o valor correto do jruby.home
+ Crie um diretório WEB-INF no diretório da aplicação RoR
+ Copie o web.xml no WEB-INF e coloque o _ rails-integration-${version}-SNAPSHOT.jar em WEB-INF/lib
+ Faça WAR do diretório da aplicação RoR com o comando jar
+
+Requisições para o context-root apropriado da aplicação web instalada devem invocar seu código Ruby !
+Se quiser automatizar a construção do arquivo war: edite rails-integration/build.xml e adicione o seguinte trecho de XML:
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+Tenha certeza que o JRUBY_HOME está configurado e rode ant -Drails-app-dir=${ror-app-dir} -Drails-app-name=${war-file-name} build-rails-war. O ${ror-app-dir}/${ror-app-name}.war deve estar pronto para ser instalado !
+Tudo isso é um trabalho em progresso e alguma coisa pode mudar logo. Obrigado aos desenvolvedores do rails-integration e ao pessoal do jruby!
+tags: obsolete jruby
+

@@ -1,0 +1,93 @@
+
+Aviso: toda vez que começar uma nova aplicação, garanta que seu banco de dados e sua aplicação estão configurados corretamente para suportar UTF-8! Depois a coisa fica feia. No meu caso, meu blog existe desde 2006, na época eu não prestei atenção nisso e ele ficou por padrão como Latin1 até hoje. Mas hoje aproveitei a limpeza de casa e resolvi consertar isso.
+A primeira coisa que fiz foi criar um novo banco de dados mysql vazio. Este é um assunto que tem centenas de posts sobre como proceder, o que eu acabei fazendo foi:
+
+
+
+1
+2
+
+mysqldump -u xxxxx -p -h xxxxxx --opt --default-character-set=latin1 --skip-set-charset meu_banco_velho > dump.sql
+mysql -u yyyyy -p -h yyyyyy --default-character-set=utf8 meu_banco_novo < dump.sql
+
+
+A primeira linha é um dump do banco antigo para um arquivo ‘dump.sql’. A segunda é carregando esse arquivo no banco novo. Agora o truque é usar a opção de ‘CONVERT’ que o MySql tem no ALTER TABLE, uma vez para cada tabela. Para não ter que fazer isso manualmente, eu usei o script do Vladislav Rastrusny, de 25/08/2008 que está disponível na página de Column Character Set Conversion do site da MySQL. Para facilitar, eu copiei esse script como um Gist. É um scriptzinho em PHP mesmo. Apenas configure as primeiras linhas com os dados do seu banco e rode:
+1
+2
+3
+
+curl https://gist.github.com/267295.txt > convert_latin1_to_utf8.php
+... # edite o arquivo
+php convert_latin1_to_utf8.php
+
+
+Finalmente, conecte novamente no seu banco usando o cliente de mysql e execute:
+1
+
+ALTER DATABASE meu_banco_novo CHARACTER SET utf8 COLLATE utf8_general_ci;;
+
+
+Agora, na sua aplicação Rails, seu “config/database.yml” deve ser mais ou menos assim:
+1
+2
+3
+4
+5
+6
+7
+8
+
+production:
+  adapter: mysql
+  database: meu_banco_novo
+  username: yyyyy
+  password: yyyyy
+  host: yyyyyy
+  reconnect: true
+  encoding: utf8
+
+
+A parte importante é a última linha onde o adapter de MySQL deve considerar UTF8 corretamente, por exemplo, enviando o comando “SET NAMES ‘UTF8’” a cada conexão.
+Como eu disse antes, eu mantive meu banco antigo intacto e realizei todas as operações no banco novo. Neste instante meu blog já está apontando para o banco que sofreu as modificações acima. Porém não tenho bem certeza se fiz tudo corretamente. Alguém aí tem mais experiências nesse tipo de operação?
+E só para garantir, como estou usando suporte a ETAGs também apaguei o cache temporário assim:
+1
+
+rm -Rf tmp/cache/*
+
+
+Outro detalhe, como agora estou com o RVM, tentei rodar meu blog usando o Ruby 1.9.1, mas ele está dando erro sempre que tenta renderizar um template:
+1
+2
+
+Encoding::CompatibilityError in Posts#show
+incompatible character encodings: UTF-8 and ASCII-8BIT
+
+
+Procurando a respeito, existe o Ticket #2188 Encoding error in Ruby1.9 for templates. É um problema com o ActionView e o ERB. No meio dos comentários existem alguns hacks e monkey patches para se tentar mas eu ainda não consegui fazer funcionar também. Ainda é um bug que precisa ser resolvido no Rails 2.3.×.
+Isso aprendido, lembre-se: crie seu banco de dados já com suporte correto a UTF8:
+1
+
+CREATE DATABASE `database` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+Além disso garanta que está usando um editor de textos decente que salve em UTF-8 (a maioria dos de Windows salva em Latin1, cuidado!) e no seu “app/controllers/application_controller.rb” tenha sempre algo assim:
+1
+2
+3
+4
+5
+6
+7
+
+  after_filter :set_content_type
+
+  protected
+
+  def set_content_type
+    headers['Content-Type'] ||= 'application/xhtml+xml; charset=utf-8'
+  end
+
+
+Depois disso tudo espero que meu blog continue funcionando normalmente, se alguém vir algo estranho, não deixe de comentar aqui. Falando nisso, muita gente acha que eu uso Wordpress ou Mephisto. Não, eu uso uma versão modificada do mini-blog Enki, não deixe de dar uma olhada.
+tags: obsolete
+

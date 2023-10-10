@@ -1,0 +1,38 @@
+
+Fonte: techno weenie
+Configurando seu Ambiente (Environment)
+Em cada aplicação Rails existem várias coisas para configurar. Você pode precisar configurar um endereço de e-mail que o plugin exception_notification usa, ou talvez apenas inflexões customizadas. Vamos dar uma olhada nas opções disponíveis atualmente à nossa disposição:
+
+
+Environment.rb
+Use isso para coisas gerais do framework Rails, como inflexões customizadas. Nesse ponto, seus plugins não foram carregadas, então não use isso para acessar seus controllers ou models que podem estar dependendo de código em plugins. Também, cada ambiente deixa definir opções de configuração específicas de ambiente no config/environments/.rb. É assim que Rails sabe que não deve recarregar em modo de produção ou sar caching em modo de desenvolvimento.
+O Gancho Pós-Inicialização
+Existe uma tarefa pouco conhecida after_initialization que roda bem no fim do processo de inicialização. Você pode ou definir no bloco em Rails::Initialization no config/environment.rb ou em qualquer lugar nos arquivos específicos de ambiente mencionados acima.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+# config/environments/development.rb
+config.after_initialize do
+  PaymentProcessor.gateway = :bogus
+end
+
+# config/environments/production.rb
+config.after_intialize do
+  PaymentProcessor.gateway = :whatever
+end
+
+
+Um fato importante a se lembrar aqui é que você só pode ter um bloco de after_initialization. A ordem de precedência é config/environment.rb => config/environments/RAILS_ENV.rb => plugins. Provavelmente não é uma boa prática definir blocos after_initialization em seus plugins já que isso vai bagunçar qualquer configuração de aplicação que o desenvolvedor tentar fazer. Sua melhor aposta é definir isso em seus arquivos de configuração específicos de ambiente.
+Callbacks de Preparação de Dispatcher
+Callbacks de preparação são blocos executados antes do Dispatcher manipular qualquer requisição Rails. Eles são executados apenas uma vez em produção e antes de cada requisição em modo de desenvolvimento. Um uso comum que tenho para eles é ter certeza que Liquid usa meus filtros e derruba entre requisições de desenvolvimento. Rails usa um internamente para garantir que seus observers estão sempre carregados também.
+A ser concluído
+Fiquem ligados para o artigo final dessa pequena trilogia, explicando mudanças no processo de inicialização de plugins em mais detalhes.
+tags: obsolete rails
+

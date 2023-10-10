@@ -1,0 +1,13 @@
+
+
+
+
+Faz algum tempo que eu quero escrever um tutorial da linguagem Ruby. Não uma documentação extensiva mas sim um hands-on mostrando onde o Ruby é diferente de outras linguagens tradicionais. Para isso preparei este Micro-Tutorial dividido em 3 partes.
+
+Parte I
+Parte II
+Parte III
+
+Se encontrar algum erro nos textos, não deixe de me avisar pois ainda não tive tempo de revisar. Sugestões sobre assuntos importantes que eu esqueci de mencionar também são bem vindos. Este tutorial estava na minha lista de tarefas faz dias e estava represando outros assuntos que quero tratar, vamos ver se agora volto a escrever mais :-)
+tags: learning beginner ruby tutorial
+

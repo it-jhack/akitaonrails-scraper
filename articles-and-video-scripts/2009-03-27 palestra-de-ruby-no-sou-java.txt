@@ -1,0 +1,99 @@
+
+Quarta-feira teve a reunião do SouJava onde fui convidado para palestrar sobre Ruby, JRuby e Testes. No total foram cerca de 2:30 de apresentação (espero que não tenha sido muito cansativa). No começo mostrei o que a linguagem Ruby é capaz de fazer, como funcionam os conceitos dinâmicos, a meta-programação e outros conceitos mais básicos da linguagem. Em seguida fiz uma demonstração de uso do JRuby para criar testes em RSpec para testar classes em Java puro usando o projeto JTest4R. Finalmente no final demonstrei rapidamente o Cucumber para definição de User Stories e cenários de aceitação, para um desenvolvimento top-down no melhor estilo BDD.
+Palestra no Grupo Sou JavaView more presentations from Fabio Akita.
+Acima segue o PDF da apresentação. Existem uns 5 slides que na verdade são vídeo de demonstração, elas podem ser baixadas separadamente neste link. Depois vejo e faço uma versão melhor, narrada, mas já deve dar para acompanhar.
+
+
+Para começar, você pode baixar o JRuby, baixar o Netbeans e opcionalmente o plugin jVI. Esse plugin, aliás, foi um achado que eu gostei: ele dá comportamento de um editor de Vim no editor do Netbeans, então ele ganha insert mode, visual mode, e vários outros comandos para quem está acostumado com Vim. Ele não é nem de longe um substituto ao Vim real, mas tem o suficiente para tornar o editor do Netbeans mais agradável.
+Uma coisa que eu disse durante a apresentação é para usar o Netbeans (com o JVI) como um bom editor de textos, mas não como IDE. O problema é que é difícil manter o GUI atualizado com o Rails ou outras bibliotecas. A interface gráfica sempre está defasada e por isso ele dá problemas estranhos. Então, em vez de brigar com a IDE simplesmente assuma que o ciclo de desenvolvimento de software usando tecnologias open source de ponta funcionam muito melhor diretamente usando o Terminal. Na realidade eu acho que é muito mais ágil e produtivo não depender de uma IDE gráfica. Nesse sentido, IDEs mais atrasam do que ajudam.
+Outra questão que discutimos na apresentação é compatibilidade. O JRuby está bastante compatível com o Ruby padrão, praticamente tudo roda. Porém, Ruby também tem bibliotecas que conversam diretamente com código nativo em C. Esse tipo de código, claro, o Java não consegue executar. Portanto existem certas limitações sobre uso de Gems. No exemplo do vídeo eu instalo o hpricot usando a opção “—version 0.6.1”, que foi a última versão com alternativa nativa em Java. Para acompanhar o que funciona e o que não, recomendo ir ao JRubyWiki.
+Finalmente, no caso do Rails 2.3.2, existe um pequeno hack que precisa ser feito para funcionar. Uma próxima versão do JRuby-Rack deve corrigir isso, mas até lá edite seu arquivo “config/environment.rb” e acrescente antes do “Rails::Initializer.run”:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+if defined?(JRUBY_VERSION)
+  module ActionController
+    module Session
+      class JavaServletStore
+        def initialize(app, options = {}); end
+        def call(env); end
+      end
+    end
+  end
+end
+
+
+Ainda no mesmo arquivo, agora dentro do “Rails::Initializer”, acrescente:
+1
+
+config.gem "activerecord-jdbc-adapter", :lib => "jdbc_adapter" if defined?(JRUBY_VERSION)
+
+
+Agora um truque para editar o arquivo “config/database.yml” de forma que ele funcione tanto quando você rodar usando Ruby MRI quanto com JRuby, para habilitar JDBC:
+1
+2
+3
+
+development:
+  adapter: <%= defined?(JRUBY_VERSION) ? "jdbc" : ""%>sqlite3
+  database: db/development.sqlite3
+
+
+Faça a mesma coisa para os ambientes de teste e produção. O database.yml é processado pelo ERB, portanto podemos checar se estamos em ambiente JRuby (com a existência da constante JRUBY_VERSION) e prefixar o adapter com “jdbc”.
+Além disso, você precisa habilitar o Active Record Session Store para tudo funcionar direito. Edite o arquivo “config/initializers/session_store.rb” e descomente a última linha que contém o seguinte:
+1
+
+ActionController::Base.session_store = :active_record_store
+
+
+Rode o seguinte para criar a migration da tabela se sessão:
+1
+2
+
+rake db:sessions:create
+rake db:migrate
+
+
+Se você ainda não instalou o Warbler, faça-o agora:
+1
+
+jruby -S gem install warble
+
+
+Agora rode o seguinte para gerar o arquivo “config/warble.rb”:
+1
+
+warble config
+
+
+No arquivo gerado, acrescente na última linha o seguinte:
+1
+2
+3
+
+  ...
+  config.webxml.jruby.session_store = 'db'
+end
+
+
+Pronto, tudo isso irá configurar tanto o Rails quanto o Application Server Java para armazenar sessões no banco de dados. Agora basta rodar o comando ‘warble’ para gerar o arquivo .war que você consegur usar para fazer deployment em praticamente todo servidor Java como Tomcat, Jetty, Glassfish ou JBoss.
+Outra dica importante: ficar criando .war para fazer deployment pode ser meio trabalhoso. Queremos sempre conseguir modificar os arquivos Ruby, dar um reload no navegador e automaticamente já ver as modificações. Para que esse fluxo aconteça igual quando usamos Webrick ou Mongrel, podemos usar a excelente gem “jetty_rails” criada pelo Fabio Kung. Faça:
+1
+
+jruby -S gem install jetty-rails
+
+
+Pronto, agora, a partir do seu projeto Rails, apenas execute o comando ‘jetty_rails’. Ele vai iniciar um servidor Jetty e vai carregar sua aplicação na porta 3000, assim como o Mongrel faz.
+Eu vi num tweet recente alguém mencionando que com as novas versões de Rails 2.3.2 e JRuby 1.2, ele migrou uma aplicação antiga que estava em JRuby 1.1.6 e Rails 1.2 (eu acho). O consumo de memória caiu de 900Mb para cerca de 200~300Mb, o que demonstra quanto tanto o Rails quanto o JRuby estão se otimizando e evoluindo.
+Em termos de performance bruta (micro-benchmark), o Ruby 1.8.6 é o interpretador mais lento, seguido do PHP, que é 2x mais rápido que Ruby. Depois Python 3, que é 2x mais rápido que PHP. JRuby é um pouco mais rápido que Python 3. Perl é um pouco mais rápido que JRuby. Ruby 1.9 é um pouco mais rápido que Perl e Python 2 é pouco mais rápido que Ruby 1.9. É mais ou menos essa a escala hoje em dia. O JRuby tem um tempo inicial de “aquecimento” mais lento (o que o torna ruim para programas de linha de comando), mas uma vez de pé ele está bem rápido e você não sente diferença.
+Além disso o JRuby roda perfeitamente com o RSpec – embora ainda não perfeitamente com Cucumber. Uma forma de desenvolver é usar Ruby MRI em desenvolvimento, criar suas features Cucumber, testes em RSpec. De tempos em tempos você pode passar apenas os testes RSpec via JRuby (jruby -S rake spec) e rodar no jetty_rails. No final, basta usar o warbler para gerar o .war e jogar no seu Glassfish ou JBoss para colocar em produção.
+tags: obsolete conference
+

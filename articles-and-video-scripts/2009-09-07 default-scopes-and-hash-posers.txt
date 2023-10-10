@@ -1,0 +1,32 @@
+
+
+While I was editing my last article I was thinking about multi-site. Usually, Railers prefer to have a single app per Rails project. But what if I do want to have a CMS, an e-Commerce, something like Wordpress MU and so on?
+I thought to myself: “dead simple: just add default_scope to the relevant Active Record models”. Ended up not being quite so simple because it seems like ’defaultscope’ doesn’t support blocks just yet as you can follow on this open ticket at Lighthousescope-cant-take-procs.
+The problem is that ‘default_scope’ will be different per user, so I can’t have an static conditions hash pre-defined in the model. To solve that – at least until a more official solution comes along – Brian Mitchell has a great suggestion: use a Hash Poser.
+
+
+Now, a Hash Poser is a class that acts and behaves exactly like a normal Hash. Let’s see his code:
+Dead Simple, you can copy and paste this code to somewhere like ‘config/initializers/hash_poser.rb’. You can easily see how this can be used in your models:
+1
+2
+3
+4
+5
+
+class Post < ActiveRecord::Base
+  default_scope HashPoser.new do
+    { :conditions => { :user_id => UserSession.find } } 
+  end
+end
+
+
+This is supposing you’re using something like Authlogic, but actually you will want something more like ‘Site.find’ or whatever. The point is, now whatever finder you were using throughout your application will have this conditions added to it. So, a simple ‘Post.all’, in this example, will automagically run:
+1
+
+SELECT * FROM "users" WHERE ("users"."id" = 1) 
+
+
+Considering that you’re not using something like ‘find_by_sql’ with hand crafted SQL queries, the ‘default_scope’ will override all your finders. Of course, it’s easier said than done, so have your test suite ready when you do this change. As I said, you will have to add a column like ‘site_id’ to every table you need to be multi-site.
+I would like to see what other people think of this way of thinking and what caveats there are for this use case. Most of the time Rails apps will be stand-alone, but in a few exception cases, we really do want to have a single app serving multiple customers. What’s your take on this concept?
+tags: obsolete rails
+

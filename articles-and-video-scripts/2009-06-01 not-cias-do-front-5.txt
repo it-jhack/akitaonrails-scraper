@@ -1,0 +1,69 @@
+
+Desta vez faz apenas pouco mais de um mês desde minha última compilação de notícias. Este mês foi interessante, principalmente com a RailsConf Las Vegas que aconteceu no começo do mês. Quem quiser acompanhar tudo o que eu venho lendo, assine o feed do meu Google Reader, meu  Delicious e, claro, para as últimas novidades, sigam-me no Twitter. Vamos às notícias:
+
+
+
+PDF + Rails + RGhost – Now in the View – quando se pergunta sobre suporte de PDF no Ruby/Rails, a maioria se lembra primeiro do PDFWriter. Porém não podemos esquecer que temos uma solução nacional, o RGhost, criado pelo Shairon Toledo. Agora ele criou uma nova gem que integra ainda melhor o RGhost às convenções do Rails para conseguir criar views que geram PDF de forma bem mais simples.
+
+
+Enforcing Ruby code quality – hoje temos diversas ferramentas que checam qualidade de código, no caso flay, flog, reek, roodi, metric-fu. Neste artigo o Marty Andrews explica como começar a usá-los para melhorar a qualidade do seu código.
+
+
+beta test rake-compiler: fat binaries functionality implemented – se você é mantenedor ou colaborador de RubyGems, especialmente se elas tem extensões em C, leia esse artigo do Luis Lavena. Ele está aperfeiçoando um processo para tornar possível criar gems que contenham “fat-binaries”, ou seja, múltiplos binários para múltiplas plataformas na mesma gem, um processo que no mundo Mac ficou conhecido como “Universal Binary” (por ter um único executável com binários para PowerPC e Intel). Essa é, de longe, a maneira mais inteligente para suportar múltiplas plataformas e será excelente se as gems de Ruby começarem a sair dessa forma.
+
+
+Sunspot: A Solr-Powered Search Engine for Ruby – felizmente uma coisa que nunca faltou no mundo Rails foi integração com engines de procura. O mais usado acho que ainda é o Sphinx junto com o plugin Ultrasphinx ou Thinking Sphinx. Porém existe outra alternativa: o Lucene, famoso em Java, com seu par Solr, um servidor que implementa o Lucene como serviço. O Sunspot tenta ser uma alternativa para integar ao Solr, dando uma DSL que permite integração mais intuitiva a esse engine de procura. Pode ser uma boa alternativa ao antigo plugin acts_as_solr.
+
+
+Internbot Chronicles #4: CI & Test Metrics – ainda falando de qualidade, teste é um assunto constante em nossa qualidade, em especial Integração Contínua (CI). Neste artigo o Nick Quaranto explica como montar seu próprio CI.
+
+
+MacRuby, changing the Ruby ecosystem – fiquem de olho no MacRuby. Na atual versão 0.4 ele já é bastante usável e inclusive permitiu a criação de aplicações desktop nativas de Mac como o Blogo, totalmente feito em Ruby mas que você nem perceberia. A versão experimental 0.5 está andando de vento em popa e trás uma nova virtual machine e performance – até agora – espetacular. Especula-se que ela venha inclusive a se tornar uma VM usada oficialmente pela Apple como ambiente de desenvolvimento rápido de aplicações Desktop de Mac e também de iPhone/iPod Touch! Neste artigo, o Matt Aimonnetti, colaborador do projeto HotCocoa, dá uma prévia do que está acontecendo. Aproveitando, não deixe de comprar o último excelente screencast do Peepcode, MEET MACRUBY.
+
+
+Hg-Git Mercurial Plugin – a comunidade Ruby adotou o Git praticamente como a ferramenta de versionamento distribuído de código “oficial”. Porém, nós não acreditamos em “uma única maneira de fazer as coisas.” Durante a RailsConf, o Scott Chacon, que trabalha para o Github.com, lançou um plugin para Mercurial (hg), que permite a clientes Hg conversarem com repositórios remoto em Git de forma transparente. Isso permite que usuários de Mercurial consigam consumir repositórios do Github, por exemplo. Excelente exemplo de como a comunidade Ruby resolve seus problemas.
+
+
+Scotland On Rails Presentations Now Online: 27 Awesome Videos – o evento Scotland on Rails liberou os vídeos das apresentações. Vale a pena dar uma olhada.
+
+
+Ward Cunningham on Wikis and Agility – vídeo muito legal de uma entrevista com ninguém menos que Ward Cunningham – dentre milhares de outras coisas, criador do Wiki – , mostrando o ambiente de sua empresa, a AboutUs. Muito interessante para quem está interessado em criar ambiente realmente ágeis para seus funcionários.
+
+
+rinterface: a pure Ruby client to talk to Erlang – mais uma maneira de fazer chamadas remotas a procedimentos (RPC) a partir de clientes Ruby, enviando chamadas a processos Erlang. É uma forma de integração, pode ser útil em muitos casos. Neste outro artigo, Dave Bryson explica algo similar, conectando-se diretamente na porta TCP do processo Erlang.
+
+
+Clone TinyURL with 40 lines of Ruby code on Google AppEngine for Java – o título já diz tudo, mas aqui vai mais uma maneira de se criar mais um clone de TinyURL – que, aliás, deve ser a aplicação mais clonada dos últimos tempos. A idéia é usar Sinatra rodando sobre JRuby no Google App Engine. Pode ser um bom exercício para quem quer entender essas tecnologias.
+
+
+ruby pong with shoes and bloopsaphone – quer aprender a criar o jogo mais simples de todos os tempos em ruby? Pong é o avô dos videogames modernos, mas ainda é divertido, especialmente de reimplementá-lo pela milésima vez. Neste caso usando o framework Shoes, do _why.
+
+
+Heroku 0 to 60 in 15 minutes – neste tutorial a Elctech demonstra como criar, configurar e instalar uma aplicação Rails no Heroku. É tão simples que o tutorial é quase uma redundância :-) Na realidade metade do tutorial é gasto explicando como se registra domínios.
+
+
+23 links e recursos úteis do Ruby 1.9 – não deixem de visitar o site RubyInside.com.br, a versão brasileira do site britânico de mesmo nome. Neste artigo há uma coletânea importante de 23 links para aprender mais sobre o Ruby 1.9. Todos os rubistas precisam estar atualizados quanto a este assunto para ajudar a comunidade a migrar gems e outros projetos para 1.9.
+
+
+Railsconf 2009 in Review – este ano a RailsConf foi em Las Vegas. Se quiser mais detalhes também veja este vídeo da RailsEnvy ; a segunda edição da Rails Magazine ; o wrap up da thoughtbot ; os artigos que meus amigos da Locaweb que foram comigo escreveram; o round up da RubyInside ; o wrap up do wycatz ; o wrap up do Matt Aimonnetti. Finalmente, meus próprios artigos estão na categoria RailsConf2009, dêem uma olhada.
+
+
+Rubystein – durante a RailsConf, uma das coisas que mais chamou a atenção foi a palestra dos garotos da Phusion, onde eles demonstraram um jogo feito em Ruby puro, uma reimplementação (não um port) do famoso jogo Wolfenstein 3D. A idéia foi demonstrar que o Ruby é lento mas não tão lento quanto dizem, e para provar, eles fizeram algoritmos que exigem muito processamento, como ray tracing, diretamente em Ruby. Leia a respeito também na RubyInside.
+
+
+Sam’s Blog – Railsconf: Don’t mock yourself out – Dave Chelimsky – durante a RailsConf o David Chelimsky explicou mais uma vez sobre Mocks, Stubs. Neste artigo da Pivotal Labs, o Sam Pierson resume o assunto.
+
+
+RabbitMQ – Um sistema de fila rápido e confiável para Rubistas – por favor, toda vez que precisarem de algum mecanismo que simule uma “fila” (lembram-se da faculdade, First In, First Out), não comecem implementando uma tabela chamada “fila” onde cada linha é um elemento! Já existem dezenas de soluções para isso. Especialmente se você precisa de uma fila realmente robusta, com as características básicas de garantia de entrega e garantia de entrega apenas uma vez. O RabbitMQ é uma fila muito capaz e, o melhor, não é difícil integrar com Ruby. E eis mais um exemplo de Ruby integrando com produtos Erlang.
+
+
+rufus-decision 1.1, ruby decision tables – você tem aquele código feio, cheio de copy e paste, com vários ifs, dentro de ifs, dentro de ifs … resumindo, uma lógica que liga diversas condições em cruzamento a ações. Você precisa de uma tabela de decisão. Em Ruby, o rufus é uma implementação disso que pode ser muito útil para tornar sua lógica de negócio bem mais simples de dar manutenção, evitando duplicações desnecessárias.
+
+
+Typhoeus: A High Speed, Parallel HTTP Library for Ruby – para quem quer realizar múltiplas requisições HTTP em paralelo, esta biblioteca pode ajudar. É algo até que simples em conceito mas que não havia de forma fácil em Ruby. Basicamente trata-se de realizar chamadas assíncronas não-bloqueantes que respondem a eventos. Pode ser útil quando você quiser criar spiders ou crawlers de sites.
+
+
+is it jruby? – recentemente a Brightbox lançou o site is it ruby 1.9?, onde a comunidade poderia testar gems e dizer nesse site se ela é ou não compatível, em seus testes, com o ruby 1.9. Agora foi lançado mais uma com o mesmo objetivo mas desta vez para avaliar a compatibilidade de gems com o jruby. Mais e mais a comunidade está se conscientizando que as gems precisam receber mais tratamento para ficarem compatíveis com múltiplas virtual machines. Isso é muito bom e espero que todos colaborem.
+
+tags: obsolete
+

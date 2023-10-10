@@ -1,0 +1,582 @@
+
+O Chris, do err.the_blog tem artigos fantásticos e excelentes dicas de “Rubyisms and Railities”, como ele mesmo diz. Resolvi fazer mais uma tradução, mas desta vez será um combo, 3 artigos em 1 de uma seleção que eu fiz. A cereja do bolo é o terceiro artigo, mas espero que todos os três aumentem seus apetites para buscar o resto dos mais de 40 artigos em seu blog.
+
+
+
+Organize seus Models
+Diversão de Sexta com Hash
+With_scope com escopo
+
+
+Organize seus Models
+29/07/2006
+No meio de uma dessas discussões sobre CRUD e dicas de organização da aplicação, eu gostaria de submeter uma idéia um pouco menos controversa: organize seus models sem precisar usar namespaces.
+Como? Aqui vai um típico diretório app/models:
+
+Argh. Models demais. Mas digamos que realmente precisamos de todos eles mas não queremos ligar com namespaces. A primeira coisa a fazer, assim como em qualquer tipo de organização, é separar nosso grande grupo em agrupamentos lógicos menores. Nesse caso temos três: models database, que mapeiam diretamente a tabelas no banco de dados, models cache, que não mapeiam diretamente a uma tabela e vivem no memcached, e models tableless, que usamos para tirar vantagem das validações do ActiveRecord sem usar tabelas no banco.
+Criamos esses três subdiretórios dentro do models para representar nossos grupos menores: database, cache e tableless, desse jeito:
+
+Assim é bem melhor. Está imediatamente claro que models fazem o que. Agora, como fazemos Rails reconhecer os models nesses subdiretórios sem que ele assuma que caem em namespaces dos próprios diretórios?
+Não fazemos.
+Rails vai automaticamente achar esses models sem qualquer problema. Não haverá diferença em seu código, apenas menos sobrecarga mental quando estiver pulando entre diretórios.
+Você também pode usar esse truque para organizar melhor seus controllers, helpers, plugins ou bibliotecas (cuiddado, isso não funciona com migrations). Obrigado, Rails.
+
+Diversão de Sexta com Hash
+18/08/2006
+Ei, é sexta-feira. Vamos brincar com hashes.
+Primeiro de tudo: como construir um hash a partir de um array? Fácil e direto. Garanta que seus arrays estejam no formato [‘name’, ‘chris’, ‘age’, 47 ] então apenas passe ele para Hash[] com um asterisco:
+1
+2
+3
+4
+
+>> array = ["name", "chris", "age", 47]
+=> ["name", "chris", "age", 47]
+>> Hash[*array]
+=> {"name"=>"chris", "age"=>47}
+
+
+O asterisco expande os elementos do array em parâmetros de método. Certo? Nossa chamada Hash[*array] é interpretada mais ou menos assim:
+1
+
+Hash["name", "chris", "age", 47]
+
+
+Que é como Hash[] gosta.
+Faça-me um favor. Jogue flatten nele para poder passar arrays dentro de arrays.
+1
+2
+3
+4
+
+>> array = [["name", "chris"], ["age", 47]]
+=> [["name", "chris"], ["age", 47]]
+>> Hash[*array.flatten]
+=> {"name"=>"chris", "age"=>47}
+
+
+Agora podemos ficar pulando de arrays para hashes o dia todo.
+1
+2
+3
+4
+5
+6
+
+>> blog = { :name => 'err', :style => 'classic' }
+=> {:name=>"err", :style=>"classic"}
+>> blog.to_a    
+=> [[:name, "err"], [:style, "classic"]]
+>> Hash[*blog.to_a.flatten]
+=> {:name=>"err", :style=>"classic"}
+
+
+Ei, coloque no seu bolso e leve com você.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+class Array
+  def to_hash
+    Hash[*self.flatten]
+  end
+  alias :to_h :to_hash
+end
+
+>> [[:name, "err"], [:style, "classic"]].to_h
+=> {:name=>"err", :style=>"classic"}
+
+
+Concordamos que é sexta, certo? Certo. E todos sabemos que sexta é um dia folgado. Então, divirta-se com valores default de hash.
+1
+2
+3
+4
+5
+6
+7
+8
+
+>> animals = Hash.new('Não é um animal.')
+=> {}
+>> animals[:cachorro] = "Um animal!" 
+=> "Um animal!" 
+>> animals[:inseto]
+=> "Não é um animal." 
+>> animals[:cachorro]
+=> "Um animal!" 
+
+
+Esse é o básico. Você também pode passar um bloco ao Hash.new, que é de onde fica interessante. O hash por si próprio e a chave tentando ser acessada são ambas escorregadas ao bloco sendo chamado em uma procura de hash que falha.
+Vamos inicializar elementos em um array em uma procura perdida:
+1
+2
+3
+4
+5
+6
+
+>> hash_of_arrays = Hash.new { |hash, key| hash[key] = [] }
+=> {}
+>> hash_of_arrays[:animals] << 'Cachorro'
+=> ["Cachorro"]
+>> hash_of_arrays[:animals] 
+=> ["Cachorro"]
+
+
+Uau. Isso é super folgado. Com cuidado, no entanto, já que procuras perdidas vão se tornar elementos vazios no hash.
+1
+2
+3
+4
+5
+6
+7
+8
+
+>> hash_of_arrays = Hash.new { |hash, key| hash[key] = [] }
+=> {}
+>> hash_of_arrays.keys
+=> []
+>> hash_of_arrays[:cachorro]
+=> []
+>> hash_of_arrays.keys
+=> [:cachorro]
+
+
+Esse truque é útil também para entender “eu já fiz alguma coisa”? Observe:
+1
+2
+3
+4
+5
+6
+
+>> actions = Hash.new { |hash, key| hash[key] = true; false }
+=> {}
+>> actions[:move]
+=> false
+>> actions[:move]
+=> true
+
+
+Estamos configurando o elemento para true mas retornando false no primeiro acerto. Agora podemos construir alguma lógica como:
+1
+2
+3
+4
+5
+
+unless @actions[:deleted]
+  object.delete
+else
+  raise "Já deletado!" 
+end
+
+
+Você é mais criativo do que eu. Estou certo que vai encontrar um uso legal.
+Cara, código demais para uma sexta. Mas nada revolucionário. Você pode achar esse tipo de truques no Code Snippets ou lá fora na blogosfera. Tenha um bom fim de semana. Amigo.
+
+With_scope com escopo
+28/11/2006
+Pst, ei garoto. Isso, você. Você sabe sobre around_filter? É? Já usou with_scope com ele? É? Ok, legal. Deixe me contar a respeito:
+Usar with_scope em conjunto com um around_filter em um controller é ruim.
+Desculpe. Você está para receber algum vinagre em seu escopo. Vá lendo.
+O Furo
+Existe uma funcionalidade legal no Rails que é realmente útil mas (não diga isso) algumas vezes abusado: with_scope. É algo assim:
+1
+2
+3
+4
+
+Movie.with_scope :find => { :conditions => [ 'state = ?', 
+  Movie::NOW_PLAYING ] } do
+  Movie.find(:all)
+end
+
+
+Qualquer chamada a find dentro do bloco with_scope terá seu escopo limitado a filmes com um state igual ao valor da constante Movie::NOW_PLAYING. Essa chamada Movie.find(:all) é basicamente equivalente a Movie.find(:all, :conditions => [ ‘state = ?’, Movie::NOW_PLAYING ]).
+Agora, aqui vai uma idéia. Digamos que você tem um controller MovieController que está encarregado de, hmm, filmes. Como ele seria?
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+class MovieController < ApplicationController
+  def director
+    @director = Movie.find(params[:movie_id]).director
+  end
+
+  def related_movies
+    @related_movies = Movie.find(params[:movie_id]).related_movies
+  end
+end
+
+
+Limpo e bonito. Apenas um find padrão e associações. Vamos apimentar e dizer que queremos somente filmes visible que estão em NOW_PLAYING.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+class MovieController < ApplicationController
+  def director
+    movie = Movie.find_by_id(params[:movie_id], 
+        :conditions => [ 'state = ? AND visible = ?', 
+            Movie::NOW_PLAYING, true ])
+    @director = movie.director
+  end
+
+  def related_movies
+    movie = Movie.find_by_id(params[:movie_id], 
+        :conditions => [ 'state = ? AND visible = ?', 
+            Movie::NOW_PLAYING, true ])
+    @related_movies = movie.related_movies
+  end
+end
+
+
+Aqui estamos atendendo às novas especificações checando por algumas :conditions. Duas vezes. Meio grosso, e não muito DRY. Talvez podemos usar with_scope? Não, ainda não – seria definitivamente mais simples configurar o filme em um before_filter.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+class MovieController < ApplicationController
+  before_filter :set_movie
+
+  def director
+    @director = @movie.director
+  end
+
+  def related_movies
+    @related_movies = @movie.related_movies
+  end
+
+private
+  def set_movie
+    @movie = Movie.find_by_id(params[:movie_id], 
+        :conditions => [ 'state = ? AND visible = ?', 
+         Movie::NOW_PLAYING, true ])
+  end    
+end
+
+
+Uau, muito melhor. E agora sempre temos o filme disponível como uma instância variável. Entretanto, algumas vezes você precisa de mais do que um filme, sabe?
+A lista
+Digamos que eu queira, não, demande uma lista de filmes ordenados por suas datas de lançamento. Primeiro teríamos que mudar o before_filter para isso:
+1
+
+before_filter :set_movie, :except => :all_movies
+
+
+Então adicionaríamos algum tipo de método all_movies, como isso:
+1
+2
+3
+4
+
+def all_movies
+  @movies = Movie.find(:all, :conditions => [ 'state = ? AND visible = ?',
+      Movie::NOW_PLAYING, true ], :order => 'release_date DESC')
+end
+
+
+Esses raios de :conditions de novo. Exatamente o mesmo de antes, só que desta vez sem a elegância de um before_filter. Vamos suspirar. Ok, atire o with_scope.
+O around_filter
+Rails 1.2 tem um novo recurso chamado around_filter. Ele permite rodar código ambos antes e depois (“around”) das actions em um controller. Da documentação:
+1
+2
+3
+4
+5
+
+around_filter do |controller, action|
+  logger.debug "before #{controller.action_name}" 
+  action.call
+  logger.debug "after #{controller.action_name}" 
+end
+
+
+Ei … e se rodássemos nossas actions do controller com um bloco with_scope, limitado aos filmes em NOW_PLAYING e visible? Então poderíamos apagar todos aqueles parâmetros de :conditions e deixe o around_filter se preocupar com isso!
+Vamos jogar alguma coisa junta:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+class MovieController < ApplicationController
+  before_filter :set_movie, :except => :all_movies
+
+  around_filter do |controller, action|
+    Movie.with_scope :find => { :conditions => [ 'state = ? AND visible = ?',
+      Movie::NOW_PLAYING, true ] } do
+      action.call
+    end
+  end  
+
+  def director
+    @director = @movie.director
+  end
+
+  def related_movies
+    @related_movies = @movie.related_movies
+  end
+
+  def all_movies
+    @movies = Movie.find(:all, :order => 'release_date DESC')
+  end  
+
+private
+  def set_movie
+    @movie = Movie.find_by_id(params[:movie_id])
+  end    
+end
+
+
+Legal. Pude cortar toda repetição de :conditions adicionando a chamada around_filter … mas a que custo?
+ISSO. ESTÁ. ERRADO.
+Não, nada legal.
+Não coloque with_scope em um around_filter. De fato, NUNCA chama um Model.with_scope fora do contexto do Model. Quando faço isso, apenas torno meu código mais difícil de compreender. Você pode não pensar assim, pode até se dar bem, mas existe definitivamente um jeito mais simples que ambos você e colegas vão se dar bem sem ter que sempre ter em mente que existe um around_filter onipotente voando pelos céus, afetando cada um dos seus find.
+(Além disso, esse tipo de coisa é um hábito tão ruim que o with_scope se tornará protected no 2.0, como disse DHH. Você só poderá usá-lo dentro do contexto de um model).
+Então, qual a maneira mais simples? O with_scope é realmente útil? Sim.
+O Jeito Rails
+Jamis Buck (o J-bomo, como o chamo) recentemente escreveu sobre emagrecer código em Controller Magro, Model Gordo – um artigo sensacional. Seguindo essa linha, aqui vai uma maneira realmente limpa de limitar seu controler sem around_filter:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+class MovieController < ApplicationController
+  before_filter :set_movie, :except => :all_movies
+
+  def director
+    @director = @movie.director
+  end
+
+  def related_movies
+    @related_movies = @movie.related_movies
+  end
+
+  def all_movies
+    @movies = Movie.find_playing(:all, :order => 'release_date DESC')
+  end  
+
+private
+  def set_movie
+    @movie = Movie.find_playing(:first, :conditions => [ 'id = ?', 
+      params[:movie_id] ])
+  end
+end
+
+
+Está vendo? Adicionei um método find_playing à classe Movie. E como esse método brilhante se parece?
+1
+2
+3
+4
+5
+6
+7
+8
+
+class Movie < ActiveRecord::Base
+  def self.find_playing(*args)
+    with_scope :find => { :conditions => [ 'state = ? AND visible = ?', NOW_PLAYING, true ] } do
+      find(*args)
+    end
+  end
+...
+end
+
+
+Agora find_playing está me entregando filmes NOW_PLAYING, visible sem cair na mágica do with_scope.
+Refrescante. Código menor, mais simples sem efeitos colaterais. Você vê find_playing e não sabe o que ele faz, vê procura por aí; você não está trabalhando sob a falsa pretensa que o find é totalmente normal e na verdade algum with_scope está perambulando por aí em around_filters. E agora eu posso escrever um teste unitário para find_playing diretamente, para ter certeza que realmente sei o que está acontecendo (e que não estou programando por acidente). Nada mal.
+Escopo!
+Está tudo bem em entender “uau, meu código é uma droga” e então ficar refatorando franticamente para torná-lo mais limpo e simples. Faço isso diariamente. De fato, se você tiver alguma outra dica sobre como emagrecer controllers e engordar models, deixe nos comentários.
+Sedendo por mais? Aqui vai uma leitura de cabeceira: outro artigo de Jamis sobre finders customizados.
+E, finalmente, um desafio: como você implementaria find_playing_by_id? Eu quero Movie_find_playing_by_id(id), passar opções, etc etc. Da mesma forma como um find_by_id mas limitado como find_playing. Me avisem!
+find_playing_by_id
+Atualização! Dan Miliron oferece uma sugestão: with_playing.
+1
+2
+3
+4
+5
+6
+7
+8
+
+class Movie < ActiveRecord::Base
+  def self.with_playing 
+    with_scope :find => { :conditions => [ 'state = ? AND visible = ?', 
+      NOW_PLAYING, true ] } do 
+      yield 
+    end 
+  end
+end
+
+
+Então você pode, em seu controller:
+1
+2
+3
+4
+5
+6
+7
+
+class MovieController < ApplicationController 
+  def director 
+    Movie.with_playing do 
+      @director = Movie.find_by_id(params[:movie_id]).director 
+    end 
+  end 
+end
+
+
+Nada mal, mas eu realmente gosto de ter find_playing lidar com yield para mim para manter meus controllers magros. Que tal isso:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+class Movie < ActiveRecord::Base
+  def self.find_playing(*args)
+    with_playing do
+      find(*args)
+    end
+  end
+
+  def self.find_playing_by_id
+    with_playing do
+      find_by_id(*args)
+    end
+  end
+
+  def self.with_playing 
+    with_scope :find => { :conditions => [ 'state = ? AND visible = ?', 
+      NOW_PLAYING, true ] } do 
+      yield 
+    end 
+  end
+end
+
+
+Isso funciona, mas se eu fizer o with_playing do Dan no controller, eu tenho acesso a todos os métodos find_by_*- não apenas os que eu fizer hardcode. Isso é legal, e quero isso em meu model. Então, deixe-me adicionar uns method_missing em meu estilo de vida find_playing:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+def self.method_missing(method, *args, &block)
+  if method.to_s =~ /^find_(all_)?playing_by/
+    with_playing do
+      super(method.to_s.sub('playing_', ''), *args, &block)
+    end
+  else
+    super(method, *args, &block)
+  end
+end
+
+
+Isso vai lhe dar find_playing_by_blah e find_all_playing_by_blah. Louco!
+tags: obsolete rails
+

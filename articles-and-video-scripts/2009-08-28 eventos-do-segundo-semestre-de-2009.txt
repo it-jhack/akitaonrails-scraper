@@ -1,0 +1,39 @@
+
+
+
+
+No primeiro semestre viajei bastante para palestrar. Desde o Campus Party no começo do ano, passando por quase meia dúzia de cidades pelo Encontro Locaweb e mais outros pelo caminho. Mas já começamos o segundo semestre e semana que vem já recomeça a maratona de palestras. Vou atualizando neste post para não me esquecer.
+Em especial, obviamente, não deixem de participar e de promover o Rails Summit Latin America 2009, que acontecerá nos dias 13 e 14 de Outubro! Diversos dos maiores nomes internacionais de Ruby e Rails estarão presentes, é a melhor oportunidade de se encontrar com os maiores Railers do Brasil e do mundo.
+Além disso, nosso grande amigo Carlos Eduardo, da e-Genial está organizando mais um Rails for Kids, um evento online onde o que for arrecadado com a inscrição será para ajudar uma instituição beneficente. Não deixe de colaborar e participar. Grandes nomes brasileiros estarão presentes num dia inteiro de palestras.
+
+05/09 – XXVII ENECOMP – Congresso Nacional dos Estudantes de Computação – Colégio Estadual do Paraná/Curitiba
+
+
+12/09 – Rails for Kids 2009 – Online via Treina Tom
+
+
+14/09 – Dev in Rio 2009 – Rio de Janeiro
+
+
+15/09 – I Fórum de Tecnologia em Software Livre SERPRO Rio de Janeiro
+
+
+21/09 – ENIC – Encontro de Iniciação Científica – Claretiano/Batatais
+
+
+10/10 – Encontro Ágil – IME/USP
+
+
+13-14/10 – Rails Summit Latin America 2009 – São Paulo
+
+
+19/10 – Semana da Computação – USP/São Carlos
+
+
+23/10 – Latinoware 2009 – Foz do Iguaçu
+
+O Dev in Rio 2009 foi organizado pelos grandes Guilherme Chapiewski e Henrique Bastos, totalmente às pressas e prova como grandes eventos podem ser feitos em pouco tempo, com poucos recursos mas com altíssima qualidade! Sem querer se tornará um dos melhores eventos de tecnologia do Brasil.
+Estou particularmente entusiasmado com o Latinoware porque estará presente ninguém menos que o grande Frederick Brooks, famoso escritor do livro The Mythical Man-Month e a sequência No Silver Bullet. Por coincidência vou palestrar logo depois dele :-) Sou um grande fã há pelo menos uma década.
+Por enquanto é isso. Acompanhem para mais atualizações.
+tags: obsolete conference
+

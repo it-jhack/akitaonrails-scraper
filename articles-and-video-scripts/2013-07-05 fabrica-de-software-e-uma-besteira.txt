@@ -1,0 +1,19 @@
+
+Original de 11/4/2010: Gestão 2.0
+
+O maior desserviço à área de Desenvolvimento de Software já criado na nossa história recente foi o termo “Fábrica de Software”. Pior ainda depois que a Índia implementou esse conceito em larga escala, tornando-o famoso e com credibilidade.
+Digo isso porque a partir do momento que se encara “Desenvolvimento de Software” como uma tarefa de “Fábrica”, onde entra uma especificação de um lado e sai um software do outro, você acabou de destruir qualquer inovação na área. Pior ainda, considera que todo programador é necessariamente um “operário”.
+
+
+
+Porque estamos falando de “Fábrica”, os cursos de “Engenharia de Software” se tornaram mais populares que os de “Ciências da Computação”. E mais paradoxal ainda é ver estudantes se formando como “engenheiros” mas trabalhando como “pedreiros”.
+Mais ruim ainda é quando gerentes de TI, “CIO”s, “CTO”s, que sequer foram da área de software, sequer escreveram uma linha, acham que entendem como se faz software. Dado que o mercado fala de “Fábrica”, o que eles vão implementar são “linhas de produção” e junto com isso todos os procedimentos que colocam o operário em linha. Planilhas de horas, métricas de linhas de código, ou pontos de função ou pontos de história ou qualquer bobagem dessas, gantt charts e cronogramas “precisos” de entrega, etc.
+A metáfora está completamente errada. Desenvolvedores não são operários, e sim os “arquitetos” propriamente ditos. O trabalho de operário em software é do compilador, este sim, que empilha um byte sobre o outro seguindo uma especificação: o código do software. Repetindo: o código do software é a especificação, a planta baixa, e o compilador é o operário que faz o trabalho braçal.
+O que chamamos hoje de “arquitetos” não são arquitetos, na verdade não são nada. Não há como ser um arquiteto sem ser um programador sênior antes. Um bom programador pode se tornar um arquiteto.
+Agora, o problema é que o conceito de “Fábrica” se espalhou rapidamente. O governo e as instituições de ensino abraçaram isso. Me deixa extremamente triste visitar áreas do Brasil onde as únicas opções de trabalho para programadores são essas “Fábricas”. As faculdades também se depreciaram para atender essa demanda e formar “operários” com diplomas de “engenheiros”, e assim toda uma nova geração de programadores pensa com cabeça de operário.
+Uma ressalva para ser politicamente correto: não tenho nada contra operários, muito pelo contrário, é uma profissão tão respeitada como qualquer outra. Porém, ninguém vende operários de obra como arquitetos e nem os próprios operários se acham arquitetos.
+Eis porque digo que foi um desserviço: toda uma geração inteira de programadores desperdiçada pensando em software enquanto empilhar tijolo. Levará pelo menos mais 2 gerações inteiras para, talvez, conseguirmos reverter isso.
+Agora pensemos: e se em vez de “Fábrica” mudássemos o termos para algo mais adequado como “Atelier de Software”? Como isso mudaria a forma como você pensa e trabalha com software?
+
+tags: obsolete off-topic management carreira
+

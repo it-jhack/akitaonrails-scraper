@@ -1,0 +1,523 @@
+
+Update 16/03: Rails 2.3.2 foi lançado! gem update rails deve trazer a nova versão para quem já tinha uma anterior instalado.
+O DHH anunciou esses dias que provavelmente lançará o Rails 2.3 amanhã, domingo, dia 14/03. Para os impacientes, mesmo hoje você já pode instalar a versão Release Candidate 2 baixando do repositório de gems da 37signals:
+1
+
+sudo gem install rails --source http://gems.rubyonrails.org
+
+
+Além disso, todos os detalhes do lançamento já foram descritos no site do Rails Guides e sugiro que dêem uma boa olhada. Quero apenas fazer alguns comentários sobre as principais funcionalidades.
+Antes de mais nada, a resposta à pergunta de sempre: “minha aplicação já está em produção com um Rails mais antigo, devo atualizar para esta?” Resposta simples de sempre: “não.” Resposta mais completa de sempre: “apenas atualize se existir alguma nova funcionalidade – vide este artigo – que você realmente precise muito. Certifique-se que a cobertura de testes de sua aplicação esteja bem antes de começar.”
+
+
+Rack
+Internamente a mudança mais significativa é a substituição da antiga dependência estrutural de CGI para Rack. CGI continua sendo suportado via interface proxy, mas agora é tudo baseado em Rack. Outros frameworks Ruby como Merb e Sinatra já usavam Rack e sempre é difícil fazer mudanças estruturais, mas eles conseguiram. Dentre algumas coisas que podem quebrar se você está atualizando sua aplicação são Sessões, Cookies, Uploads, APIs de XML e JSON porque elas justamente dependiam da estrutura CGI anterior. Preste atenção a isso principalmente se você havia feito monkey-patches nessas estruturas.
+Falando em Sessions, uma modificação importante de performance é a seguinte: se você não quiser usar sessions, basta não usá-las. Antigamente nós desligávamos sessions explicitamente para diminuir o peso. Agora sessions são lazy loaded, ou seja, se você nunca chamar esse objeto, ele não existe, quando chamar ele é inicializado.
+Uma das coisas que isso ajuda é na implementação de Rack Middlewares. Para quem veio de Java é algo semelhante a filtros de servlets. Antes do Rails receber a requisição HTTP, ela pode passar por uma “fila” de middlewares que podem pré-processá-la antes do Rails. Um dos usos disso é o Rack::Cache, do Ryan Tomayko, que serve para fazer cache das páginas da sua aplicação Rails.
+Outro middleware é o Rails Metal. Ele é extremamente útil se sua aplicação possui actions que são muito requisitadas (por exemplo, um end point para Widgets ou alguma API) e você não precisa de todos os recursos do Rails. Ou seja, você pode criar actions muito mais “leves”, mas obviamente com menos recursos, que pulam o Rails inteiro. Assista ao screencast do Ryan Bates sobre isso.
+Essa mudança para o Rack abre todo um grande leque de possibilidades, inclusive a construção de middlewares que são compatíveis com qualquer outro framework Ruby que use Rack, como o próprio Merb, Sinatra. Um ecossistema de middlewares deve começar a surgir. Um exemplo que eu posso começar a imaginar: autenticação na forma de middleware, por exemplo.
+Engines
+Essa é uma das minhas funcionalidades favoritas: Rails Engines não é algo novo. Esse conceito ainda não está fechado e muitos estão explorando suas possibilidades. Até então uma aplicação Rails sempre foi algo stand-alone, isolado. Antigamente havia um suporte cru a “componentes” que agora já está obsoleto. Engines é uma forma de usar a infraestrutura de plugins para criar algo parecido com componentes.
+Para ter funcionalidades “reusáveis” uma das formas que tínhamos era Generators, como o Restful Authentication, que gera diversos arquivos dentro da sua aplicação. Isso funciona mas não é exatamente prático nem fácil de manter. Com Engines, poderíamos ter os componentes MVC (a pasta “app”) e também o trecho relevante de rotas (routes.rb) encapsuladas dentro de um plugin e a aplicação Rails saberia carregar isso.
+O projeto Rails Engines antigo foi parte mesclado ao código do Rails e agora é isso que ele faz: ele identifica plugins que tem a pasta “app” e torna-as parte da carga do Rails, de forma ubíquita. Isso também inclui carregar um arquivo ‘routes.rb’ dentro do seu plugin e usá-las normalmente.
+No atual estado, esse suporte ainda é incompleto. Por exemplo, o Rails 2.3 ainda não suportará Engines com migrations, ainda não suporta bem assets públicos (imagens, javascript, etc dentro do plugin). Mas de fato este é um passo na direção correta. Eu espero que na próxima versão isso se complete.
+Application Templates
+Esta é outra funcionalidade que eu gosto bastante. É um dos passo em direção a tornar o Rails um pouco menos engessado. O comando “rails” cria uma estrutura básica padrão que toda aplicação segue. Porém, todos nós com mais tempo de Rails, costumamos modificar essa estrutura um pouco. Por exemplo, trocando o renderizador ERB por HAML, trocando o test/unit por Rspec, vendorizando algumas gems, instalando alguns plugins, configurando um repositório Git e assim por diante.
+São todos passos repetitivos e que fazemos em todo projeto. Como sabemos, tudo que é feito de maneira repetitiva pode ser automatizada. Isso é o que Application Templates querem ajudar. Agora podemos ter templates que fazem mais do que o comando “rails” básico. Isso substitui o que algumas pessoas começaram a tentar com templates estáticos como os antigos Bort e Baseapp22.
+Aliás, existe uma versão do Bort que já implementa o novo sistema de templates, feito pelo Jeremy McAnally e que podemos carregar diretamente da internet, assim:
+1
+
+rails blog_again -m https://github.com/jeremymcanally/rails-templates/raw/68bada09dbd577b277a49ee4f3fea30fb0bc618c/bort.rb
+
+
+Esse arquivo de template é assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+
+# bort.rb
+# from Jeremy McAnally, Pratik Naik
+# based on bort by Jim Neath
+
+inside('vendor') do
+  run "ln -s ~/commit-rails/rails rails"
+end
+
+plugin 'rspec', 
+  :git => 'git://github.com/dchelimsky/rspec.git'
+plugin 'rspec-rails', 
+  :git => 'git://github.com/dchelimsky/rspec-rails.git'
+plugin 'exception_notifier', 
+  :git => 'git://github.com/rails/exception_notification.git'
+plugin 'open_id_authentication', 
+  :git => 'git://github.com/rails/open_id_authentication.git'
+plugin 'asset_packager', 
+  :git => 'https://synthesis.sbecker.net/pages/asset_packager'
+plugin 'role_requirement', 
+  :git => 'git://github.com/timcharper/role_requirement.git'
+plugin 'restful-authentication', 
+  :git => 'git://github.com/technoweenie/restful-authentication.git'
+ 
+gem 'mislav-will_paginate', :version => '~> 2.2.3', 
+  :lib => 'will_paginate',  :source => 'https://gems.github.com'
+gem 'rubyist-aasm'
+gem 'ruby-openid'
+ 
+rake("gems:install", :sudo => true)
+
+generate("authenticated", "user session")
+generate("rspec")
+
+
+Vale a pena vasculhar o Github que você encontrará mais templates (e inclusive pode publicar os seus). O Ryan Bates tem alguns também:
+1
+
+rails blog_again -m https://github.com/ryanb/rails-templates/raw/3d1acde2816f2e56d00541a148aa1d35e0a5d662/base.rb
+
+
+No caso deste template, ele deixa você escolher certos pedaços (“quer instalar Rspec?”). Quando você executa o comando acima, verá o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+...
+   identical  log/test.log
+    applying  template: https://github.com/ryanb/rails-templates/raw/3d1...662/base.rb
+              Do you want to use RSpec for testing?
+y
+      plugin  rspec
+From git://github.com/dchelimsky/rspec
+ * branch            HEAD       -> FETCH_HEAD
+      plugin  rspec-rails
+From git://github.com/dchelimsky/rspec-rails
+ * branch            HEAD       -> FETCH_HEAD
+  generating  rspec
+  generating  nifty_layout
+     running  git init
+   executing  echo 'TODO add readme content' > README from /private/tmp/blog_again
+   executing  touch tmp/.gitignore log/.gitignore vendor/.gitignore from /private/tmp/blog_again
+   executing  cp config/database.yml config/example_database.yml from /private/tmp/blog_again
+        file  .gitignore
+     running  git commit -m 'initial commit'
+     running  git add .
+     applied  https://github.com/ryanb/rails-templates/raw/3d1...662/base.rb
+
+
+Aprenda mais sobre templates nos artigos do blog do Pratik Naik e o screencast do Ryan Bates. E vejam este incrível serviço criado pelo Hampton Caitlin, chamado Rails Boost, que é um gerador online de Rails Templates! Mais fácil do que isso impossível.
+Nested Model Forms
+Uma das mudanças “visualmente” mais significativas talvez seja o patch para Nested Model Forms que permite a criação de formulários complexos que tem comportam mais de um Model de maneira bem mais simples. Traduzindo direto do Release Notes, digamos que você tem um model chamado Cliente que tem muitos Pedidos. E digamos que na View você pretende conseguir editar tanto os dados do cliente quanto também diretamente dos seus pedidos, numa única página. Agora podemos ter o seguinte:
+1
+2
+3
+4
+5
+
+class Cliente < ActiveRecord::Base
+  has_many :pedidos
+
+  accepts_nested_attributes_for :pedidos, :allow_destroy => true
+end
+
+
+E a View ficaria mais ou menos assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+
+<% form_for @cliente do |cliente_form| %>
+  <div>
+    <%= cliente_form.label :nome, 'Nome do cliente:' %>
+    <%= cliente_form.text_field :nome %>
+  </div>
+
+  <!-- fields_for é um recurso que já existia no Rails para criar
+  um trecho de formulário para cada pedido do cliente -->
+  <% cliente_form.fields_for :pedidos do |pedido_form| %>
+    <p>
+      <div>
+        <%= pedido_form.label :numero, 'Numero do Pedido:' %>
+        <%= pedido_form.text_field :numero %>
+      </div>
+
+  <!-- A opção allow_destroy no model Cliente permite apagar
+  os pedidos filho. -->
+      <% unless pedido_form.object.new_record? %>
+        <div>
+          <%= pedido_form.label :_delete, 'Remover:' %>
+          <%= pedido_form.check_box :_delete %>
+        </div>
+      <% end %>
+    </p>
+  <% end %>
+
+  <%= cliente_form.submit %>
+<% end %>
+
+
+Validações e Transações funcionam conforme se esperaria e isso deve eliminar muita complexidade que muita gente deveria ter nas Views e Controller para lidar com essa situação. Leia este artigo do Weblog do Rails, alguns exemplos no Github e a descrição do Ryan Bates.
+Nested Transactions
+Uma reclamação que se tinha fazia tempo era sobre Nested Transactions, ou seja, transações dentro de transações. Antigamente, se a transação de dentro falhasse a de fora continuava seu caminho. Agora podemos explicitamente usar a opção :requires_new => true se ainda quisermos essa mesmo comportamento, caso contrário se a transação de dentro falhar, a de fora também vai falhar, como deveria ser.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+User.transaction do
+  User.create(:username => 'Admin')
+  User.transaction(:requires_new => true) do
+    User.create(:username => 'Regular')
+    raise ActiveRecord::Rollback
+  end
+end
+
+User.find(:all)  # => Retorna apenas Admin
+
+
+Internamente usa-se savepoints permitindo o comportamento correto mesmo em bancos de dados que não suportam nested transactions.
+ActiveRecord Scopes
+Eu já notei que os iniciantes em Rails ainda não entendem finders dinâmicos. Ou seja, construções como esta:
+1
+2
+
+Cliente.find_by_estado("SP")
+  #=> SELECT * FROM "clientes" WHERE ("clientes"."estado" = 'SP') LIMIT 1
+
+
+O método “find_by_nome” não existe no model Cliente. Então ele cai no method_missing e o ActiveRecord checa que o método começa com “find_by” e sabe que o resto é o nome do campo e o parâmetro é o valor. Então ele cria esse método chamando o método “find” original com as condições corretas. Seria o mesmo que escrever:
+1
+2
+
+Cliente.find(:first, :conditions => { :estado => "SP" })
+# ou também: Cliente.first(:conditions => { :estado => "SP" })
+
+
+Agora temos outro recurso, os Dynamic Scopes. Os mesmos comandos acima agora podem ser escritos assim:
+1
+2
+
+Cliente.scoped_by_estado("SP").find(:all, :order => "nome", :limit => "5")
+  #=> SELECT * FROM "clientes" WHERE ("clientes"."estado" = 'SP') ORDER BY nome LIMIT 5
+
+
+Note que eu acrescentei opções a mais no finder. Dynamic Scopes serve para tornar os finders mais organizados e fáceis de ler. Inclusive podemo encadear escopos da seguinte forma:
+1
+2
+
+Cliente.scoped_by_estado("SP").scoped_by_cidade("Sao Paulo")
+  #=> SELECT * FROM "clientes" WHERE (("clientes"."estado" = 'SP' AND "clientes"."cidade" = 'Sao Paulo'))
+
+
+Fora isso também temos Default Scopes que são condições aplicadas a todos os escopos do Model por padrão. Por exemplo, no model podemos declarar:
+1
+2
+3
+
+class Cliente < ActiveRecord::Base
+  default_scope :order => 'nome ASC'
+end
+
+
+Com isso toda vez que você fizer “find” ou usar Dynamic Scopes, ele será executado com um “ORDER BY NOME ASC”. Isso deve tornar seus models ainda mais “limpos” e fáceis de ler. Não deixe também de usar o recurso do Rails 2.2 de Named Scopes, que é a versão “estática” dos novos Dynamic Scopes. Somado aos Dynamic Finders, Named Scopes, Dynamic Scopes e Default Scopes, suas queries devem ficar bem mais flexíveis e poderosas.
+Batch Processing
+Você tem um método no seu Model que processa um número grande de linhas na sua tabela e não pode ser feito com um simples comando “update”. Um jeito que todos devem imagina fazer é algo assim:
+1
+2
+3
+4
+5
+6
+7
+
+named_scope :pendentes, :conditions => { :pendente => true }
+Pagamento.pendentes.each do |pagto|
+  resultado = GatewayPagamento.call(pagto.numero_cartao, pagto.valor)
+  pagto.pendente = false
+  pagto.resultado = resultado
+  pagto.save
+end
+
+
+Este exemplo simples pega todos os pagementos pendentes (note o uso de Named Scopes), executa um a um usando um serviço externo e atualizando o pagamento na tabela. O problema principal disso: quando você executa uma query via ActiveRecord, ele vai pegar linha a linha e criar objetos para cada uma delas num array. Digamos que a query acima devolta 10 mil linhas. São 10 mil objetos que precisam ficar em memória até o processamento inteiro acabar. Esse tipo de tabela não tem tamanho fixo de linhas e não sabemos quando uma query vai trazer 10 linhas ou 10 mil linhas. Ou seja, esse é um tipo de processamento não escalável.
+A maneira correta de lidar com situações como essa é processar em “batches”, ou seja, em trechos. No caso podemos puxar 1000 linhas de cada vez, executar todas, depois pegar as próximas 1000 linhas e assim por diante. Por padrão, no Rails 2.3 o método “each” acima chama outro método novo ‘find_in_batches’ que vai trazer justamente mil linhas de cada vez. Se quisermos menos linhas de cada vez podemos fazer:
+1
+2
+3
+4
+5
+
+Pagamento.pendentes.find_in_batches(:batch_size => 100) do |batch|
+  batch.each do |pagto|
+    ...
+  end
+end
+
+
+A quantidade de linhas a serem puxadas em cada batch depende da sua aplicação. Você precisa avaliar se 100 ou 1000 é muito ou pouco. Isso depende do tempo que cada processamento leva, da quantidade de colunas que cada linha tem e assim por diante.
+Pequenos ajustes de ActiveRecord
+Callbacks agora tem opções sobre quando rodar:
+1
+2
+
+before_save :processar_pagamento, :if => :pendente,
+  :unless => [:isento, :especial]
+
+
+No caso, quer dizer, rode o método “processar_pagamento” antes de salvar somente se o método “pendente” retornar true e a menos que os métodos “isento” e “especial” retornem true.
+Falando em condições, a associação “has_many” também pode ter condições agora:
+1
+2
+3
+4
+
+class Cliente < ActiveRecord::Base
+  has_many :pedidos_confirmados, :conditions => {:status => 'confirmado'}
+  has_many :pedidos_pendentes, :conditions => {:status => 'pendente'}
+end
+
+
+Outro acréscimo é nos finders. Para quem conhece SQL, uma opção que faltava era o HAVING, que depende do GROUP:
+1
+2
+
+funcionarios =  Funcionario.find(:all, :group => "salario",
+  :having => "sum(salario) > 10000", :select => "salario")
+
+
+Ajustes de ActionController
+Uma coisa que pode confundir algumas pessoas atualizando aplicações antigas é o nome do “app/controllers/application.rb” para “app/controllers/application_controller.rb”. Você precisa atualizar do nome antigo para o novo. Isso é para tornar tudo mais coeso porque todo controller precisa terminar como “_controller.rb” menos o antigo Application. Agora está tudo certo.
+Desde o Rails 2.1 temos suporte a HTTP Basic Authentication. Agora no 2.3 temos suporte a HTTP Digest Authencation. A diferença é que o primeiro envia a senha usando codificação Base64 que é praticamente a mesma coisa que enviar a senha em texto puro (portanto snifável, por exemplo). Na nova opção enviasse um Digest MD5 (um hash) da senha, que é um pouco mais seguro.
+Observação: Mesmo que um Digest seja “mais seguro” que Base64, elas são igualmente inseguras do ponto de vista de segurança de verdade. Segurança é sempre binário: ou é seguro ou não é seguro. Ser “meio” seguro é a mesma coisa que ser inseguro completamente. Portanto, que garantir senhas seguras sendo transferidas? Use SSL.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+class ArticlesController < ApplicationController
+
+  before_filter :digest_authenticate
+
+  def digest_authenticate
+
+    # Given this username, return the cleartext password (or nil if not found)
+    authenticate_or_request_with_http_digest("Articles Administration") do |username|
+      User.find_by_username(username).try(cleartext_password)
+    end
+  end
+
+end
+
+
+No exemplo do Ryan Bates, vemos como recebemos o digest e devolvemos a senha em texto puro da nossa tabela para o Rails gerar o digest e comparar com o digest que foi digitado pelo usuário. No caso, atente-se para outro detalhe não relacionado: o método “try”. Se o ‘find_by_username’ encontrar o usuário, o método ‘try’ pegará a propriedade ‘cleartext_password’, mas caso não encontre, teremos o objeto ‘nil’ e nesse caso o método ‘try’ também devolverá nil, mas sem subir uma exceptions do tipo “method not defined”. Leia mais sobre o método try.
+Nesta versão do Rails 2.3 trabalhou-se bastante em performance também. Uma das modificações é no sistema de Routing. Para mapear um recurso restful, acrescentamos o seguinte no arquivo ‘config/routes.rb’:
+1
+
+map.resources :posts
+
+
+Ganhamos vários métodos de URL com isso, por exemplo ‘posts_path’ que gera ‘/posts’ ou ‘post_path(1)’ que gera ‘/posts/1’. Também tínhamos ‘formatted_post_path(1, :xml)’ que gerava ‘/posts/1.xml’. Na nova versão do Rails não teremos mais os métodos que começam com ‘formatted’ pois descobriram que, dependendo da complexidade da sua aplicação, com dezenas de rotas automáticas, comia-se uma quantidade absurda de memória, chegando até a 100Mb em alguns casos.
+A alternativa para isso é substituir essas chamadas pela seguinte: ‘post_path(1, :format => :xml)’. Por enquanto os métodos antigos ainda vão funcionar, mas comece a atualizar sua aplicação agora se quiser conseguir usar versões futuras do Rails.
+Ao mesmo tempo que esta otimização exige mexer em muito na sua aplicação, Yehuda Katz fez várias otimizações no sistema de ‘respond_to’ que dá até 8% a mais de performance e sem precisar alterar nada na sua aplicação.
+Outra modificação que – para mim – é tanto uma modificação para melhorar a organização, manutenção, também representa uma otimização indireta de performance. Estou falando de Localized Views. No sistema de i18n que foi instaurado no Rails 2.2 ganhamos a possibilidade de ter um arquivo de strings localizadas no diretório ‘config/locales’. O problema disso: esse arquivo pode ter todas as strings da sua aplicação. Isso significa pré-carregar uma quantidade gigantesca de strings se você não tomar cuidado.
+O novo sistema de Localized Views funciona assim: Digamos que no seu config/environment.rb você configurou:
+1
+
+I18n.locale = :pt-br
+
+
+Agora, digamos que sua aplicação normalmente carregaria o arquivo “app/views/posts/show.html.erb”. Se você quiser, pode ter um arquivo “app/views/posts/show.pt-br.html.erb”. Se o Rails encontrar o arquivo com o valor da localização configurada, ele carregará essa em vez do padrão.
+O truque agora é saber quando colocar as suas string no config/locales ou quando criar views individuais localizadas. Minha recomendação: use views localizadas se sua view for muito densa em texto (páginas de Sobre, faqs, páginas institucionais, etc). É uma maneira de dividir as coisas.
+E falando em internacionalização, uma maneira de organizar suas chaves dentro de um arquivo como “config/locales/pt-br.yml” é ter trechos assim:
+1
+2
+3
+4
+
+posts:
+  index:
+    title: Meus Posts
+    submit: Enviar
+
+
+Não é uma regra, mas no caso eu quis organizar os strings da view “app/views/posts/index.html.erb”. Agora, dentro da view eu precisaria usar as chaves assim:
+1
+
+<h2><%= t(:title, :scope => "posts.index") %></h2>
+
+
+Ou ainda:
+1
+
+<h2><%= I18n.translate("posts.index.title") %></h2>
+
+
+Vêem a redundância? Se por acaso o escopo seguir a convenção de ser a mesma que a organização de pastas/arquivos das views, podemos agora simplesmente fazer assim:
+1
+
+I18n.translate(".title")
+
+
+Basta colocar o ponto no começo da string para ele considerar o escopo como o caminho “posts/index.html.erb”.
+Ajustes de Views
+Ganhamos mais alguns syntatic-sugar interessantes. Antigamente para renderizar uma partial poderíamos fazer assim:
+1
+
+render :partial => 'articles/_article', :object => @article
+
+
+Vêem a redundância? Se por acaso você criar uma partial com o mesmo nome da classe do objeto sendo passado, poderíamos usar o seguinte syntatic sugar apresentado no Rails 2.1:
+1
+
+render :partial => @article
+
+
+Agora podemos fazer, no Rails 2.3:
+1
+
+render @article
+
+
+Cada vez mais curto :-) Basta seguir a convenção de nomes. O mesmo vale para coleções:
+1
+2
+
+# render :partial => 'articles/_article', :collection => @articles
+render @articles
+
+
+Outra facilidade é uma coisa que eu sempre senti falta nos helpers de formulário, Opções Agrupadas de Selects. Agora podemos fazer assim:
+1
+2
+3
+4
+5
+6
+7
+8
+
+grouped_options_for_select([
+    ["Linguagens", 
+      ["Ruby","Python", "Java"]
+    ],
+    ["Frameworks"],
+      ["Rails", "Django", "Spring"]
+  ],
+  "Django", "Escolha uma Tecnologia...")
+
+
+Isso irá gerar o seguinte HTML:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+<option value="">Escolha um Tecnologia...</option>
+<optgroup label="Linguagens">
+  <option value="Ruby">Ruby</option>
+  <option value="Python">Python</option>
+  <option value="Java">Java</option>
+</optgroup>
+<optgroup label="Frameworks">
+  <option value="Rails">Rails</option>
+  <option selected="selected" value="Django">Django</option>
+  <option value="Spring">Spring</option>
+</optgroup>
+
+
+Mais Novidades
+Existem mais mudanças, algumas pequenas, algumas mais sutis e menos diretas. Novamente, não deixe de ler o Release Notes do Rails 2.3 com mais detalhes. Uma mudanças interessante que não mencionei é a inclusão do plugin Quiet Backtrace da Thoughtbot. Quando você executa testes do test/unit e tem uma falha, o Ruby imprime um stacktrace enorme. Quem está acostumado sabe que mais da metade daquilo não serve para nada e é apenas barulho. Esse plugin serve para eliminar essa sujeira e deixar apenas as linhas de erro que interessam para você localizar o problema.
+Coisas como essas estão o Release Notes. Se nenhum grande bug de última hora for encontrado amanhã (domingo) já poderemos baixar a nova versão. Isso não significa que não haverá nenhum problema, por isso faça seus testes!
+tags: obsolete rails
+

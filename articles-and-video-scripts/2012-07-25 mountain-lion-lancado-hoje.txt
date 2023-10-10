@@ -1,0 +1,111 @@
+
+Atualização 5/8: dica sobre Gatekeeper, veja seção ao fim do artigo.
+Atualização 27/7: mais algumas dicas para instalar Rubies antigos. Veja última seção.
+Atualização (17h): resolvi investigar mais um pouco os problemas que eu documentei no final do artigo e cheguei a uma solução para meus problemas. Veja no fim do artigo como eu fiz.
+Se você é usuário de Mac, a atualização para o recém-lançado Mountain Lion é basicamente algo que você nem precisa pensar muito. $19.99 é praticamente um preço simbólico. A atualização sobre o Lion é limpa, rápida e sem dor de cabeça, da mesma forma como foi do Snow Leopard para o Lion e assim por diante.
+Quem ainda está iniciando com Macs, não deixe de ler meu artigo Comprei meu Primeiro Mac, e Agora?, que desde 2009 é um dos meu artigos mais lidos.
+
+
+
+
+Se você é desenvolvedor e é Apple Developer Member (se não é, deveria ser, outro no-brainer a $99 por ano), obrigatoriamente baixe o novo XCode 4.4 ou o XCode 4.5 Preview, mas baixe um ou outro. Antigamente o XCode instalava na raíz do sistema em /Developer, agora o XCode é um .app e vai dentro de /Applications.
+Ao instalar o novo XCode, acredito que um simples sudo rm -Rf /Developer seja suficiente. Mas se quiser pode fazer assim:
+
+1
+
+sudo /Developer/Library/uninstall-devtools --mode=all
+
+
+Mas pra garantir rode o seguinte comando (exemplo para XCode 4.5):
+
+1
+
+sudo xcode-select --switch /Applications/Xcode45-DP3.app/Contents/Developer/
+
+
+Depois de instalar o XCode, abra a aplicação, vá em Preferences e faça o download do Command Line Tools. Para usar Homebrew, você precisa disso instalado.
+Outra coisa, parte da limpeza que a Apple começou a fazer no seu stack de desenvolvimento, primeiro delegando de volta à Oracle para manter o "Java para Mac":https://arstechnica.com/apple/2012/04/oracle-updates-java-to-se-7-for-os-x-brings-full-jdk-support/, agora também parou de suportar o antigo Apple X11, devolvendo de volta à comunidade para manter essa stack, no caso para a XQuartz. Não sei se ainda é necessário, mas depois de instalar o XQuartz precisei fazer:
+
+1
+
+ln -s /opt/X11 /usr/X11
+
+
+Quem usa ferramentas como graphviz precisa baixar e instalar o XQuartz mais atual (no instante de publicação deste artigo, versão 2.7.2). No caso específico do graphviz e ferramentas que tem as mesmas dependências que ele, eu tive que fazer:
+
+1
+2
+3
+4
+5
+
+brew update
+brew remove gd
+brew remove graphviz
+brew install gd
+brew install graphviz
+
+
+Aliás, note que estou assumindo que todo desenvolvedor em Mac hoje já utiliza o Homebrew. MacPorts e Fink tiveram seu tempo, foram muito úteis por anos, mas os tempos mudaram. De qualquer forma, podem existir outras fórmulas no Homebrew que possam quebrar, principalmente por essa mudança de Apple X11 para XQuartz e também a migração do compilador GCC para Clang-LLVM.
+Existe o mito urbano que uma instalação do zero é melhor num major upgrade como esse. Eu discordo. Desde o OS X Tiger eu só faço upgrades sobre a versão anterior. Nunca tive problemas. Quando não se sabe o que se está fazendo e mesmo assim se tenta bagunçar as coisas, elas tendem a quebrar, claro. Uma instalação do zero, apaga essa bagunça, mas como você não entendeu como você mesmo criou essa bagunça em primeiro lugar, as chances são que logo depois de reinstalar, você vai repetir os mesmos erros.
+Sem preconceitos, mas quando eu era usuário Windows, eu preferia reinstalar porque os aplicativos que instalavam no sistema tinham realmente mania de se espalhar em lugares aleatórios e quebradiços. Aplicativos no OS X são bem comportados e você sabe onde cada pedaço deles está. Homebrew também mantém tudo isolado no seu Cellar. Fora isso tem o que você manualmente compila e instala, scripts no seu profile (~/.bash_profile), widgets, e coisas aleatórias que você instala e esquece. A cultura Linux/Unix, por outro lado, não é reinstalar tudo toda vez: é entender o que está quebrando e consertar sem derrubar o sistema. Tente ir por esse lado, você vai aprender mais.
+Basicamente tudo que eu tinha funcionando no meu Lion continua funcionando, incluindo tudo que já estava instalado no Homebrew (não precisa reinstalar e nem recompilar tudo). MySQL, Postgres, Redis, Mongo, ElasticSearch, etc todos rodam como services/daemons e iniciaram normalmente. Git, Rbenv, RVM, Vim/Macvim etc também tudo funcionando.
+A única coisa que realmente quebrou na atualização foi o Safari extension do 1Password (não testei novamente ainda). Tinha (pelo menos antes do Gold Master) algum bug no Safari 6 combinado ao 1Password que basicamente dava crash no Safari inteiro. O bug para mim ainda continua, embora muitos não tenham tido o mesmo comportamento, ainda não sei qual é o problema, até já tentei retirar todas as outras extensions e limpar a preferences do Safari, sem sucesso.
+Outro bug que me incomoda é do novo iMessages: desde quando instalei ele na versão Beta, ele pede as senhas das minhas contas (Gtalk, Facebook, AIM, etc), depois que eu fecho e reabro o aplicativo, ele pede as senhas novamente. Parece que ele não está conseguindo gravar as senhas, também ainda não sei porque. Se alguém já conseguiu resolver esses problemas, não deixe de colocar nos comentários.
+Tirando isso, todo o resto funcionou perfeitamente, como era de se esperar.
+Atualização: Consertando meus problemas
+Já havia tentado praticamente tudo que poderia ser feito para consertar os problemas que documentei acima, resumindo:
+
+extensão do 1Password dando crash no meu Safari 6
+novo aplicativo Messages não gravando as senhas das minhas contas e pedindo novamente toda vez que reiniciava
+
+Me ocorreu que poderia ser um problema no Keychain. Veja o que eu viz:
+
+Como todas as minhas senhas ficam no 1Password não há nenhum problema para mim reiniciar o Keychain, só significa que todos os aplicativos que precisam de algum tipo de login ou permissão serão reinicializados e pedirão as permissões novamente.
+Fazendo isso, não só o Messages não pede mais as senhas toda vez como até a extension do 1Password agora instalou e inicia no Safari sem crashes!
+FTW !!
+Atualização 2:
+A Agilebits, criadora do 1Password publicou um artigo explicando sobre os crashes do Safari 6 e como isso parece que tem a ver com configuração de Auto Proxy Discovery. Basicamente vá para System Preferences, Network, selecione sua rede ativa (com luz verde) e siga a tela baixo:
+
+Mesmo com a correção que mencionei na Atualização 2 acima, ainda havia crashes aleatórios. Acabei de usar essa dica da Agilebits e parece que pelo menos por enquanto está funcionando.
+Atualização 3: Instalando Rubies antigos
+Outra dica que está circulando pelos Stackoverflow é sobre como instalar Rubies anteriores ao 1.9.3. Um dos problemas é relacionado à dependência do Tk ao antigo X11 como mencionei antes. Mas podemos forçar a instalação assim:
+
+1
+2
+3
+4
+
+export CPPFLAGS=-I/opt/X11/include
+CC=/usr/local/bin/gcc-4.2 rvm reinstall ree --disable-tcl --disable-tk
+CC=/usr/local/bin/gcc-4.2 rvm reinstall 1.8.7 --disable-tcl --disable-tk
+CC=/usr/local/bin/gcc-4.2 rvm reinstall 1.9.2 --disable-tcl --disable-tk
+
+
+As mesmas variáveis CPPFLAGS e CC podem ser usadas com Rbenv. E para isso você precisa instalar o compilador GCC antigo que não tem no XCode mais recente, para isso usamos Homebrew:
+
+1
+2
+
+brew tap homebrew/dupes
+brew install apple-gcc42
+
+
+Isso permite que você instale todos os Rubies que precisa em seu sistema e compile códigos antigos que não compilam sobre Clang-LLVM ainda.
+Atualização 3: Gatekeeper
+Uma coisa que eu tenho visto em diversos artigos sobre dicas do Mountain Lion é a respeito do novo Gatekeeper. Para mais detalhes leia o excelente artigo do John Siracusa no Arstechnica detalhando essa funcionalidade. Em resumo, mesmo um sistema operacional seguro como o OS X não pode evitar que um usuário seja convencido a baixar um aplicativo malicioso da Internet e o execute. É como Phishing funciona e é um dos maiores problemas de instalação de malware e brecha de segurança.
+Agora, se desenvolvedores forem obrigados a se identificar e identificar seus softwares, essa atividade é drasticamente cortada. O Gatekeeper, instalado por padrão no Mountain Lion com configuração "média" impede que software não-identificado seja instalado. Todo desenvolvedor de OS X precisa ser registrado e identificado para poder distribuir seus softwares, e isso é bastante razoável. Afinal como eu posso confiar em um desenvolvedor anônimo? Resposta: não posso, nem devo.
+Se um software que não tenha sido assinado pela identidade registrada do desenvolvedor tente ser executado, ele será simplesmente bloqueado e a seguinte mensagem será apresentada:
+
+Agora vem a parte ruim: muitos artigos pela Internet consideraram esse comportamento "ruim". E a recomendação da maioria deles é desabilitar o Gatekeeper para que softwares não-identificados possam ser executados. Para desabilitar o Gatekeeper, abra o Systems Preferences depois Security & Privacy e verá a seguinte tela:
+
+A recomendação desses artigos é selecionar Anywhere que basicamente quer dizer: "deixe qualquer software, identificado ou não, executar sem ser bloqueado". Desta forma sua máquina voltará a se comportar como o Lion e outros OS X anteriores e também significa que você voltou a ser vulnerável a malwares. NÃO FAÇA ISSO!!
+Mantenha a configuração padrão, se por acaso já tenha desligado anteriormente, habilite o Gatekeeper e mantenha-se protegido. "Mas e como eu faço pra executar software que eu sei que não é malware mas o Gatekeeper bloqueia?" Simples, vá até a pasta Applications onde ele está instalado, pressione o botão Control, mantenha pressionado e clique com o mouse ou trackpad, então clique na opção Open.
+
+Fazendo isso, em vez de ser simplesmente bloqueado como antes, você será apresentado à seguinte opção:
+
+Pronto! Nenhuma dor de cabeça, o OS X irá guardar sua preferência sobre esse aplicativo e não vai mais incomodá-lo, o aplicativo será devidamente marcado como seguro e você poderá executá-lo sem precisar apertar Control como disse antes. É o melhor dos dois mundos: seu sistema permanece seguro a malware que você não-intencionalmente baixou e executou mas poderá fazer uma escolha consciente sobre aplicativos seguros que ainda não se atualizaram para serem assinados e identificados. Eu mantenho meu Gatekeeper ativo e até agora não encontrei nenhum caso que me obrigasse a desabilitá-lo como muitos artigos erroneamente dizem para fazer.
+Resumo: NÃO DESABILITE O GATEKEEPER!!
+
+tags: obsolete mac
+

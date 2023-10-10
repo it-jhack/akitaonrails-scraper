@@ -1,0 +1,101 @@
+
+
+
+
+Estou ainda só brincando com o Mongo DB, mas posso dizer que os primeiros passos são incrivelmente simples.
+Para instalar no meu Snow Leopard, basta baixar os binários desta página (eu baixei a versão 64-bits). Descompacte em qualquer lugar e coloque o diretório /bin dele no seu PATH.
+Feito isso, basta carregá-lo, por exemplo, assim:
+1
+2
+
+mkdir /tmp/mongodb/
+mongod --dbpath /tmp/mongodb/
+
+
+Note que criei no /tmp que, obviamente, é volátil. Crie num lugar mais decente se quiser persistir seus dados. Esse comando vai subir o daemon do Mongo.
+Agora instale a gem do MongoId:
+1
+
+sudo gem install mongoid
+
+
+Feito isso, agora já podemos criar uma aplicação Rails normalmente:
+1
+2
+
+rails teste
+./script/generate scaffold Post title:string body:text
+
+
+Como não vamos usar ActiveRecord, precisamos fazer algumas modificações no “config/environment.rb”:
+1
+2
+3
+4
+5
+6
+7
+
+Rails::Initializer.run do |config|
+   ...
+   config.gem "mongoid", :lib => "mongoid", :version => "0.9.11"
+   ...
+   config.frameworks -= [ :active_record ]
+   ...
+end
+
+
+Lembrando que ao descarregar o framework active_record, o generator Scaffold não vai funcionar mais. Em seguida, criamos um initializer para carregar as configurações do Mongo em “config/initializers/mongo.rb”:
+1
+2
+3
+4
+
+@settings = YAML.load(File.read(File.join(RAILS_ROOT, 'config/database.mongo.yml')))[RAILS_ENV]
+connection = Mongo::Connection.new(@settings["host"])
+Mongoid.database = connection.db(@settings["database"])
+Mongoid.database.authenticate(@settings["username"], @settings["password"]) if @settings["username"]
+
+
+Também precisamos mudar o Model que o scaffold gerou, substituindo o ActiveRecord por um Document do MongoId:
+1
+2
+3
+4
+
+class Post < Mongoid::Document
+  field :title
+  field :body
+end
+
+
+Com o Mongo podemos adicionar campos dinamicamente sem precisar de migrations para isso. Finalmente, criamos o equivalente ao database.yml como “config/database.mongo.yml”:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+defaults: &defaults
+  adapter: mongo
+  host: localhost
+
+development:
+  <<: *defaults
+  database: teste_development
+  
+test:
+  <<: *defaults
+  database: teste_test
+
+
+Pronto, é só isso. Agora basta subir o servidor de desenvolvimento com o bom e velho “./script/server” e apontar seu browser para “https://localhost:3000/posts”. Tudo vai funcionar idêntico a antes!
+Nada mal para começar :-)
+tags: obsolete
+

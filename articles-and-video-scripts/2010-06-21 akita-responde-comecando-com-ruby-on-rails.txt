@@ -1,0 +1,75 @@
+
+Olá, sou um adepto recente do Ruby on Rails, gostaria de saber qual o melhor meio de aprender a desenvolver com o mesmo, se existe um esquema didático eficiente e bem explicativo…!? 
+
+Estou com dificuldades em fazer upload de arquivos em Ruby para um servidor cloud. Seria possivel você enviar ou postar algo de tal teor? ficaria muito grato.
+São duas perguntas. Vou responder a segunda em outro post. Sobre a primeira é se existe um esquema “didático eficiente”. A resposta curta é: não, não existe. E não só para Ruby, mas para diversos projetos open source. E não, mesmo os que tem programas de cursos não são nem de longe suficientes para formar um programador de verdade, e nenhum conjunto de livros também é suficiente. No final apenas uma coisa conta: experiência, experiência e experiência. E estudar para passar numa prova com ítens de múltipla escolha jamais pode ser considerado sequer “rudimentarmente suficiente”. Programação se aprende programando e quanto mais horas de programação você tiver, melhor você será, ponto final.
+
+
+Agora, para começar a entender a teoria, existem alguns materiais que você pode usar:
+
+Se estiver muito no começo de programação em geral, leia o livro Aprenda a Programar, do Chris Pine, traduzido em português.
+Se quiser aprender a linguagem Ruby, leia o livro O Guia (Comovente) de Ruby do Why, também traduzido em português.
+
+Os seguintes livros são interessantes para Ruby:
+
+The Ruby Way, do Hal Fulton, é um dos melhores livros para aprender Ruby a fundo.
+Programming Ruby, também conhecido como “Pick Axe” (por causa da ilustração de machadinha na capa) é o melhor guia de referência, mas não vai te ensinar tudo de Ruby. Veja também a versão para Ruby 1.9.
+Ruby Best Practices, do Gregory Brown já é um pouco mais avançado, mas dá várias informações úteis para aprender a programar do “Jeito Ruby”.
+Metaprogramming Ruby: Program Like the Pros é crucial porque não dá para dizer que se sabe Ruby sem saber suas características de metaprogramação.
+
+Aliás, um cuidado importante: se você veio de outra linguagem, vai querer programar Ruby do jeito Java, ou do jeito PHP, mas assim você está fazendo errado. Comece a entender o “Ruby Way”, ou seja, o jeito correto de fazer as coisas no jeito Ruby. Isso é complicado porque significa mudar velhos hábitos, mas vale a pena no longo prazo do que ficar reclamando que nem uma velha: “ah, mas na minha outra linguagem a gente fazia de outro jeito …”
+Para aprender Ruby on Rails, o framework Web, veja estas referências:
+
+O site oficial tem o Rails Guides com uma documentação completa de tudo que você precisa para começar no Ruby on Rails. É online e gratuito.
+Para referência rápida de métodos, classes, veja o API Dock que tem referências para Ruby, Rails e RSpec.
+Agile Web Development with Rails é o livro impresso que você vai querer para um primeiro contato com Rails. Ele já básico, foi feito para dar uma introdução a todos os aspectos do Rails.
+Desenvolvimento Fácil e Rápido de Aplicações Web é um bom livro em português, do Rodrigo Urubatan, para começar com Ruby on Rails. Está na versão 2.3 (que é a estável mais recente) e ele está atualizando para a futura versão 3.0 também.
+
+Não recomendo comprar livros muitos avançados de Rails, porque o framework está evoluindo o tempo todo e os livros impressos de Rails tendem a ficar obsoletos muito rápido. Em vez disso é melhor acompanhar diretamente na blogosfera e twittosfera dos Railers para ficar atualizado.
+Se quiser cursos, posso recomendar apenas estes porque conheço os envolvidos e sei que são sérios:
+
+Caelum que está apoiando a comunidade brasileira de Rails desde o começo. Eles tem dois cursos: um mais para iniciantes e outro com temas mais avançados.
+e-Genial que tem cursos online com vídeo-presença, é outra forma de aprender Ruby on Rails, de iniciante a avançado também.
+RubyLearning, se souber inglês, os cursos online do Satish Talim e sua comunidade de instrutores também é uma excelente pedida. São cursos gratuitos de Ruby e outros assuntos que você participa online.
+
+Mas mesmo com todo esse material, ainda será pouco para aprender Ruby e Ruby on Rails. A maneira mais fácil: comece a escrever código. No começo isso será difícil porque você ainda não tem muita idéia do que fazer. Por isso comece baixando alguns projetos e tentando instalá-los e fazê-los rodar. É um primeiro passo. Alguns projetos que você pode começar a tentar instalar são:
+
+Radiant CMS um dos mais antigos gerenciadores de conteúdo feitos em Rails. Ele ainda é atualizado e pode ser uma boa solução para seu site.
+Spree é um e-commerce feito em Rails, bem completo, com muito para se customizar, permite criar lojas online bonitas e tão complexas quanto você quiser.
+Jekill é o sistema de blog mais minimalista e mais voltado a desenvolvedores que você vai encontrar. No fundo ele é um gerador de páginas estáticas e vai mudar a forma como você pensa em blogs.
+Typo é o sistema de blog mais antigo feito em Rails e é mantido até hoje, com muitas opções e configurações. Também é uma boa alternativa.
+Panda é um sistema de vídeo, para você ter o seu próprio mini-YouTube!. Em vez de Ruby on Rails ele é feito usando o framework web chamado “Merb”. No mundo Ruby não existe apenas Rails.
+Redmine é um dos sistemas mais antigos em Rails para gerenciar projetos. Se você é uma consultoria ou desenvolve muitos produtos, este é um bom sistema para mantê-los organizados.
+
+Se alguém que conhece mais produtos interessantes feitos em Ruby, não deixe de listá-los nos comentários. Mas este é um primeiro passo: instalar, rodar e usar. O ideal é que você instale um produto para alguma necessidade que você já tenha, por exemplo, você precisa de um gerenciador de projetos, então tente o Redmine. Ao fazer isso, mantenha em mente: não é um produto comercial, se você quiser “algo a mais”, esta é uma boa hora para abrir o código fonte e começar a explorar.
+A fase de exploração é quando, da primeira vez, seus neurônios vão entrar em curto. Mas não tenha medo, tentativa e erro é um bom jeito de começar. Vasculhe, mude alguma coisa, recarregue o sistema, veja se ainda funciona. Tente tirar alguma coisa, veja o que quebra. Aliás, ver o que quebra é uma boa maneira de aprender sobre como as coisas funcionam. É como um radinho velho de pilha: todo mundo já desmontou um quando era criança, é a mesma coisa.
+Quando você começar a ficar mais confiante, talvez você queira começar a evoluir e administrar seus códigos e até mesmo colaborar código de volta a esses projetos. Para isso você vai precisar, no mínimo, de duas coisas:
+
+Criar uma conta no Github e aprender a usá-lo. Todo grande projeto moderno em Ruby hoje está no Github, que é um repositório comunitário que organiza o código fonte e os grupos de desenvolvimento. Em muitos casos o Github é usado em conjunto com o LightHouse, um sistema de gerenciamento de tickets. Para entender como as duas coisas funcionam juntas, leia esta documentação de contribuição
+A comunidade Ruby massivamente adotou Git como o melhor sistema de versionamento e controle de código fonte, portante é crucial aprender a usá-lo. Uma forma de começar é acompanhar o Scott Chacon, que trabalha no Github e produziu toneladas de material para difundir mais o Git. Ele escreveu o livro Pro Git, produziu o screencast Git Internals, produziu o livro comunitário Git Community Book e também produziu vários episódios no video podcast Git Casts. Consuma todo esse material pois aprender Git não é fácil, mas é recompensador.
+
+E o principal: envolva-se na comunidade. Existem diversos blogs, sites, foruns, pessoas que você precisa seguir para entender o que estamos fazendo. Comece com:
+
+Ruby Inside um dos principais sites de notícias para acompanhar as novidades do mundo Ruby.
+Ruby Inside Brasil, a versão brasileira, com traduções e notícias locais.
+Ruby Flow, um agregador que lista artigos gerados pela comunidade toda. É um bom ponto para começar a acompanhar os blogueiros mais ativos da comunidade.
+RailsCasts é um video podcast, quase semanal, produzido pelo Ryan Bates. Um dos melhores recursos para aprender as diversas tecnologias do mundo Rails de forma visual e simples.
+PeepCode, de Geoffrey Grosenbach, é um dos recursos mais antigos da comunidade, produzindo screencasts pagos de alta qualidade. São excelentes video-aulas.
+Ruby5 é um podcast semanal, que duram aproximadamente 5 min, com as dicas e novidades mais importantes da semana. Produzido por Gregg Pollack e o pessoal da EnvyLabs.
+Rails-BR a lista de usuários de Rails do Brasil.
+Guru-SP é a comunidade local de São Paulo
+RS on Rails o grupo de usuário do Rio Grande do Sul
+Ceará on Rails um dos maiores grupos do Nordeste
+Rails MG grupo de Railers de Minas Gerais.
+Rails Bridge é uma comunidade internacional de Railers
+Plataforma Tec é uma consultoria brasileira com diversos rubistas excelentes, incluindo o José Valim, que faz parte da equipe principal do Ruby on Rails. Acompanhem o blog deles.
+Siga as categorias de Ruby e Rails da Caelum, que é outra boa fonte nacional de informações.
+Area Criações é do Daniel V. Lopes, instrutor da e-Genial, tem sua própria produtora e é um dos rubistas mais conhecidos de Minas Gerais.
+50+ Rubyists to follow on Twitter é uma lista compilada pelo Satish Talim, do RubyLearning, com diversos rubistas conhecidos que você provavelmente gostaria de seguir no Twitter para ver as principais novidades.
+
+Novamente, existe muitas outras fontes de informações nacionais para seguir, se você conhece outras importantes que merecem ser listas, não deixe de mencionar nos comentários.
+Aliás, se quiser uma galeria de web sites nacionais feitos com Ruby on Rails, veja este post que publiquei alguns meses trás.
+A partir daqui você, iniciante em Ruby, deve começar a andar com as próprias pernas, ou melhor, correr. Dê as caras nas reuniões locais, participe das listas ajudando os outros que também estão aprendendo, acompanhe diariamente os artigos que a comunidade publica, baixe muito código-fonte open source e explorer, extenda, contribua de volta. O que eu listei aqui é apenas uma pequena fração de tudo que existe na comunidade internacional. Sem se comprometer, sua educação sempre estará limitada.
+O principal: está tudo praticamente uma “googlada” de distância (clique aqui se você não sabe usar o Google). E você não precisa investir muito dinheiro se não quiser: a quantidade de material disponível na internet, mais as pessoas online publicando novidades o tempo todo, pode ser o suficiente se você estiver disposto a se esforçar.
+tags: obsolete learning
+

@@ -1,0 +1,10 @@
+
+
+
+
+Galera, começamos a lançar alguma novidades aqui na Locaweb. Tem muito mais por vir. Mas para começar, foram para ar os novos planos de hospedagem compartilhada.
+Resumindo, pelos mesmos preços, começando em R$ 18, agora temos 25 vezes mais espaço, 10 vezes mais domínios, 10 vezes banda e bases MySQL ilimitadas em todas os planos. Vejam mais detalhes aqui.
+Como exemplo, no Plano Expresso isso significa 5Gb de espaço em disco, 100Gb de transferência mensal, 50 domínios. Acho que isso deve tornar as contas mais atraentes aos brasileiros.
+Falando nisso, estou bastante ocupado por aqui :-) Temos muita coisa legal no forno. O Trial de Rails ainda está em andamento mas as inscrições já foram fechadas porque temos mais gente do que esperávamos! Peço desculpas pelo atraso em liberar algumas contas, mas estou terminado as últimas ativações, ufa! Aguardo o feedback de vocês!
+tags: obsolete locaweb
+

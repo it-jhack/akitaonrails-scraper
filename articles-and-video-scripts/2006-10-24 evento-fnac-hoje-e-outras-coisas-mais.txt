@@ -1,0 +1,13 @@
+
+
+
+
+Antes de mais nada, temos um encontro marcado para hoje, a partir das 19hs, na FNAC Paulista. Aguardo todos para este evento de lançamento do livro, onde poderemos nos encontrar e conversar sobre Rails.
+Esta semana tem outras notícias importantes. Quatro dias atrás, Johm Lam, criador da ponte Ruby e .NET RubyCLR, anunciou que está se mudando a partir de Janeiro do ano que vem, do Canadá para os Estados Unidos porque foi recrutado para trabalhar na Microsoft. Esta contratação deve trazer grandes expectativas para a comunidade .NET.
+Outro desenvolvedor que já vem fazendo um trabalho excepcional na Microsoft é Jim Hugunin, que originalmente portou Python para rodar na JVM 9 anos atrás, gerando o excelente JPython, a inspiração de toda linguagem dinâmica que quer rodar sobre a JVM da Sun. Dia 5 de setembro foi anunciada a versão 1.0 final do IronPython, a versão de Python que roda sobre a CLR do .NET.
+Portanto, é óbvio que as expectativas sobre Johm são grandes para se gerar o próximo “IronRuby”. O movimento das grandes empresas atrás da próxima galinha-dos-ovos-de-ouro são grandes. E a Sun não está atrás: depois da contratação de Charles Nutter e Thomas Enebo, os criadores do JRuby, existem grandes expectativas também no lançamento da versão final do JRuby, a versão de Ruby que roda sobre a JVM.
+Em 2007 teremos grandes surpresas. Com sorte já teremos versões estáveis de Ruby.CLR e JRuby, além do provável anúncio do Rails 1.2, que pode ser conferido baixando-se a versão de desenvolvimento Edge Rails. As funcionalidades mais importantes da nova versão do Rails com certeza são simply_restful e simply_helpful, que já discutimos em outros posts. Recomendo que todos comprem o screencast Restful Rails. Por US$ 9 você poderá baixar um excelente vídeo de 250Mb com a demonstração completa de como Rails se tornará ainda mais simples e elegante.
+Rails se tornou a plataforma ideal para idéias ágeis. Diversas pessoas da comunidade estão dando duro (ou nem tanto assim) para deixar Rails ainda mais refinado (se isso é possível). Talvez um dos plugins mais impressionantes seja o Dr. Nic’s Magic Models. Se já era fácil mapear classes com tabelas usando ActiveRecords, Dr. Nic agora torna criar relacionamentos e validações ainda mais triviais: com zero código!
+Finalmente, o casamento Apple e Ruby on Rails tem sido perfeito. Já anunciei que na próxima versão do Mac OS X, codenome Leopard (sim, esta é a página oficial da Apple), Rails virá pré-instalado, tornando o que já era simples, trivial. Recomendo que todos assistam o vídeo institucional Why Mac for Computer Science disponível no site da Apple Education, estrelando o fundador da 37signals, Jason Fried e, claro, o criador do Rails, David Heinemeir Hansson.
+tags: obsolete my-book
+

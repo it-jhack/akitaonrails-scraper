@@ -1,0 +1,32 @@
+
+É oficial, Ruby 1.8.6 foi frameworkzado no novo Leopard, conforme este detalhado relato. Agora ele fica em /System/Library/Frameworks/Ruby.framework, porém tudo continua funcionando já que existem symlinks onde costumávamos encontrar o ruby, como /usr/bin/ruby e /usr/lib/ruby.
+
+
+
+Esta distribuição de Ruby também é Universal Binary, o que significa que um fat binary suporta Intel e PowerPC, arquiteturas 32-bits e 64-bits. Isso significa que todas as extensions em C instaladas rodam em qualquer um desses ambientes. Porém, sabemos que ao instalar algumas gems ele tentará compilar do código fonte. Isso pode ser um problema se tentarmos instalar uma Gem que não é universal. Para isso contornar isso podemos forçar uma arquitetura:
+$ sudo s
+$ ARCHFLAGS=“-arch i386” gem install mysql - -with-mysql-dir=/usr/local/mysql—
+
+O Leopard vem com RubyGems 0.9.4, Rails 1.2.3, Capistrano 2.0, Mongrel 1.0.1. Os gems pré-instalados ficam em /System/Library e os novos gems que quisermos instalar ficarão em /Library. Como tudo no Mac OS X (e nos Unix em geral), o que é de sistema fica separado do que é de usuário, que é justamente o motivo de porque updates de sistema em Mac são ordens de grandeza mais triviais, sem problemas e sem degradação de performance do que quando você migra de 2000 para XP ou de XP para Vista (system32-hell, registry-hell, etc).
+
+E claro, ainda há o suporte do Ruby ao framework Cocoa via o projeto open source RubyCocoa. Diretamente através da excelente IDE XCode (que é free-as-in-beer) para criar aplicações de Mac com componentes nativos do sistema.
+
+h3. Leopard Amanhã!
+
+
+Diferente do que eu havia reportado antes, o Leopard não estará no Brasil amanhã. Argh, serei obrigado a importar. Um dia a Apple do Brasil vai se levar mais a sério, mas pelo visto não é agora.
+Independente disso, os reviews estão rolando solto pela internet. O Gold Master vazou na internet no começo desta semana e centenas de pessoas já baixaram via BitTorrent a enorme ISO de 6.7Gb. Além disso os jornalistas receberam luz verde noite passada para publicarem seus reviews:
+Steven Levy, famoso autor do livro The Perfect Thing , publicou na seu video review na NewsWeek
+O temido Walt Mossberg, do Wall Street Journal disse que não teve nenhum problema de compatibilidade mesmo sem fazer uma instalação do zero e que o Leopard parece tão rápido quanto o Tiger, além de bootar em quase 1/4 do tempo que o Vista leva. Segundo ele o Leopard é mais rápido e mais fácil do que Vista.
+O cômico David Pogue, do The New York Times, também diz que o Leopard poderoso, bem acabado e bem executado. Surpresas felizes e muito poucos desapontamentos.  O Leopard tem mais de 300 novos pontos – e a maioria são brilhantes.
+Edward Baig, do USA Today concordou com todos que o Leopard acerta todos os pontos certos.
+A maioria tem reclamado de detalhes como o visual do novo Dock e o menu transparente. Por outro lado ninguém reclamou das coisas que poderiam ser realmente danosas como updates que destróem seu ambiente, degradação de performance, dezenas de incompatibilidades, problemas graves de segurança.
+O Tiger já era seguro. O Leopard o torna ainda mais seguro. Até hoje os Macs nunca sofreram nenhum ataque de vírus ou worms – tirando uma prova de conceito em laboratório que nunca se concretizou.
+E não, isso não tem absolutamente nada a ver com o velho mito “hackers não atacam Macs porque seu market share é muito pequeno.” Pensemos outra coisa: a maioria dos servidores expostos na internet roda alguma variante de Unix e serviços como Apache. Por que será que, tendo um ‘market share’ maior, ainda assim os servidores Windows são os que recebem mais atenção?
+Parece um paradoxo mas não é: o Windows foi construído sobre uma fundação comprometida. Até que essa fundação seja recomeçada do zero, nada do que se faça é mais do que um band-aid. Diferente disso, o Mac OS X foi construído sobre uma base BSD Unix confiável desde o começo. 6 anos atrás isso significou quebrar a compatibilidade com a história. Hoje colhemos os frutos.
+
+O Mac OS X já é tão estável, robusto e rápido que a única coisa que sobra para talvez dar uma criticada é o visual do Dock (que aliás, na versão final, é configurável) e alguns detalhes cosméticos. Este artigo dá algumas dicas de como se preparar para uma nova instalação – um pouco paranóica – mas válida.
+Este artigo é muito engraçado. Também leiam esta série para entender a origem de algumas das novas funcionalidades do Leopard.
+Unaminidade: Tiger, muito à frente do Vista. Leopard, anos luz à frente do Vista. Nota 11 de 10.
+tags: obsolete apple
+

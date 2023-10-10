@@ -1,0 +1,39 @@
+
+De volta com mais um tutorial de Scott Rutheford sobre o plugin Ajax Scaffold. Até este artigo entendemos como customizar as colunas de uma tabela, mas ainda restou o problema de como definir as colunas dinamicamente dependendo, por exemplo, das permissões do usuário.
+
+
+Basicamente é muito simples, você simplesmente define um hash de todas as colunas que potencialmente gostaria de mostrar marcado com o nome da coluna, algo assim:
+1
+2
+
+@@columns_hash[:user] = ScaffoldColumn.new(..)
+@@columns_hash[:foo] = ScaffoldColumn.new(:name => 'bar')
+
+
+Então definimos um before_filter parecido com:
+1
+
+before_filter :create_columns, :only => ['table', 'update_table']
+
+
+Finalmente tudo que precisamos fazer é escrever o método create_columns para assinalar as colunas apropriadas dependendo do usuário:
+1
+2
+3
+4
+5
+6
+7
+
+def create_columns
+  if user.is_administrator
+    @@scaffold_columns = [ @@columns_hash[:user], @@columns_hash[:foo] ]
+  else
+    @@scaffold_columns = [ @@columns_hash[:user] ] 
+  end
+end
+
+
+Esse método deve continuar funcionando na versão 4.0 que está para chegar, entretanto acho que ele será refinado um pouco para eliminar variáveis de classe. Mas por enquanto, isso deve resolver o problema.
+tags: obsolete rails
+

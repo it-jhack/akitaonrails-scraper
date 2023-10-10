@@ -1,0 +1,23 @@
+
+
+
+
+O assunto de hoje não poderia ser outro senão a abertura da WWDC 2006 (Apple WorldWide Developer Conference) e a apresentação sempre eloquente de Steve Jobs a respeito da finalização da transição para a plataforma Intel (trabalho incrível feito em menos de um ano) e o lançamento dos novos Mac Pro, XServe (absurdos Dual-Core 2 Duo de 3Ghz com 4Mb de L2) e o tão esperado Mac OS X 10.5 Leopard (chamado no evento de Vista 2.0, ou “a próxima coisa que a Microsoft irá copiar”).
+Para a comunidade Rails uma excelente novidade: a Apple, provando que está sempre à frente, lançará o Leopard com Ruby e Rails pré-instalado e configurado! O próprio David comentou isso no blog Riding Rails, agora há pouco. A versão para developers que foi distribuída hoje no evento já vem com Ruby 1.8.4 e Rails 1.1.2, mas a expectativa é ter Rails 1.2 junto com Mongrel e integração com SQLite, além de vários outros “brindes” antes do lançamento previsto para a primavera americana.
+O transcript da apresentação de Steve Jobs pode ser lida no site Engadget e o vídeo diretamente do site oficial do Quicktime. Recomendo que todos leiam e principalmente assistam pois os anúncios são impressionantes.
+Além disso, hoje também li outro post de David em seu blog pessoal “Loud Thinking” que acho que vale a pena traduzir. É um desabafo de muito entusiasmo frente ao aniversário oficial de dois anos que Rails completou no último dia 24 de julho (um longo caminho desde a versão 0.5 beta lançada em 2004). Entre Apple e Rails, parece que novamente David (no pun intended) vai vencendo Golias.
+Rails entra no ano Três
+Um de meus prazeres culposos é provar que as pessoas estão erradas. Poucas coisas me deixam mais motivado para atingir do que ouvir quão inapropriado, ou idealista, ou não-realista o ideal que estou empurrando é.
+Os últimos três anos têm sido cheios de prazeres desse tipo. Rails cresceu de apenas um brilho no meu olho para um fenômeno com um momentum fantástico. De alguns poucos beta testers para dezenas de milhares de programadores pelo mundo todo.
+Tim O’Reilly recentemente divulgou os números de vendas de livros mostrando mais um salto de Ruby, de cerca de 700% (acima dos 1.500% do ano passado), para se tornar maior do que Perl e ainda maior do que Python.
+Isso não é um reflexo de nenhuma dessas duas boas linguagens, mas na verdade um testemunho do crescimento das linguagens da liberdade. Embora possamos não dividir o mesmo senso estético, ainda dividimos a mesma lealdade de prioridades.
+Existem muitos outros que não dividem a mesma lealdade. Os tipos de pessoas que rotularam Ruby e Rails meramente de buzzwords, fogo de palha, para ser esquecido logo, para ser extinto logo.
+Quando comecei a espalhar a idéia de um novo framework que entregaria uma foto, em vez de um quebra-cabeça e usando um linguagem de nicho para iniciar, essas pessoas deram alguma coisa entre uma semana e seis meses. Então os jovens de olhos arregalados descobririam a próxima coisa brilhante e iriam em frente. Assim como é a moda, fútil em seu núcleo. Vêm fácil, vai fácil.
+Mas isso não aconteceu. Em vez disso, Rails fez sua parte como ponte entre os mundos do rápido e limpo. A ponte entre o impressionante e o sensível. Atraindo pessoas espertas dos campos do grande mercado e lhes dando uma história em que acreditar: “não precisa ser uma bo$ta”.
+E isso continua sendo nossa história. De beleza, felicidade e motivação. Tendo orgulho e prazer em nosso trabalho e ferramentas. Essa história não é fogo de palha, não é moda. Uma história que permite palavras como paixão e entusiasmo como parte do vocabulário sancionado de desenvolvedores sem a necessidade de fazer desculpas para nós mesmos. Ou nos sentirmos embarassados por gostarmos do que fazemos.
+Então, para minha (atrasada) celebração de Rails virando dois anos, eu saúdo todos os que se aventuraram desde cedo, que se atreveram a dar a cara para bater e serem motivo de piada a seus suspeitos pares.
+Vamos dividir um pequeno momento de prazer culposo por provar que eles estavam errados, então ir em frente para o prazer de longo prazo de simplesmente nos manter nisso para nosso próprio bem. E termos compreensão com aqueles condicionados por desapontamentos passados, que por isso classificam tudo que é novo e cheio de paixão de ser desinteressante, de ser enganação, sem calorias.
+Passamos do ponto de paixão, isto é amor, e amor é inclusivo. Feliz aniversário Rails, feliz aniversário Railers.
+DHH.
+tags: obsolete rails wwdc pitch
+

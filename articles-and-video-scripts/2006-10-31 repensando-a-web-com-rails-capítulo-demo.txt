@@ -1,0 +1,11 @@
+
+
+
+
+Pessoal, uma boa notícia. Conversando com a editora Brasport combinamos que seria uma boa idéia divulgar um capítulo-demo do livro para que todos pudessem baixar e distribuir livremente (claro, sem alterar seu conteúdo!).
+É uma forma das pessoas fazerem um “test-drive” no livro, principalmente aqueles que estão em dúvida se vão comprar e não tem nenhuma livraria com o livro disponível na região para que se possa folhear.
+Cliquem neste link (não usem o botão direito do mouse, cliquem no link mesmo). Este é o capítulo 3: Anatomia de Rails, um capítulo dividido em 10 passos que dá a primeira volta pelos principais pontos da plataforma. Acredito ser um bom capítulo de demonstração pois permite um hands on imediato.
+E de qualquer forma, não deixem de acompanhar a página de Erratas do livro. Algumas pessoas já enviaram algumas pequenas gafes que encontraram (sobretudo neste mesmo capítulo que coloquei para download). É importante que os erros encontrados sejam reportados para mim para que outros leitores não passem pela mesma confusão.
+Obrigado pela ajuda!
+tags: obsolete my-book
+

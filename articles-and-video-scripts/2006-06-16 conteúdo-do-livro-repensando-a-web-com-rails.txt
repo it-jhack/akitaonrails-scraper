@@ -1,0 +1,321 @@
+
+Seguindo a sugestão de um comentário no post anterior, publico agora o índice do livro. Ainda não terminamos a editoração por isso não tenho a numeração correta das páginas. Mas para terem uma idéia em Word (eu sei, eu sei …), deu aproximadamente 590 páginas em A4 com as margens padrão e fonte tamanho 11. Aproximadamente 11 Mb de material.
+Foi um longo trabalho que começou no dia 24 de abril deste ano e terminou agora no dia 11 de junho. Ainda não tenho os prazos da editora, esperamos que seja rápido. Vejamos o conteúdo:
+
+
+repensando a Web com Rails (15 pags)
+
+prólogo
+por que Ruby on Rails?
+	
+a História se repete
+um pouco de história
+advogado do diabo
+pregos e martelos
+
+a resposta de Ruby on Rails
+	
+interfaces humanas
+não-se-repita
+nós, desenvolvedores
+
+“enterprisey”
+organização deste Livro
+
+preparando o ambiente (13 pags)
+
+Windows 2000/XP
+Debian Linux
+Fedora Core 4 ou superior
+Mac OS X Tiger
+instalando Rails
+ferramentas e IDEs
+IRB, seu melhor amigo
+
+características de Ruby (27 pags)
+
+aprenda Ruby
+miscelânea
+conceitos básicos
+se parece um pato, será um pato
+tudo é um objeto
+Iterators, Blocks e Closures
+orientação a objetos anabolizado
+Strings e Arrays
+resumo
+
+anatomia de Rails (48 pags)
+
+introdução
+inspirações
+finalmente, Rails
+	
+Actionmailer
+ActionPack
+ActiveRecord
+ActionWebService
+ActiveSupport
+rails
+mysql
+
+primeiros passos: ambiente
+segundo passo: banco de dados
+terceiro passo: models
+quarto passo: inteligência no model
+quinto passo: um pouco de segurança
+sexto passo: relacionamentos
+sétimo passo: “scaffold”
+sétimo passo: do controller à view
+nono passo: autenticação
+décimo passo: ajustes
+último passo: recapitulando
+
+active record (74 pags)
+
+object-relational mapping patterns
+	
+dados como tabelas
+data mapper e outros
+
+Active Record
+	
+anatomia do ActiveRecord
+migrations
+
+Base
+	
+New (CRUD – Create)
+Find (CRUD – Read)
+Finders Dinâmicos
+Acessores
+Update (CRUD – Update)
+Delete (CRUD – Destroy)
+Callbacks
+
+associações
+	
+normalizar ou não?
+associações iniciais
+fora da convenção
+one-to-many
+one-to-one
+many-to-many
+“has many through”
+extensões
+1 + N
+
+validações
+agregações
+cálculos
+Locking
+timestamps
+transações
+Observers
+connection adapters
+
+action controller (52 pags)
+
+fundamentos
+	
+MVC
+
+routing
+actions
+	
+verification
+sessions, cookies e … flashes?
+render
+layouts
+filters
+
+components
+dependencies
+rescue
+scaffolding
+
+action view (55 pags)
+
+templates ERb
+builders
+tag_helper
+text_helper
+date_helper
+number_helper
+custom helpers
+form_helper
+	
+extendendo FormBuilder
+elementos de forms
+listas
+
+active_record_helper
+url_helper
+asset_tag_helper
+capture_helper
+paginator_helper
+
+por que testar? (41 pags)
+
+testar ANTES
+monstruosidades
+testando com Ruby
+	
+T.D.D.
+limpando o ambiente
+testes funcionais
+testes integrados
+Mocks
+
+performance
+
+Ajax 2.0 (53 pags)
+
+javascript on Rails
+javascript_helper
+java_script_macros_helper
+	
+in place editor
+auto complete
+
+ajax on Rails
+	
+link_to_remote
+timer
+forms
+observers
+
+efeitos visuais
+	
+drag and drop
+
+<noscript>
+	
+javascript detect
+
+Javascript Generator Template
+	
+JavaScriptGenerator::GeneratorMethods
+
+testando
+
+action mailer (31 pags)
+
+enviando mensagens
+alterando o login
+Primeiro e-mail
+	
+parts
+juntando as pontas
+
+recebendo e-mails
+TMail
+testando mensagens
+
+action web services (33 pags)
+
+web services on Rails
+unicode
+	
+Ruby on Rails VS Unicode
+
+matando o pato: APIs
+recomendações
+mais um problema: datas
+direct dispatching
+delegated dispatching
+layered dispatching
+filters
+testes
+integração
+
+benchmarks – Rails é mais lento? (17 pags)
+
+performance-bruta VS produtividade
+ruby apenas para “pagininhas” web?
+continuando …
+solucionando performance
+recomendações
+Conclusão
+
+deploying (43 pags)
+
+Apache
+	
+de CGI a HTTP
+
+Mongrel
+	
+rails vs enterprise
+SCGI VS HTTP
+HTTP correto e win32
+performance
+segurança e evolução
+instalação
+cluster
+
+sessions
+	
+melhorando sessions
+
+performance
+	
+cache público
+cache privado
+cache fragmentado
+cache paginator
+expirando caches
+
+capistrano
+cuidados
+
+gran finale (52 pags)
+
+active_support
+	
+arrays e hashes
+numeric
+time
+strings
+
+Edge Rails
+plugins
+	
+reusabilidade
+annotate_models
+file_column
+acts_as_taggable
+globalização
+autenticação
+
+configurações e ambiente
+	
+config.active_record
+config.active_controller
+config.action_view
+config.action_mailer
+test
+ambientes
+rake
+
+
+bônus: SAP on Rails (34 pags)
+
+crescimento meteórico
+	
+solução
+integração
+saprfc
+portais
+conceitos
+
+utilização
+	
+elementos de uma RFC
+interface de uma RFC
+continuando o exemplo
+
+
+bônus: uma conversa com Yukihiro Matsumoto (4 pags)
+Divulguem o livro, vamos nos encontrar no lançamento! Qualquer dúvida ou informação, sintam-se livres para perguntar, questionar e até mesmo criticar.
+tags: obsolete my-book
+

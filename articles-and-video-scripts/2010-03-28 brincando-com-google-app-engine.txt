@@ -1,0 +1,54 @@
+
+Faz 1 ano que eu publiquei sobre o suporte a Java no Google App Engine (GAE) pela primeira vez.
+A primeira plataforma suportada no GAE foi Python, por motivos óbvios, mas a coisa mais significativa foi de longe terem colocado suporte a Java. A tendência hoje é aproveitar a robustez e maturidade da Java Virtual Machine (JVM), substituindo a linguagem Java por outras mais modernas, que incluem também Python (via Jython), Scala, Clojure, Groovy, Javascript (via Rhino) e, claro, Ruby, via JRuby, uma das linguagens dinâmicas sobre a JVM mais madura de todas. Para saber o que funciona de Java sobre o GAE, leia o artigo Will it Play in App Engine.
+De lá para cá o suporte do JRuby cresceu. Dentro do próprio Google temos um rubista evangelizando o uso de Ruby sobre o GAE, este é John Woodell. Acompanhe seu blog JRuby on App Engine para novidades. Além disso temos um projeto chamado appengine-jruby, que trás uma série de bibliotecas e ferramentas para tornar fácil desenvolver, empacotar e fazer deployment de aplicações JRuby para o GAE.
+
+
+Lembrando que o GAE trás características diferentes do que estamos acostumados. Para começar, não existe um banco de dados relacional. No GAE obrigatoriamente temos que ir na direção de noSQL, mais precisamente usando um banco de dados orientado a colunas chamado DataStore, que vai exigir que você mude seu paradigma de pensamento sobre dados. Podemos fazer isso substituindo o ORM ActiveRecord por um adaptador de DataMapper ou mesmo um ORM mais recente e mais leve chamado TinyDS.
+No GAE podemos usar o sistema de Single Sign-on do próprio Google. O GAE também precisa fazer muitas restrições, por exemplo, não é possível acessar recursos de I/O diretamente, portanto manipular arquivos está fora de questão. Para fazer coisas como Upload de imagens, precisamos usar APIs específicas.
+Com as várias restrições, podemos criar aplicações com intuito de alta escalabilidade usando a infra-estrutura do Google. Você pode começar testando o ambiente deles pois é possível criar até 10 aplicações gratuitamente, com algumas limitações de recursos como CPU, banda, etc. Mas você sempre pode optar por pagar por uso, usando o Google Checkout com seu cartão de crédito internacional. Existem diversas opções e é bom entender os critérios de cobrança deles. Mas o ambiente gratuito deve ser suficiente para nós, desenvolvedores, podermos testar nossas aplicações.
+Criando Aplicações
+A forma mais simples é começar com este tutorial, que funciona perfeitamente para criar uma aplicação Rails 2.3.5 muito simples, com DataMapper. Se quiser criar uma aplicação mais simples, usando Sinatra, este outro tutorial é o caminho.
+Eu segui o tutorial de Rails 2.3.5 e funcionou perfeitamente. Como próximo passo decidi tentar converter uma aplicação já existente. Escolhe o RubyURL do Robby Russell. É uma aplicação bem simples para minificar URLs assim como serviços como bit.ly. Como tem apenas dois models, achei que seria bem trivial converter para DataMapper.
+
+Seguindo o tutorial, ele pede para baixar um script chamado rails2_appengine.rb. Eu só comentei a linha 51 que gera um novo projeto Rails, porque eu quis executar esse script sobre um projeto já existente:
+1
+2
+
+# comentar esta linha:
+system "appcfg.rb run -rthread -r#{MORE_GEMS} bin/rails ."
+
+
+Fora isso, retirei a linha config.gem “rack” que está no config/environment.rb. No mesmo arquivo também retirei a linha config.frameworks porque o script já inclui um bloco com a mesma linha repetida. Precisei apagar o arquivo lib/tasks/rspec.rake porque ele é carregado quando o Rails sobe, e como não estou empacotando o RSpec, dá problemas depois do deployment.
+O script também gera um Gemfile de Bundler, que cria um repositório privado de gems para a aplicação. É outro bom exemplo de uso de uma tecnologia do Rails 3 num projeto Rails 2.3.5
+Não podemos deixar de configurar o arquivo config.ru para configurar corretamente o “application id” de acordo com o nome da aplicação que você registrou no App Engine.
+1
+2
+3
+4
+5
+6
+7
+
+...
+AppEngine::Rack.configure_app(
+    :application => 'urlakita',
+    :precompilation_enabled => true,
+    :sessions_enabled => true,
+    :version => "1")
+...
+
+
+No meu caso, a aplicação se chama “urlakita” que pode ser acessado em https://urlakita.appspot.com. No Dashboard do GAE você pode cadastrar um domínio próprio também.
+Como curiosidade note a opção “precompilation_enabled” que força o pré-carregamento das classes da aplicação Java o quanto antes, para que as requisições fiquem rápidas o quanto antes. Lembrando que servidores Java tem o velho problema de “warm up” (aquecimento). O HotSpot precisa ser executado algumas vezes, para coletar dados em tempo de execução e assim saber como otimizar melhor o código. O GAE tenta otimizar para que isso aconteça o quanto antes. O efeito mais óbvio disso é que logo que você sobe uma nova versão da aplicação, a primeira requisição é sempre mais demorada. Felizmente hoje em dia é razoavelmente aceitável, mas tudo depende do tamanho da sua aplicação, da quantidade de gems e plugins que sua aplicação carrega e assim por diante.
+Uma vez pré-carregada, a aplicação costuma se comportar de forma rápida. Mas se ela ficar idle (sem fazer nada) por muito tempo, ela se descarrega da memória e da próxima vez, a requisição seguinte será mais lenta porque precisa pré-carregar tudo de novo. Faça muitos testes com sua aplicação para ver se essa demora é aceitável.
+Não deixe de acompanhar a lista de discussão via Google Groups para aprender mais com a experiência dos outros. Veja o código-fonte completo da minha aplicação convertida no Github e veja ela rodando no App Engine.
+Impressões Iniciais
+Esse tipo de hospedagem de sites com promessa de escalabilidade está se tornando outra tendência para desenvolvedores mais avançados e que saberão como alterar suas aplicações às limitações do ambiente.
+O GAE está amadurecendo, como impressão inicial posso dizer que foi muito fácil subir uma aplicação simples. Depois quero tentar com alguma aplicação maior e mais pesada para ver como ele se comporta. Mesmo assim, eu vi muitas vezes o problema de Timeout e a tela branca com a mensagem de erro aparecendo, isso não me deixou muito confortável.
+Porém, para maior conveniência, menos limitações, ainda acho que o Heroku é uma opção mais atraente e mais flexível, especialmente porque podemos usar o Ruby MRI 1.8.7 e 1.9.1, que permite acesso a um número maior de gems. O GAE exige diversos patches e hacks para funcionar direito e isso não me soa muito agradável.
+Para a maioria de nós, no entanto, ainda acho que a melhor solução é contratar uma VPS própria de lugares como Rackspace Cloud, Linode ou Slicehost. A maioria das aplicações que fazemos não exige alta escalabilidade e não é difícil gerenciar 2 ou 3 servidores web. Se precisar 10 ou mais servidores, o que já é praticamente um mini-datacenter, é melhor sub-contratar o serviço de administradores de sistema competentes que podem cuidar disso para você ou usar serviços mais caros como da Engine Yard que cuidarão desses detalhes.
+
+Mas, para hobistas, para desenvolvedores que querem subir pequenas aplicações rápido, mesmo com algumas inconveniências, o GAE ainda é uma opção razoável. Espero que eles continuem evoluindo a plataforma e investindo para que ela se torne o mais transparente possível para os desenvolvedores.
+tags: obsolete cloud-computing google
+

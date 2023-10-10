@@ -1,0 +1,62 @@
+
+Muita gente me pergunta sobre isso:
+“Akita, comprei o livro X, mas ele não é de Rails 2, eu consigo aprender com esse livro? Os exemplos vão funcionar?”
+Vamos lá: se eu não estou enganado, tirando o livro do Obie Fernandez, nenhum outro livro cobre tudo do Rails 2 até agora (o do Dave Thomas ainda está em beta). Portanto, o que fazer? Esperar para comprar quando sair um livro novo?
+
+
+Não. Você pode aprender a maior parte do Rails com qualquer um dos livros. O meu livro Repensando a Web com Rails (aliás, fiquei sabendo que eles estão com um estoque novo para pronta entrega, então aproveitem) e os outros ou começam na versão 1.1 ou 1.2. Na introdução do livro eles devem especificar exatamente qual é (pode ser 1.2 ou 1.2.6 por exemplo). O problema é que rodar um exemplo feito para Rails 1.1 pode falhar no Rails 2.0 por causa de pequenas modificações entre elas.
+O comando que todos dizem para instalar Rails (depois de ter instalado Ruby) é este:
+
+gem install rails
+1
+2
+3
+4
+5
+
+
+ou 
+
+<macro:code>
+gem install rails --include-dependencies
+
+
+Na versão mais nova do RubyGems não precisa mais dessa opção —include-dependencies. Mas uma coisa que poucos livros explicam é que você pode ter RubyGems de múltiplas versões na mesma máquina! Ou seja, você pode ter Rails 1.1 ou Rails 2.0 rodando em paralelo.
+Para isso faça o seguinte:
+
+gem install rails —version 1.1
+1
+2
+3
+4
+5
+
+
+Com isso você conseguirá instalar versões anteriores de Rails. Mas não é só isso. O segundo comando que todos os livros colocam para iniciar um projeto em Rails (aquele que já cria todos os diretórios, etc) é assim:
+
+<macro:code>
+rails meu_projeto
+
+
+O problema é que o comando “rails” vai usar o Rails mais atual na sua máquina. Para rodar esse comando explicitamente dizendo qual versão usar, faça assim:
+
+rails 1.1 meu_projeto
+1
+2
+3
+4
+5
+
+
+E pronto, agora dentro desse diretório "meu_projeto", todos os outros comandos como 'rake', ou 'script/generate' vão usar a versão que você especificou. Note inclusive que isso vale também para outras gems como o Capistrano. Você pode fazer assim:
+
+<macro:code>
+cap _1.0_ deploy
+
+
+Dessa forma você ainda pode fazer deployment usando uma receita antiga da versão 1.0 (que não é totalmente compatível com a 2.x).
+Ou seja, sim, compre os livros que existem atualmente. Não fique aguardando porque senão você estará perdendo tempo. Nenhum livro é suficiente para aprender tudo. Todos os livros são bons para que se tenha pelo menos o “grosso”, mas depois disso é sua responsabilidade de evoluir sozinho. Por exemplo, o livro do Obie vai ficar parte obsoleto em breve porque o Rails 2.1 está para sair e isso trará coisas que obviamente o livro dele não cobre. O novo do Dave Thomas provavelmente vai cobrir 2.1, mas até ele sair nós já estaremos vendo coisas novas da 2.2 ou mesmo 3.0!
+Portanto, não espere! Quem cruza os braços e usa isso como ‘desculpa’ para ainda não começar está perdendo tempo. Compre qualquer um dos livros e entenda que o assunto não acaba nesses livros, tem muito mais!
+-
+tags: obsolete learning
+

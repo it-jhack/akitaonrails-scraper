@@ -1,0 +1,105 @@
+
+Update Jul/2016: Microsoft acabou de lançar o Windows 10 Anniversary Edition e ele vem com o excelente “Bash on Ubuntu on Windows”. Você pode usar isso agora. Este post está obsoleto e você deve ler o meu mais recente The Year of Linux on the Desktop: It’s Usable!
+Update 04/27/09: eu fiz atualizações importantes que você pode ver aqui
+Você está começando em Ruby on Rails. Não é nem do mundo Linux nem Mac. Qual o melhor ambiente de desenvolvimento?
+Antes de mais nada, ignore o que você leu por aí: não é necessário uma IDE como Netbeans ou Aptana. Também ignore pacotes que tentam fazer demais como o Instant Rails. Vamos instalar do zero um ambiente competente para desenvolvimento de Rails em ambiente Windows.
+
+
+
+Componentes Pré-requisitos
+Primeiro, baixe o One-Click Ruby Installer. Apenas execute o instalador e siga o bom e velho “next, next, finish”.
+Railers usam Git, portanto baixe o msysGit. Novamente, “next, next, finish”. Numa das janelas finais, haverá 3 radio buttons. Eles falam de opções de PATH. Escolha a última opção. No que fala de SSH, deixe o padrão que é OpenSSH.
+Para começar a aprender, o SQLite3 é um banco de dados bom o suficiente. Baixe este zip e copie o executável sqlite3.exe para c:\Windows. Depois baixe este outro zip e copie o sqlite3.dll para c:\Windows\System32.
+Para o gVim vamos precisar também do Exuberant CTags. Descompacte o arquivo zip e copie apenas o executável ctags.exe para c:\Windows.
+Agora, precisamos de um editor de textos decente. Baixe o gVim. Neste caso, preste atenção nas opções. Haverá uma tela cheia de check boxes. Uma delas diz sobre criar um .bat para executar via linha de comando. Ela estará desmarcada, então marque-a.
+Se você tem instalado o Office 11 ou o Visual Studio, provavelmente já tem a fonte Consolas. Mas se não tiver, baixe deste link pois vamos usá-la para tornar o gVim mais bonito.
+Personalizando seu Console
+Feito isso, um opcional é configurar o Command Prompt. Digite Windows+R para abrir a tela de “executar” e digite apenas “cmd”. Isso abrirá o Console. No ícone superior esquerdo, tem um menu de propriedades. Abra, e configure assim:
+
+Na Aba “Options”, marque a opção “Quick Edit”
+Na Aba “Font”, escolha “Lucida Console” e tamanho 14pt.
+Na Aba “Layout”, digite (em Screen Buffer Size) Width 90, Height 1200, e digite (em Window Size) Width 90, Height 40
+Na Aba “Colors”, selecione “Screen Text” e depois escolha a cor Branca mais à direita.
+
+Feito isso, no Windows XP, ele perguntará se quer alterar somente a janela atual ou se quer aplicar isso globalmente. Escolha a segunda opção. No Windows 7 ele deve gravar automaticamente. Aplique isso na janela do Git Bash (ícone que deve estar no seu Desktop agora). Nesse caso, com o botão direito, escolha “Run as Administrator” se estiver rodando no Windows 7 (talvez no Vista também seja assim). Isso tudo deve deixar o Console mais agradável para se trabalhar.
+Você também pode baixar o Console2 que substitui o Command Prompt e dá suporte a várias coisas interessantes como Tabs. Baixem a versão beta e não a antiga 1.5.
+Instalando algumas Ruby Gems
+Agora, ainda com o Console aberto, vamos instalar algumas gems. Para isso digite os comandos:
+1
+2
+3
+
+gem install rails ruby-debug capistrano rspec ZenTest webrat  image_science mini_magick mechanize RedCloth  fastercsv piston sashimi ruport json newgem open4 rubigen --no-ri --no-rdoc
+gem install sqlite3-ruby --no-ri --no-rdoc --version=1.2.3 --platform=mswin32
+gem install mongrel mongrel_service mysql ruby-postgres oniguruma ultraviolet libxml-ruby --no-ri --no-rdoc --platform=mswin32
+
+
+Precisamos também baixar uma versão específica de ImageMagick. Após fazer o download, abra outro Console. Com ele aberto digite apenas:
+1
+2
+
+cd
+ 
+
+Daí, com o Explorer aberto, arraste o diretório que contém o arquivo rmagick-2.7.1-x86-mswin32.gem que você acabou de descompactar para a janela do Console. Você deve ver uma linha parecida com esta:
+1
+
+ C:\Users\akitaonrails\Documents\Downloads\RMagick-2.7.1-ImageMagick-6.4.5-3-Q8\
+
+
+Então digite:
+1
+
+gem install rmagick-2.7.1-x86-mswin32.gem
+
+
+No mesmo diretório deve ter um instalador chamado ImageMagick-6.4.5-3-Q8-windows-dll.exe. Dê duplo clique e siga as instruções na tela. Esse tipo de coisa é necessário para poucas Gems. No mundo Ruby, “Gems” são bibliotecas reusáveis. Algumas delas, por questões de performance ou reuso de código, usam extensões nativas em C. Nos ambientes Linux e Mac isso não é problema pois todas as dependências, incluindo compiladores, já fazem parte deles. Mas no Windows não há sequer compilador. Portanto é necessário baixar algumas versões específicas com extensões pré-compiladas. O ImageMagick é um dos principais, mas há outros. Para algumas gems, às vezes apenas colocar a opção “—platform=mswin32” para o comando “gem” já é suficiente.
+Configurando o gVim para Rails
+Antes de mais nada precisamos configurar o msysGit porque o padrão dele é para substituir quebras de linha Unix (\n) por formato Windows (\r\n), o que é ruim. Edite o arquivo “c:\Program Files\Git\etc\gitconfig” e troque onde está “autocrlf = true” por “autocrlf = false”.
+No Console aberto originalmente, você ainda deve estar no diretório “home” do seu usuário. No Windows XP deve ser “c:\Documents and Settings\seu-usuario” e no Windows Vista e Windows 7 deve ser “c:\Users\seu-usuario”. Dali mesmo faça o seguinte comando:
+1
+
+git clone git://github.com/akitaonrails/vimfiles.git
+
+
+Em seguida execute (copie, cole e execute uma linha de cada vez no console):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+cd %HOME%\vimfiles
+
+vim after\plugin\snippets.vim +":%s/.vim/vimfiles/g" +":x!" 
+vim plugin\fuzzyfinder_textmate.vim +":%s/.vim/vimfiles/g" +":x!" 
+vim vimrc +":%s/desert/vibrantink/g" +":x!" 
+vim vimrc +":%s/monaco/Consolas:h12/g" +":x!" 
+vim vimrc +":%s/<c-f>/<c-t>/g" +":x!" 
+
+copy /y vimrc ..\_vimrc
+
+
+Pronto, você tem tudo que precisa para começar. Assista ao meu screencast sobre Rails on Vim para entender um pouco mais e procure tutoriais sobre Vim. Me recomendaram o site do Aurélio como uma boa fonte de informações e dicas sobre o Vim.
+Por que não outra IDE?
+Fora isso, você só vai precisar mais do browser Firefox e do bom e velho Firebug para ajudar no desenvolvimento de CSS, Javascript.
+Antes de mais nada, jogue fora o preconceito. Principalmente desenvolvedores que vieram de IDEs excessivamente monumentais como Eclipse e Visual Studio, se sentem intimidados pelo Console e subestimam muito editores como Vim. Falta-lhes os montes de menus visuais, wizards, dialog boxes e todas as firulas. Entendam o seguinte: esse tipo de ambiente que é apenas visual é altamente ineficiente e improdutivo. Na primeira oportunidade onde uma Regular Expression salvar seu dia, você vai entender o que quero dizer.
+Outra coisa: esqueçam auto-complete em Ruby, simplesmente não funciona. E isso não é um “defeito” das IDEs ou mesmo da linguagem. Ruby não é uma linguagem estática onde é possível inferir toda sua interface apenas lendo o código. A idéia básica de uma linguagem dinâmica é que seu comportamento em execução não será o mesmo do código escrito. O poder desse tipo de linguagem é justamente ser mutante. Entender esse paradigma é fundamental e nesse caso uma IDE ficará no seu caminho.
+Além disso, a sintaxe é tão simples que esse tipo de muleta – que é altamente necessário em linguagens como Java e C# – se torna totalmente desnecessária em linguagens como Ruby ou mesmo Python. Escrever plugins gráficos, na maior parte dos casos, é uma perda de tempo. Isso porque gasta-se centenas ou milhares de linhas de código para simplesmente esconder uma linha de comand muito simples como um “script/generate”. Não compensa o trabalho e sempre tem o risco dessa interface ficar defasada quando o Rails vai subindo de versão. Daí, quando alguma coisa dá erro nessas IDEs você não sabe se é um bug da IDE (e todas elas têm várias) ou se é erro do seu código. Para começar, sempre vá pelo mínimo. Depois que estiver mais confortável, daí explore outras possibilidades, mas eu acho que este ambiente já é mais do que suficiente.
+Mais Referências
+Para referência rápida de APIs, deixe no seu bookmark o site APIDock. E para saber como Rails funciona, leia todo o Rails Guides
+Dentre outros materiais, se você ainda é totalmente iniciante em programação, comece pelo livro gratuito online Aprenda a Programar. Se você já programa, então aprenda Ruby pelo livro gratuito O Guia (comovente) do Why. Finalmente, para entender a filosofia de desenvolvimento Ágil e Pragmático de onde deriva toda a comunidade Rails, leia o clássico "Caindo na Real:https://gettingreal.37signals.com/GR_por.php. Se quiser aprender em aulas online, acompanhe o curso RubyLearning.org do Satish Talim.
+Isso deve ser o suficiente para começar a aprender. Acompanhe as notícias do mundo Rails pelo meu site, ouça o Rails Podcast Brazil ou pelo RailsEnvy. Leia diariamente os sites do Peter Cooper como Ruby Inside e Ruby Flow. Fora o próprio Blog oficial do Rails, o Riding Rails.
+Para aprimorar seus conhecimentos, também compre os screencasts (video-aulas) do Peepcode. E acompanhe os video podcasts gratuitos do Ryan Bates no Railscasts.
+E não esqueça que é muito importante aprender sobre Git também. Não deixe de ler meu Micro-Tutorial de Git e meu artigo sobre como colaborar no Github, que na verdade é válido para qualquer outro repositório como Gitorious.
+Primeiros Passos
+Este ambiente que configuramos é estado-da-arte para um desenvolvimento eficiente de Ruby on Rails. Você não vai precisar de muito mais do que isso. O Vim é um editor muito versátil e poderoso mas a curva de aprendizado é bem maior. Porém, uma vez passado os primeiro dias de prática, ela se tornará muito confortável e você vai querer fazer tudo com o Vim.
+Rails, Ruby, Git, Vim. Se você é um desenvolvedor de C# com Visual Studio, ou de Java com Eclipse, este novo ambiente é bastante intimidador. Mas a jornada vale a pena. Você finalmente vai passar da fase de codificador para desenvolvedor. Ninguém disse que será fácil, mas quem passar por isso com certeza terá um novo conjunto de habilidades que a média do mercado simplesmente não tem.
+A primeira semana é a pior. Mas passe por isso e dali para frente a coisa deve começar a fluir. Eu diria que em 6 meses você já estará totalmente confortável com esse ambiente.
+E quando você se torna “sênior”, “master”? Resposta: 10 mil horas. Em qualquer profissão, ofício ou ocupação, nunca considere que você é “bom” a menos que já tenha passado por 10 mil horas de experiência. Um programador precisa ter programado – não lido livros ou feito provas -, realmente digitado código, por 10 mil horas. Não estou falando especificamente de Rails, mas sim programação em qualquer conjunto de linguagens. Por isso mesmo que quanto mais coisas você tentar, quanto mais coisas diferentes testar, mais vai aprimorar seus conhecimentos e mais perto vai chegar de ser tornar um mestre de verdade.
+tags: obsolete windows
+

@@ -1,0 +1,13 @@
+
+
+
+
+*Atualização 22/05:" A pedidos acrescentei o botão de Doações do Paypal também. Em breve vejo se coloco do PagSeguro. Valeu pessoal!
+Hoje resolvi passar o fim da tarde aqui no Starbucks do Shopping Morumbi. Não tão confortável quanto eu esperava mas é bom mudar de ares um pouco.
+O que tem ocupado meu tempo nesses últimos dias é a pesquisa para preparar minha palestra do RailsConf, que já está chegando! Será no dia 9 de junho, às 16:25h, horário em Baltimore. O tema é Making Rails really Restful with Restfulie. Nos últimos dias tive a oportunidade de trocar algumas idéias diretamente com o Jim Webber, além de ler seu livro Rest in Practice. Essa semana também pude discutir mais a fundo o assunto com o George Guimarães e o Guilherme Silveira. Vou dizer que, a princípio, o assunto não é tão complicado, mas cada vez que entro num tópico em mais detalhes parece que não tem fundo :-) Já fiz alguns slides, mas vou dizer que vou gastar o resto da semana que vem para terminar.
+E na semana que vem, terça-feira, será minha última palestra pelo Encontro Locaweb. Foram 6 cidades e é sempre uma satisfação encontrar todo mundo em cada região. Por um lado é uma correria, mas vale a pena. Depois disso, no fim de semana, vou dar as caras no evento de Rails do Guru-SP. Desta vez só assistindo :-) Espero ver todos por lá.
+Depois da RailsConf, na primeira semana de Junho, finalmente talvez eu consiga prosseguir com meus projetos pessoais. Infelizmente acabei divergindo minha atenção em mais coisas do que deveria – pra variar. Significa que quero acelerar até o fim de Junho.
+Porém, meu deadline é Julho. Até lá minhas parcas economias vão esgotar. Não sei se vou conseguir terminar o que eu gostaria até lá. Por isso resolvi fazer uma tentativa com vocês, meus leitores :-) Coloquei um botão de Doações no meu blog (no canto superior direito). Se você gosta dos meus posts, minhas palestras e tudo mais, é sua chance de colaborar de volta ;-)
+Além disso, se estiver interessado em palestras ou coaching, não deixe de me procurar também. Não pretendo me comprometer com projetos longos por enquanto, mas se eu puder ajudar pontualmente, estou à disposição.
+tags: obsolete
+

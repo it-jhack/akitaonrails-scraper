@@ -1,0 +1,17 @@
+
+De vez em quando saem alguns comentários interessantes no Ruby on Rails: Core. Esta semana um cara chamado Stephen estava com uma dúvida: ele começou a fazer testes para entender isso.
+Ele criou um script que mede o uso real de memória depois de cada request a uma aplicação Rails 2.0 simples de um único model. Ele faz 4 requests para a página default e depois mais 4 vezes acessando a listagem desse model e daí mede a memória.
+Ele notou que a cada conjunto desse o processo do Rails consumia um pouco mais de memória (algo em torno de 8 a 20bytes por request). Então ele criou 100 cópia do model, cada um com cerca de 1kb de dados e duplicou os testes.
+Daí ele repetiu para 1000 e depois 10.000 objetos do model. Entre 0 e 1.000 cópias do model, o tamanho do processo variou entre 55 e 70Mb. Mas quando ele foi para 10.000 objetos o processo passou a consumir 220Mb!
+O banco de dados é SQLite com apenas 11Mb quando está com 10.000 linhas.
+Agora vem a dúvida dele: “se o Ruby tem Garbage Collector, porque continua consumindo mais e mais memória?”
+
+
+No post seguinte do thread, Piers matou a charada: de fato o Ruby tem um garbage collector conservador de mark and sweep que funciona bem. Porém, Ruby – assim como a maioria dos interpretadores modernos como perl e python – não devolvem memória de volta ao sistema. O motivo é simples: é caro alocar e desalocar memória do sistema o tempo todo.
+Além disso, assume-se que se você chegou a usar esse tanto X de memória é provável que vá usar de novo. Como o Paul Dix explicou neste post todas as bibliotecas que normalmente subimos uma aplicação Rails típica vai utilizar pelo menos cerca de 30Mb de memória. Lorens Naude demonstrou neste post que certas bibliotecas são enormes. Imagine carregar um Globalize com 8 línguas, 1.400 traduções por linguagem, pré-carregadas. Fora outros grandes como ImageMagick, RMagick, PDF Writer, TZInfo (que também tem timezones de todos os países).
+Quem é de Java vai se lembrar que a gente pré-configura a JVM para começar carregando pouca memória (-Xms) até um limite do heap (-Xmx). Normalmente se for um servidor interno, já deixamos -Xmx=1.5G (se não me engano não dava para pré-alocar mais do que isso em sistemas de 32-bits). E mesmo Java – com um dos melhores gerenciadores de memória em virtual machines – também tem memory leaks ocasionais. Quantos de nós já não vimos o erro OutOfMemory?
+Às vezes nossos mongrels alcançam um pico temporário, mas poucos, e gostaríamos de não deixá-los rodando com tudo isso pré-alocado. Por isso temos serviços como Monit ou God.
+Fora isso Ruby também sofre de memory leaks, principalmente por conta de extensions feitas em C. Alguns que já tiveram casos discutidos foram RMagick e Ferret. Scott Laird explica algumas maneiras de fazer o profile de um memory leak em Ruby, e esta thread na lista do Mongrel também dá algumas dicas.
+Enfim, não existem soluções perfeitas, mas podemos chegar muito próximo de algo muito estável se soubermos com o que estamos lidando e colocando as devidas proteções no lugar. No fundo, um mongrel cluster monitorado por um monit ou god, com algum monitoramento periódico para ver se nada está se comportando mal, deve ser o básico.
+tags: obsolete ruby
+

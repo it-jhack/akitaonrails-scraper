@@ -1,0 +1,14 @@
+
+Hoje e amanhã está acontecendo a webdevcamp São Paulo 07, na Av. Rebouças, 3181 – Casa Gafanhoto. Estou blogando ao vivo, neste momento o pessoal do MercadoLivre está palestrando (é um dos patrocinadores). Está bem legal, eu fiz a primeira palestra sobre Rails 2.0, com demonstração ao vivo do que está por vir. Além disso fiz um anúncio exclusivo que só quem veio ao evento soube em primeira mão :-) Depois conto a todos aqui.
+
+
+
+Dentre os patrocinadores e participantes do evento, temos algumas startups em Rails, como o Pagestacker, o boo-box mostrando a viabilidade do Rails em produtos de verdade. Mas um que provavelmente está na frente pelo tamanho é o BlogBlogs.
+Hoje tive prazer de conhecer o Manoel Lemos que nos deu uma pincelada dos tipos de problema que ele enfrenta. O BlogBlog está hoje na Joyent e está passando pelos mesmos problemas que o Twitter passou 1 ano atrás. Exatamente o tipo de problema que toda startup adoraria ter: sucesso!
+
+O ambiente aqui é menor do que foi a RejectConf mas nem por isso menos legal. A galera empreededora estava toda aqui então foi muito legal ouvir as experiência reais do pessoal. Figurinhas carimbadas como o Nando Vieira, Danilo Sato, etc marcaram presença.
+Quem se cadastrou no evento ainda pode vir amanhã. Infelizmente eu não poderei estar presente mas recomendo. O pessoal está gravando o evento (vide na foto, a câmera profissa e o Manoel com 3 macbooks) portanto aguardem para poder assistir as palestras online.
+Update: o primeiro dia da webdevcamp acabou agora há pouco depois do pessoal do MercadoLivre nos falar sobre seus planos de negócios em relação às suas Apis (e o Nando Vieira já começou a fazer um wrapper Ruby durante o evento :-) E no final tivemos uma sessão de Q&A com o pessoal da startup RedeParede. Eles estão desenvolvendo um produto de classificados em Rails, que será  plataforma para a América Latina. Foi uma conversa bacana.
+O evento foi muito legal pra juntar uma galere que está realmente mão na massa com Rails. Empreendedores e desenvolvedores de verdade. Parabéns aos organizadores pela iniciativa.
+tags: obsolete conference
+

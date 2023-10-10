@@ -1,0 +1,10 @@
+
+
+
+
+Conforme prometi, mais algumas novidades hoje. Coloquei no site (vejam na lateral), o link para todos os códigos que mostro no livro. É um download de cerca de 2Mb, divididos por capítulos para facilitar.
+Sugiro que simplesmente não copiem os códigos, mas que realmente sigam passo-a-passo o livro. Mas em momentos de dúvida, onde minha explicação não esteja clara, acredito que estes códigos serão de grande valia. Por favor, me ajudem a divulgar este download. Na época não houve tempo para acrescentar o link diretamente no livro.
+Além disso acho que seria muita pretensão da minha parte acreditar que é possível escrever, sozinho, 500 páginas em menos de dois meses e ter tudo perfeito. Eu tentei ser cuidadoso ao máximo, mas minha experiência em software mostra que não existe software versão 1.0 sem bugs, acho que o mesmo vale para livros.
+Serei o mais transparente possível com relação a erros. Peço a colaboração de todos para me enviarem feedback. Sempre que puder vou concentar os erros e colocar nesta página de Erratas. Peço novamente que me ajudem a divulgar esta página também pela comunidade.
+tags: obsolete my-book
+

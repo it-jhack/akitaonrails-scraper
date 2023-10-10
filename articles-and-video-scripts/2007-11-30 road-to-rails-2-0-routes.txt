@@ -1,0 +1,112 @@
+
+O Rails 2.0 não é uma nova versão do tipo que se precise re-aprender tudo porque tudo mudou. Pelo contrário: considere como um Rails 1.2 ++. Esta é uma versão de estabilização, com poucas funcionalidades novas.
+Mesmo assim, algumas coisas precisam ser adaptadas. O suporte a REST melhorou e cresceu. Para quem já usava RESTful Rails, com named routes, porém, pode ter uma surpresa, elas mudaram! Felizmente não é tão complicado adaptar sua aplicação REST 1.2 para 2.0.
+Vou traduzir o artigo do Paolo, do blog Assert_Buggy que diz como fazer isso:
+
+
+Ok, você ficou bastante orgulhoso quando no Rails 1.2.x você tornou sua aplicação restful. Agora, REST 2.0 foi melhorado, limpado, retrabalhado e … mudou a nomenclatura de nested Routes (rotas dentro de rotas).
+Vejamos as diferenças com o 1.2.×. O código seguinte:
+1
+2
+3
+4
+5
+6
+
+map.resources :dinners do |dinner|
+  dinner.resources :dishes do |dish|
+    dish.resources :side_courses
+  end
+  dinner.resources :drinks
+end
+
+
+geraria (entre outros):
+
+dinners_url
+dinner_url
+
+dishes_url
+dish_url
+
+side_courses_url
+side_course_url
+
+drinks_url
+drink_url
+
+e assim por diante. Com as mesmas rotas no Rails 2.0, teremos:
+
+dinners_url
+dinner_url
+
+dinner_dishes_url
+dinner_dish_url
+
+dinner_dish_side_courses_url
+dinner_dish_side_course_url
+
+dinner_drinks_url
+dinner_drink_url
+
+Nota do Akita: Para quem não entendeu, side_course está dentro de dish que está dentro de dinner. No Rails 1.2 eu teria simplesmente side_course_url(@dinner, @dish, @side_course), ou seja, passando as duas instâncias dos objetos pais como parâmetros da rota nomeada a URL seria gerada corretamente. Mas o nome da rota pode gerar confusão e ambiguidade, então, no Rails 2.0, o nome dos models-pai são prefixados no nome da rota, gerando dinner_dish_side_side_course_url().
+E seus métodos de rotas REST mudarão mais se você usar o novo sistema de namespace de rotas no 2.0. Isso é bom e muito legal, e uma grande ajuda em aplicações complicadas que usam o mesmo recurso em diferentes níveis de ‘nesting’ para diferentes propósitos.
+Mas isso significa que para migrar do 1.2.x você precisa mudar todas as chamadas aos métodos de rota antigos (que estarão espalhados por todos os seus controllers e views).
+Bem, eu escrevi um pequeno script para automatizar a procura e substituição de rotas antigas pelas novas. E pensei em compartilhá-la …
+Esse script assume que você está em algum sistema compatível com Linux já que usa comandos como find/grep/sed. Os primeiros dois passos são simples:
+
+atualize uma cópia não-crítica da sua aplicação Rails para a versão 2.0 do Rails.
+faça o download do script e salve na raíz do seu projeto.
+execute script/console e digite o seguinte:
+1
+2
+
+require 'route_migrator'
+RouteMigrator.dump_current_route_methods
+
+
+saia do console e abra o arquivo route_map_2_0.rb com algum editor de textos. Esse arquivo deve conter um hash Ruby com chaves e valores contendo as rotas antigas.
+agora você precisa atualizar os valores do hash com as rotas novas. Para o exemplo anterior uma linha ficaria parecida com:
+1
+
+"side_courses_url" => "side_courses_url"
+
+
+e você precisa atualizar para
+1
+
+"side_courses_url" => "dinner_dish_side_courses_url"
+
+
+Se não tiver uma idéia clara de quais são as novas rotas pode usar:
+
+rake routes
+
+ou abrir novamente o script/console e digitar:
+1
+2
+
+require 'route_migrator'
+RouteMigrator.dump_named_routes
+
+
+Cuidado que esse hash gerado pode conter lixo no meio, apenas apague as linhas que acha que não tem nada a ver com rotas usadas na sua aplicação.
+Quando achar que seu hash está completo e pronto você pode checar seu trabalho no script/console digitando:
+<macro:lang="ruby">
+require ‘route_migrator’
+RouteMigrator.check_new_routes
+
+Isso vai lhe mostrar avisos (warnings) se você digitou no hash alguma rota que não está na lista gerada pelo 2.0.
+Se a checagem anterior for bem sucedida você pode tentar o seguinte que irá substituir toda ocorrência de rota antiga pelas novas que você definiu.
+AVISO: este script garantidamente vai estragar >>BASTANTE<< seu código se usá-lo sem entender o que ele faz. Leia o código-fonte do script antes de prosseguir. Como sempre, svn diff e svn revert são seus amigos
+1
+2
+
+require 'route_migrator'
+RouteMigrator.upgrade_route_methods!
+
+
+
+Neste ponto sua aplicação deve estar atualizada com as novas rotas.
+tags: obsolete rails restful
+

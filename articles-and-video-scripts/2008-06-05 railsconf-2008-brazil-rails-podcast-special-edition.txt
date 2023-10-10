@@ -1,0 +1,41 @@
+
+The very first thing I did as soon as I checked into the hotel was to figure out how to get to the Apple Store. Damn, I like Portland’s MAX train. Once in the 5th avenue we got inside and I left a good chunk of my wallet there. One of my achievements was a small audio recorder for my iPod.
+
+Good thing I bought that because otherwise I wouldn’t be able to record all these awesome audios. I thank again my good friend Julio Monteiro for supporting the audio file hosting.
+
+
+The first group I ran into at RailsConf was no other than the JRuby core team. They were quietly coding and I bothered them a bit. Charles Nutter and Thomas Enebo were very kind and I think this is one of the best audios I have.
+ The JRuby Core Team (forgot Nick Siegel, sorry!)
+Charles Nutter and Thomas Enebo [23:48]
+In the following day, I spotted Gregg Pollack and after the main keynote I was able to catch him for a very quick interview. He is very easy going and you can tell that he is very proficient at podcasting. Way to go Rails Envy!
+  Geoffrey, Gregg, myself and Peter Cooper!
+Not only that, but shortly after I finished my interview with Gregg we found Geoffrey Grosenbach (in a suit!) fixing Peter Cooper’s poster in the wall. He is very funny and it was a pleasure finally meeting him.
+Gregg Pollack [8:21]
+Geoffrey Grosenbach [7:15]
+The Phusion guys were hilarious, a great bunch. They are funny, they are young, and they don’t get a ‘no’ for an answer. Their Passenger solution will surely echo for a long time.
+ Tinco, Hongli and Ninh
+After their presentation, I was able to tape an exclusive interview with them. Carl Youngblood, from Surgeworks and Confreaks, also recorded the whole thing in video and we will post it as soon as possible.
+Phusion, Special Edition [33:35]
+Then, at lunch time I think it was Diego (from Uruguay?) who found me and helped me finding Obie Fernandez. I finally caught him and he was very kind to let me interview him at lunch time.
+ Obie Fernandez, from HashRocket
+Obie Fernandez [23:27]
+After the Heroku talk, Vinicius Telles was very very impressed and directed me straight to the Heroku booth where we were able to interview their CEO, James Lindenbaum. He was also very nice and gave us a very good explanation on his product.
+ James at the Heroku booth
+James Lindenbaum [13:04]
+People think that everybody is just walking around doing nothing, but when I first tried to interview Chad, he was helping the Rails Core Team with some gems issue, but after that I was able to interview him just before the closing keynote of the day. I know he was tired, thanks Chad!
+I met Josh Susser at the Double Tree hotel at the night before the Tutorial day, right when David Hansson just arrived as well. Since then I’ve been trying to interview him and I was finally able to do so after lunch of the last day. He talks about Pivotal, agile and testing and should be a great inspiration for other railers.
+“” Josh Susser and Chad Fowler
+Chad Fowler
+Josh Susser [24:00]
+It was right before the closing keynote with the Rails Core Team and I was able to find Ezra working in a sofa. I’ve met him in the very first night as well, but I was just able to interview him at the last minute. He explains Engine Yard’s projects and all the Rails scalability woes (unfortunately I forgot to take a photo of him, damn!)
+
+Ezra Zygmuntowicz [33:19]
+The RailsConf was finally over, people were dismantling the whole show, everybody was going out, but I was able to find David Chemlinsky again and I invited him for my last interview, and he agreed and we made the largest audio recording of all. I think this would help everybody interested in understanding some more about RSpec.
+ David Chemlinsky, Eric Hodel, Wilson Bilkovich
+David Chemlinsky [41:18]
+Finally, I tried to record one of the sessions, specifically, the “Scalling Rails”, a panel with several people, some from Engine Yard, Blaine Cook himself, talking about scaling in general and Twitter in specific. Good thing I recorded it because I don’t remember all the details by heart already :-) I had to record with my arms extended and aiming for the big speaker, hope it sounds good enough until the end.
+ Blaine Cook is almost hidden in the right side corner
+Scaling Rails Panel [47:58]
+And that was it for my first time as a live podcaster. I thank everybody that supported me on this. I just wished I had more time to interview more people, there were lots and lots of very intelligent and smart guys all over the place. For instance, I wasn’t able to interview no one from the Rails Core Team, no one from the Rubinius Team, and so on. Well, another good reason for me to attend next year!
+tags: obsolete railsconf2008 english
+

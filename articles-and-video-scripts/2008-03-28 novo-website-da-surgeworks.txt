@@ -1,0 +1,12 @@
+
+
+
+
+No fim de outubro do ano passado eu escrevi um artigo chamado Onde estão os Web Designers me indagando porque é tão difícil encontrar bons web designers. Foi um dos artigos mais comentados da época no meu site.
+Um dos motivos de ter escrito esse artigo foi justamente porque nós da Surgeworks estávamos procurando por um bom web designer. Apareceram alguns candidatos mas depois de muito procurar encontramos o Renato Carvalho, de Brasília, que tem um ótimo equilíbrio entre bom gosto visual e criatividade e domínio de web standards, XHTML, CSS, etc.
+Foi uma ótima escolha e ontem lançamos um dos primeiros sites em que ele trabalhou de ponta a ponta: o redesign do website da Surgeworks e redefinição de nossa identidade visual. Acredito que nosso website – que antes estava bem ‘Web 1.0’ – finalmente deu um salto de qualidade para os padrões ‘Web 2.0’.
+
+Tivemos que lançar o site antes de acabarmos por causa da conferência MountainWest RubyConf 2008 que começou hoje e também está sendo patrocinada pela Surgeworks. Por isso o site ainda tem muito pouco conteúdo, estamos ainda codificando algumas coisas e tirando alguns bugs. Quisemos dar ênfase em nossa expertise Ruby on Rails e para tanto temos que mostrar que em casa de ferreiro o espeto é de ferro, por isso nosso website agora roda sobre Radiant.
+Foi um ótimo trabalho de toda a equipe Surgeworks, em especial da nossa equipe Rails Brazil com o Marcus Derencius e o Renato Carvalho no front. Valeu galera!
+tags: obsolete surgeworks
+

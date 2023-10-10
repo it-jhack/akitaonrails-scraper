@@ -1,0 +1,11 @@
+
+
+
+
+No Episódio 16 do nosso podcast, eu e o Carlos Brando falamos sobre a Insoshi. Ele é um projeto Rails que você pode fazer fork via Github e começar a mexer nele.
+É uma aplicação-template de um social network escrito em Rails, pelo mesmo autor do livro RailsSpace: Building a Social Networking Website with Ruby on Rails, Michael Hartl. Pelo visto, em casa de ferreiro o espeto é de ferro!
+Mas o motivo deste post é que a aplicação realmente é legal! O design de exemplo é bonito e limpo e o principal: o código é limpo! Ou seja, ele serve perfeitamente para qualquer iniciante explorar e aprender como uma aplicação de verdade funciona! Ele não inventa a roda, não acrescenta código difícil de entender, é Rails-padrão. Ele peca um pouco na parte de testes, tem muitos incompletos (Tapajós? :-) mas no geral é uma excelente oportunidade para se entender como fazer rotas restful, como fazer modelos associados num aplicação que suporta minimamente um blog, forum, fotos, comunidade, etc. Independentemente cada módulo não se compara a uma aplicação completa. O blog do Insoshi não é um Mephisto, o forum não é um Beast, mas a idéia é ser simples mesmo.
+Uma das coisas que eu não gosto muito é que ele tem search implementado sobre Ferret, mas é por isso que o Github é legal: se eu quiser (alguém se habilita?) posso fazer um fork e implementar suporte ao Sphinx, por exemplo. Enfim, principalmente aos iniciantes, não deixem de dar uma olhada. Outra coisa que ele ainda não tem: localização, suporte a Open Social, Facebook ou outra APIs, aliás, ele praticamente não tem APIs para fora. Tudo coisa que a comunidade pode ajudar a incrementar.
+Algumas outras publicações noticiaram sobre o Insoshi, vejam no Mashable, no TechCrunch e no Ruby Inside.
+tags: obsolete rails
+

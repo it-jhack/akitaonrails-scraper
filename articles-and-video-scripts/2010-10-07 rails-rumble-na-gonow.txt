@@ -1,0 +1,13 @@
+
+
+
+
+
+Pelo segundo ano seguido, a GoNow vai participar do Rails Rumble a famosa competição internacional online de Rubistas, em sua 4a edição. A GoNow deve participar de cerca de 3 equipes.
+Para quem não conhece, o Rumble é uma competição onde você pode participar de equipes de até 4 pessoas ou na categoria solo, programando sozinho. Os competidores terão 48 horas para desenvolver uma aplicação web completa, funcional e competitiva, partindo do zero, sem ter nada pronto, nem mesmo o HTML do web design.
+Cada equipe ganha uma máquina virtual vazia cedida pela Linode. Ela será aberta às 9 horas da noite de sexta-feira, dia 15 e fecha à 9 da noite de domingo, dia 16. Os projetos serão acompanhados por uma banca julgadora. Quando o servidor fechar, ele fechou e é bom que você tenha conseguido terminar tudo.
+Exatamente nessa hora é que as boas práticas ágeis serão importantes, incluindo devidamente adicionar testes unitários e de aceitação, automatizar com integração contínua (por exemplo, usando Signal), automatizar o deployment (por exemplo, usando Inploy), priorizar o que desenvolver e começar desenvolvendo o que trás mais valor primeiro.
+Infelizmente as incrições já se encerraram em 17/09. Se você tem uma equipe e quer um lugar para desenvolver, a GoNow irá fornecer infra-estrutura e alimentação. Inclusive vamos tentar transmitir as 48 horas do Rumble ao vivo via Internet streaming. Se estiverem interessados ainda temos espaço para até mais 3 equipes no nosso escritório, para confirmar enviem e-mail para mim Vai ser um fim de semana muito legal de muito código!
+
+tags: obsolete gonow
+

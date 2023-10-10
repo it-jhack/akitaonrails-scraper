@@ -1,0 +1,88 @@
+
+
+
+
+Fonte :the { buckblogs :here }, por Jamis
+Em Named, explicit routes eu mencionei Object#with_options de passagem, somente para descobrir depois que este método super útil não consta na documentação da API do Rails! Desde então corrigi essa situação no trunk, mas o método é útil o suficiente (particularmente em conjunto com routing) que achei que valeria a pena blogar a respeito.
+O ponto doloroso que inspirou o método é esse: suponha que você tem um punhado de chamadas de métodos, todos aceitando um hash de opções como último parâmetro, e muitos deles compartilhando um ou mais das mesmas opções. Definições de Routes são o exemplo canônico disso:
+1
+2
+3
+4
+5
+6
+7
+
+map.create_message "/msg/create/:id", 
+        :controller => "message", :action => "create"
+map.delete_message "/msg/delete/:id", 
+        :controller => "message", :action => "delete"
+map.message "/msg/:id", 
+        :controller => "message", :action => "get"
+# etc, etc, etc
+
+
+Feio! E definitivamente não muito DRY também. Uma maneira de resolver isso é definir uma variável separada que contém o hash de opções em comum, e usar Hash#merge para adicionar a diferença em cada chamada:
+1
+2
+3
+4
+5
+6
+7
+8
+
+common = { :controller => "message" }
+map.create_message "/msg/create/:id", 
+        common.merge(:action => "create")
+map.delete_message "/msg/delete/:id", 
+        common.merge(:action => "delete")
+map.message "/msg/:id", 
+        common.merge(:action => "get")
+# etc, etc, etc
+
+
+Melhor, mas ainda não muito DRY. Object#with_options é a resposta de Rails a esse padrão:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+map.with_options :controller => "message" do |msg|
+  msg.create_message "/msg/create/:id", 
+        :action => "create"
+  msg.delete_message "/msg/delete/:id", 
+        :action => "delete"
+  msg.message "/msg/:id", 
+        :action => "get"
+  # etc, etc, etc
+end
+
+
+Ah! A duplicação foi embora! Muito melhor.
+Embora eu pessoalmente use isso primariamente para definição de routes, isso pode ser usado em qualquer lugar onde aparecem hashes de opções como último parâmetro … o que descreve a maioria das interfaces no Rails. Tem um punhado de associações em um model, todos os quais declarados dependentes de um pai?
+1
+2
+3
+4
+5
+6
+7
+
+class Blog < ActiveRecord::Base
+  with_options :dependent => :destroy do |parent|
+    parent.has_many :authors
+    parent.has_many :posts
+    parent.has_many :themes
+  end
+end
+
+
+Coisa boa! (E mais um exemplo do poder dos blocos no Ruby. Para os curiosos, vocês podem ler a implementação do with_options no projeto ActiveSupport do Rails, aqui e aqui. Tudo dito, isso tem menos de 30 linhas de código, então é fácil de pegar. (Parabéns a Sam Stephenson) pela bela implementação.
+tags: obsolete rails
+

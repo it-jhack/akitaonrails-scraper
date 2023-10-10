@@ -1,0 +1,284 @@
+
+Uma coisa que era meio que uma “gambiarra” (um “after thought” seria mais adequado) era o suporte a Engines. Desde a primeira versão, o Rails tinha suporte a plugins, que você coloca no diretório “vendor/plugins”. É bom para carregar bibliotecas. Uma evolução disso é o uso de RubyGems, para desacoplar a evolução dos projetos de forma independente.
+Porém, quando desenvolvemos mais de uma aplicação, eventualmente gostaríamos de poder reusar partes de uma aplicação em outra. Por exemplo, um sistema de comentários, poderia servir para várias aplicações no estilo de CMS. Isso significa um conjunto de arquivos, por exemplo, composto por um CommentsController, suas Views, o model Comment, sua migration, seu conjunto de rotas e talvez alguma configuração.
+Uma forma que alguns tentam é via Generators. Poderia ser uma gem que você executa dentro do seu projeto e ele gera esses arquivos e mescla aos existentes no seu projeto. É uma solução razoável para coisas simples e genéricas, mas é muito ruim se queremos algo testável, fácil de manter depois.
+Lá pela era do Rails 2.1 mais ou menos, surgiu um projeto que tentava embutir uma infra-estrutura de Engines. Basicamente significava a possibilidade de ter a árvore “app/controllers”, “app/models”, “app/views”, “config” dentro de um plugin/gem e ele se mesclar ao projeto principal sem precisar mesclar os arquivos no mesmo lugar. Pessoalmente eu nunca achei que ele funcionava muito bem, era difícil se integrar ao processo de boot do Rails, tinha muito monkey patch envolvido, enfim, não ficava algo muito limpo. Além disso, se a versão do Rails mudava, provavelmente esse suporte se quebraria.
+
+
+Rails + Merb
+A situação prometeu mudar quando aconteceu a lendária decisão de mesclar tecnologias do Merb dentro do Rails, e uma das coisas interessantes que o Merb tinha era o conceito de Slices, justamente pequenos trechos MVC que você poderia plugar à sua aplicação.
+Um ano depois disso, o Rails 3 Beta 3 está aqui, se preparando para o lançamento oficial, e ele trouxe de fato muitas mudanças interessantes, incluindo uma grande refatoração no seu processo de boot.
+Quando criamos uma nova aplicação de Rails 3, superficialmente não parece que mudou muita coisa. A primeira mudança que vemos é o arquivo “config/application.rb”. Antigamente, toda a configuração se concentrava no bom e velho “config/environment.rb”, mas agora ele tem só isto:
+1
+2
+3
+4
+5
+
+# Load the rails application
+require File.expand_path('../application', __FILE__)
+
+# Initialize the rails application
+MyApp::Application.initialize!
+
+
+Esse “MyApp” é uma classe que representa sua aplicação e ela tem o mesmo nome da sua aplicação. Quando você usa o comando “rails [my_app]” para criar uma nova aplicação, o generator usa esse nome para criar essa classe. Note que a primeira linha carrega o arquivo “config/application.rb”, que é onde essa classe está declarada. Um trecho é este:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+require File.expand_path('../boot', __FILE__)
+
+require 'rails/all'
+
+# If you have a Gemfile, require the gems listed there, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(:default, Rails.env) if defined?(Bundler)
+
+module MyApp
+  class Application < Rails::Application
+  ...
+  end
+end
+
+
+Este arquivo, por sua vez, carrega o também velho conhecido “config/boot.rb” que inicializa a aplicação. Em seguida ele declara a dependência aos frameworks do Rails. Note que ele requer o “rails/all”. No código fonte do pacote Railties, o arquivo “lib/rails/all.rb” tem este conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+require "rails"
+
+%w(
+  active_record
+  action_controller
+  action_mailer
+  active_resource
+  rails/test_unit
+).each do |framework|
+  begin
+    require "#{framework}/railtie"
+  rescue LoadError
+  end
+end
+
+
+Você pode mudar o ‘require’ e requerir menos frameworks, por exemplo, se não estiver interessado no Action Mailer, ou no Active Resource. Voltando ao “application.rb”, em seguida ele checa se o Bundler está carregado e então requer as dependências declaradas no arquivo “Gemfile”. Leia a documentação do Bundler para entender sobre esse arquivo, vou explorar esse assunto em outro artigo, mas por enquanto basta entender que antigamente declarávamos as gems no arquivo “environment.rb” usando linhas como “config.gem ’paperclip”, agora declaramos no arquivo “Gemfile”.
+Note também que ele carrega o arquivo “railtie.rb” de cada um dos frameworks como Active Record. É porque esta é a forma que cada um deles é configurável e consegue se integrar ao processo de boot do Rails e ao mesmo tempo serem desacoplados uns dos outros.
+Finalmente, temos a declaração da classe “MyApp::Application”. Uma aplicação Rails agora não é mais global, ela é delimitada por um namespace adequado, que por sua vez dá acesso às suas APIs internas de inicialização, configuração e tudo mais. De fato, no mesmo processo, podemos carregar múltiplas aplicações Rails isoladas.
+Olhando no código fonte do pacote Railties novamente, vemos que o “lib/rails/application.rb” é declarado desta forma:
+1
+2
+3
+4
+5
+
+module Rails
+  class Application < Engine
+  ...
+  end
+end
+
+
+Ou seja, toda aplicação Rails é derivada de um “Engine”. Vejamos agora sua declaração em “lib/rails/engine.rb”.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+module Rails
+  class Engine < Railtie
+    autoload :Configurable,  "rails/railtie/configurable"
+    autoload :Configuration, "rails/railtie/configuration"
+
+    include Initializable
+
+    ABSTRACT_RAILTIES = %w(Rails::Railtie Rails::Plugin Rails::Engine Rails::Application)
+    ...
+  end
+end
+
+
+Uma Engine, por sua vez, deriva da classe-pai “Railtie”. Ela é uma classe bem simples, declarada em “lib/rails/railtie.rb” que define o núcleo de uma aplicação Rails. Segundo a documentação, você implementa um Railtie em um plugin, por exemplo, se precisar criar initializadores, configurar partes do framework Rails, criar chaves “config.*” de configuração de ambientes, se assinar nos novos notificadores ActiveSupport::Notifications (mais um assunto para outro artigo), adicionar tarefas de Rake no Rails.
+Como podem ver no trecho listado acima, ele carrega os módulos que o tornam configurável e faz mixin do módulo que o torna inicializável.
+Finalmente, temos uma última classe, o Rails::Plugin, que é definida em “lib/rails/plugin.rb”.
+1
+2
+3
+4
+5
+
+module Rails
+  class Plugin < Engine
+  ...
+  end
+end
+
+
+Como podemos ver um Rails::Application e Rails::Plugin ambos herdam de Rails::Engine que, por sua vez, herda de Rails::Railtie. Essa é a hierarquia da nova estrutura do Rails. Um Rails::Plugin é um Rails::Engine que se carrega mais tarde no processo de inicialização e por isso não tem as mesmas oportunidades de customização de uma Engine. E novamente segundo a documentação, diferente de um Railtie ou um Engine, você não deve criar uma classe que herda de Rails::Plugin pois todo pacote dentro de “vendor/plugins” é um plugin e ele automaticamente vai procurar por um arquivo “init.rb” dentro dela para começar.
+Expliquei tudo isso para dizer que, no Rails 3, um Engine não só melhorou como agora ele é a espinha dorsal de todo o resto do framework. Lembrando também que o Rails::Application é o responsável por carregar Rails Metal (end-points mais leves que o ActionController::Base) e também outros middleware Rack. O Rails::Application tem um método “call”, justamente o mínimo necessário para constituir uma aplicação Rack. O Application faz a costura com o ActionDispatch para cuidar de toda a complexidade dos roteamentos entre applications, engines, rack middlewares e assim por diante.
+Introdução a Engines
+Isso tudo dito, ainda estou experimentando e não cheguei a uma solução ótima, mas me parece que uma forma de começar um novo Rails Engine é basicamente criando uma aplicação Rails normal. Por exemplo, digamos que eu ache que uma funcionalidade de Blog é importante para ser reusado em meus projetos e por isso quero uma Engine de Blogs. Começo assim:
+1
+2
+
+rails blog
+cd blog
+
+
+Existe muita coisa que não vou precisar:
+1
+2
+3
+4
+5
+6
+7
+8
+
+rm -Rf log
+rm -Rf tmp
+rm -Rf doc
+rm -Rf public
+rm -Rf vendor
+rm -Rf db
+rm -Rf config/environments/
+rm config/boot.rb
+
+
+Os outros diretórios funcionam normalmente, o “app” para nossos arquivos MVC, o “config” para configurar o Engine e as Rotas, o “lib” para ter código customizado e também o “lib/tasks” para tarefas Rake. Tudo isso deve funcionar. Depois vou apagar também o “script”, mas por agora ele será útil.
+Agora, podemos fazer assim:
+1
+
+./script/rails g scaffold Blog::Post title:string post:text
+
+
+O bom e velho model de Post. Notem que estou usando um namespace, “Blog”, isso é importante para evitar conflitos, especialmente com nomes muito comuns como “Post”. Se existir um outro model “Post” na aplicação onde você pretende integrar esta Engine, terá problemas.
+Um detalhe é que o Generator atual não lida muito bem com namespaces. Significa que precisaremos mexer nos arquivos gerados. Em particular, no controller a ação “index” do Blog::PostsController estará assim:
+1
+2
+3
+4
+5
+6
+
+unloadable # acrescente isto
+
+def index
+  @blog_posts = Blog::Post.all
+  ...
+end
+
+
+Outra coisa interessante é declarar “unloadable” no corpo da classe controller. Isso permite que em modo de desenvolvimento você consiga recarregá-lo.
+Substitua “@blog_posts” por “@posts”, isso deve estar errado no template. Falando em templates, as rotas nomeadas nas views também estão todas erradas, por exemplo, no “app/views/blog/posts/index.html.erb” teremos este trecho:
+1
+2
+3
+4
+5
+6
+7
+
+<tr>
+  <td><%= post.title %></td>
+  <td><%= post.post %></td>
+  <td><%= link_to 'Show', post %></td>
+  <td><%= link_to 'Edit', edit_post_path(post) %></td>
+  <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
+</tr>
+
+
+Mas deveria ser assim:
+1
+2
+3
+4
+5
+6
+7
+
+<tr>
+  <td><%= post.title %></td>
+  <td><%= post.post %></td>
+  <td><%= link_to 'Show', [:blog, post] %></td>
+  <td><%= link_to 'Edit', edit_blog_post_path(post) %></td>
+  <td><%= link_to 'Destroy', [:blog, post], :confirm => 'Are you sure?', :method => :delete %></td>
+</tr>
+
+
+Estou assumindo que todos aqui sabem lidar com rotas nomeadas, especialmente com rotas aninhadas e rotas com namespace como é o caso acima. Se não, leiam o Guia Oficial sobre o assunto para entender melhor.
+Precisamos mudar o arquivo de rotas também. No nosso caso basta modificar o “config/routes.rb” para ter o seguinte:
+1
+2
+3
+4
+5
+
+Rails.application.routes.draw do |map|
+  namespace :blog do
+    resources :posts
+  end
+end
+
+
+Veja que estamos usando o “Rails.application” em vez de ir direto na classe da aplicação, porque a idéia é esta Engine se plugar à aplicação principal. Desta forma as rotas da Engine estarão disponíveis no conjunto de rotas principais da aplicação.
+Agora, precisamos configurar a Engine propriamente dita, para isso precisamos modificar o arquivo “config/application.rb” para ter algo como:
+1
+2
+3
+4
+5
+
+module Blog
+  class Engine < Rails::Engine
+  ...
+  end
+end
+
+
+Se fosse uma aplicação Rails normal, estaria herdando de “Rails::Application”. No corpo da classe você pode fazer as mesmas configurações que faria no inicializador de uma aplicação, todas aquelas chaves tipo “config.load_paths” ou “config.time_zone” e assim por diante. Veja os comentários do arquivo “application.rb” original pois ele já vem bem documentado para começar.
+Não sei se é necessário, mas para garantir modifiquei o “config/environment.rb” para ter apenas:
+1
+
+require File.expand_path('../application', __FILE__)
+
+
+Pronto. Isso deve ser o suficiente como esqueleto básico. Se você colocar esse projeto “blog” dentro de “vendor/plugins” da sua outra aplicação, ela já estará automaticamente integrada. Se executar “rake routes” verá as rotas do seu projeto e da Engine. Lembrando que outros diretórios padrão como “config/initializers” também funcionam como você esperaria então dá para organizar bem a engine.
+Mas ainda há mais algumas coisas que precisam ser feitas. Por exemplo:
+
+É melhor empacotar esta Engine como uma Gem. Nesse caso você deve configurar um arquivo “.gemspec” na raíz da sua Engine para gerar uma “.gem”. Uma opção é usar o Jeweler para criar e manter a Gemspec.
+Migrations não são automaticamente executadas da Engine. Este é um dos poucos casos onde você vai precisar manualmente criar ou um Generator ou uma tarefa Rake para copiar o arquivo de Migration para o diretório “db/migrate” do projeto principal. Não é algo difícil de fazer e este tutorial pode ser um bom começo.
+Além de Migrations, se você precisar de CSS, Javascripts ou outros arquivos que normalmente colocaria no diretório “public”, também precisam ser copiados ao diretório “public” do projeto-pai. Novamente, as soluções são usando Generators ou tarefas Rake.
+
+Novamente, esta é só uma introdução. Ainda quero escrever outro artigo mostrando exemplos mais completos. Se tiverem sugestões de técnicas e boas práticas, elas são bem vindas, não deixem de comentar no artigo.
+tags: obsolete rails
+

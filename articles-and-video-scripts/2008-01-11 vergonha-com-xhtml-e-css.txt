@@ -1,0 +1,24 @@
+
+English readers, click here
+Eu tenho uma história vergonhosa hoje. É sobre 2 e-mails que recebi. O primeiro veio logo pela manhã de um dos leitores do meu site. Ele reportoou que minha homepage estava toda bagunçada no IE 7. De cara eu não me importei muito (“oh droga, sempre fica estranho no IE”). Eu normalmente me satisfaço quando vejo meu site funcionando tanto no Firefox quanto no Safari – o raciocínio sendo – “se funciona no Safari, deve funcionar no IE 7.”
+Então, deixei passar. Agora vem a parte feia com o segundo e-mail, que recebi à noite, do meu chefe, Carl. Ele me reportou que estava falando com um possível futuro cliente e decidiu orgulhosamente mostrar meu website. Claro, o cliente abriu seu IE 7 e BUM! Vergonha! Para a surpresa do Carl, meu website renderizou completamente quebrado e inusável no browser do cliente! Eu posso imaginar a situação. E ele tentou ajeitar ainda dizendo: “mas eu garanto que ele sabe XHTML e CSS …”
+Que droga! Eu não sou nenhum expert em web design mas eu sei um truque ou dois sobre XHTML e CSS bem formatados. Então eu abri os validadores de XHTML e CSS da W3C. 100 erros de XHTML e 2 de CSS! Muito Feio!
+
+
+Isso não é bom. Vamos consertar. Felizmente os validadores dão boas dicas sobre o que está errado. Então deixem-me dizer, quase todos os erros foram nesses elementos:
+
+quadro do Facebook
+quadro do Twitter
+quadro do Rec6
+tocador de video streaming do Soapbox
+tocador de apresentações do Slideshare
+
+Parece que o validador odeia todos eles. Ok, felizmente o Facebook tem uma opção para mudar de um quadro javascript por uma imagem estática. Beleza. Twitter não foi tão fácil. Eu não estava com bom humor para brincar no código dele, então simplesmente tirei fora. Mesma coisa com o Rec6. Os players Flash de vídeo eu joguei pras páginas internas pra não quebrarem mais a homepage. Além disso, haviam alguns erros meus mesmos, tags que esqueci de fechar e esse tipo de coisa. Depois dessa limpeza (não demorou tanto, talvez meia hora), este é o status atual:
+
+
+Desci de 100 erros de XHTML para Zero e de 2 erros de CSS para Zero. Parece que estou bem agora. Mas não por muito. Algumas das páginas internas ainda vão quebrar porque tem os tocadores de vídeo Flash. Minha reclamação é: sim eu poderia mexer neles até ficarem corretos. Mas esse não é o ponto: o ponto é que esses serviços oferecem o HTML para nós apenas copiarmos e colarmos em nossos websites. Então, por que eles não conseguem produzir tags compatíveis com XHTML, caramba!? Eu definitivamente não vou perder meu tempo consertando as tages deles!
+Então, não terei mais Twitter ou qualquer desses tocadores Flash na minha homepage até que eles consertem essa vergonha. Nós bloggers ajudamos a promover esses websites, o mínimo que eles podem fazer é não quebrar os nossos!
+No fim: agora meu website renderiza perfeitamente bem no Safari, Firefox 2 (tanto Mac quanto Windows) e no IE 7. Mas no IE 6 ele ainda não renderiza a barra lateral direito (dêem uma olhada). Mesmo agora sendo um XHTML e CSS “perfeitamente” bem estruturados, o IE 6 se recusa a renderizar corretamente … oh bem, o IE 6 normalmente não renderiza direito de qualquer jeito …
+Update: O Carl me enviou uma dica interessante para Flash neste link. Coloquei meu Twitter de volta. Não é a melhor solução mas funciona (o melhor seria a solução ser default no próprio Twitter). E agora o XHTML não quebra.
+tags: obsolete
+

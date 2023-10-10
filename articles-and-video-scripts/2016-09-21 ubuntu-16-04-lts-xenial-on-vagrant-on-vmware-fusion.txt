@@ -1,0 +1,268 @@
+
+I'm old school. I know the cool kids are all playing around with Docker nowadays, but I like to have a full blown linux environment with all dependencies in one place. I will leave volatile boxes for the cloud.
+I like to keep a Vagrant box around, because no matter how messy an OS upgrade can go (looking at ya macOS), I know my development box will just work.
+But even with everything virtualized and isolated, things can still go wrong. I am currently using Vagrant 1.8.5, with the vagrant-vmware-fusion plugin 4.0.11 and Vmware Fusion 8.5 on El Capitan (even though macOS Sierra just launched, I will wait at least 1 month before upgrading, there is nothing there that is worth the risk).
+
+
+
+If you're installing a brand new box for the first time, this is the bare-bone Vagrantfile configuration I am using:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "bento/ubuntu-16.04"
+
+  config.vm.network :forwarded_port, guest: 8080, host: 8080
+  config.vm.network :forwarded_port, guest: 3000, host: 3000
+  config.vm.network :forwarded_port, guest: 3001, host: 3001
+  config.vm.network :forwarded_port, guest: 4000, host: 4000
+  config.vm.network :forwarded_port, guest: 5555, host: 5555
+  config.vm.network :forwarded_port, guest: 5556, host: 5556
+  config.vm.network :forwarded_port, guest: 3808, host: 3808
+
+  config.vm.network "private_network", ip: "192.168.0.100"
+
+  config.vm.synced_folder "/Users/akitaonrails/Sites", "/vagrant", nfs: true
+
+  config.vm.provider :vmware_fusion do |v|
+    v.vmx["memsize"] = "2048"
+  end
+end
+
+
+I usually go in the Vmware settings for the virtual machine and enable an extra processor (as my Macbook has 8 virtual cores to share) and enable hypervisor (support for Intel's VT-x/EPT).
+As a rule of thumb, the very first thing I always do is set the locale to en_US.UTF-8:
+
+1
+2
+3
+
+sudo locale-gen "en_US.UTF-8"
+sudo dpkg-reconfigure locales
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+
+And just to make sure, add the following to /etc/environment:
+
+1
+2
+
+LC_ALL=en_US.UTF-8
+LANG=en_US.UTF-8
+
+
+You must set UTF-8 before you install packages such as Postgresql.
+Then I upgrade packages and install the basic:
+
+1
+2
+
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install open-vm-tools build-essential libssl-dev exuberant-ctags ncurses-term ack-grep silversearcher-ag fontconfig imagemagick libmagickwand-dev python-software-properties redis-server libhiredis-dev memcached libmemcached-dev
+
+
+This will install important tools such as Imagemagick, Memcached and Redis for us.
+Now, to install Postgresql:
+
+1
+
+sudo apt-get install postgresql-9.5 postgresql-contrib postgresql-server-dev-9.5
+
+
+Create the superuser for vagrant:
+
+1
+2
+3
+4
+5
+
+sudo -i -u postgres
+createuser --interactive
+
+Enter name of role to add: vagrant
+Shall the new role be a superuser? (y/n) y
+
+
+And only for the development environment edit /etc/postgresql/9.5/main/pg_hba.conf and change the following:
+
+1
+2
+3
+4
+5
+6
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     trust
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            trust
+# IPv6 local connections:
+host    all             all             ::1/128                 trust
+
+
+This is to make your life easier while programming. If you did everything right until now, you will have your PG with proper unicode encoding and without bothering with password when you do bin/rails db:create. If you didn't configure your locale properly before, you can follow this gist to manually set PG's locale to UTF-8.
+Installing Ruby is still better done through RVM:
+
+1
+2
+3
+4
+5
+
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash
+source $HOME/.rvm/scripts/rvm
+rvm install 2.3.1
+rvm use 2.3.1 --default
+
+
+And I prefer using YADR as my default dotfiles, replacing Bash for ZSH. And comparing to other dotfiles, I like this one because I usually don't have to tweak it, at all. I won't even configure anything about RVM after installing because YADR takes care of that already.
+
+1
+
+sh -c "`curl -fsSL https://raw.githubusercontent.com/skwp/dotfiles/master/install.sh `"
+
+
+To update it (or resume in case it breaks for some reason):
+
+1
+2
+
+cd .yadr
+rake update
+
+
+The only 2 tweaks I have to do is change my iTerm2 profile to use Solarized, and I have to add the following 2 lines to the top of the .vimrc file:
+
+1
+2
+
+scriptencoding utf-8
+set encoding=utf-8
+
+
+Next step, install NodeJS:
+
+1
+2
+
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install nodejs
+
+
+Next step, install Java. You can choose Oracle's installer, but I believe the openjdk should be enough:
+
+1
+
+sudo apt-get install default-jdk
+
+
+We will need Java for Elasticsearch 2.4.0:
+
+1
+
+wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.0/elasticsearch-2.4.0.deb && sudo dpkg -i elasticsearch-2.4.0.deb
+
+
+Now you can start it manually with sudo /etc/init.d/elasticsearch start, and you want to leave it that way because it consumes a lot of RAM, so you should only start it when you really need it.
+With Java in place, we can also install Leiningen to have Clojure ready.
+
+1
+2
+3
+4
+5
+
+echo "PATH=$PATH:~/bin" >> ~/.zsh.after/bin.zsh
+mkdir ~/bin && cd ~/bin
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod a+x lein
+lein
+
+
+Leiningen will install it's dependencies and you can follow its tutorial to get started.
+Installing Rust is as easy:
+
+1
+
+curl -sSf https://static.rust-lang.org/rustup.sh | sh
+
+
+Installing Crystal, also easy:
+
+1
+2
+
+curl https://dist.crystal-lang.org/apt/setup.sh | sudo bash
+sudo apt-get install crystal
+
+
+Installing Go is not difficult, but more manual:
+
+1
+2
+3
+4
+5
+6
+7
+
+wget https://storage.googleapis.com/golang/go1.7.1.linux-amd64.tar.gz
+tar xvfz go1.7.1.linux-amd64.tar.gz
+chown -R root:root .go
+sudo mv go /usr/local
+touch ~/.zsh.after/go.zsh
+echo "export GOPATH=$HOME/go" >> ~/.zsh.after/go.zsh
+echo "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" >> ~/.zsh.after/go.zsh
+
+
+Once you install go and set it's work path, we can install some useful tools such as forego and goon (that Elixir's Hex can optionally use):
+
+1
+2
+
+go get -u github.com/ddollar/forego
+go get -u github.com/alco/goon
+
+
+And speaking of Elixir, we saved the best for last:
+
+1
+2
+3
+
+wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && sudo dpkg -i erlang-solutions_1.0_all.deb
+sudo apt-get update
+sudo apt-get install esl-erlang elixir
+
+
+And this is it, a very straightforward tutorial to have a modern development environment ready to go. These are the basic software development tools that I believe should be in everybody's toolbelts for the following years.
+Honestly, I am not so much into Clojure and Go as I think I should. And I didn't give .NET Core a lot of time yet, but I will explore those in more detail in the future.
+
+tags: linux install learning elixir crystal clojure ruby on rails postgresql
+

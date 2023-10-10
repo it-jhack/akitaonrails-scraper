@@ -1,0 +1,15 @@
+
+
+
+
+
+O Peter Cooper publicou hoje sobre um tutorial de Clemens Kofler sobre a nova funcionalidade de internacionalização (i18n) do futuro Rails 2.2. O interessante é que ele fez isso de uma maneira muito prática: fazendo o tutorial ser uma aplicação Rails executando exatamente como ele explica.
+Achei a idéia muito legal e, graças ao Github, fiz um fork do projeto dele e já traduzi para português. Portanto vocês podem clonar diretamente do meu fork e já entender como tudo funciona :-) Apenas faça:
+
+git clone git@github.com:akitaonrails/i18n_demo_app.git
+cd i18n_demo_app
+./script/server
+-
+Ou faça download do código-fonte zipado. De qualquer forma, basta abrir o browser depois de iniciar o servidor e carregar https://localhost:3000. Bom aprendizado!
+tags: obsolete rails tutorial
+

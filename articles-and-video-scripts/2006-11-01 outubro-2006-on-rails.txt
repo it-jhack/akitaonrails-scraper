@@ -1,0 +1,12 @@
+
+
+
+
+Este mês foi particularmente bom para a comunidade Ruby on Rails brasileira como um todo. Primeiro, finalmente tivemos o lançamento do livro Repensando a Web com Rails que, felizmente, vem recebendo boa aceitação. Espero que isso ajude a difundir ainda mais Rails dentro do Brasil. Recebi mensagens de diversos partes do país como Pernambuco, Paraná, Mato Grosso do Sul, Rio de Janeiro, Bahia, Minas Gerais. Só posso dizer que estou satisfeito. Agradeço a todos que apareceram no evento de lançamento dia 24, na FNAC.
+Além disso tivemos o primeiro seminário brasileiro de Rails, promovido pela Tempo Real, e que aconteceu agora no dia 28 de outubro na Universidade São Marcos, em São Paulo. Infelizmente tive problemas nesse fim de semana e não pude comparecer (peço desculpas). Independente disso o evento foi um sucesso. Muitos programadores puderam ver o Rails em ação pela primeira vez através de pessoas experientes. Este post no blog da Improve It sumariza bem o evento.
+A mesma livraria Tempo Real, uma referência em livros de informática aqui em São Paulo, também promove diversos outros eventos e cursos. Um deles é a série Mão na Massa. Dias 24 e 25 de Novembro acontecerá a Mão na Massa Rails uma chance de aprender Rails em mais detalhes.
+Falando em cursos, a Caelum, conhecida escola de Java aqui em São Paulo, começará a oferecer um curso de Rails, contando com 20 horas de ensino.
+Mas para não falar apenas de São Paulo, aconteceu também um evento universitário em Araçatuba no dia 11 de outubro, dando a introdução sobre as vantagens de Rails aos estudantes de computação. E no Rio de Janeiro tivemos a XP Rio on Rails no último dia 24 de outubro no SENAC. Nesse evento sobre desenvolvimento ágil o objetivo era discutir o papel de Rails em metodologias ágeis.
+Por favor, se pulei algum outro evento importante, não deixem de comentar aqui. Parabéns a todos que estão estimulando a comunidade brasileira de Ruby e Rails.
+tags: obsolete
+

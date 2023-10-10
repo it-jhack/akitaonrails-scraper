@@ -1,0 +1,34 @@
+
+Você usa Ext JS? Num projeto comercial? Cuidado …
+Alguns dias atrás iniciou-se uma longa discussão em diversos fórums sobre o framework ExtJS.
+Para quem não conhece o framework ExtJS é um toolkit extremamente complexo feito em puro Javascript. O autor, Jack Slocum, começou criando uma extensão à biblioteca Yahoo UI mas ele cresceu para algo ainda maior.
+Pense um toolkit gráfico completo, com elementos complexos como grids, tabelas, árvores e todo tipo de widget que você veria num Visual Basic, Delphi ou parecido. Ele faz interfaces quase tão complexas e bonitas quanto vocês fariam num Adobe Air, por exemplo.
+A comunidade começou a usar o ExtJS em massa. Porém, uma grande controvérsia se iniciou no lançamento do ExtJS versão 2.1.
+
+
+to GPL or not GPL?
+A partir de agora, cuidado, eu não sou advogado e portanto o que sei de direitos autorais é muito pouco para tirar conclusões. Vou expôr o que eu entendi das discussões e peço que, se existe algum leitor aqui que tenha embasamento jurídico para comentar, que por favor o faça.
+Enfim, até a versão 2.0, o ExtJS era distribuído como LGPL. O que eu entendo de diferença entre LGPL e GPL é que LGPL é adequado para código que seja usado como biblioteca (como .dlls, .so, .js, etc), ou seja, código que pode ser reusado em outro software. A vantagem é não ter a característica VIRAL do GPL. Ou seja, eu poderia criar um software que usa o ExtJS mas não precisaria que meu próprio código fosse GPL.
+A partir da versão 2.1 eles retiraram a licença LGPL e a ela se sobrepôs a temida GPL 3. Qual o problema disso? Exatamente o toque de Midas: tudo que o GPL toca vira GPL. Nesse caso qualquer software que use o Ext de alguma forma deve se tornar necessariamente GPL.
+Mas e se eu quiser criar um software comercial, que eu vendo a clientes, e ainda usar Ext? Assim como MySQL, por exemplo, o ExtJS também tem Dual Licensing, ou seja, em você querendo manter seu código fechado, você pode comprar licenças comerciais da empresa ExtJS, LLC. Assim você fica livre dos compromissos impostos pelo GPL.
+Nas palavras do próprio Jack Slocum :
+
+Suponha que você tenha uma aplicação web com um index.php que inclui Ext JS. Nesse caso o index.php deve ser GPL já que está usando Ext. E já que ele precisa ser GPL, seu código fonte precisa ser distribuído. Também por causa disso, o efeito “viral” do GPL está agora em ação e qualquer coisa que use isso no lado do servidor também precisa ser GPL.
+
+
+Suponha que você está usando código server-side para gerar javascript que interaja com Ext JS. Esse código também precisa ser GPL.
+
+Ou seja, o que está irritando a comunidade é:
+
+Ou você está fazendo um projeto que já é GPL;
+
+
+Ou você precisa comprar licenças comerciais da Ext JS, LLC.
+
+Muitas questões ficam em aberto. Parece que o pessoal do Zope (Python) recomendaram no seu fórum que ninguém faça commit de código com ou derivado de Ext no trunk.
+Isso também deixa em aberto o que outros projetos que são open source, mas não são GPL, podem fazer. Por exemplo quem usa a licença BSD, Apache, MIT e outros. Vejam este trecho no fórum deles.
+Portanto, cuidado, se você pretende criar software comercial que utiliza Ext JS, deve pagar pela licença comercial, caso contrário deve liberar seu código como GPL.
+É exatamente por isso que muitos projetos open source não gostam do GPL e preferem licenças realmente livres como BSD, que não tem tal cláusula viral.
+Usem Ext JS se precisar, mas prestem atenção para qual lado da cerca você cai ao fazer isso.
+tags: obsolete javascript
+

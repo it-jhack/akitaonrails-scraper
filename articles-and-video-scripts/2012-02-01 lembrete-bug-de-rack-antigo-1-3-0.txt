@@ -1,0 +1,26 @@
+
+Ano passado minha equipe colocou um grande projeto em produção. Por conta do NDA assinado com o cliente, não podemos divulgar, posso dizer que era internacional e com grande tráfego. Porém quero descrever uma situação que passamos que talvez possa ajudar outros projetos mesmo sendo um bug antigo.
+Pesquisando esses dias esbarrei com este Gist do John Nunemaker. Não afirmo que é exatamente o mesmo bug mas a descrição é idêntica. Em nosso caso, os servidores de produção estavam todos funcionando bem, mas aleatoriamente quando monitoramos víamos algumas das CPUs em 100%, se deixássemos mais algum tempo em breve todas as CPUs estavam no máximo e parando de responder.
+
+
+
+Não havia uma situação especial, parecia bem aleatório. A única forma de recobrar o servidor era um bem não amigável kill -9 nos processsos que estavam a 100% já que o próprio monitor do Passenger também não conseguia reciclar os processos travados. Tentamos reproduzir em ambiente de desenvolvimento ou outro ambiente controlado mas essa situação não acontecia, era apenas em produção.
+Inicialmente achávamos que poderia ser algum bug no Passenger (chute). Procuramos a respeito em fóruns e listas de discussão. Encontramos relatos como este# que nunca foram confirmados como “bug”. Pensamos em substituir pelo Unicorn mas como não tínhamos certeza que o bug era no Passenger e nem tínhamos muito tempo, a solução – nada elegante – foi fazer um script no cron para matar os processos que ficavam presos em 100% por muito tempo. Não era a solução mas “resolveu” o problema.
+Só agora, meses depois, finalmente vi essa descrição do Nunemaker que bate muito com o que passamos e finalmente com um diagnóstico mais preciso. Como ele tentou eu também fiz dumps dos processos com gdb mas me falta conhecimento de gdb, strace e outras ferramentas de debug para encontrar o ponto exato do erro.
+A forma de reproduzir é abrir o IRB e executar:
+1
+2
+
+str = "http%3A%2F%2Fwww.google.com%2Furl%3Fsa%3Dt%26source%3Dweb%26cd%3D1%26sqi%3D2%26ved%3D0CCkQFjAA%26url%3Dhttp%253A%252F%252Fnd.edu%252F%26rct%3Dj%"
+str =~ /\A(?:%[0-9a-fA-F]{2}|[^%]+)*\z/
+
+
+Se sua versão de Ruby ainda tiver o bug de regex, ele vai travar e a CPU vai pra 100%. Ctrl-C no terminal deve matar o processo. Essa situação acontece num aplicativo Web que usa Rack porque especificamente na versão 1.3.0 existe esse código na linha 61. Dependendo de quem estiver acessando seu site (crawlers do Google por exemplo) ele pode desencadear o bug travando seu processo (literalmente um Denial of Service).
+Esse erro acontece nos Ruby REE 1.8.7, nos 1.9.2. O teste exato acima não acontece no 1.9.3 porém ele acontece no próximo teste que tentei. Resolvi fazer um micro teste importando exatamente a versão com o bug do Rack:
+Estranho que isso passa no meu Ruby 1.9.3-p0 embora essa mesma versão de Ruby falhe com o teste direto no IRB anterior. Ambos executam a mesma Regex na mesma string, só que um trava e a outra retorna (com exceção mas retorna). Ainda não entendi por que, provavelmente estou fazendo algo errado muito simples mas que não estou vendo (alguém tem idéias?)
+A versão 1.3.0 foi lançada no dia 23 de maio, aproximadamente a época em que colocamos a aplicação em produção. Me parece que as versões anteriores não tinham essa regex (e por outro lado não validavam a URI acima como errada). Porém não tenho certeza que não estávamos usando o Rack 1.2.5 ou anterior e nesse caso o bug não seria este. Infelizmente não temos mais acesso aos servidores de produção do cliente para ter certeza, mas se não for isso seria uma grande coincidência.
+A versão 1.3.1 – lançada no dia 13 de julho – já tem uma correção que modifica a regex para que ela não trave. Portanto a janela onde esse bug ficou no ar foi de 23 de maio a 13 de julho, se alguém rodou um bundle nessa época e travou o Rack para a versão 1.3.0 (cheque no seu Gemfile.lock) esse pode ser um problema ainda ativo no seu servidor e precisa ser verificado.
+Para facilitar, a versão do Rails nessa época era 3.0.7, mas chequem projetos mais antigos também. Especialmente se você já viu, aleatoriamente, algum processo se prendendo a 100% de CPU sem nenhuma explicação aparente.
+Escrevi este artigo mais como um post-mortem porque passamos por esse problema nessa época de maio a julho no ano passado e ele ficou sem solução, e eu detesto problemas sem solução.
+tags: obsolete ruby
+

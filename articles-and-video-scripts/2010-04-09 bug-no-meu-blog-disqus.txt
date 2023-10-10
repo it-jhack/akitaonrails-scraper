@@ -1,0 +1,22 @@
+
+
+
+
+Acabei de perceber um bug que eu mesmo coloquei no meu blog. Alguns vão notar que alguns comentários e retweets não estão aparecendo no blog.
+Acontece que meses atrás, depois de importar meus posts de um banco pra outro, tive problemas com os permalinks e timestamps. Por exemplo, um permalink “2009/01/02/bla-bla” virava “2009/01/01/bla-bla”. Isso acontecia se por exemplo a data do post era “2009-01-02 01:00:00” e quando eu migrava ficou “2009-01-01 22:00:00”. O “fix” que acabei fazendo foi ignorar a data e procurar só pelo “bla-bla”. Como antigamente os comentários ficavam ligados no post, não tinha problema.
+Mas depois que migrei pro Disqus, o permalink com o timestamp ficou mais importante porque ele é a “chave-primária” digamos. Um bug no meu administrador é que quando eu atualizo o texto de um post, ele está vendo errado o timezone e fica decrescendo 3 horas (porque Brasil é GMT -3) e uma hora ultrapassa a meia-noite e descresce o dia, mudando o link do post.
+Eu ainda não parei pra corrigir isso, mas o que aconteceu é que nos links dos posts do iPad, por exemplo, alguns comentários ficaram nestes links do dia 06/04:
+
+https://www.akitaonrails.com/2010/04/06/off-topic-primeiras-impressoes-do-ipad
+https://www.akitaonrails.com/2010/04/06/off-topic-primeiras-impressoes-do-ipad-2-2
+https://www.akitaonrails.com/2010/04/06/off-topic-segunda-impressao-do-ipad
+
+E alguns poucos caíram nestes que ficaram no dia 05/04:
+
+https://www.akitaonrails.com/2010/04/05/off-topic-primeiras-impressoes-do-ipad
+https://www.akitaonrails.com/2010/04/05/off-topic-primeiras-impressoes-do-ipad-2-2
+https://www.akitaonrails.com/2010/04/05/off-topic-segunda-impressao-do-ipad
+
+Eu preciso corrigir o bug de configuração de Timezone que eu vinha postergando mas por enquanto vou só tomar cuidado manualmente pra data de publicação não regredir um dia. O problema foi que eu negligenciei que “permalink” quer dizer “permanent link” (duh, claro) e ignorei isso no meu banco de dados. Então fica de dica também. Lidar com timezones pode ser chatinho. O Bug não é do Disqus, é do meu blog mesmo.
+tags: obsolete blog
+

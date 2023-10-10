@@ -1,0 +1,32 @@
+
+
+
+
+Pessoal, aqui vai uma lista dos palestrantes com os horários. São “tentativas” de horários, vamos tentar seguí-los mas pode não ser exato.
+
+
+PalestranteTópicoInícioFim
+CCSL IME12:0012:10Abertura do Evento
+Fabio Akita12:1012:30Apresentando Ruby on Rails
+Anderson Leite12:3012:45rails start – iniciando na linguagem
+Danilo Sato12:4513:00RSpec e Rails
+Eduardo Fiorezi13:0013:20Refactoring on Rails
+Myke Hamada13:2013:40segurança em apps web
+Intervalo13:4014:00
+Felipe Giotto14:0014:20Rails para aplicativos Desktop
+Fabio Kung14:2014:35JRuby Compiler
+Dairton Bassi14:3515:05Case Ikwa.com.br
+Intervalo15:0515:35
+George Guimarães15:3516:05Pagestackr – desafios e soluções
+Carlos Eduardo16:0516:25Cases eGenial
+Carlos Villela16:2516:55RailsConf Europe 2007, ThoughtWorks RubyWorks e Mingle
+Intervalo16:5517:15
+Vinícius Teles17:1517:45Projeto Lucidus – produtividade e diversão ao extremo com Rails e XP
+Carlos Brando17:4518:15Está fazendo a sua parte?
+Fabio Akita18:1518:30Finalização
+
+
+Se possível tentem chegar a partir das 11:00. O objetivo do evento não é apenas vocês assistirem às palestras e ir embora, mas sim que troquem idéias entre si, se conhecem. Principalmente acho que os blogueiros que estarão presentes podem ajudar nisso. Teremos cerca de 3 intervalos para justamente incentivar a movimentação.
+Aos iniciantes: não se acanhem, ninguém morde :-) É uma ótima oportunidade para aumentar o networking e conhecer blogs, sites e pessoas que podem ajudar a aprender Rails.
+tags: obsolete rejectconf
+

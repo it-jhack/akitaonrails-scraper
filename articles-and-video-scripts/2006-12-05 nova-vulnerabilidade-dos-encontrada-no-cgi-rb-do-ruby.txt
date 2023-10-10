@@ -1,0 +1,9 @@
+
+
+
+
+
+Do RubyInside: A a homepage oficial do Ruby está relatando que outra vulnerabilidade DoS (Denial of Service) foi encontrado na biblioteca CGI do Ruby (cgi.rb). A solução é atualizar para o novo Ruby 1.8.5-p2 (aviso: link direto para arquivo .tar.gz). Especificamente:
+Uma requisição HTTP específica para qualquer aplicação Web usando cgi.rb causa o consumo de CPU na máquina onde a aplicação está rodando. Muitas dessas requisições resultam em um denial of service.
+tags: obsolete security
+

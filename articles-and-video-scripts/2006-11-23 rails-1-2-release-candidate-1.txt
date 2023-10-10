@@ -1,0 +1,138 @@
+
+David postou hoje o anúncio oficial da versão Release Candidate 1 do tão esperado Rails 1.2. Teoricamente isso significa um congelamento de funcionalidades para que todos possam testar contra seus aplicativos, plugins e tenham a chance de se adaptar, reportar bugs.
+Já falei de algumas dessas funcionalidades nestes posts:
+
+pós-RailsConf: Abrindo caminho para Rails 1.2
+
+
+simply_restful no núcleo Rails
+
+Além do grande suporte a REST existe ainda outra excelente notícia: finalmente Rails terá um suporte oficial a Unicode! Segue abaixo o anúncio de David.
+
+
+Novidades
+Primeiro me permitam dar uma breve repassada no que deve deixá-los excitados. Enquanto essas novas funcionalidades possam não ter um glamour imediato como RJS, ainda assim representam mudanças fundamentais em como muitos aplicativos Rails serão criados a partir de agora.
+REST e Resources
+REST e o entendimento geral de HTTP é a estrela de Rails 1.2. A maior parte dessas funcionalidades foi originalmente apresentada ao público em geral na minha palestra na RailsConf. Dêem uma olhada para entender os conceitos de porque REST é importante para Rails.
+Então comece a pensar em como seu aplicativo poderia ficar mais RESTful. Como poderia transformar aquele seu controller com 15 actions em 2 ou 3 controllers onde cada um abraça um único recurso com visão de CRUD. É aí onde o verdadeiro benefício está escondido: uma aproximação clara para design de controller que reduzirá a complexidade para o implementador e resultará em uma aplicação que se comporta como um cidadão muito melhor na Web em geral.
+Para ajudar a transição temos um gerador scaffold que criará o stub da interface CRUD, como o scaffold original, mas de uma maneira RESTful_. Você pode testá-lo com "script/generate scaffoldresource". Rodando dessa maneira, sem argumentos, teremos uma breve introdução de como ele funciona e o que criará.
+A única API real que liga tudo isso junto é o novo map.resources, que é usado no lugar de map.connect para conectar um controller baseado em recurso com verbos HTTP. Então, quando tiver um controller-recurso, poderá ligá-lo com nosso link de emulação de verbos link_to "Destroy", post_url(post), :method => :delete. Novamente, executando o scaffold de recursos lhe dará uma sensação melhor de como tudo funciona.
+Formatos e respond_to
+Mesmo respond_to estando conosco desde Rails 1.1, adicionamos alguns ajustes no 1.2 que acabam fazendo uma grande diferença para utilidade imediata da funcionalidade. Essa é a mágica de :format. Todos os novos aplicativos terão uma rota padrão adicional: map.connect ':controller/:action/:id.:format'. Com essa rota instalada, imagine o seguinte exemplo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+class WeblogController < ActionController::Base
+  def index
+    @posts = Post.find :all
+end
+
+respond_to do |format|
+    format.html
+    format.xml { render :xml => @posts.to_xml }
+    format.rss { render :action => "feed.rxml" }
+  end
+end
+
+GET /weblog     # returns HTML from browser Accept header
+GET /weblog.xml # returns the XML
+GET /weblog.rss # returns the RSS
+
+
+Usar o cabeçalho Accept para conseguir isso não será mais necessário. Isso torna tudo muito mais fácil. Você pode explorar a API no browser apenas adicionando .xml à URL. Não precisamos mais de um before_filter para procurar dicas de um newsreader, apenas usar .rss. E tudo isso funciona automaticamente com caching de páginas e actions.
+Claro, esse esquema de formatos funciona ainda melhor junto com map.resources, que automaticamente garante que tudo Apenas Funcione. O gerador scaffold de recursos até inclui um exemplo disso usando format.xml, então /post/5.xml é automaticamente conectado. Muito legal!
+Multibyte
+Unicode! Mesmo Rails sempre tendo a capacidade de armazenar e mostrar unicode sem muitos problemas, ainda assim tem sido um pouco mais complicado truncar, reverter ou ter o tamanho exato de um string UTF-8. Você precisava bagunçar com KCODE por si mesmo, e mesmo que muitas pessoas obtivessem sucesso, nunca foi fácil como plug-and-play como muitos gostariam (ou mesmo até esperavam).
+Então, como Ruby não terá suporte multibyte até o próximo ano, Rails 1.2 apresenta ActiveSupport::Multibyte para trabalhar com string Unicode. Chame o método chars no seu string para começar a trabalhar com caracteres em vez de bytes.
+Imagine o string ‘€2.99’. Se manipulássemos no nível de byte, é fácil termos nossos sonhos destruídos:
+1
+2
+3
+
+'€2.99'[0,1] # => "\342" 
+'€2.99'[0,2] # => "?" 
+'€2.99'[0,3] # => "€"
+
+
+O caracter € utiliza três bytes. Então, não somente não conseguimos manipulá-lo no nível de byte facilmente como String#first e TextHelper#truncate costumavam engasgar com isso. Antigamente, aconteceria isso:
+1
+2
+
+'€2.99'.first        # => '\342'
+truncate('€2.99', 2) # => '?'
+
+
+Com Rails 1.2, teremos:
+1
+2
+
+'€2.99'.first        # => '€'
+truncate('€2.99', 2) # => '€2'
+
+
+TextHelper#truncate/excerpt e String#at/from/to/first/last automaticamente fazem a conversão .chars, mas se precisar manipular ou mostrar o tamanho você mesmo, tenha certeza de estar usando .chars assim:
+1
+
+You've written <%= @post.body.chars.length %> characters.
+
+
+Com Rails 1.2 estamos assumindo que vocês querem brincar direito com unicode. O charset padrão para renderização de actions, portanto, será também UTF-8 (você pode configurar outro com ActionController::Base.default_charset=(encoding). KCODE é automaticamente configurado para UTF-8 também.
+Assista ao screencast (mas note que configurar manualmente o KCODE não é mais necessário).
+Unicode estava em grande demanda, mas Multibyte está pronto para lidar com outras codificações (por exemplo, Shift-JIS) da forma como está implementado. Por favor, extenda Multibyte para as codificações que usam.
+Agradecimentos para Manfred Stienstra, Julian Tarkhanov, Thijs van der Vossen, Jan Behrens e (outros?) por criarem esta biblioteca.
+Pegadinhas
+Apesar de termos tentado permanecer o mais compatíveis possível com a versão 1.1.6, existem algumas pequenas bordas que precisarão de algum retrabalho se você costumava fazer as coisas de uma certa maneira.
+Routes
+Action Pack tem uma implementação toda nova de Routes que é ao mesmo tempo mais rápida e mais segura, mas isso a tornou mais restrita. dois pontos e pontos são separadores, então a rota /download/:file que costumava bater com /download/history.txt não funcionará mais. Utilize :requirements => { :file => /.*/ } para encontrar o ponto.
+Auto-loading
+Consertamos um bug que permitia que bibliotecas padrão do Ruby fossem auto-recarregadas em referência. Antes, se vocês meramente referenciasse a constante Pathname, nós auto-recarregávamos pathname.rb. Agora não mais, você precisará manuamente require 'pathname'.
+Também melhoramos o esquema de carga de módulos, o que significa que uma referência a Accounting::Subscription procurará por app/models/accounting/subscription.rb. Ao mesmo tempo, significa que meramente referenciar Subscription não procurará por subscription.rb em nenhum subdiretório app/models. Apenas app/models/subscription.rb será tentado. Se por alguma razão você depende disso, ainda poderá ter isso de volta adicionando app/models/accounting no config.load_paths em config/environment.rb.
+Prototype
+Para ficamos mais compatíveis com a especificação HTTP, formulários baseados em Ajax do Prototype não mais serializam elementos desabilitados de formulários. Atualize seu código se você depende de campos desabilitados na submissão.
+Para consistência métodos do Element e Field do Prototype não mais aceitam um número arbitrário de argumentos. Isso significa que você precisa atualizar seu código se utiliza Element.toggle, Element.show, Element.hide, Field.clear e Field.present em Javascript escrito à mão (os helpers de Prototype foram atualizados para automaticamente gerar as coisas corretamente).
+1
+2
+3
+4
+
+// Se você tem alguma coisa que se parece com isso
+Element.show('page', 'sidebar', 'content');
+// Precisa substituir por código como esse
+['page', 'sidebar', 'content'].each(Element.show);
+
+
+Action Mailer
+Todos os e-mails são MIME versão 1.0 por padrão, então você precisa atualizar seus testes unitários de mailer com: @expected.mime_version = '1.0'
+Deprecação
+Desde Rails 1.0 mantivemos uma API estável e compatível com versões anteriores, de forma que seus aplicativos possam mover entre lançamentos sem muito trabalho. Mas muitos dessas APIs não se encaixam mais por isso entraremos numa dieta de corte de gordura. Rails 1.2 depreca um monte de funcionalidades que agora tem alternativas superiores ou são melhor atendidas com plugins.
+Deprecação não é uma ameaça, é uma promessa! Essas funcionalidades terão ido embora completamente em Rails 2.0. Você pode continuar a utilizá-las no Rails 1.2, mas será avisado constantemente: procure por avisos de deprecação nos resultados de seus testes e em seus arquivos de log.
+Migre seu código da era 1.0 para um estilo mais moderno. Para começar, apenas rode seus testes e preste atenção aos avisos.
+Instalação
+Os gems do Release Candidate estão no repositório de gems do Rails. Você pode instalar dessa forma:
+1
+
+gem install rails --source http://gems.rubyonrails.org --include-dependencies
+
+
+Ou você podem puxar diretamente do Subversion com https://dev.rubyonrails.org/svn/rails/branches/1-2-pre-release.
+Submetendo bugs de regressão
+Aí está. Essas são as maiores mudanças e como sempre você pode pegar o escopo completo nos CHANGELOGs. Através dos últimos oito meses, fizemos literalmente centenas de melhorias. Vale muito a pena ler os CHANGELOGs em busca das novidades. Ryan’s Scraps está fazendo um ótimo trabalho anotando as mudanças também.
+Mas com o lançamento de qualquer nova peça de software, algumas coisas que funcionavam antes não funcionarão mais.
+Enquanto a intenção de Rails 1.2 é manter compatibilidade, somos apenas humanos, e há chances que algumas coisas tenham passado desapercebido. Então, se você está testando o release candidate 1.2 e encontrou um bug, garanta que tenha reportado isso para nós. Existem alguns passos que você deve seguir para nos ajudar a corrigir seu bug durante o ciclo de release candidate.
+Quando adicionar seu relatório do bug, garanta que colocou ‘1.2regression’ no campo de palavras-chave. Bugs com essa palavra-chave aparecem no relatório trac. Se está procurando um lugar para ajudar, comece aqui.
+Se possível, por favor inclua um teste unitário que falha com seu relatório de bug. Isso torna nossa vida significativamente mais fácil e ajuda os outros a verificar que você encontrou um caso genuíno.
+tags: obsolete rails
+

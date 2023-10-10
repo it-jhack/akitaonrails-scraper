@@ -1,0 +1,17 @@
+
+
+
+
+Essa notícia já é meio velha, de dezembro de 2005, mas dá para dar uma boa idéia de como o mundo adota rápido novas idéias.
+Segundo a O’Reilly, comparado como o mesmo período do ano anterior, os livros de Java estavam em queda de 4%, os de C# subiram 16%.
+Mas a surpresa foi na comparação entre os livros de Python e Ruby. Os de Python tiveram alta de 20% mas os de Ruby 1.552% (os de Perl caíram 3%).
+Cliquem nos gráficos abaixo para lerem a matéria original. Primeiro o gráfico das vendas de livros de Ruby.
+
+Em seguida, dos livros de Python.
+
+A conclusão parece óbvia: a ascensão do Rails está alavancando o Ruby junto.
+Claro, PHP continua sendo a linguagem dinâmica com mais livros vendidos, mas vem estagnando. Na realidade Rails está roubando programadores desanimados com as outras plataformas mais do que está atraindo novos programadores. Portanto Ruby on Rails subir significa o interesse na outras cair.
+Recomendo a quem puder, para adquirir os livros da Pragmatic Programmer, dentre os principais “Programming Ruby” e “Agile Web Development with Rails”, ambos de Dave Thomas. Está para sair também (já disponível em beta), o livro “Rails Recipes” de Chad Fowler. Como ainda são escassas as literaturas sobre Ruby on Rails, sugiro que leiam de tudo.
+Felizmente esses livros tem excelente qualidade e são muito bem escritos.
+tags: obsolete
+

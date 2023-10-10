@@ -1,0 +1,19 @@
+
+Estou um pouco atrasado, mas para quem não sabia recentemente aconteceu o Rubyconf 2013 em Miami. Todas as palestras estão gravadas e disponíveis pela excelente Confreaks.
+Estava assistindo as Lightning Talks que foi bem longa (mais de 2 horas!) e selecionei as que foram realmente práticas. Veja minhas favoritas na lista a seguir. Clique no link do tema para ir direto na posição certa no vídeo do YouTube˜ para não perder tempo.
+
+
+
+Appraisal - esta gem é muito interessante. Quem já não fez ou usou uma gem que tem dependências externas, por exemplo compatível com activerecord 3.0.0, e agora você está fazendo um projeto em Rails 4 e a gem não vai funcionar? Às vezes é só uma questão de atualizar a dependência, rodar as specs e elas vão passar ou fazer ajustes pequenos. Mas para manter a compatibilidade com múltiplas versões de gems, pode ser tedioso ficar testando múltiplas versões da sua gem. E para isso a gem Appraisal pode ajudar. Vale a pena dar uma olhada.
+Uma crítica é que o @sikachu é um desenvolvedor excepcional, mas é um péssimo comunicador. É doloroso assistir a apresentação. Lembrem-se: comunicação não é apenas 'dizer' é fazer o outro lado se engajar. Por favor, dediquem-se a se comunicar melhor.
+GC.disable - o grande @Nari3, um dos contribuintes do Ruby MRI e criador do atual bitmap garbage collector do Ruby 1.9.3 e 2.0 fez uma das melhores apresentações que já vi que demonstra visualmente o que significa quando o garbage collector "stop the world" para realizar uma coleta, que é o comportamento do GC do Ruby até a versão 2.0. A partir da versão 2.1 entrará o novo generational garbage collector ('semi') do grande Koichi Sasada e, visualmente, o Nari demonstra qual é a grande diferença. Novamente, assista.
+Semantic Versioning - este assunto não é nada novo, mas por isso mesmo é bom relembrar já que muita gente faz muito errado ainda: colocar versões corretas nos seus projetos, declarar corretamente a dependência de versão de coisas externas. Mesmo projetos famosos (cof Sidekiq cof) ainda fazem errado.
+PolyTEXnic - muitos devem conhecer o @Mhartl como autor do Ruby on Rails Tutorial (aliás, excelente material para iniciantes). Ele criou um conjunto de ferramentas para gerar não só sites mas ebooks e pdfs bem diagramados, com boa tipografia, e tudo mais que é bom do TeX. Vale a pena ver como ele deixou todo o processo muito simples.
+Ruby Logger Thread/Process Safe - Log é algo normalmente ignorado por muitos, mas é um aspecto que está aumentando em escopo mais e mais, especialmente com novas soluções como Greylog2, Logstach e o Fluentd do @sonots, que faz esta palestra. Ele discute alguns aspectos mais low level da linguagem Ruby e garante que o logger do Ruby esteja thread-safe e process-safe (afinal o Ruby faz fork, e o log não pode se perder com isso).
+Aliás, vários japoneses da comunidade Ruby do Japão palestraram nas Lightning Talks. Japonês não sabe falar inglês, ponto. #vergonhaalheia
+Unbelievable - Essa do Michael Dvorkin não vou nem descrever. Na prática não tem utilidade nenhuma, mas foi tão divertido o que ele fez que quis compartilhar. Assista.
+Em termos das apresentações, a grande maioria é bem ruim (conteúdo até bom, mas apresentação ruim). Muito gaguejo, muita quebra de raciocínio, piadas sem graça. Pratiquem, apresentar não é tão simples quanto parece. As que foram boas são justamente de quem já tem prática, veja o do CTO da RapGenius por exemplo.
+Coloco esse comentário porque muitos acreditam na visão romântica de que o exterior (apresentação) não é importante, o que realmente importa é o interior (conteúdo). Sinto muito, uma coisa não elimina a outra: se a embalagem não me atrai eu não compro o produto, e aí perco a oportunidade de ver o que 'poderia' ser um excelente conteúdo. Só embalagem e um conteúdo decepcionante também não ajuda. Logo a conclusão é óbvia: ambas as coisas são importantes, apresentação e conteúdo.
+
+tags: obsolete conference
+

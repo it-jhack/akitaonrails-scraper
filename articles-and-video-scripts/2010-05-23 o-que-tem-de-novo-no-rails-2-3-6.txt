@@ -1,0 +1,315 @@
+
+Atualizado 25/05: A versão 2.3.7 saiu rápido demais, tentando corrigir um bug e acabou expondo outro. O Jeremy Kemper (@bitsweat) se desculpou pelo lapso e acabou de soltar, finalmente, a versão estável 2.3.8
+Atualizado 24/05: Parece que havia alguns bugs ainda no novo suporte a XSS por isso o pessoal lançou uma correção na forma da versão 2.3.7
+O pessoal do Rails Core acabou de lançar o Rails 2.3.6, provavelmente a última revisão da série 2.3 antes do lançamento da esperada versão 3.0 (atualmente em Beta 3). Ela trás algumas funcionalidades para servirem de “ponte” entre as duas séries. Vejamos algumas modificações.
+Para começar, instale essa nova versão:
+1
+
+gem install rails --version=2.3.8
+
+
+
+
+
+Proteção Cross Site Scripting (XSS)
+Até o Rails 2.3, nos templates ERB você era obrigado a manualmente sanitizar strings usando o helper “h()”, desta forma:
+1
+
+<%= h @comment.body %>
+
+
+Desta forma, se alguém tentou embutir um javascript, iframe ou coisa do tipo, a função “h” iria sanitizar a string, tornando-a inócua. É uma boa prática. Porém, fazer opt-in desse tipo de coisa é perigoso porque é muito fácil esquecer de usá-la. Portanto, no Rails 3, toda string é automaticamente sanitizada e se você efetivamente quiser o HTML, javascript embutida no string precisará dar opt-out da segurança usando, por exemplo, o novo helper “raw()”, assim:
+1
+
+<%= raw @post.body %>
+
+
+Com a nova versão 2.3.6 você pode instalar o plugin RailsXSS, instalando-o  no seu projeto:
+1
+
+./script/plugin install git://github.com/rails/rails_xss.git
+
+
+Por compatibilidade, o antigo helper “h()” ainda existe, mas ele tem efeito nulo porque o string já é sanitizado por padrão. Se você tem helpers que geram HTML e não quiser que eles sejam sanitizados, o correto agora é usar um decorador:
+1
+2
+3
+4
+5
+
+module ApplicationHelper
+   def gerador_de_html
+     ... # cuspindo HTML
+   end
+   safe_helper :gerador_de_html
+
+
+Leia a documentação do plugin para mais exemplos
+Mais Cookies
+Os Cookies ganharam mais flexibilidade. Você pode optar por usar dois modificadores, um chamado “permanent” que na verdade configura seu cookie para durar 20 anos a partir de agora ou o “signed” que encripta o string do cookie. E também é possível combinar os dois. Conforme a documentação você pode usar assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+cookies.permanent[:prefers_open_id] = true
+# => Set-Cookie: prefers_open_id=true; path=/; expires=Sun, 16-Dec-2029 03:24:16 GMT
+
+cookies.signed[:discount] = 45
+# => Set-Cookie: discount=BAhpMg==--2c1c6906c90a3bc4fd54a51ffb41dffa4bf6b5f7; path=/
+
+cookies.signed[:discount]
+# => 45 (if the cookie was changed, you'll get a InvalidSignature exception)
+
+cookies.permanent.signed[:remember_me] = current_user.id
+# => Set-Cookie: discount=BAhU--848956038e692d7046deab32b7131856ab20e14e; path=/; expires=Sun, 16-Dec-2029 03:24:16 GMT
+
+
+São helpers para configurar o atributo “Set-Cookie” no cabeçalho HTTP de resposta. Só cuidado, um cookie pode ter no máximo 100kb de informações e é boa prática colocar pouca coisa neles, mas a encriptação aumenta o tamanho do string. Você não quer uma página que devolve um HTML de, digamos 30kb e mais 100kb só de cookie!
+Refinamentos no Flash
+Quando você realiza operações como salvar ou atualizar um model, no controller normalmente configuramos mensagens no objeto “flash”, para “:notice” ou “:alert”. Daí mostramos no ERB e o objeto se limpa sozinho. São mensagens voláteis válidos por uma requisição. O padrão é fazer algo assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+def create
+  @post = Post.new(params[:post])
+
+  respond_to do |format|
+    if @post.save
+      flash[:notice] = 'Post was successfully created.'
+      format.html { redirect_to(@post) }
+      format.xml  { render :xml => @post, :status => :created, :location => @post }
+    else
+      format.html { render :action => "new" }
+      format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
+    end
+  end
+end
+
+
+Este é o método “create” criado automaticamente se você usou o gerador “scaffold”. Mas no Rails 2.3.6, o mesmo gerador cria o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+def create
+  @post = Post.new(params[:post])
+
+  respond_to do |format|
+    if @post.save
+      format.html { redirect_to(@post, :notice => 'Post was successfully created.') }
+      format.xml  { render :xml => @post, :status => :created, :location => @post }
+    else
+      format.html { render :action => "new" }
+      format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
+    end
+  end
+end
+
+
+Note que a linha com “flash[:notice]” não existe mais e em seu lugar o helper “redirect_to” ganhou as opções “:notice” e “:alert” embutidas. É apenas um syntatic sugar para ficar mais limpo. Nada de muito drástico aqui.
+ActiveRecord
+Optimistic Locking
+Uma das características de um ORM é que quando puxamos linhas de uma tabela no banco, essas linhas são mapeadas para objetos. O problema é que criamos uma redundância de informações (a linha na tabela e o objeto em memória). E se duas requisições independentes puxarem a mesma linha no banco? Significa que podemos ter pelo menos dois objetos em memória apontando para o mesmo lugar. E se agora cada requisição modificar o mesmo objeto e tentar salvar de volta? Sem proteção, basicamente o último que modificar o objeto vai ganhar e o primeiro perde as modificações que fez.
+Com um Optimistic Locking na forma de uma coluna de segurança, podemos ter o seguinte comportamento:
+1
+2
+3
+4
+5
+6
+7
+
+p1 = Person.find(1)
+p2 = Person.find(1)
+
+p1.first_name = "Michael"
+p1.save
+
+p2.destroy # Devolve a exceção ActiveRecord::StaleObjectError
+
+
+No exemplo, criamos dois objetos em memória, puxando a mesma linha da tabela. Alteramos o primeiro objeto e salvamos, isso modifica a coluna de trava. Se tentarmos manipular com o segundo objeto vamos receber a exceção de que o objeto está “sujo” em memória e a forma correta agora é tratar essa exceção, recarregar o objeto com as novas informações, mostrá-las e pedir ao usuário para tentar novamente a operação.
+Isso já funcionava para o método “save” mas agora a novidade é que funciona corretamente também para o “destroy”. No caso, se não me engano a opção padrão para determinar se o objeto está sujo ou não é fazendo um SELECT novamente, puxando todos os dados e comparando com os dados do objeto que já estava em memória, se um dos campos diferir significa que alguém já modificou antes de nós e aí ele lança a exceção.
+Essa atualização saiu do Ticket #1966 do LightHouse.
+Posicionamento de novas colunas em Migrations
+Se você usa MySQL, agora a função “add_column” trás opções extras para que você consiga criar colunas exatamente no lugar onde quiser. Assim:
+1
+2
+
+add_column :new_col, :string, :first => true
+add_column :another_col, :integer, :default => 0, :after => :new_col
+
+
+Com a opção “:first” você coloca sua coluna no topo da tabela e com a “:after” pode indicar depois de qual coluna que já existe você quer encaixar a nova coluna. É mais um eye candy que deve agradar quem gosta de extrair modelos entidade-relacional a partir da estrutura das tabelas.
+Nomes de Tabelas com Prefixos
+Muitas vezes você quer ou precisa criar namespaces para models de ActiveRecord, por exemplo, se estiver criando um plugin ou uma engine e quiser garantir que ele não vai conflitar com tabelas de mesmo nome na aplicação, especialmente se tiver tabelas meio genéricas como “users”.
+A forma de fazer isso é assim:
+1
+
+./script/generate model Admin::User name:string
+
+
+Ele criará a seguinte estrutura:
+1
+2
+3
+4
+
+app/
+  models/
+    admin/
+      user.rb
+
+
+E também criará a migration corretamente:
+1
+2
+3
+4
+5
+
+create_table :admin_users do |t|
+  t.string :name
+
+  t.timestamps
+end
+
+
+Note que o nome da tabela é a combinação do nome do módulo-namespace mais o nome do model em si, ou seja “Admin::User” vira a tabela “admin_users”. Finalmente, no model temos o seguinte:
+1
+2
+
+class Admin::User < ActiveRecord::Base
+end
+
+
+Se executarmos a migration com “rake db:migrate” e iniciarmos o console com “./script/console” veja o que acontece ao tentarmos checar o model:
+1
+2
+
+ree-1.8.7-2010.01 > Admin::User
+ => Admin::User(Table doesn't exist)
+
+
+Isso porque o ActiveRecord não sabe que deve usar o nome do módulo e está tentando achar a tabela “users”, que não existe. A partir do Ticket #8994 passamos a ter suporte explícito a prefixos de nomes de tabela configuradas no módulo. Então podemos mudar o código do model acima desta forma:
+1
+2
+3
+4
+5
+6
+
+module Admin
+  def self.table_name_prefix; "admin_"; end
+
+  class User < ActiveRecord::Base
+  end
+end
+
+
+Agora, no console podemos recarregar o módulo e ele vai corretamente buscar na tabela “admin_users”
+1
+2
+3
+4
+5
+6
+
+ree-1.8.7-2010.01 > reload!
+Reloading...
+ => true
+
+ree-1.8.7-2010.01 > Admin::User
+ => Admin::User(id: integer, name: string, created_at: datetime, updated_at: datetime) 
+
+
+Isso deve facilitar a organização de grupos de models, mesmo se não for desenvolvimento de plugins, você pode agrupar models da mesma família dentro do mesmo namespace e ter tabelas como “users_addresses”, “users_orders”, “admin_settings”, “admin_authorizations” mapeando para “Users::Address”, “Users::Order”, “Admin::Setting”, “Admin::Authorization” e assim por diante.
+ActiveSupport
+Suporte a SAX (Serial API for XML)
+No ActiveSupport você tem a classe “XmlMini”, ele é um backend genérico que suporta fornece operações de XML para serem usadas em coisas como o “from_xml” que embutimos na classe “Hash”, por exemplo. Ele também suporta trocar de backends. Se não me engano o padrão é o REXML, que é bem lento. Mas você pode trocá-la por LibXML ou Nokogiri (o mais recomendado), para deixar mais rápido.
+O problema de parsing de XML é que um XML é um string super-gigante e redundante. Toda você você precisa carregar um string enorme em memória para que o backend possa ler, fazer o parsing e gerar o DOM (Document Object Model), que é a estrutura em formato de objetos para que possamos manipulá-lo. Isso se torna rapidamente ineficiente se o XML é grande demais.
+Para situações assim, temos a opção de usar SAX. De forma resumida imagine que você vai servindo o parser com pedaços do XML e ele vai processando à medida que for recebendo, sem precisar pré-carregar tudo antes. No Ticket #3636 do LightHouse foi apresentado um patch que adiciona essa funcionalidade de SAX. Segundo benchmarks, usando o mesmo backend Nokogiri, por exemplo, o método via SAX chegou a ser de 5 a 10 vezes mais rápido do que o normal, o que é bastante significativo especialmente em aplicações que são pesadas no uso de XML.
+Tecnicamente você não precisa fazer nada de extra no seu código, mas só de atualizar para o Rails 2.3.6, o uso de métodos como “from_xml” deve ficar mais rápido.
+ActionView
+Labels internacionalizáveis
+Digamos que você tivesse um form como este:
+1
+2
+3
+4
+
+form_for @post do |post|
+  f.label :title
+  f.text_field :title
+end
+
+
+Para traduzir o nome do atributo “title” para “Título”, você precisaria de um arquivo como “config/locales/pt-BR.yml”. O trecho relevante seria mais ou menos assim:
+1
+2
+3
+4
+
+active_record:
+   attributes:
+      post:
+        title: Título
+
+
+O problema é que o atributo da label fica atrelado diretamente ao nome do campo do model. Mas se quiséssemos um label diferente precisaríamos criar uma chave arbitrária e explicitamente colocá-la no helper “label”. Mas agora podemos fazer assim:
+1
+2
+3
+4
+
+views:
+  labels:
+    post:
+      title: Digite seu Título aqui
+
+
+Isso separa de forma mais limpa o texto do label do nome do atributo propriamente dito. No ERB fica tudo padrão como no primeiro trecho de “form_for” e agora temos um agrupamentos separado para campos de models e para descrições de labels das views. É apenas uma pequena convenção, mas isso deve facilitar manutenções futuras da sua aplicação.
+Fechando
+Existem mais atualizações, por exemplo, as dependências de gems foram atualizadas:
+
+Rack de 1.0.1 para 1.1.0
+i18n de 1.3.3 para 1.3.7
+TZInfo de 0.3.12 para 0.3.16
+TMail de 1.2.3 para 1.2.7
+
+O backend de JSON também foi mudado do antigo “json” para o YAJL. A vantagem é que ele é compatível com a API do antigo Json mas é mais veloz. Isso deve ser um ganho principalmente em aplicações pesadas em Ajax devolvendo payloads em JSON.
+Para ver o que mais mudou cheque a lista de commits (o Github tem uma interface que permite gerar uma lista de commits entre duas versões diferentes, vale a pena conferir).
+No geral a parte mais relevante provavelmente é o backport de strings seguras na ActionView, que é justamente uma das mudanças mais “visíveis” do ponto de vista de quem usa o Rails para desenvolver aplicações. Além disso as mudanças de backends tanto de XML quanto JSON devem dar um aumento de performance de graça, o que é sempre bom. O que me lembra que o uso do plugin RailsXSS que mencionei acima, além de trazer as strings seguras, ainda troca o backend de views do ERB para o ERubis (que é o novo padrão no Rails 3), e isso também trás um pequeno aumento de performance de graça.
+Então esta versão 2.3.6 significa alguns aperfeiçoamentos, levar um pouco mais próximo ao Rails 3 e performance de graça. Um bom lançamento para um fim de semana. Aproveitem!
+tags: obsolete rails
+

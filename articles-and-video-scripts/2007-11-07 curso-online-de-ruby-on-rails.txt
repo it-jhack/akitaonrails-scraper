@@ -1,0 +1,13 @@
+
+
+
+
+
+Pessoal, esqueci de blogar sobre isso mas não se esqueçam que a partir do dia 26 de novembro estarei dando um curso online de Ruby on Rails.
+Matriculem-se aqui
+A idéia do curso é ser abrangente o suficiente para que vocês consigam desenvolver suas próprias aplicações de sucesso. Vamos falar um pouco de tudo para dar uma idéia geral do que o Rails é capaz de fazer. Muita gente ainda tem dificuldade para começar, seja porque não encontra as peças certas, as ferramentas certas então vamos tentar colocá-lo nos “trilhos”.
+Mesmo quem não conhece a linguagem Ruby poderá acompanhar pois tanto linguagem quanto framework serão abordados durante o curso. De qualquer forma é recomendado que o aluno tenha experiência em programação em outras linguagens. Não sei se haverá tempo para entrar em detalhes de todos os novos recursos do Rails 2.0, mas com certeza irei pincelar as principais diferenças. O Rails 2.0 ainda usará as mesmas convenções do 1.2 mas terá opções adicionais.
+Uma das vantagens do curso online é que todos os alunos matriculados também podem baixar as aulas – que são ao vivo – para poder recapitular com calma depois.
+Além disso, o Carlos Eduardo me disse que poderei sortear 2 vagas para este curso na RejectConf SP’07 !! Portanto que já se confirmou e comparecer lá estará concorrendo a este curso no final do evento.
+tags: obsolete
+

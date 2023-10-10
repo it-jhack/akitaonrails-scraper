@@ -1,0 +1,68 @@
+
+ Estamos muito próximos do lançamento do Rails 1.2. Alguns imaginavam que ele sairia antes da RailsConf Europe. Eu pessoalmente espero que não saia antes do fim do ano. Não, não estou torcendo contra, apenas acredito que com tempo adicional DHH e o resto do Core Team poderão estabilizar e testar melhor. Existem funcionalidades grandes e que dependem de muito teste antes de enfrentar o escrutínio do público.
+Qualquer um pode acompanhar a evolução em direção à versão 1.2 baixando o Edge Rails (como já disse várias vezes em posts anteriores). Isso é muito importante não apenas para ver de antemão o que nos espera, mas também para colaborar enviando, pelo menos, relatórios de bugs encontrados e, preferencialmente, sugestões para correção. Sugiro que todos que tenham algum tempo sobrando, façam isso. Além de ser extremamente educativo, ainda contribuimos para a qualidade da comunidade.
+
+
+Alguns blogs resumiram o que viram no Edge Rails, como a I.NFECTIO.US em seu post Rush to Rails 1.2 Adds Tons of New Features.
+Além das correções de bugs da versão atual, pequenas melhorias em algumas partes isoladas para refinar o código, drivers, eu pessoalmente acredito que dois pontos serão principais na próxima versão:
+
+DHH deu muita ênfase no Simply RESTful na RailsConf Chicago e agora apresentou Simply Helpful na RailsConf Europe. Esses dois produtos, na minha opinião, serão a maior melhoria estrutural e conceitual, levando as filosofias Convention over Configuration e DRY a um novo degrau, aproveitando melhor as models e simplificando tanto controllers quanto views.
+Substituição do WEBrick pelo Mongrel como plataforma prioritária tanto para desenvolvimento quanto para produção. Vir pré-instalado junto com Rails será uma excelente maneira de criar uma plataforma mais robusta.
+
+Gostaria que scaffold fosse melhorado. Não sei se com Simply (REST|Help)ful teremos um scaffold vitaminado. Acredito que ainda não será nessa versão, principalmente com a evolução de Streamlined e Ajax Scaffold, como falei antes.
+Já falei antes sobre Simply RESTful, portanto, falta falarmos do que se trata Simply Helpful. A seguir a tradução do blog Scott`s Place. Lembrem-se que essas funcionalidades ainda estão sob intenso desenvolvimento, portanto muita coisa ainda pode mudar, tanto na sintaxe quanto na própria forma de utilização, mas os conceitos são importantes o suficiente para serem apresentados agora.
+Nova funcionalidade do Rails: simply_helpful
+Um novo plugin apareceu no repositório Subversion do Rails. Chamado simply_helpful, sua intenção parece ser simplificar alguns dos usos mais comuns das funções helper.
+Suspeito que essas mudanças foram implementadas como um plugin para não afetar o Edge Rails de ninguém até estar 100% estável e 100% compatível com versões anteriores. Então, se quiser explorar as mudanças agora mesmo, terá que instalar o plugin no seu projeto manualmente:
+script/plugin install simply_helpful
+Com o novo plugin instalado, alguns helpers básicos ficam simplificados. Por exemplo, em meu index.rhtml para meu controller chamado Venus eu costumava ter:
+ 
+Name
+City
+Postcode
+
+<%= render :partial => ‘venue’, :collection => @venues %>
+
+Obs: esta é uma versão altamente simplificada da tabela. Cortei muita coisa fora para não ficar no caminho de mostrarmos o que simply_helpful está fazendo.
+Mas, considerando que Rails pode me dizer que o array @venues está populado com instâncias de entidades Venue, o novo helper não precisa que eu explicite o nome da partial que quero usar.
+ 
+Name
+City
+Postcode
+<%= render :partial => @venues %>
+
+Então a chave :collection se torna redundante (estamos passando um Array, então ele pode assumir uma coleção), assim como a nomenclatura do componente partial – simply_helpful automaticamente deriva a localização a partir da classe dos objetos passados – nesse caso, como é uma coleção de objetos Venue, a partial em questão é assumida como venues/_venue.rhtml.
+ID de atributos DOM
+<%= dom_id(object, prefix = nil) %>
+Esse código passa o valor do atributo ID de HTML para um objeto na tela baseado na classe do objeto e ID no banco de dados. Por exemplo, dom_id(person), onde @person@ é uma instância da entidade Person com o ID no banco de 123 retornaria person_123. Se o objeto ainda não foi gravado no banco, o ID será new_.
+Ligando essa funcionalidade com melhorias nos helpers RJS, significa que agora você pode linkar diretamente objetos DOM na página com os objetos de dados que eles representam. Os próximos exemplos agora tem significados idênticos:
+page[:person_123]
+page[dom_id(person)]
+page[person]
+Muito legal.
+Nomes de Classes DOM
+<%= dom_class(object) %>
+Isso cria um nome de classe CSS baseado na classe do objeto – então um objeto ProductionType teria uma classe DOM de production_type.
+Por si só, essa nova função talvez não seja tão excitante quanto as melhorias de dom_id e render, mas ele é usado na próxima funcionalidade, e é uma boa prática encorajadora ter nomes de classes de objetos DOM limpos, legíveis e consistentes.
+Form blocks
+A nova sintaxe form_for combina o novo Restful Routes, para simplificar muito a configuração do form:
+
+A action do form aponta para uma ação update e create, dependendo se seu objeto já foi gravado anteriormente.
+O form automaticamente pegará um ID de DOM de new_objeto ou edit_objeto_# (onde objeto é o nome da classe do objeto e # é o ID no banco de dados), dependendo se é um novo form ou não.
+O form também automaticamente terá nome ou de new_objeto ou edit_objeto (novamente, onde objeto é o nome da classe do seu objeto).
+
+Isso significa que chamadas a form_for se torna massivamente simples. Por exemplo, essa linha agora funcionaria tanto para instâncias novas e existentes de Venue:
+<% form_for @venue do |f| %> …
+Para um objeto venue existente, isso produziria:
+
+
+E esse mesmo código, para uma nova instância de venue, produziria:
+
+
+Infelizmente, exatamente neste segundo (duas semanas atrás, na revisão 5050), ainda está um pouco quebrado. Existe um requerimento de um hash opcional :html presente, então eu só poderia fazer o código anterior funcionar mudando para:
+<% form_for @venue, :html => {} do |f| %>
+Ele também ainda não suporta custom builders, que estou usando em meu projeto para automaticamente atribuir etiquetas a campos, e para visualmente demarcar campos obrigatórios das opcionais.
+De qualquer forma, simply_helpful ainda é muito novo – esses bugs serão corrigidos muito rapidamente. E quando forem, Rails terá mais uma forma de encorajá-lo a escrever código simples, melhor e de uma forma 100% compatível com versões anteriores.
+Crédito onde merece: esse post de Marcel Molina Jr. me ajudou a entender o que fazer com esse plugin.
+tags: obsolete rails
+

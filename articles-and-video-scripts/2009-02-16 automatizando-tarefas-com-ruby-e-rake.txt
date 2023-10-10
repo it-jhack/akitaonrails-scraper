@@ -1,0 +1,545 @@
+
+Todos que iniciaram em Rails provavelmente já rodaram a seguinte linha de comando:
+
+rake db:migrate
+
+Você sabe, mais ou menos, que isso gera seu banco de dados e suas tabelas. Espero que todos tenham pelo menos se perguntado: “O que diabos é ‘rake’?”
+É exatamente o que vamos tentar explicar agora.
+
+
+Rake on Rails
+Antes de mais nada, vamos entender o que o comando acima faz. Se você leu meus dois últimos artigos sobre Ruby Gems, basta começar dizendo que Rake é mais uma gem, que instala um executável chamado ‘rake’.
+Todo projeto Rails é criado com diversos diretórios e arquivos padrão (lembram-se, Convention over Configuration?). Um desses arquivos é o ‘Rakefile’, que fica na raíz do seu projeto, com o seguinte conteúdo:
+1
+2
+3
+4
+5
+6
+7
+
+require(File.join(File.dirname(__FILE__), 'config', 'boot'))
+
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+
+require 'tasks/rails'
+
+
+A primeira linha carrega toda a infraestrutura do Rails (mais sobre isso num próximo artigo). A seguir, ele carrega a gem Rake. Na última linha ele carrega as tarefas do Rails, coisas como o ‘db:migrate’ que falamos acima.
+Você sempre deve rodar o comando ‘rake’ a partir da raíz do projeto Rails porque é lá que está o arquivo ‘Rakefile’. Sem ele você não encontrará tarefa alguma. Portanto, a partir da raíz do projeto, você pode digitar o seguinte comando:
+rake -T
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+Isso trará uma listagem enorme parecida com esta:
+
+<macro:code>
+rake db:charset         # Retrieves the charset for the current environment's database
+rake db:collation       # Retrieves the collation for the current environment's database
+rake db:create          # Create the database defined in config/database.yml for the current...
+...                     
+rake tmp:create         # Creates tmp directories for sessions, cache, and sockets
+rake tmp:pids:clear     # Clears all files in tmp/pids
+rake tmp:sessions:clear # Clears all files in tmp/sessions
+rake tmp:sockets:clear  # Clears all files in tmp/sockets
+
+
+Para encontrar algumas tarefas, você pode filtrar a lista. Digamos que você queira encontrar apenas as tarefas que contém a palavra ‘gem’:
+rake -T gem
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+
+O resultado será:
+
+<macro:code>
+rake gems                      # List the gems that this rails application depends on
+rake gems:build                # Build any native extensions for unpacked gems
+rake gems:install              # Installs all required gems for this application.
+rake gems:refresh_specs        # Regenerate gem specifications in correct format.
+rake gems:unpack               # Unpacks the specified gem into vendor/gems.
+rake gems:unpack:dependencies  # Unpacks the specified gems and its dependencies into vendor/gems
+rake rails:freeze:gems         # Lock this application to the current gems (by unpacking them into vendor/rails)
+
+
+Agora, onde essas tarefas estão definidas? Para entender isso, você pode fazer duas coisas:
+
+Baixar o código do Rails a partir do Github; ou
+Executar o comando ‘gem environment’ e ver no “GEM PATHS” onde suas gems estão instaladas.
+
+No meu caso, na minha máquina, estão todas em “/opt/local/lib/ruby/gems/1.8/gems”. Lá dentro eu posso entrar no diretório “rails-2.2.2”. E mais à fundo posso entrar no diretório “lib/tasks”. Lá encontraremos os seguintes arquivos:
+
+annotations.rake
+databases.rake
+documentation.rake
+framework.rake
+gems.rake
+log.rake
+misc.rake
+rails.rb
+routes.rake
+statistics.rake
+testing.rake
+tmp.rake
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+
+Arquivos de tarefas Rake são arquivos Ruby normais com a extensão ".rake". Os nomes desses arquivos são bastante intuitivos. Voltando ao exemplo do 'db:migrate', sabemos que é algo relacionado a banco de dados, portanto o primeiro suspeito é o arquivo 'databases.rake'. Olhando dentro desse arquivo encontraremos a definição da tarefa:
+
+--- ruby
+namespace :db do
+  ...
+  desc "Migrate the database through scripts in db/migrate and update db/schema.rb by invoking db:schema:dump. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
+  task :migrate => :environment do
+    ActiveRecord::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
+    ActiveRecord::Migrator.migrate("db/migrate/", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
+    Rake::Task["db:schema:dump"].invoke if ActiveRecord::Base.schema_format == :ruby
+  end
+  ...
+end
+
+
+Nessas poucas linhas podemos aprender um pouco de como o Rake funciona.
+
+No nome da tarefa “db:migrate”, vemos que ‘db’ é um namespace, um jeito de organizar as tarefas dentro de ‘categorias’. Tudo que estiver dentro do bloco ‘namespace :db’ será prefixado com ‘db’.
+Quando executamos o comando ‘rake -T’ ele listou todas as tarefas com descrições. A descrição é definida pelo método ‘desc’, logo antes de definir a tarefa em si. É assim que documentamos as tarefas.
+Tarefas podem depender de outra tarefa, no caso quando rodamos ‘db:migrate" ele primeiro executará a tarefa ’environment’ (pode ser também um array de tarefas dependentes). No Rails, as tarefas que precisam acessar elementos do Rails precisam da tarefa ‘environment’ como dependência.
+Dentro da tarefa vemos que a migração de banco de dados está apropriadamente encapsulada dentro do ActiveRecord. No final podemos fazer uma composição chamando outras tarefas. O comando “Rake::Task[‘nome da tarefa’].invoke” serve para isso.
+
+De curiosidade, você verá que quase todas as tarefas do Rails dependem da tal tarefa ‘environment’. Ela está definida no arquivo misc.rake e tem a seguinte implementação:
+1
+2
+3
+4
+
+task :environment do
+  $rails_rake_task = true
+  require(File.join(RAILS_ROOT, 'config', 'environment'))
+end
+
+
+Basicamente ela carrega o config/environment.rb, que inicia e configura seu ambiente Rails, dando acesso às gems associadas como ActiveRecord, aos seus models, bibliotecas, etc. Sem colocar a dependência “=> :environment” você estará no ambiente Ruby cru, sem nada pré-carregado. Algumas tarefas realmente não precisam disso, por exemplo, tarefas que apenas gerenciam arquivos, como em tmp.rake:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+namespace :tmp do
+  ...
+  namespace :sessions do
+    desc "Clears all files in tmp/sessions"
+    task :clear do
+      FileUtils.rm(Dir['tmp/sessions/[^.]*'])
+    end
+  end
+        ...
+end
+
+
+No exemplo acima, se rodarmos “rake tmp:sessions:clear” ele apenas apagará o conteúdo da pasta “tmp/sessions”, efetivamente limpando as sessions – se estiverem usando o armazenamento em disco (sessions podem ficar em cookie, disco, banco de dados, memcached, drb).
+Por acaso, ainda nesse arquivo temos outro exemplo interessante. Esse arquivo tem diversas tarefas que fazem a limpeza de vários diretórios como sessions, cache, sockets. Em vez de rodar um a um manualmente, podemos usar o recurso de dependência que chama todos eles de uma só vez, por exemplo:
+1
+2
+3
+4
+5
+
+namespace :tmp do
+  desc "Clear session, cache, and socket files from tmp/"
+  task :clear => [ "tmp:sessions:clear",  "tmp:cache:clear", "tmp:sockets:clear"]
+  ...
+end
+
+
+Veja que a tarefa ‘clear’ acima não tem nenhuma implementação, apenas dependências. Ele rodará as três tarefas definidas no array. Essa mesma tarefa poderia ser escrita de outra maneira assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+namespace :tmp do
+  desc "Clear session, cache, and socket files from tmp/"
+  task :clear do
+    Rake::Task["tmp:sessions:clear"].invoke
+                Rake::Task["tmp:cache:clear"].invoke
+                Rake::Task["tmp:sockets:clear"].invoke
+  end
+  ...
+end
+
+
+É a mesma coisa, mas do primeiro jeito é mais curto e conciso, mas apenas para mostrar que existe mais de uma maneira de fazer a mesma coisa. Em alguns casos você usará o segundo caso, se precisar ter lógicas extras na implementação, como mostramos no exemplo do ‘db:migrate’ mais acima.
+Criando suas próprias Tarefas Rake
+Em todo projeto Rails, ele já vem com o diretório ‘lib’. Para criar suas próprias tarefas, basta criar arquivos com a extensão “.rake” dentro do diretório ‘lib/tasks’ do seu projeto. O Rails tratará de carregá-las como parte das tarefas válidas.
+Recentemente, colaborando no projeto Gitorious eu fiz a internacionalização dele. Para facilitar minha vida – e a de outros tradutores – eu fiz uma pequena tarefa Rake que avaliasse os string internacionalizados, comparando a versão em inglês com a tradução, para ver se não estava faltando nada. Dessa forma, caso alguém acrescentasse alguma coisa na versão em inglês, eu saberia rapidamente o que faltava na versão em português.
+Basta colocar o código disponível no Gist em ‘lib/tasks/locales.rake’. Um trecho que nos interessa é este:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+namespace :locales do
+  desc "Compare locale files and get differences and missing keys"
+  task :compile do
+    ENV['LANG_SOURCE'] = 'en' if ENV['LANG_SOURCE'].nil?
+    if ENV['LANG_TARGET'].nil?
+      puts "define the target language using the LANG_TARGET environment variable\nrake locales:compile LANG_TARGET=pt-BR"
+      exit(1)
+    end
+...
+
+
+Podemos aprender mais uma ou duas coisas com essa tarefa. A forma de executá-la é assim:
+
+rake locales:compile LANG_TARGET=pt-BR
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Passamos argumentos para tarefas Rake usando variáveis de ambiente, que depois podem ser consultadas a partir da coleção 'ENV' dentro da tarefa. Se sua tarefa depende do ambiente rails, você pode definir se quer executar em ambiente de desenvolvimento ou produção fazendo "RAILS_ENV=production". Também cuidado porque as variáveis que estão definidas no ambiente são passadas para o Rake. Portanto, sem precisar passar nada na linha de comando alguns valores podem passar para dentro da tarefa. Veja "este post":https://errtheblog.com/post/33 do Chris Wanstrath onde ele explica como ajustar o RAILS_ENV para garantir que certas tarefas sempre rodarão no ambiente correto. Em resumo, criando um arquvo 'lib/tasks/environment.rake' com o seguinte conteúdo:
+
+--- ruby
+%w[development production test].each do |env|
+  desc "Runs the following task in the #{env} environment" 
+  task env do
+    RAILS_ENV = ENV['RAILS_ENV'] = env
+  end
+end
+
+
+O código acima criará 3 novas tasks, chamadas ‘production’, ‘development’ e ‘test’. O comando rake aceita como parâmetros várias tarefas em sequência. Desta forma podemos fazer assim:
+rake production db:migrate
+1
+2
+3
+4
+
+
+Neste exemplo ele vai primeiro executar a tarefa 'production', que configurará a variável RAILS_ENV, conforme está no código acima, e depois chamará o 'db:migrate'. Esta forma é a mesma coisa que executar o comando:
+
+<macro:code>rake db:migrate RAILS_ENV=production
+
+Uma coisa importante neste exemplo: um arquivo Rake é código Ruby. O comando “task” é um método Ruby como qualquer outro e podemos usá-lo para criar tarefas dinamicamente. É uma das grandes diferenças entre usar Rake em vez de outros tipos de gerenciadores de tarefas como Ant, onde teríamos XML e nenhuma possibilidade de processar as coisas dinamicamente como fizemos aqui.
+Podemos criar tarefas num projeto Rails para executar várias coisas não-web. Recomendo ler o tutorial do RailsEnvy.com. Um exemplo que eles dão é acessar seus models para enviar e-mails todo dia à meia-noite. Veja como fazer:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+namespace :utils do
+  desc "Finds soon to expire subscriptions and emails users"
+  task(:send_expire_soon_emails => :environment) do
+    # Find users to email
+    for user in User.members_soon_to_expire
+      puts "Emailing #{user.name}"
+      UserNotifier.deliver_expire_soon_notification(user)
+    end
+  end
+end
+
+
+Agora basta agendar essa tarefa no seu cron com a seguinte linha:
+
+0 0 * * * cd /var/www/apps/rails_app/ && /usr/local/bin/rake RAILS_ENV=production utils:send_expire_soon_emails
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+
+
+É o tipo de tarefa que, intuitivamente, muitos programadores resolvem colocar dentro da aplicação Web para chamar via browser ou - pior - usar um 'wget' no crontab para chamar. Não faça isso.
+
+Outros tipos de tarefa interessantes são para fazer backup, transferência de dados entre diferentes bancos de dados, tarefas de limpeza e assim por diante.
+
+Ainda como recomendação do RailsEnvy e do Peter Cooper, vejam "aqui":https://www.rubyinside.com/advent2006/15-s3rake.html uma série de tarefas Rake para gerenciar seu storage Amazon S3 usando rake. Usando essas tarefas aliado ao crontab, você pode criar backups da sua aplicação em produção para o Amazon S3, por exemplo. 
+
+h2. Rake, Make e afins
+
+Para nós realmente interessa o Rake apenas no contexto de uma aplicação Rails, porém, o Rake foi criado muito antes disso. O propósito real de sua existência foi porque Jim Weinrich não gostava do formato do clássico Make.
+
+"Make":https://rubyurl.com/ZZTQ, por sua vez, foi criado mais de 30 anos atrás por Stuart Feldman para resolver o problema de compilação. Pense assim: você tem centenas de arquivos C que precisam ser compilados para gerar um executável ou uma biblioteca. Alguns desses arquivos tem dependências entre si. Pior ainda: toda vez que você modifica um arquivo C precisava compilar tudo de novo (ou manualmente compilar só o que foi modificado) para regerar o binário.
+
+Com o intuito de resolver esse problema, Stuart criou o sistema de Make, onde você pode configurar as dependências e tudo mais num arquivo chamado 'Makefile' e a partir daí a compilação seria automatizada rodando apenas o comando 'make', que tomaria conta de recompilar apenas o que fosse necessário e de seguir as dependências adequadas.
+
+Toda vez que você baixa um software open source a partir do código fonte, já deve ter rodado os comandos './configure && make && sudo make install'. O comando 'make' sozinho executa a tarefa 'default', que compila tudo e no final você explicitamente executa a tarefa 'install' que copia os executáveis no lugar certo do seu sistema.
+
+O Rake pode ser usado como substituto do Make (e do Ant ou Maven no Java). Um exemplo de RakeFile que cobre assuntos de compilação e dependência se parece com o seguinte:
+
+--- ruby
+require 'rake/clean'
+
+CLEAN.include('*.o')
+CLOBBER.include('hello')
+
+task :default => ["hello"]
+
+SRC = FileList['*.c']
+OBJ = SRC.ext('o')
+
+rule '.o' => '.c' do |t|
+  sh "cc -c -o #{t.name} #{t.source}" 
+end
+
+file "hello" => OBJ do
+  sh "cc -o hello #{OBJ}" 
+end
+
+# File dependencies go here ...
+file 'main.o' => ['main.c', 'greet.h']
+file 'greet.o' => ['greet.c']
+
+
+Veja o artigo do próprio Jim explicando como isso funciona. Dentre algumas coisas notáveis, note a existência das constantes CLEAN, CLOBBER, métodos como FileList que trás uma lista de arquivos, os métodos ‘rule’ e ‘file’ que geram tarefas dinamicamente dependendo dos arquivos passados e de suas dependência.
+Usar o Rake para compilação está um pouco fora do escopo deste artigo, mas se estiver interessado o blog do Jim Weinrich é uma grande fonte, bem como este artigo do Martin Fowler. Para quem está interessado em usar Rake para projetos Java, o projeto Raven deve ser uma boa solução – antigamente existia um projeto chamado JRake, mas ele foi mesclado ao Raven, caso alguém esbarre com ele no Google. Outra alternativa é o projeto Buildr, que é um projeto Apache. Este último parece melhor documentado e mais bem suportado, mas acho que compensa pesquisar as duas opções. Eu particularmente não ingressei em nenhum dos dois pois não tenho projetos Java atualmente, mas qualquer um que esteja brigando com o Ant ou Maven, deveria considerar essa opção.
+Thor e Sake
+Acho que já deu para entender que Rake é bastante flexível e útil para automatizar as mais diversas tarefas administrativas de sua aplicação. Porém, também já devem ter notado que é necessário estar no mesmo diretório que contém um arquivo RakeFile.
+E se você pudesse ter tarefas que são globais ao seu sistema? Pensando nisso, o Chris Wanstrath, faz muito tempo, criou o projeto Sake. A idéia é muito simples: criar uma infraestrutura semelhante ao Rake tradicional, mas permitir instalar tarefas “globais” (tecnicamente, é um arquivo na raíz do seu diretório home). Para instalar faça:
+sudo gem install sake
+1
+2
+3
+4
+
+
+Comandos para listar tarefas globais é o mesmo do Rake:
+
+<macro:code>sake -T
+
+E você pode instalar tarefas tanto a partir de um arquivo .rake quanto de uma URL:
+
+sake -i teste.rake
+sake -i https://pastie.caboo.se/73373.txt
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Dr. Nic é um dos que gostou da idéia e fez "alguns experimentos":https://drnicwilliams.com/2008/08/19/my-attempt-at-sake-task-management/. Isso ainda pode evoluir muito, mas uma coisa interessante é criar tarefas de Sake para seu workflow Git. Muitas vezes tem um fluxo de trabalho razoavelmente estável que envolve alguns passos repetitivos. É exatamente o tipo de caso onde o Sake deve ajudar. Você pode criar um namespace :git e ter tarefas como "sake git:pull". Olhe o código do Chris no "Github":https://github.com/defunkt/sake/tree/master para entender como ele funciona e talvez até propor algumas extensões.
+
+Outra coisa que vocês podem ter achado estranho é que para enviar parâmetros às suas tarefas Rake/Sake, você precisa usar variáveis de sistema e depois ler da global 'ENV'. Pensando nisso, caímos em outro problema 'option parsers' ou 'optparse', para quem conhece programação em Shell. O Rake/Sake não tem nenhum suporte adequado a isso.
+
+Por causa desse detalhe, o Yehuda Katz (a.k.a. wycatz) desenvolveu a gem "Thor":https://yehudakatz.com/2008/05/12/by-thors-hammer/ que é atualmente usado no Merb. Assim como Rake/Sake, o Thor também é um sistema de gerenciamento de tarefas. Ele procura por um arquivo chamado "Thorfile" no diretório atual ou em qualquer diretório pai de onde você está, ou então procura por um subdiretório "tasks" com arquivos com extensão ".thor".
+
+Você pode instalar assim:
+
+<macro:code>sudo gem install thor
+
+Ou se você instalou o Merb recentemente, provavelmente já tem o Thor instalado pois ele é dependência. Parte de sua sintaxe lembra o Rake, como o comando para listar as tarefas disponíveis:
+thor -T
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+
+Eis um exemplo de um arquivo Thor:
+
+--- ruby
+# module: random
+
+class Amazing < Thor
+  desc "describe NAME", "say that someone is amazing"
+  method_options :forcefully => :boolean
+  def describe(name, opts)
+    ret = "#{name} is amazing"
+    puts opts["forcefully"] ? ret.upcase : ret
+  end
+
+  desc "hello", "say hello"
+  def hello
+    puts "Hello"
+  end
+end
+
+
+Novamente, é um arquivo puro Ruby. Porém ele tem algumas diferenças básicas em relação ao Rake:
+
+para definir uma opção “—forcefully” para a linha de comando, basta definir com o método ‘method_options’
+tarefas são métodos Ruby normais definidas com ‘def’
+descrições, como no Rake, é com o método ‘desc’, mas você precisa explicitamente dizer o nome da tarefa sendo descrita no primeiro parâmetro
+como tarefas são métodos normais, ele também pode receber parâmetros. O último parâmetro é um hash de opções, definidas com o ‘method_options’
+
+Se o arquivo acima for chamado ‘task.thor’ basta instalar assim:
+thor install task.thor
+1
+2
+3
+4
+5
+6
+7
+
+
+Para listar as tarefas seria assim:
+
+<macro:code>
+$ thor -T
+Tasks
+--
+
+amazing:describe NAME [—forcefully]   say that someone is amazing
+amazing:hello                          say hello
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+Finalmente, para executar as tarefas definidas acima, veja esses exemplos:
+
+<macro:code>
+$ thor amazing:hello
+Hello
+
+$ thor amazing:describe "This blog reader"
+This blog reader is amazing
+
+$ thor amazing:describe "This blog reader" --forcefully
+THIS BLOG READER IS AMAZING
+
+
+O Thor deve continuar amadurecendo e é uma ótima alternativa se você precisar de coisas mais complexas que o Rake/Sake não resolvem. Especialmente se envolvem parâmetros e opções em linhas de comando que normalmente você pensaria num optparse. Acompanhe os artigos no blog do Yehuda Katz para mais notícias e dicas sobre o Thor.
+Conclusão
+Ruby on Rails tornou Rake mais popular e com ele uma miríade de soluções de linha de comando para as mais diversas tarefas. Fora o Sake e o Thor existem outras alternativas mas acredito que estas já resolvam a maioria do que precisamos fazer no dia a dia.
+
+Rake: para tarefas específicas de um Projeto
+Sake: para tarefas simples globais
+Thor: solução que substitui Rake/Sake e serve tanto para tarefas específicas de projeto quanto globais
+
+Na maioria dos casos eu acho que Rake e Sake sozinhos resolvem bem. Se você já está em Merb então Thor deve ser mais óbvio para se começar a usar. Para projetos Rails e Merb, vocês tem um local preparado para receber arquivos ‘.rake’ ou ‘.thor’ que é o lib/tasks.
+A regra mais básica é a seguinte: se você está executando a mesma tarefa mais de uma vez, ela é uma ótima candidata a ser automatizada. Lembrem-se do princípio DRY: Don’t Repeat Yourself.
+Finalmente, para tarefas que envolvem controle remoto de uma máquina para outra máquina temos outras soluções, no caso o Capistrano e o Vlad, the Deployer. Mas eles são bem mais complexos e vão precisar de artigos separados para cada um. Por enquanto, garanta que você entendeu bem o Rake, caso contrário o Capistrano será mais difícil de entender.
+tags: obsolete ruby
+

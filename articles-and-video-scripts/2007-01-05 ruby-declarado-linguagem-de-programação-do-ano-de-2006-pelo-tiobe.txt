@@ -1,0 +1,11 @@
+
+
+
+
+Fonte: O’Reilly Ruby e TIOBE
+Ruby agora está na lista de Top Ten do TIOBE index e foi declarado Linguagem de Programação do Ano de 2006 porque teve o maior aumento de popularidade em 2006 dentre todas as linguagens monitoradas.
+Estamos felizes em anunciar que Ruby se tornou “Linguagem de Programação do Ano de 2006”. Ruby teve o maior aumento de popularidade em um ano dentre as linguagens de programação (+2.15%). Quem esteve próximo esse ano é JavaScript com +1.31%. Ambas as linguagens foram impulsionadas por seus frameworks correspondentes, Ruby on Rails e Ajax. Isso deve ser uma nova tendência. No passado recente era necessário ter uma grande empresa por trás da linguagem para aparecer nos holofotes (Sun com Java, Microsoft com C#), mas hoje em dia um killer app parece ser suficiente. Marketing viral pela Internet funciona! Os ganhadores dos dois últimos anos, PHP e Java, são os perdedores desse ano. Outras tendências observadas é o crescimento das linguagens dinamicamente tipadas e o fato de diferença na popularidade das linguagens diminuir.
+Notas do Akita: Lembrando que Ruby começou Janeiro de 2006 em 21o lugar e subiu rapidamente até o 10o lugar, agora em Janeiro 2007. Um fato interessante para mim foi ver o ABAP (linguagem da SAP) ter subido da 20a para 15a posição no mesmo período. Em se tratando de uma linguagem antiga eu esperaria o contrário, mas parece que a estratégia de marketing da SAP ainda dá resultados. Muito se comentou sobre a linguagem D e quem já experimentou está segurando grandes expectativas. D também cresceu em popularidade, subindo da 22a posição para a 14a.
+Java, C, C++, PHP, Perl e C# continuam entre os 7 primeiros, mas todos eles perderam popularidade. Mais expressivo foi Java ter caído -3.10% e PHP ter caído -1.46% (descendo um degrau de popularidade, da 4a para a 5a posição). Essa parece ser a tendência no momento.
+tags: obsolete
+

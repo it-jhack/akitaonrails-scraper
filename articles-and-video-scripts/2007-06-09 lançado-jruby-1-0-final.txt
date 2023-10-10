@@ -1,0 +1,10 @@
+
+
+
+
+Enfim, como prometido, a versão 1.0 estável acabou de ser anunciado. Acabei de ler no post de Ola Bini e de fato temos aqui para download o jruby-bin-1.0.tar.gz e o jruby-src-1.0.tar.gz.
+O maior objetivo desta versão era ser totalmente compatível com o Ruby 1.8.5. Perfeição é impossível, mas eles chegaram bastante perto. Vocês podem ver no Issue Tracker que ainda existem 189 tickets abertos, mas apenas 7 críticos.
+Portanto, eles decidiram que o estágio atual é suficiente para considerar a versão 1.0 como final e liberar para uso.
+É hora de testar. Peguem seus aplicativos Rails e façam rodar! Se precisarem de um tutorial para começar, leiam este artigo.
+tags: obsolete jruby
+

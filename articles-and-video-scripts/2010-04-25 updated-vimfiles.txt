@@ -1,0 +1,28 @@
+
+
+
+
+Update 04/26/2010: I just replaced Fuzzy Finder for Command-T as suggested in the comments. Read more about it at the end of this article.
+One of the most accessed articles in my blog still is The Best Environment for Rails on Windows. It was a long time since then. So I’ve decided to reorganize my vimfiles a little bit.
+I have been forcing myself to stay away from Textmate and get more used to MacVim. Vim is only really useful if you do invest some time to get used to the key mappings, without it, Vim is a nuisance. You have to get used to navigate without the aid of a mouse. When you learn most of the more important key mappings it’s really, very productive. It requires lots of hours of training but I think it pays off to do so, specially because you will be able to use this environment in Mac, Linux and Windows, graphic mode or text mode, locally or remotelly thru SSH or something else. It’s free, lightweight, flexible and powerful at the same time, with most of Textmate’s acclaimed features.
+
+Just to recap, if you’re new to this project, it is a collection of plugins and customizations for gVim/mVim to make it more enjoyable and powerful. We have to thank great developers such as Scrooloose, Tim Pope and others for their extensive work on those plugins.
+If you have never installed it, please, read the README file for required dependencies.
+One thing that Scrooloose already started was to move away from the old ‘snippets’ plugin replacing it for snipmate. The advantage is that we can use a Textmate-like syntax to create snippet bundles. Problem is: it is not 100% compatible, so while you can just copy and paste Textmate bundles as snipmate snippets, the simpler ones should just work though the more complicated will fail. I am using Scrooloose’s snipmate-snippets repository, so please contribute and if you know of any other more complete repository, let me know.
+Another thing that has always annoyed me was that plugins usually come with a few folders such as ‘doc’, ‘plugin’, ‘autoload’, etc and you’re supposed to expand their zip files on top of your .vim folder, mixing the files within the existing folders. This is a mess to organize and manage. Fortunatelly seems like Tim Pope feels the same and to fix that he created the pathogen script. It allow us to create a “bundle” folder and put every plugin in its own folder, without having to mix their files. Therefore, plugin managemente become that much easier.
+To leverage this advantage, I searched for lots of vim plugins that are maintained in Git repositories and used git’s submodule feature to install them in the “bundle” folder. That way we can update plugins individually. There are still a few plugins in the old folders and I will try to continue the clean up – help is welcome.
+There are still lots of things that can be done (fork it!):
+
+Make snipmate-snippets more complete and reliable, mostly testing the Textmate snippets and adapting them to snipmate’s syntax
+Find more vim plugins that are not linked thru git submodules in the bundle folder. I didn’t find some of them so I just hard copied them there.
+Text wrapping is somewhat annoying because I didn’t find a way to soft wrap by words, vim wants to break the words right in the middle of them. (solved: I was doing a small mistake in vimrc)
+Test, test, test – as none of those plugins have tests we can’t be sure if they all behave correctly in all circumstances, so feedback is most welcome, specially tweaks in the vimrc file.
+
+Remember that “\ + p” (backslash and “p”) opens up NERDTree’s project view. “Ctrl-F” opens up the Fuzzy Finder search to navigate more easily thru your files. “Ctrl-B” opens up the buffer list to navigate thru your opened files. There are lots of documentation for each plugin and I highly recommend you to get acquainted with them because they are very complete and simple to follow.
+And if you want to contribute, don’t forget that it is a requirement that this vimfiles work well on all platforms, Linux, Mac and specially Windows.
+Command-T
+One of the most important features for a “Textmate-replacement” is the ability to fuzzy search path and file names. The initial motivation for my vimfiles package was Jamis Buck’s original attempt at a fuzzy finder solution. Problem is that it has not been updated in a while. For Mac, it means that we can use the newest Snapshots.
+Wincent Colaiuta tried another approach and developed the Command-T plugin. It is much more complete and robust. His website even has screencasts to demonstrate its usage and I recommend you take a look.
+So, I replaced the old Fuzzy Finder for Command-T (activated with the Leader key + t, actually). One caveat is that this plugin requires a Ruby native extension. I have already bundled a Windows version and a Mac version (for Ruby Enterprise Edition). You will have problems with other Ruby versions or Linux. But the procedure is simple enough. Read the README file for more details. This should make Vim even more powerful.
+tags: obsolete vim english
+

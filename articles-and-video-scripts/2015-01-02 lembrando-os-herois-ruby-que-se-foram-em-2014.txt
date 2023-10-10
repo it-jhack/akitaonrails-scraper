@@ -1,0 +1,16 @@
+
+Em muitos aspectos o ano de 2014 foi extremamente triste para a comunidade internacional de Ruby e para mim pessoalmente já que conheci os 3 pessoalmente.
+
+
+
+Primeiro foi a perda do venerado Jim Weirich, em 20 de Fevereiro de 2014. Ele foi o autor do projeto Rake. Veja seu Github para ver no que ele contribuía. E de curiosidade, leia um pouco da história do Rake que está dentro do seu código-fonte. Jim sempre foi uma presença essencial nos eventos de Ruby e Rails e tem diversas palestras excepcionais que vale a pena assistir. Antes de partir, ele era Chief Scientist da consultoria NEO.
+Em 30 de Novembro de 2014, foi a vez de Ezra Zygmuntowicz, ele foi um dos co-fundadores da famosa Engine Yard. Na época em que ele e Tom Mornini dirigiam a empresa, eles tiveram as equipes do JRuby e do Rubinius sob seu patrocínio e tutela. Ezra foi quem pegou o Mongrel de Zed Shaw e explorou o mundo de evented I/O antes de Node.js, com o Evented Mongrel (que depois foi substituído pelo projeto Thin), foi um dos primeiros a explorar e ajudar a popularizar o Redis, ele trouxe a tona a idéia de Platform as a Service antes do Heroku, a idéia de infraestrutura como software (antes da onda Devops), trouxe o projeto Merb (que depois viria a ser incorporado ao Rails 3). Depois disso, ele saiu da Engine Yard e passou um tempo desaparecido em Portland, Oregon. Começou uma startup de impressão 3D (quando impressão 3D estava começando) mas acabou não dando certo. Pouco antes de partir ele estava twitando que iria empreender uma nova idéia. Ezra foi um visionário como poucos que existem hoje, e o mundo vai sentir sua falta. Assista algumas de suas palestra no YouTube.
+Finalmente, em 28 de Dezembro de 2014, perdemos James Golick, um grande companheiro de outro rubista que talvez seja mais conhecido, Joe Damato. Talvez muitos dos rubistas mais novos não tenham ouvido falar dele, mas ele ficou conhecido alguns anos atrás principalmente por causa do projeto Resource Controller, que ele resolveu parar em 2009 por causa de uma alternativa chamada Inherited Resources apareceu para substituí-lo. Eu mesmo cheguei a contribuir um pouco nesse projeto na época. Mas ele era um contribuidor open source prolixo, vejam seu Github para ver as últimas coisas em que trabalhou. Eu fiz uma video entrevista com ele na Railsconf 2010 em Baltimore, assistam aqui.
+Todos os 3 eram programadores queridos na comunidade, com reconhecimento pelos seus feitos, e principalmente pelo exemplo de seus bons caráters. Devem ser relembrados nos anais da história desta comunidade e vamos sentir muita falta deles.
+Vamos trabalhar em 2015 e adiante para que seus esforços não tenham sido em vão.
+
+PS: fiquei particularmente triste com a perda de Ezra porque coisa de algumas semanas antes dele partir, estávamos combinando de trocar idéias, um Hangout que nunca mais vai acontecer:
+
+
+tags: ruby heroes
+

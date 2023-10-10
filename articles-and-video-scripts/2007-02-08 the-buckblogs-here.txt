@@ -1,0 +1,10 @@
+
+
+
+
+Jamis Buck trabalha para a 37signals e tem um blog excelente chamado the { buckblogs :here } onde ele ensina diversos truques interessantes sobre Rails que muitos podem passar batido. Eu traduzi alguns posts dele antes mas ele está postando mais rápido do que eu tenho tempo para traduzir, então vamos dar apenas uma resumida, se alguém quiser uma tradução, me avisem.
+Ontem mesmo ele trouxe uma curiosidade interessante. Todos sabemos da escola que 1 dividido por 0 (zero) é infinito. Na faculdade, ou colegiais que ensinam o conceito de Limites, entendemos um pouco melhor o que isso significa: não é “infinito” mas “indefinido”, 1 dividido por um número tende a infinito quanto mais perto chegamos do zero. Infinitamente perto de zero não é zero. Mas chega de matemática, o interessante é que nesse post Jamis mostra algumas aplicações interessante em Ruby para Infinito.
+Mudando de assunto, ficamos todos felizes que o novo Rails 1.2.2 suporta UTF-8 sem maiores problemas agora. O suporte à Internacionalização ganhou um novo passo, mas ainda faltam outros, um deles é Time Zone. Nesse post Jamis dá uma introdução ao plugin TzTime para facilitar aplicações que precisam lidar com múltiplas zonas internacionais. Primeira grande dica: certifique-se que em seu banco de dados tudo está sendo gravado como UTC (horário de Greenwich).
+Além das dicas, ele tem opiniões interessantes (algumas batem com as minhas, afinal são senso comum) como neste post onde ele discute o esforço de Pat Eyler em tentar criar uma certificação para Ruby e porque isso não tem sentido. Resumindo: “diga NÃO à certificação”. Eu e você sabemos que certificação e nada é a mesma coisa.
+tags: obsolete rails
+

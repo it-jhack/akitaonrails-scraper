@@ -1,0 +1,11 @@
+
+
+
+
+Eu escreverei mais sobre isso mais tarde em detalhes, mas só para dar o ‘scoop’, Avi Bryant fechou o ciclo. Como eu disse alguns posts atrás, na última RailsConf, Avi disse que “sabia o futuro”. Hoje ele demonstrou o futuro.
+O MagLev é Ruby rodando sobre a excelente VM da GemStone. Eu conversei com os engenheiros e responsáveis da GemStone e vou conseguir mais detalhes direto com eles.
+Para vocês terem uma idéia: os micro-benchmarks são melhores na ordem de 50 ~ 60, alguns até mais de 100 vezes mais rápido que o MRI. Em termos de escalabilidade, num grande case, o sistema deles aguenta facilmente 6000 req/s, com facilidade.
+E o mais interessante, como Avi Bryant já havia dito e repetiu hoje, como eu ouvi dos engenheiros da GemStone, Ruby é exatamente idêntico a Smalltalk, pra ser justo, eles tiveram que acrescentar coisa de 3 ou 4 bytecodes novos na VM deles. Fora isso, ele terá exatamente a mesma performance do Smalltalk, sem tirar nem por. Não há um layer de “emulação” ou coisa parecida como no caso do JRuby.
+Aguardem mais notícias, vou achar tempo para postar muito mais e dar um relatório completo do que está acontecendo!
+tags: obsolete smalltalk
+

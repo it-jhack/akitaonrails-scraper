@@ -1,0 +1,48 @@
+
+Se você ainda não usa Vagrant como ambiente de desenvolvimento e testes, vá já instalar o seu!
+Em seguida, garanta que você está usando NFS para a máquina virtual acessar seus arquivos no seu HD de verdade na maior velocidade possível.
+Finalmente, a dúvida que você pode ter é: usar Virtualbox, que é open source e gratuito ou comprar o VMWare Fusion Provider a caros USD 79 e mais a licença do VMWare Fusion pra Mac que vai te custar outros USD 59.99, para um total de USD 138.99 !!??
+O problema é que você pode decidir que é caro demais e que o Virtualbox é suficiente, mas aí sempre que sentir algo lento vai ficar pensando "será que vale a pena pagar os quase USD 140?"
+A resposta TL;DR é simples: NÃO, fique no Virtualbox. O VMWare pode até ser mesmo um pouco melhor, e certamente se você quer usar Windows e ter uma boa integração entre desktops gráficos e tudo mais, acho que vale o custo. Mas para a maioria de nós, desenvolvedores, o custo certamente não compensa, não pare de se sentir com dor na consciência e aprecie o Virtualbox.
+
+
+
+Como testes bem não-científicos, eu criei duas máquinas Vagrant usando o box 'hashicorp/precise64', com NFS habilitado e nada mais de customização.
+Copiando arquivos, peguei um projeto Rails médio e o código-fonte do Rails e copiei do meu HD local, compartilhado via NFS, pro HD interno da máquina virtual. Respectivamente, no VMWare Fusion tive os tempos de 3 segundos e 6 segundos; já no Virtualbox tive os tempos de 4 segundos e 5.5 segundos.
+Quando eu digo não-científico, entenda que ao mesmo tempo meu Dropbox está sincronizando, meus emails estão aparecendo, diversas abas em browsers devem estar atualizando algum conteúdo, e diversas outras coisas estão interferindo nesses tempos. Baseado nisso, pra mim foi empate.
+Em seguida, tentei instalar o RVM com Rails:
+
+1
+
+time curl -sSL https://get.rvm.io | bash -s stable --rails
+
+
+No VMWare Fusion, terminou em 15 minutos. No Virtualbox levou 10 minutos. Obviamente, o gargalo aqui não é performance da máquina virtual, mas sim o tempo de internet para download do Ruby, das Gems, etc. Mas coloquei esses tempos mais para demonstrar o ponto que muitos dos tempos do seu dia-a-dia dependem da qualidade da sua conexão de internet mais do que só performance bruta de hardware.
+Finalmente, quando tempo para um mero comando "rails new", criando um novo projeto? Lembrando que ao final ele vai executar "bundle install" e, logo, será afetado por tempo de internet. No caso do VMware, levou 1 minuto e 1.2 segundos. No caso do Virtualbox, levou 1 minuto e 1.4 segundos. Novamente, empate.
+Portanto, não, você não vai ter uma vantagem "milagrosa" só por pagar USD 140 e instalar o VMWare. Para sua máquina local, de desenvolvimento, melhor ficar no Virtualbox.
+Quero testar eu mesmo!
+Se não acreditou e tem USD 140 para investir, mãos à obra. Digamos que você já tem uma máquina virtual em Virtualbox, que montou manualmente (sem scripts de provisionamento), e quer migrar pro VMWare, como fazer?
+Eu escrevi um pequeno Gist faz algum tempo, mas chegou a hora de colocar num post mesmo pra ficar mais fácil encontrar. Segue a transcrição:
+
+exporte seus boxes do Virtualbox para arquivos em formato OVA
+execute vagrant destroy para matar seus boxes em Virtualbox
+desinstale o Virtualbox usando o script de uninstaller que vem no DMG de instalação (passo opcional)
+faça download do VMWare Fusion (depois de comprar a licença)
+compre a licença do VMWare Fusion Provider para Vagrant
+execute vagrant plugin install vagrant-vmware-fusion para instalar o plugin do novo provider
+execute vagrant plugin license vagrant-vmware-fusion license.lic para instalar a licença que comprou
+do VMWare, importe os arquivos OVA (provavelmente opcional, eu não tentei abrir o OVA direto)
+execute vagrant up a partir de onde seu Vagrantfile está. Isso vai criar um novo box novinho a partir da sua configuração. Se não desinstalar o Virtualbox, force o provider: vagrant up --provider=vmware_fusion ou vagrant up --provider=virtualbox
+agora abra o VMWare, abra as configurações do novo box que acabou de ser criado pelo Vagrant, remova o harddrive
+depois de remover, adicione um novo dispositivo de harddrive e selecione "from existing disk" e então aponte para o box importado (da OVA) e selecione o disco formato "vmdk". Ele vai recomendar copiar para a nova máquina, faça isso.
+se o box for Linux, inicie a máquina a partir do VMWare usando o login 'vagrant' e senha 'vagrant'
+de dentro, execute sudo /opt/[VBoxGuestAdditions ...]/uninstall.sh
+do lado de fora, execute vagrant reload para reiniciar a máquina virtual
+do VMWare vá para o menu de "Machine" e instale o vmware tools. Ele vai fazer download do ISO. Se seu box Linux não montar automaticamente, encontro o arquivo "linux.iso" dentro da aplicação do VMWare application, abra e copie para a pasta compartilhada que foi montada como "/vagrant".
+instale o VMWare tools
+finalmente, vagrant reload, e é só isso!
+
+Agora você mesmo pode rodar seus testes, não fique muito decepcionado se os tempos não forem tão diferentes. Mas se por acaso alguém souber de alguma situação específica onde o VMWare for ordens de grandeza superior ao Virtualbox, não deixe de comentar abaixo!
+
+tags: obsolete vagrant
+

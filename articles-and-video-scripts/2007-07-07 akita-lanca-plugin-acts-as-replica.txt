@@ -1,0 +1,99 @@
+
+For english-speaking audience: the plugin documentation is in english at the Google Code project website.
+Estava ansioso para postar logo esta notícia. No artigo anterior eu reclamava de como me sentia improdutivo. Felizmente acho que durante esta semana eu consegui me recuperar. Voltei à minha rotina normal de produção e um dos resultados foi o plugin acts_as_replica, que acabei de lançar como projeto open source. Hoje vou narrar como cheguei a ele.
+Numa das primeiras tarefas que recebi da Surgeworks foi um projeto envolvendo um sistema distribuído: deveria haver um servidor central em Rails e diversos aplicativos rodando em notebooks, offline, para realizar captação de dados. No fim do dia, esses dados deveriam ser enviados de volta ao servidor e também receber novos dados do mesmo. Ou seja, um cenário de sincronização bi-direcional.
+
+
+À primeira vista parece muito fácil. Vou repetir o que muitos costumam dizer à primeira vista:
+
+‘Fácil, expõe tudo como XML e consome depois, como RSS’
+
+
+‘Simples, usa o tal do Google Gears’
+
+
+‘Elementar, cria um arquivo txt e manda pro servidor’
+
+É isso ou algo parecido. A maioria se esquece de algumas coisas mais complicadas:
+
+Se dois aplicativos iguais (mesmas tabelas) estão rodando offline em ambientes separados, cada tabela com chaves primárias auto-incrementáveis, significa que teremos dois objetos com exatamente o mesmo ID. Como sincronizar isso?
+
+
+Se essas tabelas, por sua vez, tiverem relacionamento com outras tabelas via chaves estrangeiras e, como dito acima, os IDs conflitarem entre aplicações rodando em ambientes diferentes, como resolver os conflitos?
+
+
+Se o servidor recebe e envia dados entre diversos clientes remotos, como garantir que cada um deles receba somente a fatia de dados que não tem? Não basta apenas um cliente enviar dados para o servidor: outros clientes também precisam receber os mesmos dados.
+
+
+Se dois clientes remotos atualizarem o mesmo objeto, como resolver o conflito? E se um deles atualizar o objeto e outro apagar o mesmo objeto? Como lidar com esse conflito?
+
+
+Esses serviços ficarão expostos na Internet? Como realizar a autenticação e tráfego seguro dessas informações? Como otimizar os dados para gastar menos banda? XML não é ‘gordo’ demais? E se o cliente estiver via dial-up? E se tiver um proxy no meio do caminho?
+
+O Cenário
+Agora a história começa a ficar mais complicada. Para quem ainda não entendeu o cenário, vou dar um exemplo: pense que você é um vendedor (não, meu projeto não tem nada a ver com vendas). No começo do dia, você abre seu notebook e ‘puxa’ do servidor central os dados mais atualizados de estoque, preços de produtos, carteira de clientes, etc. Você desconecta da Internet e sai gastando sapato vendendo seus produtos. Cada venda realizada gera uma Ordem de Venda dentro do sistema no seu notebook. Descontos, preços especiais, pagamentos parcelados, etc. Ao final da jornada de trabalho, você retorna para casa e religa seu notebook na Internet. Agora você quer ‘subir’ essas vendas todas para o servidor central da empresa.
+Esse é o cenário. Mas imagine que existem dezenas de ‘vendedores’ – que eu chamo de ‘clientes remotos’. Uma das maneiras de facilitar esse desenvolvimento é utilizando soluções como o Joyent Slingshot. Ele facilita encapsular uma aplicação Rails para rodar como se fosse um programa executável qualquer. Sua infra-estrutura carrega o Ruby, o Rails, Gems e outras bibliotecas de que sua aplicação dependa. Para o usuário é como instalar um programa qualquer. No caso do Windows acho que ele até cria um ícone e atalho no menu Iniciar.
+Ele tem suporte para Windows (via .NET) e Mac. No fundo é programa muito simples que carrega um browser sem parecer um browser, arrancando a barra de ferramentas, botões de navegação, barra de status, etc. Quem já programou uma aplicação desktop já deve ter utilizado a engine de renderização Web do Internet Explorer ou o WebKit, no caso do Mac. É exatamente isso. Só que ele se limita a carregar a aplicação Rails. O executável inicia o Mongrel por baixo dos panos e esse ‘browser’ mínimo carrega a página via localhost.
+Até aqui tudo bem, funciona bem. A Joyent até propagandeia que tem funcionalidades de sincronização de dados! Excelente, era tudo que eu precisava. Mas … essa infra-estrutura ainda está muito crua. Ele até tem as partes em que pega uma coleção de objetos ActiveRecord, transforma em XML e depois lê do XML e transforma de volta em objetos Ruby. Porém, ele não tem nenhuma lógica que controla quais dados devem ir para quem e em que ordem. No fundo, se você quiser apagar os dados do cliente o tempo todo e fazer um espelho do servidor, funciona. Mais do que isso, ele não serve.
+Soluções de Sincronização
+Por acaso, havia um blog que eu lia chamado Eribium, de Alex MacCaw. É um excelente blog, recomendo a leitura. Esse garoto desenvolve produtos muito interessantes e um dos plugins que ele publicou se chama acts_as_syncable.
+Parecia promissor. Infelizmente o plugin dele ainda estava bastante inacabado e não funciona muito bem. Na realidade, ele também se preocupou no processo de serialização, ou marshalling, mas em vez de XML ele escolheu YAML. Ele foi um pouco além da Joyent porque inventou um mecanismo para rastrear as mudanças no banco de dados utilizando associação polimórfica do ActiveRecord. Mas ele não evoluiu mais.
+Pesquisei mais a fundo pela Internet e não encontrei mais nenhuma alternativa no mundo Ruby ou Rails. E aqui vem um ponto que considero importante: Não reinventem a roda. Existem muitos plugins diferentes que fazem coisas muito similares. Eu só criei este plugin porque realmente não havia outra alternativa.
+Em outros ambientes existem diversas formas de tratar esse problema. Alguns anos atrás eu desenvolvi um sistema parecido com o do exemplo do vendedor. Eu codifiquei em .NET Compact Framework para rodar em PocketPCs iPaq. O servidor era o IIS, claro. A vantagem é que o banco de dados era o SQL Server. Existe uma versão chamada Compact Edition e o seu ponto forte é o suporte ao SQL Agent. Com isso é possível realizar merge replication entre os iPaqs e o servidor central com bastante facilidade.
+Por que não utilizar o que já existia?
+Os requerimentos das tabelas envolviam utilizar chaves primárias auto-incrementáveis. Mas o conflito era evitado porque a chave primária na realidade era composta com o ID do vendedor. Portanto, mesmo que houvesse duas Ordens de Venda com ID igual a “1”, os vendedores eram diferentes, portanto não havia conflito de chave composta. Além disso, para saber qual registro havia sido modificado, criado ou apagado, havia uma tabela separada que mantinha um log: um tipo mais simplificado de transaction log, suportado por uma coluna de timestamp. Com isso era possível reprocessar as mesmas operações, com os mesmos dados, na mesma ordem, em outro banco. O SQL Agent cuidava do resto.
+Inicialmente eu pensei em algo parecido. Mas resolvi ir pelo caminho mais simples. O plugin do Alex tinha uma cara boa. Usar uma tabela separada via associação polimórfica já havia sido utilizada na implementação de outro plugin, o acts_as_trackable e é realmente uma boa idéia.
+O primeiro ‘erro’, pelo menos para os meus requerimentos, é que em vez dele trafegar os dados na mesma ordem em que foram criados, ele agrupava em três grupos: create, update e destroy. Ou seja, ele tira as operações de ordem e isso é ruim porque você pode acabar tentando criar uma linha numa tabela filha de um registro pai que já foi apagado e começar a ter diversos erros de integridade referencial. Para evitar isso é obrigatório que as operações que aconteceram no cliente remoto, por exemplo, sejam executadas novamente na mesma ordem no servidor.
+Feito isso ainda há outro problema: chaves primárias auto-incrementáveis. Minha primeira idéia foi usar o plugin Composite Primary Key do Dr. Nic. Porém, desisti da idéia. O plugin é muito bom, mas haveria muita configuração a ser feita, tanto nos models como nas rotas e em outros lugares. Em uma próxima versão talvez eu tente usar esse plugin, mas por enquanto resolvi ir pelo caminho mais simples: resolvi que todas as tabelas envolvidas em replicação não poderiam ser números auto-incrementáveis e sim identificadores universalmente únicos, ou UUID.
+Sidenote: UUID?
+Para quem não sabe, UUID é um número de 128-bits, gerado a partir do timestamp da máquina e várias outras variáveis e, tecnicamente, a probabilidade de se gerar dois UUIDs iguais é muito próxima de zero. O exemplo que mais gosto para explicar isso é: pensa no tamanho da Internet. O Google tem bilhões de páginas indexadas. Vamos arredondar para cima, digamos que exista 1 trilhão de objetos na internet (10^12). Pense em cada página do Orkut, do Wikipedia, do MySpace, do Facebook, cada vídeo do YouTube, cada foto do Flickr. Podemos atribuir um UUID para cada um desses objetos individualmente.
+Agora digamos que cada um dos mais de 6 bilhões de habitantes do planeta recebam uma cópia completa dessa ‘Internet’ de 1 trilhão de objetos unicamente identificados, ou seja, o mesmo objeto de duas pessoas diferentes tendo UUIDs diferentes. Agora digamos que cada uma dessas pessoas receba uma cópia inteira dessa Internet por segundo! Quantos anos vai legar para acabar com todos os números UUIDs possíveis?
+Mais de um bilhão de anos
+Vamos repetir: Cada pessoa recebe sua cópia pessoal da Internet inteira, a cada segundo, por um bilhão de anos. Enfim, depois desse exercício numérico, apenas acreditem que é extremamente difícil gerar dois UUIDs iguais mesmo em locais fisicamente distintos. É exatamente o que eu preciso: não me preocupar com conflito de IDs.
+A desvantagem óbvia? As URLs serão feias. Mas como elas ficarão escondidas de qualquer maneira (já que um aplicativo Rails rodando sobre o mini-browser do Slingshot não mostra a URL), tanto faz. E o Rails como um todo parece não se incomodar com isso também. Tudo funciona normalmente, de maneira transparente. Que é o que eu queria.
+Handshake
+Continuando, eu precisava identificar as pessoas usando o sistema. Não vou reinventar a roda. Vocês podem usar quaisquer plugins de autenticação que estiverem acostumados. Porém, há alguns pré-requisitos: a tabela de usuários precisa se chamar User, a chave-primária precisa ser modificada para ser um UUID e ainda preciso que existam as colunas:
+1
+2
+3
+4
+5
+6
+
+:guid,       :string, :limit => 36, :null => false
+:last_synced,:timestamp
+:created_by, :string, :limit => 36
+:updated_by, :string, :limit => 36
+:created_at, :timestamp
+:updated_at, :timestamp
+
+
+No site do projeto eu dou mais detalhes de como isso funciona. Recomendo que leiam com calma tudo que documentei lá.
+Finalmente, para terminar esta história, resolvi que meu plugin deveria encapsular um Controller e alguns Models. O problema é que plugins não foram feitos para conter ações de navegação, rotas. Para que isso funcionasse, precisei utilizar o recurso de Engines, que permite  encapsular um trecho MVC inteiro de uma aplicação Rails dentro de um plugin.
+Com isso, eu criei uma rotina simples de ‘handshake’, ou seja, o processo onde o cliente remoto negocia com o servidor: onde ele se identifica e onde ambas as pontas definem quais dados cada lado ainda não tem e iniciam o tráfego do que falta. Novamente, recomendo ler o site do projeto para os detalhes.
+Open Source
+Esta é minha primeira tentativa de lançar um projeto de código-aberto. O plugin em si até que é bastante simples. Acredito que a maioria dos desenvolvedores conseguirá entender o código com facilidade. Para chegar nesta versão inicial, eu recomecei a codificação diversas vezes. Uma vez que cheguei num meio termo razoável, resolvi publicar para a comunidade.
+Meu objetivo: receber mais idéias. Meu plugin parte de certos requerimentos limitados. Da mesma forma como o Rails, ele não foi feito para cobrir 100% dos casos. Há quem não goste de serializar dados em YAML, então talvez essa pessoa queira colaborar comigo criando um adaptador para XML também.
+Talvez alguém não goste do processo de challenge-response que criei. Talvez essa pessoa prefira colaborar comigo implementando uma autenticação via PKI. Talvez outra pessoas não goste de usar UUIDs, então talvez ela queira implementar um jeito ultra-transparente de usar chaves compostas ou então ranges numéricos.
+Enfim. Preciso de duas coisas:
+
+Pessoas para me ajudar a testar. Da forma como plugin foi feito, estou com dificuldades de criar uma suíte automatizada de testes. Isso porque como o processo envolver replicação entre duas aplicações Rails rodando isoladamente e se comunicando entre si, como eu poderia testar isso? A única forma que consegui foi criando uma aplicação Rails de teste e publicando no site do projeto uma receita de como subir dois processos Rails e usá-los para os testes. Sugestões para uma suíte mais simples e completa são muito bem vindas.
+
+
+Falando em testes, eu também só fiz testes dos casos mais simples. Espero que alguém consiga realizar cenários mais complexos. Talvez simular dezenas de clientes trafegando dados simultaneamente, benchmarks, identificação de gargalos no código.
+
+
+Novas idéias de funcionalidades para completar o plugin. Por exemplo, hoje, se duas pessoas atualizarem a mesma linha da mesma tabela, o último que atualizar passa por cima do primeiro. Poderia haver algum tipo extra de configuração de regras. Outra coisa: atualmente eu uso a própria natureza das aplicações Rails no cliente e no servidor de serem serviços Web, por isso o tráfego é todo encapsulado, obviamente, em pacotes HTTP. A forma mais usual de se fazer isso é usando Message Brokers ou os chamados Integradores. Esse tipo de produto implementa filas de mensagens. Sua característica é garantir a entrega da mensagem ao destinatário e garantir que este não receba mensagens duplicadas. Um e-mail é uma fila de mensagens, mas ela não garante a entrega e nem garante não-duplicação, por exemplo. Se JRuby já fosse mais utilizado, eu poderia implementar uma fila de mensagens usando JMS. É uma idéia mais robusta: a criação de uma arquitetura Publisher-Subscriber utilizando infra-estrutura de fila de mensagens.
+
+Recomendações
+Alguns recados importantes para quem quer entrar no mundo open source:
+
+“Coce sua própria coceira”. Quer dizer, normalmente um bom projeto open source surge da sua própria necessidade de se criar alguma ferramenta. No meu caso, meu cliente tinha um requerimento que eu não conseguir cobrir com nenhuma outra ferramenta disponível. Isso me leva ao segundo ponto:
+“Não reinvente a roda”. Não faça coisas que já existem. Se você tem um problema, as chances são de que alguém em algum lugar do planeta já teve o mesmo problema e já publicou uma solução. Pesquise no Google o suficiente para ter quase certeza que seu problema é o primeiro desse tipo, só então comece sua própria solução.
+“Documente”. A maioria dos programadores são péssimos escritores. Todo bom programador é um bom escritor. Não há desculpa para uma discrepância nesse postulado: escrever código é como escrever uma dissertação. Se o programador não consegue manter uma linha de raciocínio argumentativo numa dissertação, como esperar que ele consiga ter senso de estética e beleza no código? Documentação é fundamental num projeto open source. Se ninguém entender para que serve seu código, como poderão utilizá-lo?
+
+Claro, do ponto de vista de contribuição ao mundo Open Source, ainda sou um novato, mas do ponto de vista de desenvolvimento, acho que posso me dar ao luxo de dizer uma palavra ou duas.
+Ah sim, e antes que alguém pergunte ‘E por que você não evoluiu em cima do plugin acts_as_syncable que já existe?’ Boa pergunta. A resposta é simples: eu não planejei lançar este plugin como projeto open source. Começou exclusivamente como um desenvolvimento interno para nosso cliente. À medida que evolui nas idéias, ficou claro que fazia sentido separar como um plugin. Mas nesse ponto eu já divergi tanto do plugin original que daria trabalho mesclar os códigos novamente. Eu cheguei a conversar com o Alex mas não discutimos sobre o assunto de merge. O deadline do projeto com o cliente é mais importante por enquanto. Mas o assunto de juntar os dois projetos ainda não foi descartado.
+Este plugin é de uso bastante restrito, para cenários bastante específicos. Espero que outras pessoas em projetos similares possam tirar proveito disso e também colaborar de volta.
+tags: obsolete rails
+

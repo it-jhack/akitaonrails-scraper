@@ -1,0 +1,131 @@
+
+Continuando com o excelente tutorial de Scott Rutheford vamos falar agora de como ir além do básico com o Ajax Scaffold, customizando as tabelas a nosso gosto.
+
+
+Colunas Customizadas
+Uma das primeiras coisas que você provavelmente irá notar com o plugin Ajax Scaffold (ASp) é que ele funciona muito bem se tudo que quiser fazer é mostrar uma tabela com todos os campos que o model pode oferecer. Entretando, suponha que queremos produzir uma tabela mostrando valores que vem de métodos definidos pelo usuário no model.
+Por exemplo, vamos pegar o model User com os seguintes campos: name, password, created_at, number_of_logins. Para criar a tabela que simplesmente mostra esses campos é simples, apenas adiciona o seguinte no UsersController:
+1
+
+ajax_scaffold: user
+
+
+mas suponha que queremos que uma das colunas contenha apenas o nome e a média do número de logins por semana (per week), por mês (per month), por ano (per year) …
+Para isso codificamos 3 métodos em nosso model:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+def logins_per_month
+  some great code
+end 
+
+def logins_per_week
+...
+end
+
+def logins_per_year
+..
+end
+
+
+Agora, para fazer ASp usar essas colunas precisamos declarar um conjunto de objetos AjaxScaffold::ScaffoldColumn. O gerador do AjaxScaffold antigo faz isso no model – o plugin precisa disso no controller.
+Antes de entrar nos detalhes da implementação desse exemplo, vamos dar uma rápida olhada no objeto ScaffoldColumn.
+AjaxScaffold::ScaffoldColumn
+Essa classe é usada internamente (apesar que vamos sobrescrevê-la em um minuto) pelo ASp (e pelo gerador) para criar as colunas que serão mostradas. Seu construtor tem a seguinte forma:
+1
+
+AjaxScaffold::ScaffoldColumn.new(class name, options)
+
+
+O construtor do ScaffoldColumn recebe as seguinte opções:
+
+name – declara a coluna no model que estamos definindo, este é o único valor obrigatório e será usado para inferir todo o resto a menos que façamos uma definição explícita.
+
+
+label – representa o nome da coluna que será mostrado. Isso será mostrado como título na tabela.
+
+
+class_name – isso declara o nome de uma classe CSS que será adicionado na declaração da coluna da classe.
+
+
+eval – é onde definimos o método que será chamado. Isso pode ser declarado como row., onde “row” significa o string real ou ..
+
+
+sort_sql – define a coluna da tabela que será usada para ordenação, normalmente o mesmo valod do nome da coluna SQL.
+
+
+sort – usado para definir o método de uma classe que será usado para ordenação (como logins_per_year).
+
+Exemplo de Users (tabela única na página)
+De volta ao exemplo, com apenas uma tabela na página (ou seja, sem passar a opção :suffix ao plugin), nossas colunas customizadas podem ser definidas adicionando a seguinte declaração no controller:
+1
+2
+3
+
+@@scaffold_columns = [
+   Array de objetos ScaffoldColumn
+]
+
+
+Parece bem fácil, mas e as colunas? Ok, então temos 4 colunas que queremos mostrar. O primeiro é o nome do usuário e então os 3 com nossos métodos customizados. Isso leva ao seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+@@scaffold_columns = [
+        AjaxScaffold::ScaffoldColumn.new(User, { :name => "name" }),
+        AjaxScaffold::ScaffoldColumn.new(User, { :name => "per week", 
+          :eval => "row.logins_per_week", :sort => 'logins_per_week' }),
+        AjaxScaffold::ScaffoldColumn.new(Report, { :name => "per month", 
+          :eval => "row.logins_per_month", :sort => 'logins_per_month' }),
+        AjaxScaffold::ScaffoldColumn.new(Report, { :name => "per year", 
+          :eval => "row.logins_per_year", :sort => 'logins_per_year' })
+]
+
+
+Vale a pena notar que se tinha uma associação no model User, digamos Address (Endereço, em um relacionamento), poderíamos acessar essa informação para a ordenação definindo algo como:
+1
+2
+
+AjaxScaffold::ScaffoldColumn.new(User, { :name => "postcode", 
+   :eval => "row.address.postcode", :sort => 'address.postcode' })
+
+
+Isso funcionará para tantos níveis quantos quisermos brincar.
+Exemplo de User (múltiplas tabelas na página)
+Com múltiplas tabelas na mesma página (:suffix passado como true) precisamos atualizar o código acima para incluir o prefixo users_:
+1
+2
+3
+
+@@users_scaffold_columns = [
+.......
+]
+
+
+Então podemos fazer a mesma coisa com qualquer outra tabela na página.
+Totalizando Colunas Customizadas
+Para ter calculadas e mostradas os totais de qualquer uma de nossas colunas simplesmente adicionamos um segundo array contendo os nomes das colunas que queremos totalizar:
+1
+
+@@scaffold_column_totals = ['per month', 'per year']
+
+
+Lembre-se de usar o prefixo se tiver mais de uma tabela por controller.
+tags: obsolete rails
+

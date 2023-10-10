@@ -1,0 +1,20 @@
+
+
+English readers: click here
+Como eu twitei ontem, estamos muito orgulhos de anunciar que a ThoughtWorks se juntou como patrocinador da conferência na última hora. Inclusive eles resolveram dar um presente à comunidade: patrocinar metade de 30 ingressos para o Rails Summit, promoção que começou algumas horas atrás e ficará no ar até acabarem os ingressos patrocinados. Não percam!
+
+Mais ainda, você deve ter ouvido rumores sobre isso. Roy Singham, fundador da ThoughtWorks, soltou o anúncio na conferência Agiles 2009 acontecendo em Florianópolis, SC alguns minutos atrás. Estou muito contente de confirmar que sim, os rumores eram verdade: a ThoughtWorks decidiu aterrissar no Brasil. Eles estabelecerão seu quartel-general em Porto Alegre, RS, começando este ano.
+Agora, eles tem intenções de começar a contratar desenvolvedores de software brilhantes imediatamente. Eles estarão no Rails Summit para falar com você, procurando grandes pessoas para embarcarem nessa empreitada.
+A ThoughtWorks é muito conhecida como uma força no mundo de desenvolvimento de software, com diversos escritórios pelo mundo. Eles tem grandes e conhecidos engenheiros, arquitetos trabalhando lá, redefinindo a maneira como fazemos software, como Martin Fowler.
+Não percam essa oportunidade de vir conhecê-los, pessoalmente. Estaremos esperando por você no Rails Summit 2009, semana que vem!
+
+
+
+ThoughtWorks lands in Brazil
+As I twitted yesterday, we are very proud to announce that ThoughtWorks joined us as sponsor for the conference at the last moment.
+Moreover, you may have heard rumors about this. Roy Singham, founder of ThoughtWorks,  just released the announcement at the Agiles 2009 conference in Florianópolis, SC a few minutes ago. I am very happy to confirm that yes, the rumors are true: ThoughtWorks decided to land in Brazil. They will establish their head-quarters in Porto Alegre – RS, starting this year.
+Now, they have intentions to start hiring bright and insightful software developers right away. They will be at Rails Summit to talk to you, searching for matches to sign up for their enterprise.
+ThoughtWorks is a well known software development powerhouse, with offices around the globe. There are several great and well known engineers, architects working there, redefining the way we do software, such as Martin Fowler.
+Don’t miss this opportunity to come and get to know them, in person. We will be awaiting you at Rails Summit 2009, next week!
+tags: railssummit2009
+

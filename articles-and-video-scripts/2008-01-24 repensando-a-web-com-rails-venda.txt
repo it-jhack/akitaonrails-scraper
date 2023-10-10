@@ -1,0 +1,9 @@
+
+
+
+
+Conforme prometido meu livro Repensando a Web com Rails já está à venda no site da Brasport e pelo jeito eles conseguiram enxugar mais ainda o preço: R$ 80,75.
+É o mesmo livro de 472 página, formato grande, que ficou fora de circulação desde o final do ano passado porque acabou a edição nas livrarias e a partir de hoje a editora voltou a reimprimir sob demanda, à venda apenas pelo site. Uma ótima oportunidade para quem estava procurando material original, completo para aprender Ruby on Rails, escrito em português.
+
+tags: obsolete my-book
+

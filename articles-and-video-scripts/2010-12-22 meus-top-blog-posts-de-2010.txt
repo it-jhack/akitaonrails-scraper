@@ -1,0 +1,30 @@
+
+Estamos quase fechando o ano então nada como a tradicional lista dos artigos mais lidos deste ano. Aqui vão os Top 20:
+
+Limpando meu Ambiente de Desenvolvimento
+[Akita Responde] Começando com Ruby on Rails
+Cooking Solo with Chef
+[Off-Topic] O Programador Humilde, por Edsger W. Dijkstra
+Rails 3.0 FINAL, Acaba de Ser Lançado!
+[Off-Topic] Primeiras Impressões do iPad
+[Screencast] Começando com Git
+Rails 3: Introdução a Javascript Não-Obstrutivo e Responders
+[RailsConf 2010] – Video Interview – David Hansson
+Brincando com Node.js, Tornado and Thin
+
+
+
+
+[Screencast] Instalando um Ambiente Ruby
+O que tem de novo no Rails 2.3.8
+[Screencast] Começando com Vim
+[RailsConf 2010] – Video Interview – Robert Martin
+[Off-Topic] Onde estão as Mulheres na Área de Tecnologia?
+Deploy com Git Push
+Criando um Chat com Reactor e WebSockets
+Updated Vimfiles
+Começando a Brincar com Rails 3
+Brincando com Google App Engine
+
+tags: obsolete blog
+

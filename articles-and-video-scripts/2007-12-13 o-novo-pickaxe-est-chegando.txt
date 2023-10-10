@@ -1,0 +1,11 @@
+
+
+
+
+O melhor livro de Ruby está sendo atualizado para a Terceira Edição, acompanhando a evolução do Ruby para a versão 1.9.
+A Pragmatic Programmer já está vendendo o beta do livro que Dave Thomas está atualizando a partir da excelente Segunda Edição. Toda nova versão de Ruby tem que ser acompanhada de um Pickaxe. 120 páginas já foram atualizadas.
+Matz e Koichi ainda estão melhorando a linguagem e ela deve sair logo, o livro será atualizado acompanhando cada nova atualização e só será publicada quando a versão 1.9 sair oficialmente. Se você quer realmente aprender Ruby, não olhe para outro lugar, vá direto ao melhor: o Pickaxe. Reserve sua cópia.
+Novidade em off: Esperem para os próximos dias mais duas grandes entrevistas de fim de ano. Eu conversei com Evan Phoenix do tão esperado projeto Rubinius e ninguém menos que Avi Bryant do excelente projeto Seaside! Só preciso de tempo para traduzir tanto material agora :-)
+Notícia 2: Graças ao Screencast e Tutorial de Rails 2.0 que lancei, o tráfego ao meu site aumentou brutalmente, pelo menos 600%, tanto que minha conta de shared hosting na Railsplayground está simplesmente engasgando o tempo todo. Tenham um pouco de paciência, esse pico deve dissipar logo :-)
+tags: obsolete book ruby
+

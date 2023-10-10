@@ -1,0 +1,14 @@
+
+
+
+
+Galera, a editora me deu uma posição hoje que o livro deve estar liberado nas lojas a partir de Setembro de 2006. Vai ser um pouco mais atrasado do que eu esperava, vamos ver se eles conseguem correr um pouco.
+Preciso de idéias: como divulgar o assunto até lá? Alguém tem idéias? Como abrir a mente de programadores J2EE, ASP.NET, PHP? Qualquer sugestão é bem vinda.
+Além disso esperem mais uma adaptação de um assunto que David Hansson tem evangelizado bastante: ActiveResources. Quem estiver avançado no assunto Rails vai gostar de ver esta apresentação, que ele fez tanto no RubyKaigi no Japão quanto agora na RailsConf Chicago.
+No livro eu insisto que todos deveriam aprender tanto teoria de banco de dados (Edgar Codd) quanto o protocolo HTTP (Tim Berners Lee). Não à toa os verbos que usamos contra bancos são simples INSERT, SELECT, UPDATE, DELETE.
+Também não à toa o protocolo HTTP possui os seguintes comandos: PUT, GET, POST, DELETE. O problema é que o HTML atual só costuma suporta GET e POST. O conceito, uma vez entendido, tem consequências muito interessantes.
+Passamos a pensar em Controllers e Actions como operações CRUD (Create, Read, Update, Delete). E URLs como GET /blog/show/1 e POST /blog/update/1 seriam simplesmente GET /blog/1 e POST /blog/1. Prestem atenção, estamos sendo DRY com as operações.
+Esse é o movimento para criar aplicações REST-ful. Eu menciono isso no capítulo sobre Web Services no livro mas ela se extende mais longe, como podemos ver.
+Até mais!
+tags: obsolete my-book
+

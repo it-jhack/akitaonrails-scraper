@@ -1,0 +1,16 @@
+
+
+
+
+O Thomas anunciou ontem o lançamento do JRuby 1.1. Um grande passo para Ruby na JVM e esta versão focou muito mais em performance, sendo que em alguns micro-benchmarks ele está até mesmo ultrapassando o YARV!
+Dentre as principais novidades, algumas delas são:
+
+Compilação de Ruby para Java Bytecote (em modo Ahead of Time – AOT – ou Just in Time – JIT)
+Port do Oniguruma para Java (a nova engine de Regular Expressions, muito mais veloz)
+Refatoração da implementação de IO
+Melhorias no consumo de memória
+Milhares de bugs de compatibilidade corrigidos
+
+Excelente notícia!
+tags: obsolete jruby
+

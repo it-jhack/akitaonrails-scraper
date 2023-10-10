@@ -1,0 +1,18 @@
+
+Obs: para a versão em Inglês, clique aqui
+Eu ainda nem terminei de compilar todos os vídeos e nem de escrever o artigo principal do evento, mas já estava ansioso para publicar este vídeo do Robert Martin que consegui gravar, com exclusividade, em Baltimore. É uma conversa de 16 min falando sobre linguagens, carreira, certificações e Agile.
+
+
+
+
+Na quinta-feira, dia 10, último dia da RailsConf, Robert Martin fez a abertura com a palestra “Vinte e Cinco Zeros”. Você pode assistir o vídeo, na íntegra, abaixo:
+
+Em resumo ele explica como desde que foi inventado, o hardware evoluiu mais de 25 ordens de grandeza enquanto as linguagens de programação não evoluíram na mesma velocidade. Provavelmente não evoluíram nem um pouco.
+“Ah, mas hoje temos orientação a objetos, temos closures, etc”. Como o Bob Martin bem lembrou, hoje temos até maneiras mais convenientes de organizar o código. Mas desde o Fortran, na fundação, somente fazermos sequência, seleção e iteração, ou seja, assinalação de variáveis, condicionais “if”, loops como “while”.
+Além disso ele relembra como linguagens sempre vivem em ciclos: elas nascem, tem uma crescente, começam a estagnar e eventualmente morrem ou estacionam. Por isso é importante que programadores entendam que precisam aprender novas linguagens o tempo todo e não criar barreiras. Aliás, ele está aprendendo Clojure e recomenda essa linguagem, o que eu também acho uma ótima sugestão.
+Na entrevista nós comentamos um pouco sobre esse assunto. Mas indo mais a fundo me interessava ouvir dele sobre o estado atual do crescimento de metodologias Ágeis, como Scrum, e o súbito interesse em Certificações.
+Muitos devem conhecer Robert Martin como escritor do livro Clean Code e na entrevista ele revelou que está trabalhando num livro chamado “Clean Coder” – não sei se estava brincando, mas é um tema que faz sentido: um programador não pode ser excelente apenas em codificar e ser ruim em se comunicar. Existem muitas outras habilidades importantes que constróem um profissional completo.
+Finalmente, Bob também é conhecido por ser um dos signatários do Manifesto Ágil e aqui ele nos conta a história de como isso aconteceu, como a reunião foi organizada, quem participou e como eles escreveram os famosos 4 valores ágeis.
+Enfim, vários insights vindo de um profissional que está na área há mais de 4 décadas e com certeza já experimentou muito mais do que qualquer um de nós.
+tags: railsconf2010 interview
+

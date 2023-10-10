@@ -1,0 +1,10 @@
+
+
+
+
+Eu já estava meio cansado do antigo tema micro-tabbed, ele tinha vários problemas: no IE 7 dava alguns desajustes nos boxes, no IE 6 quebrava completamente, o design era pouco flexível. O maior problema é que, diferente do famoso Wordpress, o pobre Mephisto tem muito pouco tema para ele.
+Pois bem, resolvi botar a mão na massa: como não estava a fim de migrar para Wordpress, só me restava tentar converter um tema de Wordpress para Mephisto! Foi o que eu fiz: fui Google afora procurando por temas de Wordpress que fossem bonitos, limpos e compatíveis com a maioria dos browsers. Nessa procura cruzei com o RedWhite. Baixei os phps e montei um tema de Mephisto equivalente.
+Devo dizer que foi mais fácil do que pensei, eu devo ter levado umas 3 horas para ajustar o grosso. Mas infelizmente não tem uma receita que seja possível automatizar ainda, tem que ser no “olho” mesmo. Entendendo como funciona a estrutura do Mephisto, vocês vão ver que ele equivale à estrutura do Wordpress, pelo menos na questão de temas. É necessário entender um pouco de Liquid também. Mas nada que um bom Railer não consiga fazer, de repente é até um bom exercício para os iniciantes: montar um blog em Mephisto e tentar migrar um tema de Wordpress para ele.
+E então, o que acharam desse novo design? :-)
+tags: obsolete
+

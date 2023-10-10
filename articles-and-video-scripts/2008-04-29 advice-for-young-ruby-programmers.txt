@@ -1,0 +1,9 @@
+
+
+
+
+Satish Talim, from RubyLearning fame forwarded me 2 question from one of his students.
+So I went to to write a few advices for him. Without knowing his level of expertise I tried to encompass tips for young programmers in general.
+I hope it makes sense. Feel free to comment and ask questions.
+tags: obsolete english
+

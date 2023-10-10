@@ -1,0 +1,76 @@
+
+Esta notícia já é meio velha mas só hoje resolvi brincar com ela. No começo do ano o Remi publicou um artigo muito curioso sobre uma implementação de Sinatra para ASP!
+Para quem não sabe, o Sinatra é um micro-framework para desenvolver aplicações Web em Ruby. Vamos dizer que é um irmão mais leve do Ruby on Rails. O insight do Remi foi lembrar que todo mundo usa ASP com VBScript, mas desde que foi criado mais de uma década atrás, ele também já suportava JScript, uma versão de Javascript da Microsoft. Mais do que isso: Javascript pode ser tão flexível, dinâmico e expressivo quanto Ruby.
+Portanto ele pensou: “e se eu implementar um framework simples em JScript para rodar em ASP?” Daí ele implementou um subset do Sinatra, inteiro em JScript. E o mais incrível: ficou realmente interessante. O ASP ficou literalmente com uma cara de século XXI.
+
+
+Instalação
+Demorei para testar isso porque minha instalação de Windows 7 estava quebrada e eu não estava conseguindo instalar o IIS. Agora que o reinstalei no Parallels, consegui subir o IIS.
+Considerando que você já tem o msysGit devidamente instalado, abra o Git Bash e faça assim:
+1
+2
+3
+
+cd /c/inetpub
+mv wwwroot wwwroot_old
+git clone git://github.com/remi/classic-asp.git wwwroot
+
+
+Pronto, agora a partir do administrador do IIS, você precisa configurar o erro 404 para apontar para uma URL:
+
+
+A configuração é deixar de ler o arquivo 404.html padrão do Windows e passar a redirecionar para uma URL:
+
+Um pequeno detalhe se for testar na sua máquina local (via localhost), precisa fazer o IIS fazer o redirecionamento em vez de mostrar erros detalhados. Para isso, na página de configuração de erros, clique em “Edit Features” e mude para ""
+
+
+É só isso. Agora você já pode abrir no seu browser: https://localhost/foo.
+Enganando o IIS
+Da forma como o ASP foi concebido, ele deveria simplesmente mapear as URLs diretamente em arquivos com extensão .asp. Todo mundo faz isso há anos. Porém, o IIS permite redirecionar para uma URL caso não encontre um arquivo. Por exemplo, se você pedir no browser “https://localhost/foo” ele tentará encontrar o arquivo “c:\inetpub\wwwroot\foo”, como não vai encontrar, devolve o bom e velho erro “404 Not Found”.
+Agora, mandando ele direcionar para “/index.asp”, qualquer URL que tentarmos passará por ele. Portanto é um ótimo lugar para se colocar um roteador. O index.asp do Remi é a “mágica” desse processo.
+A partir dele carrega-se o arquivo “app.js”, que é a implementação da sua aplicação em Sinatra. O index.asp também define um método chamado “js()” que localiza os arquivos .js na sua estrutura. Então ele cria um sinônimo para “req” que é a função javascript “eval()” e outra para “uire” que é essa função “js()”. Daí ele consegue fazer assim:
+1
+
+req(uire('app'));
+
+
+Que literalmente quer dizer: “localize o arquivo app.js e execute seu conteúdo”. Já sua aplicação Sinatra escrita em Javascript se parece muito com uma versão em Ruby. Por exemplo, um simples Hello World, em Ruby ficaria assim:
+1
+2
+3
+4
+5
+
+require 'rubygems'
+require 'sinatra'
+get '/hi' do
+  "Hello World!"
+end
+
+
+Já nesta implementação em Javascript, fica assim:
+1
+2
+3
+4
+5
+6
+
+req(uire('sinatra/sinatra'));
+run(new Sinatra.Application(function(){
+  this.get('/hi', function(){
+    return 'Hello World';
+  });
+}));
+
+
+Um pouco mais de chaves e parênteses do que de costume, mas nada mal. Para quem já está acostumado a escrever bastante javascript, isso é mil vezes melhor do que o limitado VBScript.
+Ele vem até mesmo com bibliotecas como suporte para JSON e um micro-ORM para conectar via ADODB no seu banco de dados. Dê uma olhada no código-fonte disponível no Github, ele tem um diretório de specs (!) para que você inclusive consiga rodar testes via RSpec!
+Se só isso já não fosse o bastante, ele tem até mesmo uma implementação de HAML para fazer suas views! How cool is that!?
+Uma coisa que eu não fiz: um benchmark de acessos para ver se custa muito caro usar esse truque de redirecionamento via erro 404 (alguém se habilita?). Talvez seja uma solução interesante para aplicações pequenas que porventura sejam obrigados a usar uma infraestrutura IIS pré-existente. E como ele implementa inclusive Rack em JScript, é possível começar a escrever alguns middlewares para empilhar por cima desse Sinatra.
+Desenvolvendo em Windows
+E falando em codificar em Windows, você já configurou o gVim com meu pacote de customizações? Garanto que é bem melhor que qualquer Notepad-clone :-)
+
+Acho que pode ser pelo menos uma boa diversão de fim de semana :-)
+tags: obsolete rails
+

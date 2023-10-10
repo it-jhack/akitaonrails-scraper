@@ -1,0 +1,234 @@
+
+Acho que todos já devem ter pelo menos ouvido falar de CoffeeScript e já devem ter lido o artigo do Dr Nic ensinando como integrar num projeto Rails. Para não repetir o que ele já disse, eu criei uma pequena aplicação de demonstração usando o que o Dr Nic ensinou: a gem Bistro Car, uma rake task que gera o arquivo javascript estático para ser gerado antes de um deploy (por exemplo, no Heroku, que não tem CoffeeScript no servidor). Leia o artigo dele para entender.
+Parece que temos uma pequena tendência aqui: escrever HTML correto às vezes pode ser tedioso. Eu particularmente gosto do HAML para criar código limpo, enxuto e expressivo. Para CSS temos o SASS que faz a mesma coisa e permite coisas legais como criar variáveis e fazer aritmética de cores e tamanhos.
+
+
+
+Javascript deve ser uma das linguagens mais usadas, considerando que todo navegador web possui um interpretador. E atualmente aprendemos muito mais técnicas, bibliotecas e opções, especialmente com o advento do HTML 5 que trás mais recursos. Comparado com o que fazíamos nos anos 90, as técnicas evoluíram muito. Porém, a realidade é que Javascript foi lançado em 1995, 15 anos atrás. Ele realmente ultrapassou a prova do tempo, inclusive ele estava à frente. Mesmo assim, eu particularmente acho sua sintaxe um pouco antiquada, especialmente sendo um programador Ruby. O CoffeeScript muda esse cenário, trazendo várias características de linguagens como Ruby e Python.
+O que muitos falam sobre essas meta-linguagens é que isso dificulta o desenvolvimento de projetos em equipes pois aumenta a curva de aprendizado para todos começarem a mexer no código. Isso é verdade até certo ponto, mas eu vejo da seguinte forma: ninguém deveria precisar de mais do que 1 dia inteiro para aprender a sintaxe do HAML, SASS e CoffeeScript de uma só vez. Levar mais tempo do que isso indica que esse programador tem alguma dificuldade mais fundamental.
+Ou seja, se o programador já sabe XHTML, CSS e Javascript, não deveria ter absolutamente nenhum problema em aprender essas meta-linguagens. Portanto o contra-argumento da curva de aprendizado é verdade, mas não por mais do que 1 dia até ele se tornar produtivo. Claro, algumas técnicas mais avançadas só irá aprender com o tempo, e mesmo assim basta uma segunda olhada nas listagens de referência de cada um e de uma “googlada” de 5 minutos.
+Algumas Características
+Este é um “Hello World” simples em Python:
+1
+2
+3
+4
+
+# python
+def hello()
+  return "hello world"
+print hello()
+
+
+Em CoffeeScript também usamos o conceito de blocos delimitados por identação (significant whitespace), inclusive eliminando a necessidade de chaves e ponto-e-vírgula. Porém, assim como em Ruby, o resultado da última expressão executada é retornada automaticamente, eliminando a necessidade de usar return. Além disso, também como em Ruby, parênteses são opcionais para passar argumentos de funções (veja o alert):
+1
+2
+3
+4
+
+# coffeescript
+hello: () ->
+  "hello world"
+alert hello()
+
+
+Note a sintaxe de como se cria funções. Em vez de usar function você associa uma função anônima a uma variável. O Javascript gerado pelo CoffeeScript acima é este:
+1
+2
+3
+4
+5
+6
+
+// javascript
+var hello;
+hello = function hello() {
+  return "hello world";
+};
+alert(hello());
+
+
+Essa sintaxe de (arguments) → … para criar funções anônimas é bem mais curta e elegante do que o equivalente function(arguments) { … }. Existe outra opção que é usando => em vez de →. Note isso na minha aplicação de exemplo quando faço:
+1
+2
+3
+4
+
+# coffeescript
+$("#demo_form").bind "submit", () =>
+        $("#dialog_box").dialog("open")
+        false
+
+
+O Javascript gerado é assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+// javascript
+$("#demo_form").bind("submit", (function(__this) {
+  var __func = function() {
+    $("#dialog_box").dialog("open");
+    return false;
+  };
+  return (function() {
+    return __func.apply(__this, arguments);
+  });
+})(this));
+
+
+Como a própria documentação do CoffeeScript descreve esse uso do “fat arrow”:
+O fat arrow => pode ser usado tanto para definir uma função e para ligá-la ao valor atual de this, bem no ato. Isso é útil quando se usa bibliotecas baseadas em callbacks como Prototype e jQuery, para criar funções de iteração para passar para each, ou funções que lidam com eventos para usar com bind. Funções criadas com o fat arrow tem a capacidade de acessar propriedades do this de onde foram definidas.
+Na prática, o maior uso é quando se define callbacks para eventos como “click”.
+Continuando, o CoffeeScript trás mais funcionalidades de outras linguagens. Por exemplo, temos algo parecido com o operador splat de Ruby. Em Ruby, o operador é um * antes do nome do argumento e no CoffeeScript é um … depois.
+1
+2
+3
+4
+5
+6
+7
+
+# ruby
+def hello(first_name, *args)
+  last_name = args.last if args.size > 1
+  "Hello, #{first_name} #{last_name}"
+end
+puts hello "Fabio", "Makoto", "Akita"
+# => "Hello, Fabio Akita"
+
+
+
+1
+2
+3
+4
+5
+
+# coffeescript
+hello: (first_name, args...) ->
+  last_name = args[args.length -1] if args.length > 1
+  "Hello, $first_name $last_name"
+alert hello("Fabio", "Makoto", "Akita")
+
+
+Note que o CoffeeScript trás uma versão de interpolação de string muito parecida com a de Ruby. Para interpolar somente uma variável, use $variavel mas se quiser interpolar o resultado de uma expressão, use ${expressao}, que é parecido com o #{expressao} de Ruby.
+Outra coisa interessante é a presença de List Comprehensions como em Python, que é uma forma de criar uma lista a partir de outra:
+1
+2
+3
+4
+
+# python
+freshfruit = ['  banana', '  loganberry ', 'passion fruit  ']
+weapons = [weapon.strip() for weapon in freshfruit]
+# => ['banana', 'loganberry', 'passion fruit']
+
+
+E em CoffeeScript:
+1
+2
+3
+
+# coffeescript
+freshfruit: ['  banana', '  loganberry ', 'passion fruit  ']
+weapons: weapon.replace(/^\s+|\s+$/g, '') for weapon in freshfruit
+
+
+Em Javascript puro não existe um método como trim ou strip para retirar espaços em branco do começo e fim de um string, por isso usei uma regular expression. Porém, num cenário mais realista, estaríamos usando jQuery. Nesse caso, em vez de usar comprehensions prefiro fazer assim:
+1
+2
+3
+
+# coffeescript
+freshfruit: ['  banana', '  loganberry ', 'passion fruit  ']
+weapons: $.map freshfruit, (weapon) -> $.trim(weapon)
+
+
+Isso seria mais parecido com a versão em Ruby onde faríamos:
+1
+2
+3
+
+# ruby
+freshfruit = ['  banana', '  loganberry ', 'passion fruit  ']
+weapons = freshfruit.map { |weapon| weapon.strip }
+
+
+Portanto, se você é um pythonista ou rubista, o CoffeeScript deve agradar a ambos os lados. Outra syntatic-sugar que ele pega emprestado de Ruby são Ranges:
+1
+2
+3
+4
+5
+6
+
+# ruby
+foobar = "foobar"
+foobar[0..2]
+# => "foo"
+foobar[3..-1]
+# => "bar"
+
+
+Em CoffeeScript:
+1
+2
+3
+4
+
+# coffeescript
+foobar: "foobar"
+foobar[0..2]
+foobar[3..foobar.length]
+
+
+Outra coisa que é meio chata em Javascript é o switch que só faz comparações com strings e ainda precisa usar break para não cair no velho efeito de cascata. Em Ruby o resultado de um case pode ser associado a uma variável, além disso a comparação é bem mais abrangente, incluindo classes e ranges. Como exemplo, em Ruby podemos fazer:
+1
+2
+3
+4
+5
+6
+7
+8
+
+# ruby
+day_of_week = case Time.now.strftime("%w")
+  when "0": "Domingo"
+  when "1": "Segunda"
+  else
+    "whatever"
+  end
+puts day_of_week
+
+
+E em CoffeeScript, veja como é muito parecido:
+1
+2
+3
+4
+5
+6
+
+# coffeescript
+day_of_week = switch (new Date()).getDay()
+        when 0 then "Domingo"
+        when 1 then "Segunda"
+        else "whatever"
+alert day_of_week
+
+
+E a brincadeira está só começando, ainda há muito a se explorar e eu recomendo ler o Guia de Referência inteiro, pois há vários detalhes importantes. E não se preocupem, é meramente uma única página para ler e não um manual de centenas de páginas. Como eu disse antes, não deve levar poucas horas de leitura e experimentação para começar a usar imediatamente.
+Para ajudar, se você usa Mac, já existe um bundle de Textmate também, trazendo syntax highlights e alguns snippets para tornar a edição mais conveniente.
+Não mencionei isso antes, mas o CoffeeScript depende de outro projeto importante, o Node.js, um servidor de aplicações que usa a engine V8 de Javascript do Google. O CoffeeScript é escrito em Javascript puro e foi criado como um módulo utilitário do Node.js. Aliás, esse projeto é muito bem documentado e se estiver interessado em saber como ele é organizado, o próprio site oficial tem uma seção chamada “Annotated Source”, que deve ajudar.
+Com projetos como a veloz engine Google V8, o servidor de aplicações Node.js, CoffeeScript, HTML 5 (especialmente com tanta conversa de substituir Flash usando Canvas e outras técnicas nativas, incluindo Javascript), frameworks cada vez mais competentes como jQuery e jQuery UI, o Javascript é uma linguagem para se levar muito a sério e dominar o quanto antes. Por ser uma linguagem orientada a protótipos, que permite simular orientação a classes, onde funções são cidadãos de primeira classe, permitindo passar e receber funções anônimas, possuindo estruturas de dados flexíveis como JSON, o Javascript é uma linguagem muito moderna e flexível que não deixa nada a dever a Ruby ou Python.
+tags: obsolete javascript
+

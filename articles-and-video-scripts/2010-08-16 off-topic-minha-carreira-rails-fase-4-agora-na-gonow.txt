@@ -1,0 +1,16 @@
+
+
+
+
+Acabou meu Sabático :-)
+Eu deixei a Locaweb em Março deste ano. Tirei o mês de Abril para descansar um pouco. Boa parte de Maio foi dedicada a fazer a palestra que apresentei na RailsConf em Baltimore. Fora isso as palestras do Encontro Locaweb, FISL e outros consumiram muito do meu tempo. Achei que conseguiria tirar férias mas na realidade quase não fiquei parado. Sem contar que em paralelo comecei a atividade de criar os Screencasts pagos também, que pretendo continuar.
+Nesse meio tempo tive a oportunidade de conhecer muita gente, visitei empresas, aumentei o networking e no fim chegou a hora de voltar a colocar o pé na estrada. Dentre todas as empresas que conheci, tive uma boa impressão da GoNow. Muitos vão se lembrar deles da Rails Summit do ano passado.
+
+Nossa visão e valores são parecidos, tenho amigos que trabalham (ex Diego Carrion) ou já trabalharam lá (ex Rafael Rosa Fu), então decidi vir para cá. A partir de hoje, 16/8, comecei na GoNow como Gerente da equipe de Ruby on Rails.
+Estamos começando mas já atendemos clientes usando Rails, temos produtos sendo desenvolvidos e, se tudo der certo, devemos expandir. Se você precisa de serviços em Ruby on Rails, não deixe de nos contactar e se você é um Railer de talento também nos procure!
+
+Depois da Surgeworks, depois da Locaweb, tenho a ótima oportunidade de começar em mais uma empresa que acredita em Ruby on Rails. Já são 3 anos ininterruptos com Rails.
+Da minha experiência, fui o primeiro consultor offshore de Rails da Surgeworks e até hoje eles têm equipe por aqui. Na Locaweb, praticamente inexistia Rails e hoje em dia temos diversos Railers conhecidos e novos projetos praticamente tem que justificar porque não usar Rails.
+Espero poder colaborar com a GoNow agora! Me desejem sorte! :-)
+tags: obsolete gonow
+

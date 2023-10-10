@@ -1,0 +1,23 @@
+
+
+
+
+Este ano participarei da TDC 2011, organizado pela GlobalCode, na trilha de Ruby organizada pelo Felipe Rodrigues. Estou atrasado na divulgação, mas antes tarde do que nunca.
+
+O TDC 2011 será um evento para unir diversas comunidades de desenvolvimento. São ao todo 30 trilhas além de atividades paralelas durante 5 dias de evento. Devem comparecer cerca de 1.800 pessoas participando de palestras, painéis e workshops. No TDC 2011 ainda acontecerá o lançamento mundial do JDK 7.
+Na Trilha de Ruby, teremos as seguintes palestras:
+
+Tomás Stephano, Fun Driven Development com Ruby – Lidando com problemas do
+dia-a-dia
+Vinni Baggio, Alcançando alta performance com EventMachine,
+Hanneli Tavante, Ruby on Rails – além do Active Record
+Fabio Akita, Discutindo Rails e Arquiteturas
+Lúcas Húngaro, Seus testes estão gritando. Você está ouvindo?
+Nando Vieira, Metaprogramming 101
+Felipe Rodrigues, Starting Up – Simples e Rápido
+
+A ideia é mostrar coisas que vão muito além do Ruby on Rails nessa trilha, abordando técnicas inovadoras e percepções dos especialistas. Não perca!
+Da Gonow Tecnologia (empresa onde trabalho), estaremos eu e o Lucas Húngaro palestrando, será agora sexta-feira dia 8/7. Na Gonow estamos sempre procurando novos talentos, profissionais experientes que gostam de entregar bons projetos, desenvolvedores que querem sempre aprender mais. Se quiserem vir trabalhar conosco, não deixem de nos procurar pelo evento.
+Nos vemos lá!
+tags: obsolete conference
+

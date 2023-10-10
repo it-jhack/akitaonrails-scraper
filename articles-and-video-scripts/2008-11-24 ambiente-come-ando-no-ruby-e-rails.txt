@@ -1,0 +1,135 @@
+
+Algum tempo atrás, mais especificamente em 24/11/2008, escrevi este artigo originalmente. Infelizmente, talvez quando migrei de Mephisto para Enki, o conteúdo deste artigo se perdeu e eu não lembro o que foi exatamente que escrevi nele. Por isso vou escrever um novo artigo do zero. Especificamente sobre como configurar seu ambiente para começar com Ruby on Rails no Mac.
+Antes de mais nada, consulte o Wiki do Guru-SP, com diversos links para recursos em português, incluindo livros online, guias, tutoriais, grupos de discussão e muito mais que a comunidade brasileira de Ruby e Rails já preparou.
+
+
+Para usuários de Leopard, a coisa já começa fácil pois você já tem o Ruby 1.8.6 patchlevel 287 pré-instalado (considerando que você já atualizou para 10.5.7 ou superior). A partir do Snow Leopard (que será lançado em Setembro de 2009) você terá o Ruby 1.8.7 em seu lugar. Para ambiente de desenvolvimento, prefiro usar o Ruby que já vem pré-instalado.
+Mas vamos precisar de mais. Para começar, você precisa instalar o XCode Tools que está na pasta de “Optional Installs” que está no DVD de instalação do Leopard que acompanha todos os Macs. Além da IDE XCode e outras ferramentas visuais, ele também instalará compiladores, depuradores, headers de compilação e muito mais.
+Agora, instale o MacPorts e a interface gráfica Porticus. Feito isso, abra o Terminal e digite:
+1
+
+sudo port selfupdate
+
+
+Faça isso de tempos em tempos para que ele atualize seu repositório a partir dos servidores remotos. Agora, vamos instalar o MySQL 5:
+1
+
+sudo port install mysql5-server  
+
+
+Agora vamos configurar o MySQL:
+1
+2
+
+sudo launchctl load -w /Library/LaunchDaemons/org.macports.mysql5.plist
+sudo mysql_install_db5 --user=mysql
+
+
+Para facilitar a vida para o Rails, vamos fazer o arquivo socket do MySQL ser criado como /tmp/mysql.sock para que você não tenha que manualmente colocar o local do socket no seu database.yml.
+1
+2
+
+sudo mv /opt/local/etc/my.cnf /opt/local/etc/mysql5/my.cnf
+sudo mv /opt/local/share/mysql5/mysql/my-medium.cnf /opt/local/etc/mysql5/my.cnf
+
+
+Usando algum editor de textos como o Textmate ou mesmo o bom e velho Vim que já vem instalado no Mac, edite o arquivo “/opt/local/etc/mysql5/my.cnf” colocando o path correto do socket conforme mostrado abaixo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+...
+# In this file, you can use all long options that a program supports.
+# If you want to know which options a program supports, run the program
+# with the "--help" option.
+
+[mysqld_safe]
+socket          = /tmp/mysql.sock
+
+# The following options will be passed to all MySQL clients
+[client]
+#password       = your_password
+port            = 3306
+socket          = /tmp/mysql.sock
+
+# Here follows entries for some specific programs
+
+# The MySQL server
+[mysqld]
+port            = 3306
+socket          = /tmp/mysql.sock
+...
+
+
+Agora, opcionalmente, vamos também instalar o PostgreSQL 8.3, caso você queira testar nesse banco de dados também.
+1
+
+sudo port install postgresql83-server
+
+
+Depois de um longo tempo de compilação, faça o seguinte para configurar da primeira vez:
+1
+2
+3
+4
+
+sudo mkdir -p /opt/local/var/db/postgresql83/defaultdb
+sudo chown postgres:postgres /opt/local/var/db/postgresql83/defaultdb
+sudo su postgres -c '/opt/local/lib/postgresql83/bin/initdb -D /opt/local/var/db/postgresql83/defaultdb'
+sudo launchctl load -w /Library/LaunchDaemons/org.macports.postgresql83-server.plist
+
+
+Edite o arquivo “.bash_profile” que fica no seu diretório /Users/[seu usuário], ou crie caso ele não exista. Dentro coloque uma linha como:
+1
+
+export PATH=/opt/local/bin:/opt/local/sbin:/opt/local/lib/postgresql83/bin:$PATH
+
+
+Da primeira vez que for usar o RubyGems, do Terminal, tente atualizá-lo primeiro:
+1
+2
+
+sudo gem update --system
+sudo gem update
+
+
+Agora, hora de instalar as gems para mysql, postgresql e sqlite3:
+1
+2
+3
+
+sudo env ARCHFLAGS="-arch i386" gem install mysql -- --with-mysql-config=/opt/local/bin/mysql_config5
+sudo env ARCHFLAGS="-arch i386" gem install postgres
+sudo gem install sqlite3-ruby
+
+
+Outras instalações interessantes via MacPorts são:
+1
+2
+
+sudo port install git-core +svn
+sudo port install ImageMagick ctags memcached
+
+
+Isso lhe dará o Git com suporte a sincronizar de repositórios Subversion. O ImageMagick é uma biblioteca nativa usada por gems como RMagick.
+Depois continuo este artigo, mas este são apenas os primeiros passos.
+tags: obsolete rails
+

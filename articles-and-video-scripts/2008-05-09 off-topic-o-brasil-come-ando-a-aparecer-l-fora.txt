@@ -1,0 +1,25 @@
+
+De uns tempos para cá comecei a receber propostas de startups com muito mais frequência. Parece que os americanos estão começando a enxergar o Brasil como uma proposta viável de encontrar talentos de qualidade em Ruby on Rails a preços mais “acessíveis” do que os nativos americanos.
+Ontem mesmo conversei via Skype com o Prasad e o Vikram, fundadores da Pixily. Achei o produto deles muito interessante por isso me propus a ajudar a divulgá-los por aqui.
+A Pixily ajuda profissionais, pequenas e grandes empresas a organizar e encontrar papel e documentos digitais. A idéia é que você tem aquelas toneladas de documentos em papel aguardando cupins no fundo dos arquivos. O que fazer?
+Você empacota e envia para eles por correio normal, daí eles fazem o serviço de scanner e os transforma em documentos digitais que, via OCR, também podem ser pesquisados pelo texto deles. Daí você pode compartilhar, pesquisar, agrupar, fazer download. Você também pode fazer upload direto de arquivos digitais.
+Eles tem um video do beta neste link
+
+
+Perfil Profissional
+Eles – e várias outras startups – procuram profissionais Rails mais ou menos neste perfil:
+
+Fortes fundamentos (MVC, estruturas de dados, etc)
+Experiência em pelo menos uma aplicação Rails em produção
+Conhecimentos em Javascript, CSS e SQL (no caso deles, se você for expert em Javascript e CSS é um grande plus porque a aplicação terá muito Ajax)
+Bons conhecimentos de inglês escrito e falado (eu disse ! eu disse!)
+Habilidade para trabalhar com equipes geograficamente distribuídas via IM e telefone
+Ser um “Generalista Esperto” (competente tanto a fundo quando horizontalmente em tecnologias. A Era dos Especialistas agora terá que dividir espaço com os Generalistas)
+
+Se estiver interessado na Pixily, envie um e-mail a eles.
+E para quem quer aprender Rails?
+Obviamente, a Internet é um prato cheio. Dá para aprender 100% de Rails apenas com o que se encontra no meio dos mais de 8 milhões de hits do Google. Acredite, é bastante coisa.
+Mesmo assim se quiser livros, é o de sempre: The Rails Way, do Obie, The Ruby Way, do Hal e Deploying Rails Applications, do Ezra.
+Finalmente, para quem quer um ponta-pé inicial para começar a aprender, procure o curso de Rails 2 da e-Genial, com o Julio Monteiro. Eu soube pelo blog do Jony dos Santos que a Unisinos também estará oferecendo um curso de Rails em Porto Alegre. A Caelum também tem curso de Rails, mas não sei se tem turmas programadas para já (Kung?)
+tags: obsolete
+

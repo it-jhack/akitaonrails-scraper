@@ -1,0 +1,12 @@
+
+
+
+
+Atualização 26/6: Acompanhem neste link o segundo episódio do meu Webcast além dos outros que já foram gravados na Locaweb.
+Hoje participei de mais uma nova iniciativa da Locaweb: Webcasts. Se não me engano toda semana eles gravarão palestras ou tutoriais sobre vários temas. Hoje gravei o primeiro episódio introdutório sobre Ruby on Rails.
+Ultimamente estou numa grande correria, muitas coisas a se fazer e nessa o blog acabou ficando estagnado. Mas pretendo corrigir isso muito em breve! Enquanto isso não deixem de acompanhar também o blog da Locaweb. O pessoal lá é muito mente aberta, está por dentro do que tem de mais novo e está se movendo rápido. Para ter uma idéia nunca nos comparamos com as empresas daqui, estamos sempre acompanhando de perto o que está sendo feito lá fora. Claro que demora um pouco para tudo isso se refletir nos produtos que vocês vêem agora mas posso garantir que novidades estão para sair do forno! E não estou dizendo só de Ruby on Rails!
+O webcast de hoje foi gravado e está disponível a todos neste link. Semana que vem, dia 18, continuarei com o segundo episódio. Não percam, não é sempre que vocês me verão pilotando um Windows! :-) Mas se inscrevam antes, pois quando o webcast começa a sala se fecha.
+Este ainda é um projeto piloto e temos muito a melhorar. Não deixem de comentar lá suas sugestões e críticas também.
+Nos vemos em breve com mais novidades!
+tags: obsolete locaweb
+

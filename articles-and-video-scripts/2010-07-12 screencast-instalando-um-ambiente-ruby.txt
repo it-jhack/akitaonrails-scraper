@@ -1,0 +1,24 @@
+
+
+
+
+Atualização 09/04/12: Este screencast foi liberado para visualização gratuita. Acesse este post
+Finalmente, segue meu projeto de screencasts com o primeiro episódio Instalando um Ambiente Ruby.
+
+Nível: Iniciante
+Temas: Instalação do Ruby, RVM, Explicação de RubyGems
+Duração: 1:10h
+Formatos:
+	
+Maior 800×600 – 384mb (zip, Quicktime/H.264)
+iPhone 480×360 – 223mb (zip, Quicktime/H.264)
+
+Plataformas: Linux (Ubuntu), Mac OS X e Windows 7
+Acompanha PDF com os slides usados na apresentação
+Tem organização em Capítulos
+
+Assista na íntegra:
+
+Este screencast é destinado àqueles que querem começar com Ruby mas ainda não sabem bem como instalar um ambiente. Explico alguns dos fundamentos de Ruby como por exemplo o que é um $LOAD_PATH e como Rubygems são carregados e organizados. Mais: como criar uma Gem simples para entender os conceitos. Nos ambientes Ubuntu e Mac instalamos Ruby via RVM que é a forma mais moderna e flexível. Infelizmente não existe RVM para Windows, então mostro como fazer uma instalação simples. Este tutorial pode ajudar também quem já começou com Ruby mas não conhece RVM ou tem dúvidas sobre como Rubygems funcionam.
+tags: obsolete windows screencasts
+

@@ -1,0 +1,11 @@
+
+Este ano vou palestrar na RailsConf 2010, na quarta-feira dia 9, às 16:25. Fui convidado no começo de Fevereiro e na época decidi falar de um tópico que ainda estava iniciando: Restfulie. Minha equipe começou a usar esse projeto logo no começo, num projeto interno da Locaweb. Desde então discutíamos sobre REST e eu resolvi que precisava estudar mais a respeito.
+
+
+Uma coisa que já sabíamos era que Ruby on Rails, apesar de toda sua ênfase em recursos e “RESTful”, ainda não é RESTful. E isso significa muito porque o Rails é “mais REST” do que todos os outros frameworks web. Por isso propus a palestra “Tornando o Rails mais RESTful com Restfulie”.
+Até o começo de Maio eu ainda estava mais ocupado com o Encontro Locaweb e outras palestras. Mas este mês desci mais a fundo no assunto. Li todo o livro “REST in Practice” do Jim Webber, Savas Parastatidis e Ian Robinson. Tive a oportunidade de conversar pessoalmente com o Jim Webber quando ele esteve no Brasil e também aluguei bastante o Guilherme Silveira, da Caelum, que é o líder do projeto.
+Somente hoje consegui terminar meus slides. Ainda não tive tempo de treinar e cronometrar o tempo, afinal terei apenas 45 minutos pra falar de um assunto bastante complexo. Durante esse período também estudei parte do código-fonte do Restfulie, colaborei com algumas modificações e adições e acho que chegamos num ponto bom.
+Hoje, sexta-feira, vou decolar para Baltimore às 21:10. Digo que essa palestra me consumiu uma quantidade grande de tempo, praticamente 3 semanas inteiras. Finalmente, quando retornar, devo começar a focar mais nos meus projetos pessoais. Enquanto isso, aguardem atualizações do evento!
+Agradecimentos ao Guilherme Silveira, George Guimarães e Luis Cipriani, que colaboraram com o Restfulie e me forneceram informações importantes para a palestra.
+tags: obsolete railsconf2010
+

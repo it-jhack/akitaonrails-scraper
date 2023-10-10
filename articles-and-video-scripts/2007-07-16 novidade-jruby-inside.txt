@@ -1,0 +1,9 @@
+
+
+
+
+Peter Cooper lançou hoje o novo site JRuby Inside que deve seguir os passos da já famosa Ruby Inside.
+Para quem quiser se manter informado nos rápidos avanços do JRuby, este é um bom começo. Além dele eu sugiro os blogs do Ola Bini, do próprio Charles Nutter e da Atlantic Dominion Solutions.
+Já baixaram o vídeo da palestra? Não deixem de se cadastrar no nosso Google Groups para discutirmos sobre esse assunto.
+tags: obsolete jruby
+

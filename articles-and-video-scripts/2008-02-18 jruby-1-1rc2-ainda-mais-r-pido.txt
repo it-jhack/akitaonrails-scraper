@@ -1,0 +1,10 @@
+
+
+
+
+Thomas Enebo e Charles Nutter anunciaram o JRuby 1.1 Release Candidate 2
+Além de mais de 250 correções de bugs ainda conseguiram arrancar mais performance. Veja algumas análises prematuras aqui e aqui
+Em alguns testes o JRuby 1.1 ultrapassa não somente o Ruby 1.8 como também o YARV 1.9.
+Outro projeto que está em ritmo muito acelerado é o Rubinius. Eu venho acompanhando os últimos commits e este fim de semana eles acrescentaram mais testes em relação ao YARV 1.9 também. Parece que tanto JRuby quanto Rubinius estão mirando para ultrapassar o YARV. Coisas muito interessantes virão desses dois projetos.
+tags: obsolete jruby
+

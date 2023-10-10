@@ -1,0 +1,294 @@
+
+Como disse no artigo anterior, na dúvida, use o Heroku. Mas depois disso, alguns perguntam se existem outras alternativas. De fato existem várias. Agora é a vez de outra opções, o AppFog foi uma das mais interessantes que usei.
+
+Ela tem algumas características semelhantes e outras diferentes do Heroku. Vamos a alguma delas:
+
+
+
+
+semelhante à maioria dos PaaS como Heroku, o AppFog também utiliza Amazon AWS EC2 por baixo. Mas diferente do Heroku ela permite escolher algumas das zonas geográficas e também outros IaaS como HP OpenStack e Microsoft Azure. Pra maioria das pessoas usar a zona US-EAST-1 que é a padrão é o suficiente.
+semelhante ao Heroku, você pode controlar tudo por linha de comando, basta instalar com gem install af e ler esta documentação.
+semelhante ao Heroku, ele também tem add-ons mas numa quantidade ainda muito inferior. Alguns dos principais estão lá como LogEntries, Blitz, Memcachier, Mailgun e outros.
+diferente do Heroku, ela vem pré-configurada com um número maior de perfis de aplicação, Java Grails, Java Spring, Node Express, PHP Wordpress, Python Django, Ruby on Rails e muito mais.
+diferente do Heroku, a precificação não é por número de instâncias. Em vez disso ele funciona num modelo "pré-pago" (mais sobre isso abaixo)
+diferente do Heroku, ela tem mais serviços próprios como MySQL, PostgreSQL, MongoDB, Redis, RabbitMQ
+
+Precificação
+A parte da precificação é onde a AppFog mais se diferencia dos demais, ao mesmo tempo oferecendo vantagem e desvantagem.
+O que eles fazem é oferecer pacotes pré-pagos que inclui:
+
+limite de quantidade de RAM compartilhada
+limite de quantidade de instâncias
+limite de tamanho dos bancos de dados
+limite de endpoints SSL
+limite de RAM compartilhada entre os bancos de dados
+limite de transferência de gigabits na rede
+limite na quantidade de requisições por segundo
+
+Por exemplo, tem 3 camadas no limite de 2GB: o free (que só permite domínio *.af.cm), o que não tem suporte a SSL e o que tem suporte a 1 endpoint SSL. Respectivamente o preço varia de USD 0, depois USD 20 e USD 50.
+Esses 2 GB podem ser distribuídos entre servidores web, e até 8 instâncias de serviços (bancos de dados). O que dá pra fazer com isso? Em uma conta de USD 20 eu coloquei 7 sites pequenos, respectivamente com:
+
+2 instâncias de 320Mb cada
+1 instância de 160Mb
+1 instância de 128Mb
+1 instância de 256Mb
+1 instância de 128Mb
+1 instância de 192Mb
+1 instância de 128Mb
+
+Lembram que um dyno no Heroku é de 512Mb? O problema de um dyno fixo é que sites pequenos desperdiçam espaço e sites grandes não cabem. No caso do AppFog ele me deixa decidir quanto quero alocar para cada site até o mínimo de 128Mb. Então, em 2Gb ou eu faço 16 sites de 128Mb cada, como posso fazer uma única instância de 2GB de uma vez só.
+Agora vem o problema: se eu quiser usar mais de 2GB (no momento, nessa conta que estou testando já usei 1.66GB e 7 dos 8 serviços) o próximo plano é de 4GB com 16 serviços por USD 100. Acima dele é de 16GB com 64 serviços a USD 380, e o maior é de 32GB com 128 serviços a USD 720.
+Eu não diria que é caro, mas o preço salta em pulos muito grandes de um para o outro. No Heroku, acima de USD 36 por uma dyno, posso ir escalando em pulos menores de menos de USD 36. O modelo de negócios do Heroku é "on-demand" o do AppFog é "pré-pago". O pré-pago tem preço de entrada menor mas pode ficar caro mais rápido do que o Heroku dependendo do tipo de aplicação.
+Na teoria os preços do Appfog são bem mais em conta que o Heroku. No caso anterior, estou gastando 10 instâncias de Heroku a aproximadamente USD 323, mais USD 400 de banco de dados. No AppFog eu teria que escolher provavelmente o plano de 16GB, que custa USD 380. No Heroku, o próximo salto com mais uma dyno iria de USD 323 para USD 431. No AppFog eu precisaria pular pro plano de USD 720.
+A grande maioria dos sites não vai planos muito maiores que o de 4GB, que custa USD 100, o equivalente a 2 dynos no Heroku, sem contar banco de dados. Nesse caso o AppFog pode ficar no mínimo 2 vezes mais barato. Quando chegar no plano dos USD 380 ou USD 720 é que pode fazer um pouco mais de diferença, mas mesmo assim o AppFog ainda parece continuar mais barato.
+Porém onde o Appfog sai mais barato, também não tem algumas funcionalidades cruciais.
+Maior Problema
+O maior problema do AppFog são os serviços de bancos de dados. Primeiro de tudo: ele não oferece serviços de backup e restore. Ele espera que você faça seu próprio backup, o que é um absurdo. Ou seja, se você tem dados de missão crítica, não use o AppFog até ele ter no mínimo backup e SLA para tempo de resposta em emergência.
+Tem muita pouca informação sobre o tuning dos bancos de dados. Eu espero que não seja a configuração padrão que vem na instalação, que são sempre muito ruins para produção. O Heroku Postgres configura as instâncias com ignorantes GIGABYTES de cache.
+Não dá pra escalar os bancos horizontalmente, fazendo master-slave. No Heroku Postgres existe a opção de Follows.
+Como disse no artigo anterior, a funcionalidade matadora do Heroku é definitivamente o Heroku Postgresql. Eu não recomendaria o AppFog para clientes por causa dessa enorme deficiência no suporte a banco de dados. Não adianta nada conseguir escalar instâncias web se o próximo gargalo vai ser o banco de dados. É o dilema mais antigo da literatura web e o que a maioria dos PaaS ainda não resolveu decentemente.
+Setup e Deployments
+Depois de instalar a gem o processo é bem simples:
+
+1
+2
+3
+
+# só a primeira vez
+$ gem install af
+$ af login
+
+
+Para criar a aplicação, a partir do diretório o código do seu projeto, faça:
+
+1
+
+af push sua_aplicacao --runtime ruby193
+
+
+Ele vai fazer várias perguntas que devem ser simples de se responder:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+Would you like to deploy from the current directory? [Yn]: y
+Detected a Rails Application, is this correct? [Yn]: y
+1: AWS US East - Virginia
+2: AWS EU West - Ireland
+3: AWS Asia SE - Singapore
+4: Rackspace AZ 1 - Dallas
+5: HP AZ 2 - Las Vegas
+Select Infrastructure: 1
+Application Deployed URL [teste.aws.af.cm]:
+Memory reservation (128M, 256M, 512M, 1G, 2G) [256M]: 128M
+How many instances? [1]:
+Bind existing services to 'teste'? [yN]: n
+Create services to bind to 'teste'? [yN]: y
+1: mongodb
+2: mysql
+3: postgresql
+4: rabbitmq
+5: redis
+What kind of service?: 2
+Specify the name of the service [mysql-e4aa3]: teste-db
+Create another? [yN]: n
+Would you like to save this configuration? [yN]: n
+
+
+Agora, toda vez que atualizar o código, para fazer um novo deployment faça:
+
+1
+
+af update sua_aplicacao
+
+
+Existe um problema que o Appfog diz que sabe que existe mas continua me irritando profundamente. Depois de tentar rodar a aplicação ele precisa fazer o processo de rodar migrations, executar asset precompiling, e isso pode demorar. Parece que o comando fica preso e dá timeout, e com isso o aplicativo fica num estado não finalizado. Você precisa ficar tentando rodar o update repetidas vezes até finalmente ele conseguir subir.
+
+Um dos problemas pode ser que sua instância esteja muito pequena em tamanho de memória e a tarefa de asset precompiling pode consumir muita RAM no processo e dar crash por falta de memória. Se a aplicação for muito grande em assets uma coisa que pode ser feita é gerar o precompiling localmente antes do update. "Parece" (não confirmei) que ele sobe os assets no update e aí o precompiling (aliado ao turbo-sprockets) não precisa repetir o processo no deploy.
+Novamente, como no Heroku, ele não tem opção de zero downtime, para não tirar a aplicação do ar durante um deployment, então use um horário de pouco movimento para essas atualizações, especialmente por causa de problema atual de timeout de conexão.
+A diferença do plano grátis para o plano inicial de USD 20 é que só no plano pago você pode apontar seu domínio. Para mapear a aplicação faça:
+
+1
+
+af map sua_aplicacao www.sua_aplicacao.com.br
+
+
+E no seu serviço de DNS aponte o naked domain (sem subdomínio) como um redirect para o www e faça o www ser do tipo CNAME apontando para cname01.aws.af.cm. Esta documentação explica em mais detalhes.
+Tunnel
+Uma opção que inicialmente é interessante mas depois é bem chata é em como se conectar diretamente no banco de dados ou como rodar tarefas rake por exemplo. No Heroku é muito simples como expliquei no artigo anterior, no AppFog é um pouco burocrático.
+Pra começar, uma coisa que não mencionei é o AppFog é construído sobre o CloudFoundry.org, o PaaS da VMWare que tem partes open source. Na Rubyconf Brasil 2012 o Martin Englund apresentou essa plataforma, assista à gravação da palestra.
+Voltando ao assunto, a forma para acessar seus serviços é usar uma funcionalidade chamada caldecott. Em essência você pode criar um servidor que vai servir de túnel entre você e seu serviço, mapeando uma porta local. No caso ela usa a porta 10000 do seu localhost.
+Para abrir um túnel é simples, apenas execute:
+
+1
+
+af tunnel
+
+
+A partir daí basta escolher qual serviço você quer se conectar:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+1: foo1-db
+2: foo2-db
+...
+7: foo7-db
+Which service to tunnel to?: 7
+Getting tunnel connection info: OK
+
+Service connection info:
+  username : usM...XDS
+  password : pCS...sN1
+  name     : d92...05e
+  infra    : aws
+
+Starting tunnel to tinyclone-db on port 10000.
+1: none
+2: mysql
+3: mysqldump
+Which client would you like to start?: 1
+Open another shell to run command-line clients or
+use a UI tool to connect using the displayed information.
+Press Ctrl-C to exit...
+
+
+Se for um mysql você pode conectar assim:
+
+1
+
+mysql -u usM...XDS -ppCS...sN1 -h localhost -P 10000 d92...05e
+
+
+Obviamente, vai aparecer um usuário, senha e nome do banco diferentes. Anote o seu e faça a conexão.
+Agora, digamos que você queira executar alguma tarefa rake, ou mesmo abrir o console do rails. Para isso você vai precisar ter mais trabalho. Edite o arquivo config/database.yml local do seu projeto e adicione a seguinte configuração no final:
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+appfog:
+  adapter: postgres
+  encoding: UTF8
+  pool: 5
+  database: d92...05e
+  username: usM...XDS
+  password: pCS...sN1
+  port: 10000
+
+
+Agora você pode executar comandos assim:
+
+1
+
+RAILS_ENV=appfog rails console
+
+
+Cuidado, se precisar de configurações de ambiente, copie o config/environments/production.rb para config/environments/appfog.rb
+Não é confortável como um heroku run rails console mas funciona.
+Paliativo para o Backup
+Não ter um backup me deixa nervoso. Como paliativo (e um paliativo bem ruim, deixemos claro) fiz o seguinte script:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+#!/bin/env ruby
+
+# add to your crontab:
+# * 5,13,22 * * * backup_appfog.rb
+APPFOG_BIN = "#{ENV['HOME']}/.rvm/gems/ruby-1.9.3-p392/bin/af"
+BACKUP_DIR = "#{ENV['HOME']}/Documents/Appfog-Backup/"
+dbs = %w(foo1 foo2 foo3)
+dbs.each do |db|
+  puts "backup: #{db}"
+  `#{APPFOG_BIN} export-service #{db} > #{BACKUP_DIR}#{db}.log`
+end
+
+dbs.each do |db|
+  log = File.read("#{BACKUP_DIR}#{db}.log").split("\n")
+  url = log.select { |line| line =~ /^http/ }.first
+  puts "download: #{url}"
+  `curl -o #{BACKUP_DIR}#{db}.dump #{url}`
+end
+
+
+Customize para seu gosto (mudando nomes de diretórios e bancos de dados, claro) e adicione no crontab mais ou menos assim:
+
+1
+
+* 5,13,22 * * * /seu_diretorio_home_/.rvm/rubies/ruby-1.9.3-p392/bin/ruby /seu_diretorio_home_/backup_appfog.rb
+
+
+Novamente, mude a frequência (no exemplo, ele só vai executar às 5h, 13h e 22h), local do executável do Ruby (dependendo se está instalado nativo, com RVM ou RBENV) e nome do script.
+O dump que ele baixa é um arquivo em formato gz (tipo Zip). Use a ferramenta do mysql ou pg_restore ou outro dependendo do banco para restaurar local, por exemplo.
+Outra forma (que não dá pra colocar no cron e rodar automaticamente) é abrir um túnel como expliquei acima e usar diretamente o mysqldump e pg_dump a partir dos dados de conexão que ele fornece.
+Conclusão
+Como disse antes, estou rodando já 7 sites na conta de USD 20 da Appfog. Como podem imaginar não são sites pesados e respondem rápido ao tráfego.
+Me incomoda muito as atuais deficiências do banco de dados. Não ter backup é o pior deles, seguido por não conseguir facilmente escalar horizontalmente criando slaves read-only.
+A ferramenta de linha de comando tem dezenas de opções, muitas até que o Heroku não tem, mas ela tem esse bug horrível de dar timeout e deixar o servidor em estado instável o que prejudica o downtime em todo deployment. Eles precisam consertar isso logo.
+O estilo de "pré-pago" não funciona pra todo mundo. No meu caso, como não pretendo ir muito acima dos USD 50 com isso, é o suficiente. Pra muitos sites pequenos, o próprio plano de USD 20 vai ser mais do que suficiente e nesse sentido ele tem um custo muito mais barato do que o Heroku.
+Escalar os servidores web horizontalmente é simples, mas novamente vai estar limitado a quanto o banco aguenta, e nesse momento não sei dizer porque ele não documenta isso (pelo menos eu não achei). Também gosto do fato de estar tudo implementado numa plataforma robusta como o CloudFoundry, que só tem a evoluir principalmente depois que a aquisição da Pivotal Labs pela EMC gerou o Pivotal One.
+No geral é uma boa solução, especialmente se você quiser misturar num mesmo ambiente coisas como PHP (que o Heroku não suporta), com banco de dados MySQL (novamente, que o Heroku não suporta).
+
+tags: obsolete hosting
+

@@ -1,0 +1,25 @@
+
+Os projetos IronRuby e IronPython nasceram cresceram dentro da Microsoft. Em resumo, a Microsoft está prestando atenção ao recente crescimento na preferência por linguagens dinâmicas, em particular com a expressividade das comunidades Python e Ruby. Desde o começo ela planejou sua virtual machine, o CLR, para tentar ser o mais flexível possível para suportar múltiplas linguagens, basta que seja possível compilá-la na IL que o CLR entende e pronto. Porém, as técnicas todas foram feitas para linguagens estáticas e fortemente tipadas. Para coisas mais dinâmicas, poderia ser necessário uma camada extra, que foi chamada de DLR e a linguagem IronPython foi criada para testá-la.
+Quando o mundo de Ruby entrou no mundo .NET, um projeto se destacou mais, o RubyCLR de John Lam. Ele entrou para a Microsoft e o projeto foi renomeado para IronRuby. Com uma segunda linguagem foi possível acelerar o desenvolvimento da DLR e refinar seu design, criando uma DLR mais robusta. Houve muita discussão sobre se o overhead valia a pena e tudo mais mas os projetos continuaram evoluindo bem.
+A idéia do IronRuby é basicamente similar ao JRuby: permitir software escrito em Ruby gerar bytecode compatível com a CLR e permitir reuso e integração de bibliotecas nativas .NET e também para software .NET conseguir consumir tecnologias Ruby com o menor atrito possível.
+
+
+O John Lam passou a atender outras responsabilidades dentro da Microsoft e a liderança dos projetos passou para Jimmy Schementi. Em sua gestão o IronRuby chegou finalmente à versão 1.0. Claro, ainda há muito o que se fazer mas ele passou a ser minimamente usável. Apesar das coisas parecerem estar indo razoavelmente bem fomos todos surpreendidos em agosto de 2010 quando Jimmy blogou sobre sua saída da Microsoft.
+Houve um período de silêncio onde não se sabia bem o que fazer. Ninguém deu nenhuma comunicação oficial e sabemos que muito se discutiu internamente. Havia muitas coisas a serem consideradas, o que é normal, como o investimento feito até então, como reorganizar o processo, enfim, muitas coisas.
+Felizmente, esta semana, a Microsoft finalmente se manifestou oficialmente com uma excelente notícia: ela está liberando o IronPython e o IronRuby diretamente para a comunidade. Antes você não podia colaborar diretamente sem o código passar por alguém da Microsoft. O Jason Zanders blogou o seguinte:
+
+A licença dos softwares mudou para Apache 2.0, uma licença boa para open source.
+Outras ferramentas como o IronPython Tools for Visual Studio e o protótipo do IronRuby Tools for Visual Studio também passaram para a licença Apache 2.0.
+Mudanças foram feitas no CodePlex (onde está o código-fonte) para que seja possível à comunidade contribuir código sem precisar passar pela Microsoft.
+Os coordenadores da comunidade para o IronPython serão o Miguel de Icaza, Michael Foord, Jeff Hardy e Jimmy Schementi.
+Os coordenadores da comunidade para o IronRuby serão o Miguel de Icaza e Jimmy Schementi.
+
+
+Ou seja, o Jimmy retorna aos projetos, mesmo fora da Microsoft, e ninguém menos que Miguel também entra no jogo. Eu particularmente gostei dessa parte porque o Jimmy se demonstrou bastante ágil e dinâmico para acelerar os projetos. O Miguel também é acelerado e com sua posição na Novell e no projeto Mono podemos esperar grandes coisas para ambos os projetos.
+Logo de cara, imagino que a melhor coisa a se acontecer seria a distríbuição do Mono já trazer por padrão o IronPython e o IronRuby. Ou seja, além de C#, Boo e outras, toda vez que se instalar o Mono já teríamos essas linguagens. Além disso eles passam a integrar o sistema de Continuous Build do Mono para evitar bugs de regressão. E, melhor ainda, passarão a ter melhor integração com Linux e MacOS.
+O Mono é um projeto robusto, estável e muito útil em diversas arenas que não são apenas cópias do .NET para Windows. Na verdade, pessoalmente para mim, sua grande vantagem é justamente executar fora da plataforma Windows, permitindo executar aplicações Web em ASP.NET usando mod_modo no Apache. Permitir criar aplicações desktop usando toolkits como GTK+. Você tem a famosa engine de scripting de jogos, o Unity. E ele também é útil nas plataformas Apple com o Mono Touch para desenvolvimento de aplicações de iPhone e iPod e o recente Mono Mac para desenvolvimento de aplicações com visual nativo para Macs.
+Ou seja, o Mono é uma plataforma muito versátil que pode ser útil em diversos lugares fora do alcance da plataforma .NET, levando-a a muitos cenários inusitados e interessantes.
+Além disso, a comunidade brasileira também está bem servida com representantes como o Rodrigo Kumpera, Alessandro Binhara, Rodrigo Barreto de Oliveira (criador da linguagem Boo).
+Acho que podemos esperar grandes coisas para o IronPython e IronRuby na comunidade open source e Microsoft ainda.
+tags: obsolete
+

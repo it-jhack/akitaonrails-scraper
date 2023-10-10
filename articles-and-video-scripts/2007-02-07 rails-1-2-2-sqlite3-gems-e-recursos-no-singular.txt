@@ -1,0 +1,46 @@
+
+Ontem pela manhã eu vi que o Rails 1.2.2 havia sido disponibilizado via gems e postei aqui. Fiz a atualização e coloquei os changelogs no blog porque procurei pela blogosfera e não achei nada a respeito. Até o Thiago notou que no repositório de desenvolvimento nem havia sido liberada a tag 1.2.2.
+À tarde, saiu o post do DHH explicando do que se tratava. Segue a tradução (mais uma …) falando sobre isso. Mais abaixo Chad dá uma dica para quem tiver problemas com o novo RubyGems (que o Rails 1.2.2 precisa a partir de agora).
+
+
+Tradução/Fonte: David/Riding Rails
+É hora para outra pequena atualização ao Rails 1.2. Isso foi principalmente por uma mudança na API do SQLite entre as versões 3.3.7 e 3.3.8 que deixou o adaptador de banco de dados do Rails morto. Mas com este lançamento e o gem sqlite3-ruby do Jamis Buck na versão 1.2.1, estamos de volta aos negócios com todas as versões do SQLite3.
+Segundo, agora estamos dependendo do RubyGems 0.9.0 e superiores. Isso vai corrigir as mensagens de obsolescência para require_gem (o novo método é apenas gem) e vai restaurar o funcionamento do rake rails:freeze:gems. Então certifique-se de atualizar para o último RubyGems antes de instalar. Isso é feito com “gem update —system”.
+Finalmente, decidimos incluir alguns brindes junto com as correções descritas acimas e o resto dos reparos de bugs nesse lançamento. Recursos singulares, por exemplo, lhe permite modelar recursos singletons dentro do escopo de um domínio. O exemplo comum é user.application.com/account. Isso agora é modelado com:
+map.resource :account
+… e as rotas de acordo:
+GET    /account      => AccountController#show
+GET    /account/new  => AccountController#new
+GET    /account;edit => AccountController#edit
+POST   /account      => AccountController#create
+PUT    /account      => AccountController#update
+DELETE /account      => AccountController#destroy
+
+Note que o controller também é no singular, não plural como é normalmente o caso quando se usa map.resources.
+Também trouxemos a melhoria à :conditions no Active Record que lhe permite passar ranges, convertendo-os automaticamente para cláusulas BETWEEN, assim:
+Student.find(:all, :conditions => { :grade => 9..12 })
+… que se torna:
+"SELECT * FROM students WHERE grade BETWEEN 9 AND 12"
+Essa é uma atualização recomendada para todos rodando 1.2.x (e um lembrete que se você não estiver ainda no Rails 1.2.x, não terá correções de bugs automaticamente e terá que fazer backport deles manualmente). É uma substituição sem contra-indicações que não exige nenhuma modificação às aplicações que já rodam em 1.2.×.
+Aproveitem!
+E caso vocês estejam tendo problemas instalando gems …
+Tradução/Fonte: Chad/Riding Rails"
+Um número significativo de desenvolvedores Rails relataram problemas instalando gems com a versão atualizada do RubyGems. Se estiver passando por problemas que se parecem com isso:
+$ gem update sqlite3-ruby Updating installed gems… ERROR: While executing gem … (NoMethodError) undefined   
+  method `refresh’ for #
+
+… você deve remover se arquivo source_cache local. Esse é o arquivo que faz cache localmente de qualquer metadata de gem do servidor gem para evitar ter que baixar tudo de novo toda vez que executa o comando gem.
+Para descobrir o local desse arquivo em seu sistema, rode o seguinte comando:
+$ gem env
+RubyGems Environment:
+  - VERSION: 0.9.2 (0.9.2)
+  - INSTALLATION DIRECTORY: /usr/local/lib/ruby/gems/1.8
+  - GEM PATH:
+     - /usr/local/lib/ruby/gems/1.8
+  - REMOTE SOURCES:
+     - https://gems.rubyforge.org
+
+O arquivo source_cache deve estar no caminho chamado “GEM PATH”. Removendo esse arquivo os problemas relacionados a ele devem desaparecer.
+Essa solução é um pulo do gato por enquanto até a equipe do RubyGems sair com uma correção.
+tags: obsolete rails
+

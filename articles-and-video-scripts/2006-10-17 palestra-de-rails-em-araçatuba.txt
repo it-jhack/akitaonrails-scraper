@@ -1,0 +1,13 @@
+
+
+
+
+Carlos Henrique Martineli trabalha conosco na Balance. Está em começo de carreira e tem se esforçado para evoluir em Java, mas não perdeu tempo quando foi apresentado a Rails. Segue seu relato de uma palestra que ele ministrou em Araçatuba semana passada.
+No último dia 11 foi realizado um workshop sobre Ruby on Rails na cidade de Araçatuba, interior de São Paulo.
+Público alvo? Estudantes de ciência da computação e amantes de tecnologia.
+Tratando-se de uma ferramenta nova no mercado (ainda mais no Brasil), elaborei uma apresentação introdutória mas completa. Meu workshop foi marcado para ter inicio após uma palestra sobre Design Patterns em Java. Ciente das inúmeras comparações entre ambas as linguagens e frameworks, procurei mostrar ambos os lados de forma amistosa, envolvendo também PHP, para ampliar um pouco esta “visão cerrada” entre duas ferramentas, dentre dezenas no mercado.
+A informação que tive é que algumas pessoas conheciam a linguagem Ruby superficialmente, mas ninguém sequer tinha lido algo sobre seu web framework, Rails. No inicio notei certa curiosidade do pessoal sobre o assunto. A palestra anterior sobre design patterns foi benéfica também para a otimização do pouco tempo que eu tinha (devido ao conteúdo elaborado), com explicações sobre MVC, Observer, Value Object, etc.
+O cronograma incluiu algumas características de Ruby, como: modificadores, acessores, blocks, e assim por diante; alguns conceitos e “sub-frameworks” de Rails, como: DRY, Convention over Configuration, Active Record, Action Pack, Action Mailer e a situação do mercado com relação à tecnologia.
+Ao final, foi implementado uma adaptação do vídeo de David Hansson, How to build a blog engine in 15 minutes with Ruby on Rails. Várias pessoas ficaram surpresas com a facilidade, flexibilidade e consistência (entre as camadas) do framework, outros, “indignados” (se assim posso dizer) com a complexidade gerada pelas outras ferramentas para resolver problemas equivalentes.
+tags: obsolete
+

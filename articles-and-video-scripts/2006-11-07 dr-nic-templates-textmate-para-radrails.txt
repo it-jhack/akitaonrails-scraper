@@ -1,0 +1,28 @@
+
+
+Dr. Nic fez novamente: ele portou a maioria dos snippets (trechos de código, na maioria ativados por combinações de teclas) para o venerado RadRails. Para quem chegou agora ao assunto: no mundo Mac existe um excelente editor de textos chamado Textmate. Muitos o creditam como o melhor editor desde o Emacs original. Ele é simples, leve e altamente produtivo principalmente por ter uma engine de snippets altamente flexível. E o Textmate já vem pré-instalado com dezenas de snippets de código específicos para Ruby e Rails. Quem teve a chance de ver os vários screencasts como o famoso demo onde David Hansson codifica um blog em 15 minutos logo consegue identificar que a ferramenta que ele está usando é um de seus maiores trunfos.
+No mundo Windows, muitos já tentaram coisa semelhante com outros editores como o jEdit, por exemplo, mas o resultado final não chega perto. E o editor multi-plataforma que tem ganhado mais notoriedade é o RadRails, um Eclipse melhorado para ajudar a desenvolver projetos Rails.
+Dr. Nic já impressionou muitos com seu Magic Models, onde ele turbina o ActiveRecord de tal maneira que não é mais necessário explicitar configurações como has_many, belongs_to, validates_presence_of e assim por diante: seu plugin consulta essas características diretamente do banco de dados. E agora, como brinde de Halloween, ele liberou seu conjunto de snippets à la Textmate para RadRails.
+
+
+Instalação
+
+ Fazer download dos dois arquivos de template XML abaixo
+ Abrir o RadRails
+ Ir no menu Windows > Preferences > Ruby > Editor > Templates para ver a lista de templates inclusos
+ Clicar em qualquer template e apertar Ctrl+A para selecionar todos
+ Clicar em Remove para apagar todos
+ Clicar em Import …, selecionar o arquivo ruby-rr-templates.xml
+ Mudar para Rails > Editors > RHTML Editor > RHTML Templates
+ Remover todos os templates, como feito anteriormente
+ Clicar em Import …, selecionar o arquivo rhtml-rr-templates.xml
+ Apertar OK para fechar a janela e estamos prontos
+
+Achou muito difícil? Segundo Dr. Nic, esses templates virão pré-instalados na próxima versão do RadRails.
+Como usar templates/snippets?
+Você pode usar o cheat-sheet (uma tabela de “cola”) do próprio Textmate como base. Mas a recomendação do Dr. Nic é gastar 20 minutos dando uma olhada na lista de templates instalados. O nome do template é o que você digitará no editor para ativar o template.
+Por exemplo, o nome assert_equals é ase. Então, digite ase e pressione CTRL+SPACE e uma lista de opções será mostrado. Escolha uma e pressione ENTER.
+Quer ver todos os templates disponíveis que começam com um certo string? Digite as* e pressione CTRL+SPACE e todas as variações irão aparecer.
+Dr. Nic também trabalhou numa conversão dos snippets de Javascript e CSS mas o RadRails ainda não tem editores para isso. Se ele e a equipe do RadRails trabalharem juntos, teremos boas surpresas nas próximas versões, o que é uma excelente notícia para os desenvolvedores Rails nas plataformas Windows e Linux.
+tags: obsolete
+

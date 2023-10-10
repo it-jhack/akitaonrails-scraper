@@ -1,0 +1,107 @@
+
+Faz algum tempo que quero fazer um agregado com todos os blogs e sites que falaram sobre o Rails Summit Latin America 2008. O LiveStream do BlogBlogs agregou mais de 2.700 updates (twits, flickrs, youtube, etc). Acho que consegui juntar praticamente tudo que vocês postaram, mas se alguém fez um Review sobre o Summit e não está na lista, não deixe de comentar.
+Mais uma vez, estou muito contente que conseguimos erguer um evento que o pessoal gostou tanto. Espero que isso tenha ajudado a dar ânimo novo a quem já era Railer e também tenha incentivado novos integrantes nesta excelente comunidade.
+Sigam adiante para ver os links.
+
+
+Pré-anúncios
+
+SP debate “queridinha” das linguagens em maior evento da América Latina – anúncio pré-evento, na Folha Online
+The biggest Rails event in latin america – leonardoborges.com
+
+Impressões da Blogosfera
+
+Rails Summit: Eu fui! – Blog do Elomar França
+Rails Summit ! Eu fui ! – Blog do 1up4Developers
+Rails Summit Latin America 2008 – Excelente – Blog meupost.com
+Relato sobre o Rails Summit Latin America 08 – Blog do André
+Rails Summit 2008 – Blog do ArthurGeek.net
+Rails Summit Latin America – Dia 1 – Blog do Klaus Paiva
+RAILS SUMMIT – Blog Batecabeça
+[Rails Summit Latin America] Retrospectiva do evento – Blog do Guilherme Chapiewski
+Rails Summit Latin America – Blog do PotHix
+#RailsSummit, Inesquecível!!! – Blog do Henry Hamon
+Evento Rails Summit – Blog do Borga
+Primeiro dia do Rails Summit 2008 – Blog da Bluesoft
+Segundo dia do Rails Summit 2008 – Blog da Bluesoft
+rails summit 2008 em são paulo – Blog do Ccasado
+rails summit 2008 – Blog Pensaletes 3.0
+Rails Summit – Eu Fui! – Blog Manifesto na Web!
+Mude! – Blog Visão Ágil
+Rails Summit Latin America – Blog do Tailor R. Fontela
+Rails Summit – Quem não foi.. perdeu um ótimo evento! – Blog do Marcos Zimmermann
+Participação no “Rails Summit Latin America” – Blog do André Faria Gomes
+Os mobs no Rails Summit Latin America – Blog Mobbbi
+Rails Summit – Blog VidaGeek.net
+Rails Summit Latin America 2008 – Blog papodenerd.net
+Rails Summit Retrospective – Blog Débito Técnico
+Agilidade, por Obie Fernandez – Blog do Adolfo Souza
+Mind Map – MindMeister
+Participação no Rails Summit – Blog do Rafael Lima
+Azafatas de la Rails Summit Latino-americano – Blog do carakan
+Change! – Blog The Turning Point
+Rails Summit Latin America – Blog Simples Ideias
+Rails Summit ‘08 – Blog Superficie Reflexiva
+
+Estrangeiros e Palestrantes
+
+[Rails Summit Latin America] Conference Report – impressões do Danilo Sato
+Apresentação no Rails Summit Latin America 2008 – apresentação do George Guimarães
+JRuby on Rails, no Rails Summit Latin America – impressões, por Fabio Kung
+Rails Summit Conference recap – impressões do Obie Fernandez
+Rails Summit 2008 – impressões, por Ninh Bui, da Phusion
+RAILS SUMMIT LATIN AMERICA – blog devChix.com, pela Desi McAdam
+My impressions from Rails Summit LA 2008 – impressões, por Luis Lavena
+RubyRescue – blog do Chad DePue
+Terminó el Rails Summit Brasil – Blog El Futirifoken
+
+Silvestre Mergulhão
+O grande Silvestre postou bastante e, em alguns casos, fez praticamente um transcript completo de algumas palestras. Vale a pena conferir.
+
+RAILS SUMMIT DIA 15: CHAD FOWLER
+RAILS SUMMIT DIA 15: GEORGE MALAMIDIS E DANILO SATO
+RAILS SUMMIT DIA 15: DR NIC
+RAILS SUMMIT DIA 16: JAY FIELDS
+RAILS SUMMIT DIA 16: VINICIUS TELES
+RAILS SUMMIT DIA 16: CARL YOUNGBLOOD
+RAILS SUMMIT DIA 16: PHILLIPPE HANRIGOU
+RAILS SUMMIT DIA 16: OBIE FERNANDEZ
+
+Eliézer Pimentel
+O Eliézer também, do blog Além de Códigos, fez uma série de posts sobre o Summit e merece uma sessão à parte.
+
+RailsSummit Latin America #1
+RailsSummit Latin America #2
+RailsSummit Latin America #3
+RailsSummit Latin America #final
+
+Videos
+Infelizmente, tivemos problemas operacionais com o vídeo e acabamos ficando sem os vídeos oficiais. Alguns colaboradores gravaram algumas coisas, então dá para dar um “gostinho” para quem não foi.
+
+Railsbox Videocast na Rails Summit 2008
+
+
+Apresentando o DarkCast.. edição especial RailsSummit
+
+
+Meu emprego foi para os EUA – Carlos Brando
+
+
+Almoço Rails Summit:
+
+
+
+Ending #RailsSummit LA in São Paulo, Brazil
+
+
+
+Akita na festa Rails Summit
+
+
+
+Dr Nic: morena_opensource. Fork It Now
+
+
+É isso aí pessoal. Foi super legal ver todos juntos. Obrigado a todos pelo apoio!
+tags: railssummit2008
+

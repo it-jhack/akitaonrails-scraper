@@ -1,0 +1,26 @@
+
+Ok, acabei de responder sobre meu livro, agora respondendo sobre mim mesmo: “Onde está Wally .. quero dizer, o Akita?”
+Este fim de ano está bem agitado! Se fosse só meu trabalho na Surgeworks já estaria bem complicado (bastante coisa pra entregar, e rápido!! Socorro!!). Porém, um workaholic nunca tem trabalho demais: tem tempo de menos. Além do meu trabalho no dia a dia ainda tenho meu novo livro pra terminar e os seguintes eventos que vou participar:
+
+
+
+
+A RejectConf SP’07 está confirmadíssima para o próximo dia 17 de novembro! E uma novidade: nossos amigos da USP conseguiram um auditório maior! É menos confortável que o anterior mas isso aumenta nossa capacidade de 90 para 150 pessoas. Depois enviarei e-mail a todos que se cadastraram para confirmar. O horário mudou um pouco: será do meio-dia às 18hs. Atualizem suas agendas! Para antecipar, todos que se cadastraram até ontem (4/11) estão confirmados. Quem se cadastrar a partir de agora estará na lista de espera. E quem não responder ao meu próximo e-mail de confirmação (vou tentar mandar até quarta-feira) considerarei que desistiu da vaga e darei lugar a outras pessoas.
+
+
+Na semana seguinte, dia 24 de novembro, estarei junto com o Vinícius num evento na UNESP de Bauru/SP. Convite e esforços de Lucas Húngaro. Desde o ano passado acabei tendo que desistir de várias outras palestras em faculdades, mas já passou da hora de eu me desdobrar mais.
+
+
+A partir do dia 26 de novembro também estarei ministrando o curso online para iniciantes em Ruby on Rails, pela eGenial. Serão 18 horas de aula que deve ajudar quem está querendo começar a aprender Rails. Se este é seu caso, não deixe de se cadastrar!
+
+
+Depois de uma semana de intervalo, na seguinte, dia 8 de dezembro, é minha vez de agradecer o Vinicius (que estará na RejectConf) participando do evento dele, a Rio on Rails, no SENAC de lá. Espero que todos os cariocas possam comparecer.
+
+
+
+Finalmente, na semana seguinte, dia 15 de dezembro, é hora de ajudar quem necessita, no evento online Rails for Kids 2007, organizado por outro grande amigo, o Carlos Eduardo da eGenial. E com uma participação especial: meu chefe, Carl Youngblood também irá palestrar! Além do bom motivo de divulgar Rails ainda há um motivo mais importante de ajudar a instituição Cotolengo de MS.
+
+Ufa, bastante coisa! Isso é um excelente sinal pois significa que nossa comunidade está ganhando tração (e eu estou perdendo noites de sono)! E não se esqueçam dos eventos acontecendo em outros estados. E, claro, continuo participando online tanto do excelente Fórum da RubyOnBr quanto do grupo de discussão Rails-br. Portanto, quem quiser tirar dúvidas gerais tanto de Ruby quanto Rails poderá contar com a ajuda desta excelente comunidade em crescimento. É consenso que a melhor coisa sobre Rails é sua comunidade.
+E espero sobreviver até o Natal!!
+tags: obsolete rejectconf
+

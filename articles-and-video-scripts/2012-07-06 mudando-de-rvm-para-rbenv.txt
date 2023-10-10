@@ -1,0 +1,164 @@
+
+Aproveitei o dia hoje para testar o tão falado Rbenv. Tecnicamente não tenho nenhum motivo para mudar do RVM a não ser curiosidade de testar alguma coisa diferentes (fator “geek”, se quiserem). Desde que o Wayne lançou o RVM eu venho utilizando sempre a versão mais recente instável (rvm get head) e ao contrário do que muitos dizem, eu nunca tive nenhum problema do tipo precisar reinstalar tudo depois de uma atualização.
+A grande maioria dos problemas que eu já vi são relacionados à atualização de sistema operacional, em particular do Snow Leopard para Lion, mudança no XCode do compilador GCC para Clang, de 32-bits para 64-bits, coisas desse tipo.
+
+
+Isso tudo dito, não experimentar alguma coisa sempre me deixa apreensivo. Em particular, instalar o Rbenv não significa ter que matar o RVM da minha máquina. Para desativar o RVM basta abrir meu arquivo ~/.bash_profile ou ~/.bashrc e comentar a seguinte linha:
+1
+
+# [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
+
+
+Essa e quaisquer outras que se refiram ao RVM.
+Para instalar o Rbenv não é difícil só clonar via Git diretamente:
+1
+2
+3
+4
+5
+6
+
+cd
+git clone git://github.com/sstephenson/rbenv.git .rbenv
+
+mkdir -p ~/.rbenv/plugins
+cd ~/.rbenv/plugins
+git clone git://github.com/sstephenson/ruby-build.git
+
+
+E no .bash_profile ou .bashrc acrescentar ao final:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+# rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+# source ~/.rbenv/completions/rbenv.bash
+
+# prompt with ruby version
+# rbenv version | sed -e 's/ .*//'
+__rbenv_ps1 ()
+{
+  rbenv_ruby_version=`rbenv version | sed -e 's/ .*//'`
+  printf $rbenv_ruby_version
+}
+
+# prompt with git && rbenv
+if [ -f $BASH_COMPLETION_DIR/git ] && [ -f `which rbenv` ]; then
+  export PS1='\[\033[01;32m\]\u@\h\[\033[01;33m\] \w$(__git_ps1) ruby=$(__rbenv_ps1) \n\[\033[01;34m\]\$\[\033[00m\] '
+elif [ -f $BASH_COMPLETION_DIR/git ]; then
+  export PS1='\[\033[01;32m\]\u@\h\[\033[01;33m\] \w$(__git_ps1) \n\[\033[01;34m\]\$\[\033[00m\] '
+elif [ `which rbenv` ]; then
+  export PS1='\[\033[01;32m\]\u@\h\[\033[01;33m\] \w ruby=$(__rbenv_ps1) \n\[\033[01;34m\]\$\[\033[00m\] '
+else
+  export PS1='\[\033[01;32m\]\u@\h\[\033[01;33m\] \w \n\[\033[01;34m\]\$\[\033[00m\] '
+fi
+
+
+Posso também instalar mais plugins. Isso fez muita diferença para mim que migrei do RVM. No diretório ~/.rbenv/plugins faça:
+1
+2
+3
+4
+5
+
+git clone git://github.com/cldwalker/rbenv-plugin.git
+git clone git://github.com/carsomyr/rbenv-bundler.git
+git clone git://github.com/rkh/rbenv-update.git
+git clone git://github.com/rkh/rbenv-whatis.git
+git clone git://github.com/rkh/rbenv-use.git
+
+
+Também notem que eu não considerei usar o Rbenv sem o Ruby-build. Muitos vão dizer que não precisa, mas sinto muito: sou preguiçoso assim mesmo :-)
+Para garantir que você não vai ter problemas no Lion ou Mountain Lion pela falta de GCC em vez de Clang, baixe o osx-gcc-installer e instale do binário mais recente.
+Para compilar Ruby ou qualquer outro binário a partir do fonte (Homebrew) você precisa de um conjunto de ferramentas. A maneira oficial é baixar o XCode, abrir o painel de preferências e ir na tab “Downloads”, lá existe o “Command Line Tools”, é isso que você precisa instalar primeiro. No parágrafo anterior eu menciono o osx-gcc-installer, mas a  Apple resolveu evoluir sobre ele":https://kennethreitz.com/xcode-gcc-and-homebrew.html, veja o artigo do autor do osx-gcc-installer para entender. Macs antigos podem ainda usar esse pacote.
+De qualquer forma, dado que você possui os compiladores necessá’rios, agora podemos fazer o seguinte:
+1
+2
+
+rbenv install 1.9.3-p194 # aguarde, ele vai demorar pra instalar
+rbenv use 1.9.3 --global # definindo como versão padrão
+
+
+No momento de escrever este arquivo, a URL para a versão de JRuby mais recente estava quebrada. Para consertar, precisamos alterar o arquivo ~/.rbenv/plugins/ruby-build/share/ruby-build/jruby-1.7.0-preview1 trocando o que estiver dentro por:
+1
+
+install_package "jruby-1.7.0.preview1" "https://jruby.org.s3.amazonaws.com/downloads/1.7.0.preview1/jruby-bin-1.7.0.preview1.tar.gz" jruby
+
+
+Agora posso instalar assim:
+1
+
+rbenv install jruby-1.7.0-preview1
+
+
+Para trocar entre versões posso fazer simplesmente:
+1
+2
+3
+
+rbenv use jruby-1.7.0-preview1
+rbenv use 1.9.3
+rbenv use 1.9.3 --default
+
+
+Ou seja, graças ao plugin rbenv-use posso usar quase como se fosse RVM. E para atualizar as coisas, graças ao plugin rbenv-update é simples:
+1
+
+rbenv update
+
+
+Finalmente, graças ao plugin rbenv-bundler, os binários como rake, rails vão levar em consideração a configuração de Gemfile do Bundler do projeto específico onde estiver. Basta lembrar sempre que instalar uma nova gem ou rodar bundle install ou instalar um novo Ruby que se execute:
+1
+
+rbenv rehash
+
+
+Isso vai atualizar o que ele chama de “shims” que são scripts “casca” que chamam os originais nos lugares corretos. Existem outros plugins mas estes foram os mais úteis que encontrei. Embora muitos não gostem, em servidores que eu tenho controle, nunca achei ruim usar o RVM System Wide e parece que com Rbenv posso fazer algo semelhante, mas isso fica pra outro artigo.
+Instalei a versão mais recente do Bundler no meu Ruby 1.9.3 padrão:
+1
+
+gem install bundler --pre
+
+
+Isso é necessário pra poder escolher versão de Ruby diretamente no Gemfile para deployments no Heroku. Daí executei bundle em todos os meus projetos para instalar as gems novamente. Não tive nenhum problema e tudo correu normalmente, novamente, basta lembrar de executar rbenv rehash (isso é obrigatório mesmo? é a parte mais cansativa e que fica chato muito rápido na minha opinião).
+No caso específico do rbenv-plugins, ainda há uma última dependência:
+1
+
+gem install boson
+
+
+Críticas ao RVM para trocar para Rbenv que já ouvi, como disse antes, primeiro é o fato de algumas instalações terem tido problemas, mas não foi meu caso. Alguns puristas não gostam do comando “cd” ser substituído por um script para possibilitar a execução do arquivo .rvmrc nos projetos, eu pessoalmente não tenho nada contra. Por outro lado, os “shims” não são minha parte favorita, então estamos quites.
+Outra coisa que puristas reclamam é o fato do RVM “poluir” o ambiente com muitas variáveis de sistema – que é o mecanismo que ele usa para selecionar Rubies e gemsets, novamente, eu particularmente não tenho nada contra, especialmente porque eu também, numa era pré-Bundler, já tinha implementado mecanismo semelhante. O RVM foi construído numa época anterior ao Bundler, por isso tem o conceito de “gemsets”, ou seja, conjuntos isolados de gems. O Rbenv veio pós-Bundler, por isso ele delega ao Bundler a responsabilidade de isolar conjuntos de gems por projeto. No meu caso, simplesmente parei de usar gemsets no RVM, nada de mais.
+Tirando isso, não vejo nenhuma outra grande diferença aparente. O RVM para mim sempre foi muito bom em manter minhas gems instaladas quando eu atualizo de Rubies, não sei como o Rbenv se comporta ainda. O RVM sem dúvida é mais maduro, o Rbenv é novo ainda e menos polido mas mais simples e leve, o que agrada alguns. Sinceramente preferia ver idéias do Rbenv tendo sido incorporadas no RVM em vez de termos dois projetos separados, mas assim é a vida.
+Ao final, escolha RVM ou Rbenv, ambos vão solucionar o problema de gerenciar múltiplas versões de Ruby na mesma máquina. Sempre use Bundler em projetos Ruby, seja com Rails ou não, e dificilmente terá dores de cabeça com dependências de gems. Com tudo isso instalado, o ciclo de desenvolvimento é extremamente simples e transparente, sem dores de cabeça.
+Por último, se decidir ficar com o Rbenv, só precisarei fazer a última coisa:
+1
+
+rm -Rf ~/.rvm
+
+
+Boa diversão!
+tags: obsolete ruby
+

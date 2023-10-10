@@ -1,0 +1,13 @@
+
+Estou preparando minha palestra para amanhã, no evento da Wire 2010 (não deixem de ir, será no IME-USP pelas 13hrs). Enfim, pensando em alguns dos slides, resolvi usar novamente o exemplo de “iteração e Incremento” que o Jeff Patton explica tão bem em seu artigo Não sei o que quero, mas sei como conseguir.
+Meu problema é a imagem que ele usa no artigo:
+
+
+
+
+É uma imagem de baixa resolução e fica muito ruim quando eu coloco num slide. Ele é super claro e legal de mostrar, mas desta vez resolvi preparar algo um pouco mais caprichado.
+Então resolvi usar exatamente a mesma idéia da imagem anterior (leiam o artigo original para saber do que se trata) e editei este vídeo. Vejam o que acham :-)
+
+Pelo menos acho que fica mais divertido :-)
+tags: off-topic principles management agile
+

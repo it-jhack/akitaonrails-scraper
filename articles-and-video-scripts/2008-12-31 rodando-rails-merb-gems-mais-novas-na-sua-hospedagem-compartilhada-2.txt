@@ -1,0 +1,12 @@
+
+
+
+
+Você tem uma conta Linux em alguma hospedagem compartilhada. Porém, por mais que nos esforcemos, é difícil manter tudo sempre atualizado, ainda mais no mundo Rails onde saem gems novas o tempo todo (por exemplo, o Merb 1.0.7 saiu dia 28 de dezembro e somente 3 dias depois o Yehuda já lançou o 1.0.7.1).
+Mesmo assim muita gente quer usar a versão mais recente!
+Outro problema: você fez sua aplicação Rails e não configurou corretamente as “config.gem” ou mesmo a variável RAILS_GEM_VERSION. Por alguma razão tem muita gente que comenta essa linha, o que está errado! Isso porque dessa forma sua aplicação sempre vai carregar o Rails mais novo instalado na máquina, se o servidor for atualizado, digamos de Rails 2.2 para Rails 2.3, sua aplicação tem a possibilidade de quebrar! Por alguma razão as pessoas acham que o correto é sempre carregar a versão mais recente. De novo: está errado. Claro subir da versão 1.0.0 para 1.0.1 não deveria ser um problema, mas carregar – sem saber – da versão 1.0 para 2.0, certamente alguma coisa vai quebrar e você só vai saber disso quando alguém entrar na sua aplicação e ela estourar um erro!
+Mas existem várias soluções para isso. No Rails, você pode vendorizar todas as Gems dentro do diretório vendor/gems usando as tarefas de Rake que já vem com o Rails desde a versão 2.1 (melhoradas na 2.2).
+Mais ainda, você pode ter seu próprio repositório de Gems (incluindo o comando “Gem” em si) totalmente local no seu diretório home da hospedagem. Por isso eu criei este artigo de Wiki ensinando como fazer isso em qualquer hospedagem Linux que possua acesso via SSH, tenha pelo menos um Ruby pré-instalado e acessível e compiladores (GCC) também acessíveis. Inclusive como instalar o Merb mais novo com todas as suas dependências.
+Lembrem-se: as versões das suas Gems são importantes!! Se você controla tudo na sua máquina local e vai colocar num servidor dedicado, onde somente você usa, daí você pode instalar somente as versões que quiser. Mas se for colocar num servidor compartilhado, não há garantias, e é obrigação do desenvolvedor controlar isso.
+tags: obsolete rails locaweb
+

@@ -1,0 +1,25 @@
+
+Faz meses que quero trocar de celular, mas nenhum me pareceu adequado. Rumores sobre um “iPhone” circulavam a internet faz muito tempo. Quando os rumores ficaram mais fortes, resolvi esperar. Desde então carrego meu odioso Nokia 6600, na esperança de substituí-lo por um aparelho decente. Este dia chegou em 29 de Junho de 2007, com o lançamento do estrondoso iPhone.
+
+
+
+Infelizmente um problema: AT&T. Não adiantava comprar no lançamento pois eu não poderia utilizá-lo aqui no Brasil. Era óbvio que alguém iria destravá-lo. Comecei a acompanhar todo site sobre unlocking, o pessoal do iPhone Dev Team, o pessoal do iPhoneSIMFree. Mais de 70 dias depois, surge o anúncio de pessoas como George Holtz, que realizou um unlock via hardware. Longe do que eu esperava. Mais um pouco de paciência.
+Semana passada, se não me engano na quarta-feira dia 5 de setembro, durante o evento The Beat Goes On, Steve Jobs anuncia os excelentes novos produtos iPod (estou louco agora pelo novo iPod Nano). Junto com isso a brusca e bem vinda queda de preços do iPhone 8Gb, de US$ 599 para US$ 399. Eu compraria mesmo se fosse o dobro do preço, cortando então …
+Finalmente, segunda-feira, dia 10 de setembro, chegou ao mercado a primeira solução de unlock via software, pela iPhoneSIMFree. As críticas pela internet: o preço salgado de US$ 100. Não importa, eu pagaria porque vale a pena – alguém varou noite escrevendo esse código. Mas como meu iPhone não havia chegado ainda, segurei o cartão de crédito mais um pouco. E então, menos de 48 horas depois, o iPhone Dev Team finalmente lançou o software open source que faria a mágica: iUnlock! A internet vai à loucura, relatos em mais de 30 países nas 24 horas seguintes relatando histórias de sucesso.
+
+Sexta-feira, dia 14 de setembro de 2007, 22hs: recebo meu iPhone 8Gb!! Depois de um compromisso durante a noite, eis que começo minha empreitada rumo ao iPhone desbloqueado a partir das 2:30 da manhã de sábado, dia 15.
+5:30 da manhã: minha primeira ligação via TIM funciona! Firmware 1.0.2 aplicado, jail-break, OpenSSH e outras ferramentas BSD instaladas, Wi-Fi funcionando, YouTube! funcionando e neste exato instante sincronizando 300 tracks de podcast, contatos, calendários, diretamente no meu recém-desbloqueado iPhone!!
+Faz dias que ouço na rádio 89 FM falando sobre o iPhone “desbloqueado”. Fico imaginando como eles fizeram. As únicas duas soluções de desbloqueio via software saíram esta semana. Duvido que eles tenham uma melhor antes. Portanto só resta a alternativa do desbloqueio via hardware. Fico com dó dos iPhones que precisaram ser dissecados para serem desbloqueados, mas enfim, felizmente não é o meu :-)
+A receita não foi difícil, mas poderia ter sido mais simples. Aqui vai um pequeno resumo para os interessados. Obviamente, estou no Mac, mas há receitas para Windows também.
+O primeiro passo é Jail Break: basicamente abrir o filesystem do modo read-only para writable. Os programas que permitem isso são o iNDependence (no Mac) e o iBreak (no Windows). Existem outros como iActivator e iFuntastic, mas nenhum deles deu muito resultado – pelo menos para mim.
+Feito o desbloqueio, é necessário instalar pelo menos um servidor de OpenSSH como o Dropbear. O iNDependence também cuida disso. Finalmente, resta ativar o iPhone (ou o iTunes não deixará sincronizar nem nada). Tudo isso está coberto a partir deste link
+Feito isso, o iPhone já funcionará como se fosse o novo iPod Touch: como um iPod com capacidades Wi-Fi.
+Agora vem o pulo do gato: o desbloqueio. Para isso, siga a receita neste link. Mas há um pequeno problema que a receita não menciona. O truque eu encontrei neste outro link. Santo Google!
+O processo demora um pouco. O iUnlock vai ficar rodando por um bom tempo. Mas não há nada melhor do que ver a mensagem de “100%” ao final. Sim, como já foi confirmado, o procedimento realmente funciona! É tedioso, é um pouco demorado, as receitas são um pouco falhas, mas com bom senso é possível ativá-lo e desbloqueá-lo facilmente. Todo bom geeky vai conseguir.
+Este foi apenas um pequeno resumo. Mas tudo que eu precisei encontrei nos links acima e no Google. Não vou detalhar passo a passo porque já está tudo lá.
+Concluindo, o celular que eu esperei tanto finalmente apareceu. Agora meu velho Nokia 6600 está a um passo da sepultura.
+
+Boa Sorte a todos os Early Adopters!!
+PS: sim, todas as fotos acima foram tiradas por mim mesmo – infelizmente minha máquina fotográfica não é boa o suficiente para mostrar o nome “TIM” como operadora no topo da tela – preciso comprar outra máquina …
+tags: obsolete iphone
+

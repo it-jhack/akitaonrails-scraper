@@ -1,0 +1,222 @@
+
+De volta com mais um tutorial de Scott Rutheford sobre o plugin Ajax Scaffold. Desta vez ele nos mostra como extender ou substituir a funcionalidade padrão do plugin. Ele vai por duas áreas: em primeiro lugar como filtrar o conjunto de dados que tabela mostra e em segundo os métodos que vamos sobrescrever para realmente ganhar controle.
+
+
+Filtro Simples do Conjunto de Dados
+Para conseguir filtrar os dados que a tabela mostra, precisamos simplesmente sobrescrever um único método (para cada model) no seu controller:
+1
+
+conditions_for_{nome_da_tabela}_collection
+
+
+Espera-se que esse método retorne o mesmo array que o método find() do Rails aceita como valor do parâmetro :conditions.
+Vamos pegar um simples model user como exemplo. A tabela no banco de dados tem as seguintes colunas: id, name, password, employer_id, onde o employer_id representa um relacionamento has_one com o contratante do usuário (representado em outra tabela). Agora digamos que queremos ver usuários do contratante atual em nossa tabela, então tudo que precisamos fazer é definir o seguinte método em nosso controller:
+1
+2
+3
+
+def conditions_for_users_collection
+  [ 'employer_id = ?', params[:current_employer] ]
+end
+
+
+Claro que isso assume que a requisição atual define :currrent_employer como o ID do contratante.
+Podemos usar qualquer declaração condicional que quisermos. Se funcionaria no método find() do Rails, funcionará aqui.
+Filtros Mais Complexos
+Num nível mais baixo, a coleção usada pela tabela é fornecida por uma combinação de três métodos:
+
+count_{nome_da_tabela}_collection(model, options)
+page_and_sort_{table_name}_collection(model, options, paginator)
+page_and_sort_{table_name}_collection_with_method(model, options, paginator)
+
+Esses métodos representam uma versão um pouco extendida dos métodos encontrados no paginador do Rails. Os dois primeiros são chamados para qualquer página normal ou ordenação (ou seja, não usando o ScaffoldColumn definido com o parâmetro :sort) e o último é chamado somente por ScaffoldColumns definidos com, espere por isso, o parâmetro :sort.
+Por exemplo, digamos que temos um conjunto de objetos Report que são mostrados usando as seguintes definições de colunas:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+@@scaffold_columns = [ 
+    AjaxScaffold::ScaffoldColumn.new(Report, { 
+        :name => "title",
+        :eval => "row.current_definition.title", 
+        :sort => 'current_definition.title'}),
+    AjaxScaffold::ScaffoldColumn.new(Report, { 
+        :name => "viewed", 
+        :eval => "row.views", 
+        :sort => 'views' }),
+]
+
+
+Também definimos um método que retorna os relatórios para um projeto em particular ou para um projeto em uma categoria em particular (ambos seriam difíceis de fazer com apenas :conditions):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+def get_reports
+  project = get_project
+  reports = project.reports
+
+  if request.post?
+    selected_category = params[:category]
+    reports = project.reports_for_category(selected_category) if selected_category
+  end
+  reports    
+end
+
+
+Então poderíamos definir os três métodos acima da seguinte forma (em ReportsController.rb):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+def count_reports_collection(model, options)
+  get_reports.size
+end
+
+def page_and_sort_reports_collection_with_method(model, options, paginator)
+  collection = get_reports
+  order_parts = options[:order].split(' ')
+  sort_collection_by_method(collection, order_parts[0], order_parts[1]).slice(paginator.current.offset,options[:per_page])   
+end 
+
+def page_and_sorts_reports_collection(model, options, paginator)
+  page_and_sort_reports_collection_with_method(model, options, paginator)
+end 
+
+
+Isso faria cada ordenação (sort) / página usar o método “with_method” uma vez que todas as colunas usam o mesmo parâmetro :sort. Nossa contagem viria de nosso método get_reports e tudo deveria funcionar como esperado.
+Outros Pontos de Extensão
+Aqui estão alguns outros métodos que podemos sobrescrever para mudar o comportamento do scaffold. Provavelmente é uma boa idéia olhar realmente no código-fonte do plugin para ver como cada um é usado. Embora alguns sejam auto-explicativos.
+Em todos eles, {prefix} é definido como {nome_da_tabela}_. Ou seja, o nome da tablea com um sublinhado adicionado. {suffix} é definido como _{nome_do_model_em_caixa_baixa}. Esse é o nome da classe do model usando apenas letras em caixa baixa com um sublinhado adicionado antes. Isso é apenas necessário em cenários de múltiplas tabelas (eu escrevi dessa forma aqui para igualar com o código real). A razão para fazer isso é para dar métodos estilo CRUD quando estamos usando apenas uma única tabela.
+Coluna Padrão de Ordenação
+Por padrão as linhas são ordenadas usando a chave primária, ID. Para mudar isso podemos sobrescrever: default_sort / default_{prefix}sort
+1
+2
+3
+
+def default_{prefix}sort
+   "users.name" 
+end
+
+
+Direção Padrão de Ordenação
+Para mudar isso de “asc” podemos sobrescrever: default_sort_direction / default_{prefix}sort_direction. O único outro valor de retorno possível é “desc”.
+1
+2
+3
+
+def default_{prefix}sort_direction
+   "desc" 
+end
+
+
+Criação
+Se quiser mudar o comportamento padrão quando o model é criado podemos sobrescrever o seguinte método que chamado é internamente:
+1
+2
+3
+4
+
+def do_create#{suffix}
+    @user = User.new(params[:user])
+    @successful = @user.save
+end
+
+
+Atualização/Update
+Se quiser mudar o comportamento padrão quando o model é atualizado podemos sobrescrever o seguinte método que é chamado internamente:
+1
+2
+3
+4
+
+def do_update#{suffix}
+    @user = User.find(params[:id])
+    @successful = @user.update_attributes(params[:user])
+end
+
+
+Tabela
+Para adicionar comportamento customizado para a renderização da tabela podemos usar esse método. Isso é realmente para adicionar funcionalidade. Ainda precisamos chamar os métodos como mostrados ou as coisas podem ir um pouco erradas:
+1
+2
+3
+4
+5
+6
+7
+
+def #{prefix}table
+    self.#{prefix}table_setup
+
+    OTHER CODE GOES IN HERE
+
+    render#{suffix}_template(:action => 'table')
+end
+
+
+Adicionado em 3.2.2
+Novo
+Chamado antes do formulário para um novo model aparecer:
+1
+2
+3
+4
+
+def do_new#{suffix}
+  @user = User.new
+  @successful = true
+end
+
+
+Editar
+Chamado para encontrar o objeto a editar:
+1
+2
+3
+4
+
+def do_edit#{suffix}
+  @user = User.find(params[:id])
+  @successful = !@user.nil?
+end
+
+
+Destruir
+Chamado para encontrar o objeto a destruir:
+1
+2
+3
+
+def do_destroy#{suffix}            
+  @successful = User.find(params[:id]).destroy
+end
+
+
+
+tags: obsolete rails
+

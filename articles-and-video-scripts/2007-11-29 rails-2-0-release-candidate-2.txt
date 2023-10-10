@@ -1,0 +1,7 @@
+
+
+
+
+O DHH acabou de postar sobre a liberação do Release Candidate 2 do Rails 2.0. Este lançamento representa mais bugs resolvidos. Segundo ele, se não for encontrado nada mais grave, podemos esperar a versão final para daqui alguns dias!! Fiquem de olho e testem seus aplicativos na nova versão.
+tags: obsolete rails
+

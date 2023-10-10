@@ -1,0 +1,15 @@
+
+
+
+
+Na Dr. Dobbs de 12 de Março Ivar Jacobson escreveu uma matéria excelente que só hoje fui ver (estou atrasado!). Neste resumo na InfoQ de 3 de abril temos uma visão geral.
+Para os que não sabem, Ivar Jacobson, juntamente com Jim Rumbaugh e Grady Booch (Los 3 Amigos) são os autores de metodologias de orientação a objetos que foram muito famosos muitos anos atrás. Então, Booch decidiu juntar as metodologias em uma – ‘Unified’ Process – e criou a Rational para vender as ferramentas que implementam essa metodologia, daí o famigerado R.U.P. (que para mim deveria ser R.I.P.).
+Aos amantes de práticas Agile, Jacobson, um dos autores do processo mais monstruoso de todos, o RUP, resolveu vir à frente pregar práticas ágeis em vez de processos burocráticos. Não lembro bem mas acho que o próprio Booch já fez isso. Não estou acompanhando o mundo Agile tão de perto.
+Isso me anima porque uma das coisas que me irritam profundamente são os “Enterprisey ball-suckers Architects” e suas planilhas, MS Projects, templates e blá-blá-blá e suas inigualáveis posturas de “vou resolver todos os problemas”.
+Quem resolve os problemas são profissionais bem treinados, com experiência real na Arte-da-Resolução-de-Problemas, que sabem se comunicar – basicamente, falar português corretamente, que parece mais e mais uma raridade nos dias de hoje -, são as pessoas que entregarão os projetos.
+
+Acadêmicos recém-graduados, cheirando a leite, com livros grossos embaixo dos braços deveriam baixar a bola e primeiro aprender na prática o que é um projeto de verdade: clientes que não sabem o que querem, gerentes que não sabem o que fazem, fornecedores que não dizem a verdade, programadores amadores que se acham o próprio James Gosling e por aí vai. E mesmo levando pancada, a maioria não aprende.
+Para ter uma idéia, já tive documento oficial de escopo, assinado e aprovado por um Gerente Geral que, depois resolveu dar de louco e dizer “Assinei sem ler, pode desconsiderar”. Verdade!
+Não sou necessariamente contra metodologias em geral, mas sou completamente contra a forma como são usados na prática nas empresas: como desculpas.
+tags: obsolete uml
+

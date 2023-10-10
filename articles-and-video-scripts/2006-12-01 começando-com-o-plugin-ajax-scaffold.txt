@@ -1,0 +1,225 @@
+
+Este excelente artigo foi retirado (eu sei, eu sei, …) do blog Life On (And Off) The Tracks, de Scott Rutherford. Já mencionei tanto o Streamlined quanto o AjaxScaffold aqui no blog. O que mudou de lá para cá é que antes ele gera um generator e agora é um plugin. Mesmo assim continua extremamente simples de usar e os resultados são impressionantes. Que tal demonstrar a seus colegas a geração de uma formulário com Ajax e tudo em poucos minutos?
+obs: este artigo exige como pré-requisito que você já tenha alguma prática – mesmo que básica – em usar o Rails. Que conheça os principais diretórios, os principais geradores e saiba onde mexer no básico de Models, Views e Controllers do Rails.
+
+
+Instalação
+A maneira mais fácil de instalar a versão plugin do Ajax Scaffold (AS) é usar o instalador que vem no Rails. Simplesmente rode o seguinte comando a partir da raíz do seu projeto Rails:
+1
+
+ruby script/plugin install svn://rubyforge.org/var/svn/ajaxscaffoldp/trunk
+
+
+Isso fará download do plugin no diretório “vendor/plugins”. Os arquivos necessários (views, css e js) serão copiados ao aplicativo durante seu reinício.
+Uso Básico
+Com o plugin instalado simplesmente adicione a seguinte linha:
+1
+
+ajax_scaffold :model_name_in_lower_case
+
+
+ao topo de qualquer classe ActionController. Isso resultará na criação de todos os métodos CRUD requeridos pelo grande front end de Richard White .
+Então incluia isto em seu layout:
+1
+
+<%= ajax_scaffold_includes %>
+
+
+Voilá!! A tabela AS completa estará disponível no endereço https://servidor/meu_controller/ (claro, substitua “servidor” pelo seu servidor – normalmente localhost:3000 – “meu_controller” pelo nome do seu controller que foi modificado acima).
+Como exemplo – digamos que queremos criar uma administração de usuários. Primeiro, geramos o model de usuários:
+1
+
+ruby script/generate model user
+
+
+Então criamos a tabela de usuários no banco de dados usando o seguinte migration:
+1
+2
+3
+4
+5
+6
+
+create_table "users" do |t|
+  t.column "name", :string, :limit => 255, :null => false
+  t.column "password", :string, :limit => 255, :null => false
+  t.column "created_at", :datetime, :null => false
+  t.column "updated_at", :datetime, :null => false
+end
+
+
+Agora geramos o controller:
+1
+
+ruby script/generate controller users
+
+
+Abra o arquivo do controller, users_controller.rb e adicione a inclusão do plugin:
+1
+2
+3
+
+class UsersController < ApplicationController
+  ajax_scaffold :user
+end
+
+
+Crie um arquivo de layout chamado users.rhtml:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+     "DTD/xhtml1-strict.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <title>Users</title>
+  <%= ajax_scaffold_includes %>
+</head>
+<body>
+
+   <%= @content_for_layout %>
+
+</body>
+</html>
+
+
+Inicialize o Webrick (ou outro servidor que você esteja usando como Lighty ou Mongrel), aponte seu browser favorito (Firefox, claro) para https://localhost:3000/users e … você deve ver isto:
+
+Agora podemos ir adiante e usar essa interface. Claro, na vida real ter senhas gravadas como texto puro seria uma má idéia, além disso não colocamos nenhuma validação no model, mas acho que todos já entenderam a idéia.
+Opções
+Então agora você tem uma tabela, e o que mais ela pode fazer? Ok, existem algumas opções que podem ser passadas ao plugin e que adicionam comportamento e aparência. Ele são:
+
+except- isso recebe um array com um desses strings: “create”, “edit”, “delete” e previne a geração dos métodos correspondentes. Isso também remove os respectivos elementos de serem mostrados na tabela. O exemplo a seguir cria um controller sem métodos create e delete:
+
+ajax_scaffold :user, :except => [‘create’, ‘delete’]
+
+width – isso recebe um número representando o tamanho em pixels da tabela gerada. O exemplo a seguinte cria uma tabela de 500px de comprimento:
+
+ajax_scaffold :user, :width => 500
+
+rel_width – isso recebe um número entre 0 e 1 representando o tamanho relativo da tabela ao elemento que o contém. O exemplo a seguir produz um tabela com 70% de tamanho em relação ao seu contâiner:
+
+ajax_scaffold :user, rel_width => 0.7 produces a table of 70% width
+
+rows_per_page – isso indica o número máximo de linhas mostradas antes da paginação.
+
+ajax_scaffold :user, :rows_per_page => 10
+
+totals – isso recebe um array de strings representando os nomes e colunas que você gostaria de totalizar. Se não for nula, esta opção adiciona uma linha de totais ao final da tabela. O exemplo a seguir produz uma linha mostrando o número total de logins para todos os usuários na página (assumindo que nosso model tenha um campo incrementável chamado login_cnt, veja outro exemplo depois):
+
+ajax_scaffold :user, :totals => [‘login_cnt’]
+
+suffix – isso emula a opção de sufixo do scaffold do Rails e quando configurado para “true”, gera todos os métodos específicos ao model, permitindo múltiplas tabelas de serem colocadas dentro de um único controller (veja a seção a seguir)
+
+Múltiplos Scaffolds em uma Página
+Existem duas maneiras de colocar múltiplas tabelas em uma única página. A primeira (e provavelmente a maneira mais REST/CRUD) é criar um controller para cada model que quiser ter uma tabela. Configure cada tabela como requerido usando as opções do método ajax_scaffold e então simplesmente inclua cada tabela em um único arquivo rhtml usando uma chamada ao render para mostrar componentes:
+1
+2
+3
+4
+5
+6
+
+<%= render_component :controller => '/users', 
+        :action => 'table', :params => params %>
+<%= render_component :controller => '/articles', 
+        :action => 'table', :params => params %>
+<%= render_component :controller => '/pages', 
+        :action => 'table', :params => params %>
+
+
+Entretanto, se não quiser ir por esse caminho. Digamos que apenas queira um controller admin para administrar seus models e usuários, artigos e páginas. Isso pode ser feito em um único arquivo. Simplemente crie um controller “admin” e declare cada model com um ajax_scaffold separado. Garanta de passar opção “suffix => true”:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+class AdminController < ApplicationController
+  ajax_scaffold :user, :rows_per_page => 3, 
+        :suffix => true, :width => 500
+  ajax_scaffold :article, :except => ['edit'], 
+        :suffix => true, :rel_width => 0.4
+  ajax_scaffold :page, :except => ['delete'], 
+        :rows_per_page => 10, :suffix => true, :width => 400
+
+  def index
+  end
+end
+
+
+A página de índice (não se esqueça de adicionar o método index) então vai se parecer um pouco diferente, com as chamadas a tabelas agora usando um prefixo do nome do model:
+1
+2
+3
+4
+5
+6
+
+<%= render_component :controller => '/admin', 
+        :action => 'users_table', :params => params %>
+<%= render_component :controller => '/admin', 
+        :action => 'articles_table', :params => params %>
+<%= render_component :controller => '/admin', 
+        :action => 'pages_table', :params => params %>
+
+
+Essa configuração (com um pouco de dados adicionados) lhe dará:
+
+Colunas Totalizadas
+Agora suponha que você queira adicionar totais para a coluna “views” nas tabelas de artigos e páginas. Simples. Apenas mude a declaraçao no controller para:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+class AdminController < ApplicationController
+  ajax_scaffold :article, :except => ['create','edit'], 
+        :suffix => true, :rel_width => 0.4, :totals => ['views']
+  ajax_scaffold :page, :except => ['delete'], 
+        :rows_per_page => 5, :suffix => true, 
+        :width => 500, :totals => ['views']
+
+  def index
+  end
+end
+
+
+Agora teremos (note que o método create foi derrubado da tabela de artigos):
+
+Customizando a View
+Durante o início da aplicação, o plugin cria um diretório chamado ajax_scaffold em app/views. Ele contém todas as views requeridas pelo AS. Se quiser mudar um dos templates, simplesmente copie para o diretório de views apropriado e o atualize lá.
+A caminho de procura utilizado pelo plugin é o seguinte:
+
+app/views/
+app/views/
+app/views/ajax_scaffold
+
+Então, para nosso exemplo com um controller admin e então models user, article e pages, poderíamos ultrapassar a table.rhtml para todas as tabelas mostradas colocando nosso template customizado em “app/views/admin”. Então poderíamos ter um formulário específico para user colocando form.rhtml em “app/views/user”. Os models article e pages continuariam a usar o formulário de app/views/ajaxscaffold.
+tags: obsolete rails
+

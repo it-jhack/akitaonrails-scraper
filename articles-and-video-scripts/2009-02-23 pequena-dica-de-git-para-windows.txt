@@ -1,0 +1,27 @@
+
+
+
+
+O melhor jeito de usar Git no Windows é via o pacote msysGit. Mas existe um pequeno problema na configuração padrão dele.
+Logo depois de instalar, procure pelo arquivo gitconfig, provavelmente em c:\Program Files\Git. Nela haverá uma linha assim:
+autocrlf = true
+1
+2
+3
+4
+
+
+Mude para:
+
+<macro:code>autocrlf = false
+
+Para quem não sabe o que é CRLF, em ambientes Unix representa-se a quebra de linha (ou “line feed”) com o caracter “\n” que é o código ASCII 10 (U+000A). Porém, por razões históricas, em Windows existe um segundo caracter, o Carriage Return (CR) que é o código ASCII 13 (U+000D) e alguns já devem ter visto pela representação “\r”. Ou seja, no Windows, a quebra de linha é o conjunto “\r\n” ou CRLF (Carriage Return/Line Feed).
+Lembram-se das antigas máquinas de escrever? Você puxava a manivela na direita causando um ‘carriage return’ e depois empurrava tudo para a esquerda, causando um ‘line feed’, essa é a representação histórica. Quem que veio de Visual Basic não se lembra de já ter feito copy e paste de “chr(13) & chr(10)”? :-)
+Pois bem, deixando a história de lado, no Windows os editores de texto mais antiquados usam ainda esse legado. Agora digamos que você tem um projeto feito em Windows e resolveu jogar esse código num repositório Git, digamos Gitorious ou Github. Pior, resolveu fazer isso a partir de uma máquina Linux, conservando o CRLF.
+A configuração autocrlf = true, no Windows, faz com que todo arquivo baixado do repositório seja filtrado e todo CRLF seja convertido em LF. O resultado é que logo depois de um git clone ou git pull, se você der git status, verá vários arquivos já modificados! Isso é um inferno se você tem centenas de arquivos.
+Você pode manter o autocrlf no padrão se todos da sua equipe usam Windows e o repositório inicial foi criado a partir de um Windows. Mas se você tem um ambiente misto de Windows e Linux, desligue essa opção em todos os Windows para evitar esses conflitos de reconversão. Colocando como “false”, as quebras de linha serão mantidas intactas e nenhum desses conflitos deve acontecer.
+Apenas garanta que você está usando um editor de textos decente. Aliás, não use Notepad, nunca. Essa “coisa” não entra nem na categoria “editor de texto”. Procure por Notepad++, Notepad2, UltraEdit, Scintilla, EditPlus, Vim, Emacs, Intype, E-TextEditor, etc.
+Lembre-se que um bom arquivo de texto, atualmente, deve ser gravar texto em UTF-8 por padrão (cuidado, muitos editores no Windows gravam no formato Windows 1252, também conhecido como WinLatin-1; ou ISO-8859-1, também conhecido como Latin-1).
+UTF-8 e Line Feed only, deve ser o mantra do seu editor de textos.
+tags: obsolete windows
+

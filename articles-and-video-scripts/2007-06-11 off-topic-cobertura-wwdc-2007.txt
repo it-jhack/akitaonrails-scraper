@@ -1,0 +1,39 @@
+
+
+Acabei de acompanhar o WWDC 2007. Não há muito do que se falar. Eu particularmente achei muito fraco. Nesse evento para desenvolvedores eu realmente achava que eles fossem falar do possível novo filesystem Sun ZFS.
+imagens: fonte Engadget
+pdfs:
+
+Engadget
+MacRumors
+Gizmodo
+ArsTechnica
+
+
+
+
+Repetiram muita coisa: Spaces (Virtual Desktop), Dashcode (IDE para criar Widgets), geração de Widgets pelo Safari, Time Machine, iChat com efeitos de Photobooth e possibilidade de compartilhar slideshows, vídeos.
+
+De novo, teve o novo Desktop, com o novo Dock e o novo Finder. Isso foi interessante. O novo Finder passou a acompanhar o paradigma dos produtos iLife. Inclusive existe uma visão estilo Coverflow de arquivos, locais e pela rede.
+
+Falando em rede o Spotlight agora também faz procuras pela rede. Interessante mas nada revolucionário. No caso do Finder, documentos, também surgiu um novo aplicativo chamado Quicklook, que é um Preview mais simples e mais limpo. Agradável, nas nada muito empolgante. Em termos estéticos, realmente é ‘bonito’ ter o Quicklook transparente dando preview em um documento sendo visto via Coverflow.
+
+No novo Desktop agora existe o conceito de “Stacks”. Já vimos esse conceito inúmeras vezes em provas de conceito mas agora é um produto real: você organiza pilhas de documentos. Para comportar isso o novo Dock ganhou profundidade para comportar pilhas. Ainda não sei se é uma maneira mais “fácil” ou não de organizar as coisas, mas vamos ver.
+
+O novo conjunto de APIs, Core Animation, promete. Muitas dos novos programas do Leopard usam animações. Mais do que simples Eye Candy, realmente torna usar o Mac mais agradável e coeso.
+
+Bootcamp, todo mundo já sabia, vem nativo no Leopard e pelo visto eles estão apoiando bastante o pessoal da Parallels e VMWare. Aliás, estou usando o Parallels 3.0, bem legal o semi-suporte a DirectX 8.1. Em breve eles chegarão a DirectX 9.
+
+Falando em APIs, e em coisas repetidas, ouvimos de novo o suporte total a 64-bits do Leopard. Ele não terá versões separadas em 32 e 64 como Windows, será tudo integrado, rodando lado a lado, nativamente. Para profissionais gráficos, é uma excelente notícia.
+A Eletronic Arts e a Id de John Carmack estão trabalhando em jogos pesados para Mac. Finalmente mais alguns games de “marca” chegando.
+
+Tirando tudo isso, nada de muito mais interessante. No final da apresentação do Leopard tivemos dois One More Thing. Mas novamente nada bombástico.
+Foi anunciado um Safari for Windows. Não entendi muito bem qual o motivo disso. Eles dizem que tem experiência por causa do sucesso do iTunes no Windows, mas são coisas completamente diferentes e não é necessário ser um Prêmio Nobel para entender. O Firefox, que é o Firefox, mal alcança 15%. O Safari tem quase 5% e não deve avançar dramaticamente. Talvez Steve tenha um plano que ninguém mais esteja enxergando, espero.
+
+Falando em Safari, a segunda ‘surpresa’ foi em relação ao iPhone. A data de 29 de Junho, às 6pm foi reconfirmada. Um dos maiores pedidos em torno disso é do iPhone suportar aplicativos de terceiros. Para tentar agradar a gregos e troianos, a solução foi a mais óbvia: Widgets. No fundo, o iPhone roda uma versão full do Safari, portanto será trivial criar aplicações com XHTML, CSS, Javascript e algumas APIs para usar funcionalidades do fone. Já fazemos isso hoje com o Dashboard, será apenas mais uma plataforma. Não é o esperado de ter o poder de colocar um Skype ou iChat no iPhone, mas é melhor do que nada.
+
+Estou baixando os novos Public Beta do Safari 3, vamos ver se no Windows ele realmente vale a pena. Mesmo no Mac eu prefiro usar o Camino, que é um Firefox mais ‘light’ e mais integrado ao sistema.
+Infelizmente, parece que vai ficar mesmo para Outubro para ver as 300 novas funcionalidades do Leopard. Até agora ainda não vi nada que me convencesse a mudar do Tiger para Leopard. Se, no mínimo, disserem que o Leopard é mais performático, já vale os US$ 129.
+
+tags: obsolete apple
+

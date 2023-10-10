@@ -1,0 +1,15 @@
+
+Como testamento à facilidade do Rails, resolvi testar a criação de um plugin implementando um algoritmo conhecido no mundo de bancos de dados relacionais.
+
+
+É o problema de como mapear uma estrutura de árvore para uma tabela
+relacional. Normalmente as pessoas implementam como o que chamamos de “Adjacent List”, ou seja, uma tabela com uma foreign key voltando para ela mesma, de forma que podemos pegar alguns níveis da árvore usando um self join.
+Mas essa solução, além de não ser performática, é muito pouco prática para criar queries e operações.
+Uma solução mais elegante foi descrita por Joe Celko, o que foi chamado de “Nested Set”. Ela permite uma estrutura sem foreign keys. Cada nó da árvore, em vez de um ponteiro, guarda duas bordas numérica. Por exemplo, se um nó tem a borda esquerda numerada como 1 e a direita como 10, podemos encontrar os nós abaixo usando um simples BETWEEN de bordas. Ou seja, podemos achar os nós 2-3, 4-5, 6-7, 8-9, por exemplo.
+Vocês podem testar isso no seu próprio projeto usando o seguinte comando dentro do seu projeto Rails:
+ruby script/plugin install https://opensvn.csie.org/acts_as_nested_set
+Ela irá criar uma nova pasta chamada acts_as_nested_set dentro da pasta vendor/plugins do seu projeto.
+Em seguida, leia a documentação que descreve onde encontrar a teoria do algoritmo e siga as intruções presentes no código fonte acts_as_nested_set.rb, ela irá dar as direções para criar a tabela no formato correto dentro no banco de dados. No seu model basta colocar a diretiva “acts_as_nested_set” e pronto, ela já estará automaticamente habilitada a realizar operações de árvore.
+Divirtam-se.
+tags: obsolete rails
+

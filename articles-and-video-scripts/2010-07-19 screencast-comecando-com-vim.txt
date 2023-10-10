@@ -1,0 +1,70 @@
+
+Atualização 2013: Este screencast utiliza uma versão antiga de dotfiles. Hoje em dia estou usando o YADR que é muito superior. O Screencast ainda ensina a usar o geral de Vim por isso é relevante, mas nas partes específicas de plugins de Vim, leia a documentação do YADR.
+Atualização 09/04/12: Este screencast foi liberado para visualização gratuita. Acesse este post
+Atualização 29/08: Adicionei mais algumas informação no final deste artigo. Se você comprou o screencast, leia o adendo no final.
+Antes de mais nada, para que ninguém fique preocupado, entre este screencast e o anterior eu não fiz nenhum post “normal” do blog, mas em breve os conteúdos de sempre, sobre Ruby, Rails, agilidade, os Off-Topics, irão retornar.
+Este episódio é uma introdução ao venerado editor de textos Vim para quem ainda não tinha visto ou estava apenas começando e precisava de um “empurrão” para seguir adiante. Agora não há desculpas!
+Este screencast não está mais à venda. Aguarde, em breve será liberado gratuitamente. Obrigado a todos que colaboraram até agora
+
+Nível: Iniciante
+Tema: Começando a usar o editor de textos Vim
+Duração: 2:03h
+Formatos:
+	
+Maior 800×600 – 405mb (zip, Quicktime/H.264)
+iPhone 480×360 – 393mb (zip, Quicktime/H.264)
+
+Plataformas: Linux (Ubuntu), Mac OS X e Windows 7
+Este screencast usa meu pacote de vimfiles que é open source também
+Pré-requisitos: ter assistido o começo do screencast anterior ou já ter Ruby instalado e, se for usuário de Mac, já ter Homebrew instalado.
+Acompanha PDF com os slides usados na apresentação
+Tem organização em Capítulos
+Pós-requisito: durante o episódio eu menciono “Expressões Regulares”, mas como é um tema fora do escopo, caso não conheça, recomendo começar com este artigo do Aurélio Jargas sobre o assunto.
+
+Assista na íntegra aqui:
+
+Faça download
+Vim é um dos editores de texto mais antigos no mundo Open Source. Considerado por muitos como “difícil demais para aprender” ou “antigo demais e obsoleto” este screencast vai mostrar que, muito pelo contrário, Vim é um editor completo, robusto, estável, sofisticado e versátil e ainda totalmente apropriado para os desenvolvedores mais exigentes.
+
+
+Usando Vim
+Apesar de existir ótimos editores e IDEs no mercado, o Vim não deixa nada a desejar e ainda oferece mais opções. Este screencast usa meu pacote customizado de vimfiles para facilitar a iniciação e tornar a introdução aos iniciantes mais agradável.
+Eu mesmo comecei a usar Vim – ou melhor, o anterior Vi – em 1995. Mesmo assim nunca investi muito tempo em aprender mais do que o básico dele. Mas só esse básico se mostrou importante toda vez que precisei entrar num servidor via terminal e o único editor decente disponível era o Vi.
+Por alguma razão inexplicável, há alguns meses o Vim começou a retornar com mais força. Pude notar isso desde que comecei a brincar com o pacote de vimfiles do scrooloose em Janeiro de 2009 e resolvi derivar o meu próprio (cuidado: o post desse link está defasado). Vi que o interesse sobre esse pacote foi grande desde o começo.
+Apesar de existir diversos tutoriais de Vim, desde básico até avançado, por toda a blogosfera, não é fácil para alguém que nunca “viu” entender como funciona o Vim. A pessoa sempre fica mais empolgada quando tem a chance de ver alguém realmente usando. É quando “cai a ficha”, literalmente. Por isso faz alguns meses que eu planejo fazer um screencast a respeito, para dar esse efeito de “ver o Vim atrás dos ombros de alguém” e possivelmente dar o empurrão que falta a muita gente que quer aprender mas não sabe exatamente por onde começar.
+A boa notícia é que ao contrário do que muitos pensam, Vim não é uma coisa só para Linux. As versões de Windows funcionam perfeitamente bem e nesse screencast também mostro como instalar nele. Portanto o Vim é um editor quase universal. No Mac muitos já devem ter ouvido falar do Textmate, mas todo screencast que eu faço com ele não soa tão bem para quem usa Windows ou mesmo Linux. Pretendo usar apenas Vim quando fizer outros screencasts e isso deve diminuir um pouco a barreira para os não-usuários de Mac.
+
+Além disso, só soube hoje pelo tweet do @paulojeronimo (sorry pela ignorância) sobre outro projeto, o vimbook, um manual de Vim, open source, em português escrito por usuários de Vim de longa data, alguns deles já bem conhecidos da nossa comunidade brasileira de Ruby como o Eustáquio Rangel e o Willian @pothix Molinari, do Guru-SP. Esse manual vai facilitar seu aprendizado de Vim.
+E para quem entende inglês, eu também recomendo comprar os screencasts Smash into Vim que o Peepcode lançou recentemente em parceria com o Andrew Stewart. São dois episódios muito bem feitos.
+Adendos
+Para o gVim, no Linux e no Windows, atalhos como o Ctrl-C e Ctrl-V para copiar e colar não funcionam. Para isso você precisa editar seu vimrc. No Windows edite o $HOME\_vimrc e no Linux o ~/.vimrc. Eles devem ser pelo menos essas linhas:
+1
+2
+3
+4
+5
+6
+7
+
+# no Windows:
+source $HOME\vimfiles\vimrc
+source $VIMRUNTIME\mswin.vim
+
+# no Linux:
+source ~/.vim/vimrc
+source $VIMRUNTIME/mswin.vim
+
+
+Isso vai habilitar atalhos conhecidos como:
+
+Ctrl-C – Copiar
+Ctrl-X – Cortar
+Ctrl-P – Colar
+Ctrl-Z – Undo
+Ctrl-Y – Redo
+Ctrl-A – Marcar tudo
+Ctrl-Tab – Muda de Janela
+Ctrl-F4 – Fecha Janela
+
+tags: obsolete vim screencast
+

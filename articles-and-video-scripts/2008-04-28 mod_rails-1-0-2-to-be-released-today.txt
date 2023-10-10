@@ -1,0 +1,8 @@
+
+
+
+
+I was just told by the Phusion guys that mod_rails 1.0.2 is going to be released today! Keep an eye on it. And if you didn’t do so, donate for the Ruby Enterprise Edition program (I am in the second batch already!)
+Update 04/30: As I have said, Phusion released 1.0.2 with lots of features explained in their new corporate blog. New features include support for OS X’s built-in Apache, support for Rails below 2.0, more stability, a new tool to measure real memory usage (‘ps’ doesn’t convey the true memory), improved documentation, improved SSL support, and more.
+tags: obsolete passenger english
+

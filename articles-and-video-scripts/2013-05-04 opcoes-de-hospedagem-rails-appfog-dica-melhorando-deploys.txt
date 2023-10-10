@@ -1,0 +1,111 @@
+
+Atualizado 7/5/2013: adicionado procedimento que não existe na documentação oficial para conseguir fazer deployments "corretamente" no Appfog.
+Como disse antes comecei a usar o AppFog pra várias coisas. Mas tem um problema, diferente do Heroku ele não é bom pra executar assets:precompile (primeiro porque pode estourar memória, segundo porque dá timeout se o processamento demorar muito).
+O processo de deployment não é via git push mas via o comando af update. Ele simplesmente faz um upload dos arquivos no diretório do projeto ao servidor (se entendi direito). Portanto o melhor a fazer é executar o assets:precompile localmente antes do deploy (lembrar de colocar turbo-sprockets pra ir mais rápido).
+O problema é que agora em modo de desenvolvimento o servidor local vai começar a puxar os assets direto da pasta public/assets em vez de processar dinamicamente da pasta app/assets que é o que você precisa em desenvolvimento. Vide meu artigo Asset Pipeline para Iniciantes caso ainda não esteja bem familiarizado com o processo.
+
+
+
+Independente de Appfog, se quiser precompilar os asset e deixá-los na sua máquina local sem interferir com seu desenvolvimento (precompilar local é a forma mais rápida para fazer deployment), basta editar o arquivo config/environments/development.rb e adicionar o seguinte:
+
+1
+
+  config.assets.prefix = "/assets_dev"
+
+
+Agora o Rails local em modo de desenvolvimento vai ignorar completamente a pasta public/assets e usar /assets_dev como pasta de assets. Como não existe public/assets_dev, ele vai compilar dinamicamente os assets da pasta app/assets, que é o que queremos.
+Fonte: Stackoverflow
+Problemas no deployment
+Existe um problema que considero grave tanto na documentação quanto no processo em si. Como já reclamei ao @appfog o update é interrompido por erros mal explicados diversas vezes. Depois de muito tentar, descobri que o problema é em como lidar com a gem libv8 que não consegue ser compilada nos servidores da Appfog.
+A libv8 é necessária pelo Asset Pipeline que a usa para compilar coffeescript em javascript. Por alguma razão a gem less depende dele que, por sua vez, é dependência do Twitter Bootstrap que eu uso. Não deveria ser necessária em produção, mas acho que a rotina de deployment do Appfog/CloudFoundry tenta compilar os assets depois de subir a atualização dos arquivos, ela tenta instalar as gems do grupo assets e quando tenta instalar a libv8 ela é interrompida por erro de compilação, causando confusão no estado do deployment.
+
+Depois de muitas horas de tentativas frustradas parece que o que funciona é o seguinte: olhe seu arquivo Gemfile.lock. Cheque a versão do libv8:
+
+1
+
+libv8 (3.11.8.17)
+
+
+A forma que o libv8 é versionado é o seguinte: 3.11.8 é a versão do libv8 propriamente dito. A versão menor .17 é a versão da Gem. Versões pares da Gem vem somente com o código-fonte, versões ínpares vem já embutidas com os binários. Se você tentar executar num OS onde esses binários não são compatíveis, você pode "chumbar" a versão par no Gemfile. No caso do Appfog é preciso garantir que você tem a versão ímpar, ou seja, que já tem o binário, evitando o processo de compilação que dá problemas.
+Além disso, nas minhas tentativas precisei adicionar as gems do grupo assets à production na Gemfile:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+group :assets, :production do
+  gem 'jquery-ui-rails'
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  gem 'execjs', :platforms => :ruby
+  gem 'therubyracer', :platforms => :ruby
+  gem 'uglifier', '>= 1.0.3'
+
+  gem 'less-rails'
+  gem 'twitter-bootstrap-rails'
+  gem 'turbo-sprockets-rails3'
+end
+
+
+Também segundo a documentação, precisa existir o seguinte no config/environments/production.rb:
+
+1
+2
+
+# Disable Rails's static asset server (Apache or nginx will already do this)
+config.serve_static_assets = true
+
+
+E o procedimento é, antes de executar o deployment, precompilar os assets localmente e vendorizar as gems (importante especialmente se depender repositórios git privados):
+
+1
+2
+
+rake assets:precompile
+bundle package 
+
+
+Mesmo assim, ao final do processo pode vir uma mensagem de erro, mas pelas tentativas se a fase de Staging passar parece que a aplicação sobe até o fim mesmo o comando dando o seguinte erro:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+af update app
+Uploading Application:
+  Checking for available resources: OK
+  Processing resources: OK
+  Packing application: OK
+  Uploading (48K): OK
+Push Status: OK
+Stopping Application 'app': OK
+Staging Application 'app': OK
+Starting Application 'app': .................Error:
+Application 'app's state is undetermined, not enough information available.
+
+
+O Appfog ainda precisa melhorar muito esse procedimento para não dar problema.
+
+tags: obsolete hosting
+

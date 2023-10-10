@@ -1,0 +1,24 @@
+
+
+
+
+Estava lendo o blog do mengwong e vi esta história hilária e resolvi traduzir :-)
+<@freeside> nós totalmente xkcd alguém esta noite
+<@freeside> então, saímos com a linda rene
+<@freeside> e estávamos andando pelo centro da cidade de mountain view, que é onde os googlers costumam passear
+<@freeside> e andamos até o Red Rock Cafe, onde eles tem wifi grátis.
+<@freeside> havia um cara sentado pela janela com seu macbook pro 17", com textmate aberto e sintaxe iluminado explodindo pela tela
+<@freeside> e robrt e eu olhamos praquilo e ficamos tipo, “aquilo é java? não … python? não … é ruby!”
+<@freeside> e dissemos à rene, “ok, escute atentamente, queremos que faça isso:”
+<@freeside> rene, vocês sabem, está usando uma roupa bem feminina, com chapéu verde e grande lindos olhos
+<@freeside> então ela vai para o cafe, direto para o tal cara e diz
+<@freeside> “com licença, mas você está programando em ruby?”
+<@freeside> e o cara diz, “huh? o que? sim, eu estou.”
+<@freeside> e rene diz, “resposta correta!”
+<@freeside> e ela pisca pra ele
+<@freeside> e se vira
+<@freeside> e vai embora de sua vida pra sempre.
+Como alguém disse nos comentários, o macbook pro tem ‘shut and sleep’. Alguém aí continuaria programando depois dessa? (antes de responder veja este link).
+Falando nisso, onde estão as renes desta comunidade? ;-)
+tags: obsolete
+

@@ -1,0 +1,14 @@
+
+
+
+
+Não se esqueçam que dia 15 de dezembro, tentaremos levar o Natal para as crianças do Cotolengo/MS 10 dias antes!
+O Carlos Eduardo colocou o site oficial do evento no ar. Vários de nós da comunidade Rails estaremos reunidos para levar informação e atualidades sobre o mundo Rails ao mesmo tempo que todos poderão colaborar com um bem maior.
+É uma tentativa inédita em nossa comunidade e espero que não pare aqui, para isso é importante que todos nós colaborem. É um objetivo palpável a atingível. A típica situação onde todos saímos ganhando.
+Quanto à minha palestra, vou tentar vestir a máscara de “Mister M”. A inspiração veio de uma frase do grande Arthur C. Clarke
+“Qualquer tecnologia suficientemente avançada se confunde com Mágica”
+Essa frase circulou bastante pela comunidade Rails.
+E Ruby on Rails (tanto a linguagem quanto o framework) possuem exatamente essa qualidade: as pessoas que olham pela primeira vez se sentem num verdadeiro show de prestidigitação do calibre de David Copperfield
+A diferença é que por trás da ilusão de Ruby on Rails se produzem produtos muito reais e úteis, o que alimenta ainda mais a “mística” por trás dessa tecnologia. Na minha palestra tentarei desvendar alguns desses truques e farei um pouco melhor: tentarei ensinar como qualquer um pode encontrar os segredos de todos os truques, incluindo criando os seus próprios ;-)
+tags: obsolete conference
+

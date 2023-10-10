@@ -1,0 +1,216 @@
+
+Hoje, passei a tarde experimentando o básico da gem rails-sqlserver-2000-2005 que é a melhor versão de adapter para SQL Server que temos hoje. Só para entender, antigamente havia a gem activerecord-sqlserver-adapter que vinha junto com o Rails. A partir da versão 2.0.2, se não me engano, ela foi considerada obsoleta e retirada do pacote ActiveRecord. Depois de algum tempo, ninguém mais deu manutenção e ela foi esquecida. Foi quando o Ken Collins e amigos resolveram ressucitar esse projeto e ela se tornou a nova gem “2000-2005” no Github. Portanto, se você esbarrar em algum tutorial velho mencionando a antiga gem, esqueça-a.
+Tecnicamente, tive vários pequenos probleminhas que levaram horas para eu entender por isso resolvi compilar num artigo para que eu não me esqueça de novo (já não é a primeira vez que faço a mesma coisa e sempre esqueço os detalhes).
+Minha configuração é bem simples, um Macbook Pro com VMWare Fusion rodando duas máquinas virtuais: um Windows XP SP2 e um Ubuntu Intrepid Ibex Server. No meu cenário, o XP tem o SQL Server 2005 Express rodando e com o Management Studio também instalado. Eu quero uma aplicação Rails básica que simplesmente conecta nesse banco. E quero conectar a partir do próprio Windows, do Mac OS X e do Ubuntu como clientes desse banco.
+
+
+Configurações do SQL Server
+A instalação do SQL Server é simples, sem Windows Authentication mode (conectando via usuário e senha). Estou assumindo que você obviamente sabe usar SQL Server, caso contrário você precisa resolver esse problema primeiro antes de continuar. Eu mesmo tenho pouca experiência com a versão 2005. O único motivo de se usar Rails com SQL Server é se for obrigado a usar um banco legado. Hoje vou falar apenas de como configurar para conectar nele, outro dia falarei sobre como mapear tabelas legadas (por isso este artigo é Parte 1).
+Outra coisa, neste exercício eu instalei também a base de dados de exemplo Adventure Works. Assim como o bom e velho NorthWind, este também é um banco de exemplo já populado de dados que usaremos no próximo artigo como exemplo. Baixe o primeiro MSI da lista e depois faça o attach do MDB. Uma última coisa, abre a partir do menu Microsoft SQL Server 2005 → Configuration Tools → SQL Server Configuration Manager. Configure conforme a figura abaixo. A idéia é ter a porta TCP 1433 ouvindo conexões porque não estaremos usando um driver nativo que suporta named pipes. Também assegure-se que o Firewall do Windows tem essa porta aberta.
+
+Instalando e Configurando ODBC no Unix
+Se você estiver usando Windows para criar sua aplicação Rails que vai conectar no SQL Server, pode pular esta seção inteira. Essa seção é apenas para os desenvolvedores em Ubuntu ou Mac.
+Estou considerando que você já tem o Ruby instalado na sua máquina, que você entende o que são rubygems e que já tem o Rails instalado também. Se você estiver no Mac ou Ubuntu, antes de mais nada precisará manualmente instalar o antigo ODBC Binding for Ruby. Faça assim:
+1
+2
+3
+4
+5
+6
+7
+
+cd /tmp
+wget https://www.ch-werner.de/rubyodbc/ruby-odbc-0.9996.tar.gz
+tar xvfz ruby-odbc-0.9996.tar.gz
+cd ruby-odbc-0.9996/
+ruby extconf.rb
+make
+sudo make install
+
+
+Isso instalará as dependências que a gem dbd-odbc vai precisar. O DBD é um módulo para a gem Ruby-DBI. Em Unix, vamos usar ODBC para conectar no SQL Server. No Windows podemos conectar nele nativamente. Para continuar, precisaremos também ter o UnixODBC e o driver FreeTDS instalados (curiosidade: TDS – Tabular Data Stream – é o protocolo de comunicação cliente-servidor do SQL Server). No Ubuntu faça o seguinte:
+1
+2
+
+sudo apt-get install unixodbc unixodbc-dev
+sudo apt-get install freetds-dev sqsh
+
+
+No Mac OS X, assumindo que você já tem MacPorts instalado, faça o seguinte:
+1
+2
+
+sudo port install unixODBC
+sudo port install freetds +msql
+
+
+Só para garantir, no Ubuntu, coloque as seguintes linhas no final do arquivo /etc/profile
+1
+2
+3
+
+ODBCINI=/etc/odbc.ini
+ODBCSYSINI=/etc
+FREETDSCONF=/etc/freetds/freetds.conf
+
+
+Digite “source /etc/profile” para recarregar esses novos valores.
+Se estiver no Ubuntu, edite o arquivo /etc/freetds/freetds.conf. Se estive no Mac OS X, edite o arquivo /opt/local/etc/freetds/freetds.conf. Sem apagar o que tem nele, apenas adicione no final do arquivo o seguinte conteúdo:
+1
+2
+3
+4
+5
+
+[vmware]
+        host = vmware.windows
+        port = 1433
+        tds version = 8.0
+        encryption = required
+
+
+Esclarecendo “vmware.windows” é uma entrada no meu arquivo /etc/hosts apontando para o IP do VMWare onde está rodando meu Windows XP (de dentro do Windows, digite ‘ipconfig’ num command prompt para saber qual o seu IP).
+Agora, no Mac OS X, edite o arquivo /Library/ODBC/odbc.ini com o seguinte:
+1
+2
+3
+4
+5
+6
+
+[ODBC Drivers]
+tds = Installed
+
+[tds]
+Driver = /opt/local/lib/libtdsodbc.so
+Setup  = /opt/local/lib/libtdsodbc.so
+
+
+Já no Ubuntu, edite o mesmo arquivo /etc/odbc.ini com o seguinte:
+1
+2
+3
+4
+5
+6
+
+[ODBC Drivers]
+tds = Installed
+
+[tds]
+Driver = /usr/lib/odbc/libtdsodbc.so
+Setup  = /usr/lib/odbc/libtdsodbc.so
+
+
+O que muda entre o Ubuntu e o Mac é a localização do driver, um está a partir de /usr e o outro a partir de /opt (o MacPorts sempre instala tudo a partir de /opt já o Apt-get instala sempre a partir de /usr). Finalmente, vamos editar o último arquivo, /etc/odbc.ini no Ubuntu ou o /Library/ODBC/odbc.ini no Mac, onde ambos tem o mesmo conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+[ODBC]
+Trace = 0
+
+[WindowsServer]
+Driver      = TDS
+Description = ODBC connection via FreeTDS
+Trace       = No
+Servername  = vmware
+Database    = AdventureWorks
+
+
+“WindowsServer” é o DSN (Data Source Name) do ODBC. No ítem “ServerName” colocamos “vmware” que é o nome da configuração que colocamos no arquivo freetds.conf. Isso liga o DSN ao servidor e porta TCP corretos. Finalmente, no ítem “Database” coloquei “AdventureWorks” que é o banco de dados de exemplo instalado que mencionei no começo do artigo. Você pode colocar o nome de qualquer banco de dados com o qual queira se conectar. Na realidade, nesse arquivo você pode configurar quantos DSN quiser, basta colocar um nome diferente de “WindowsServer” que eu coloquei de exemplo.
+Configurando seu Projeto Ruby on Rails
+Com tudo em ordem, primeiro instale as gems que vamos precisar:
+1
+2
+3
+
+sudo gem install dbi --version 0.4.0
+sudo gem install dbd-odbc --version 0.2.4
+sudo gem install rails-sqlserver-2000-2005-adapter -s https://gems.github.com
+
+
+No seu projeto Rails – assumindo que estamos usando a versão 2.1 ou superior – acrescente as dependências no config/environment.rb:
+1
+2
+3
+
+config.gem 'dbi', :version => '0.4.0'
+config.gem 'dbd-odbc', :version => '0.2.4', :lib => 'dbd/ODBC'
+config.gem 'rails-sqlserver-2000-2005-adapter', :source => 'https://gems.github.com'
+
+
+Agora vem a parte importante: no arquivo config/database.yml, se estiver no Ubuntu ou Mac OS X, coloque:
+1
+2
+3
+4
+5
+6
+
+development:
+  adapter: sqlserver
+  mode: odbc
+  dsn: WindowsServer
+  username: sa
+  password: sua_senha_do_sql_server
+
+
+Veja que colocamos aqui o DSN que configuramos no arquivo /etc/odbc.ini. Os únicos dados extras que você precisa passar são o usuário e a senha corretos que você já deve ter configurado no seu SQL Server. Note que estamos considerando que você não está usando Windows Authentication Mode – e nem pergunte se isso funciona, porque mesmo antes de Rails eu sempre preferi à moda antiga com usuário/senha mesmo.
+No Windows, use o bom e velho Administrative Tools → Data Sources (ODBC) para configurar o DSN apontando para seu SQL Server. Não se esqueça de especificar o banco de dados – no caso o AdventureWorks – no ítem “Change the default database to” no Wizard da ferramenta de ODBC do Windows. Então coloque o nome adequado no ítem “dsn” do arquivo config/database.yml. O comportamento deve ser idêntico em todos os sistemas.
+
+Mapeando o primeiro model ActiveRecord a uma tabela do Banco
+Feito tudo isso – ufa – crie um arquivo chamado app/models/person_address.rb com o seguinte conteúdo:
+1
+2
+3
+4
+
+class PersonAddress < ActiveRecord::Base
+  set_table_name "Person.Address"
+  set_primary_key "AddressID"
+end
+
+
+Crie também um outro arquivo app/models/person_state_province.rb com o seguinte:
+1
+2
+3
+4
+
+class PersonStateProvince < ActiveRecord::Base
+        set_table_name "Person.StateProvince"
+        set_primary_key "StateProvinceID"
+end
+
+
+Agora, você pode abrir o “ruby script/console” como de costume e já consegue:
+1
+2
+3
+4
+5
+6
+7
+8
+
+$$ ./script/console 
+Loading development environment (Rails 2.2.2)
+>> PersonAddress.count
+=> 19614
+>> address = PersonAddress.first
+=> #<PersonAddress AddressID: 1, AddressLine1: "1970 Napa Ct.", AddressLine2: nil, City: "Bothell", StateProvinceID: 79, PostalCode: "98011", rowguid: "9AADCB0D-36CF-483F-84D8-585C2D4EC6E9", ModifiedDate: "1998-01-04 00:00:00">
+>> address.state_province
+=> #<PersonStateProvince StateProvinceID: 79, StateProvinceCode: "WA ", CountryRegionCode: "US", IsOnlyStateProvinceFlag: false, Name: "Washington", TerritoryID: 1, rowguid: "16274DF0-6F05-43A6-BC18-AD171017A1EB", ModifiedDate: "2004-03-11 10:17:21">
+
+
+Finders básicos já devem funcionar. Porém, as tabelas definidas no banco AdventureWorks está bem fora das convenções do Rails e num próximo artigo pretendo explorar como fazer para mapear pelo menos a maior parte da forma correta. No estado atual, o ‘save’, por exemplo, já não vai funcionar por causa das colunas ModifiedDate e rowguid. Estou sentindo que o próximo artigo vai acabar gerando alguma biblioteca customizada para fazer monkey-patching no ActiveRecord de forma a ultrapassar esses obstáculos. Mas pelo menos se você pretende conectar a um banco legado apenas para ler seus dados, isso já deve ser suficiente, basta criar arquivos de model para cada tabela. As associações mais básicas também funcionam, como podem ver.
+Para mais informações aguarde o próximo artigo ou já comece por esta página do antigo Wiki de Rails. Mais detalhes sobre ODBC, veja também os antigos artigos específicos para OS X e para Linux. Esses links são cache do Google para páginas do antigo Wiki do Rails, que já não existem mais, portanto esse cache pode ser apagado a qualquer momento.
+tags: obsolete rails
+

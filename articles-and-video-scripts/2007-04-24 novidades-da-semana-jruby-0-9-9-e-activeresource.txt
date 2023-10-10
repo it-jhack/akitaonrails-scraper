@@ -1,0 +1,8 @@
+
+
+
+
+Mal falamos sobre o JRuby 0.9.8 e Thomas Enebo anunciou o lançamento do 0.9.9! Estamos a 0.0.1 da versão final! E esta versão é ainda melhor que a anterior com cerca de 180 correções, estabilizações e uma performance média 40% maior do que a versão 0.9.8. Eles realmente estão evoluindo muito rapidamente.
+Finalmente, DHH resolveu tirar o suporte a Active Web Services diretamente do núcleo do Rails. Calma, ele ainda continua disponível mas com um gem. Opcionalmente você pode instalá-lo e ativá-lo no config/environment.rb. Em seu lugar, agora o Active Resource (o suporte REST) passa a ser padrão. Provavelmente quando for lançado um eventual 1.3 ou 2.0, essa mudança estará disponível a todos.
+tags: obsolete jruby
+

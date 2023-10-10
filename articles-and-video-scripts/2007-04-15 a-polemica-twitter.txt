@@ -1,0 +1,217 @@
+
+No artigo Seja Arrogante! eu exaltei a necessidade em sermos arrogantes ao ponto de querermos saber o máximo, ou seja, não se contentar, botar a cara para bater, aceitar desafios e conquistá-los. A linha-mestra do texto falava sobre Inglês.
+Eu não leio muitos sites nacionais, mas uma procura rápida no Google não trouxe quase nada sobre Twitter e “Rails não escala”. Mas quem acompanha as notícias internacionais com certeza acompanhou a discussão em torno da polêmica que começou com a entrevista de Alex Payne do Twitter.
+Para quem ainda não sabe (!) Twitter é um site de social-networking que se parece com um emaranhado de mini-blogs. A frase inicial é “O que você está fazendo?”
+[continue lendo no link abaixo]
+
+
+Você pode postar no seu “mini-blog” via GTalk (via Jabber – aliás, adoro o conceito de controlar uma aplicação web enviando mensagens IM para ela) ou SMS. A idéia é postar sobre coisas que está fazendo, pensando no minuto em que isso passa pela sua cabeça, em vez de criar um post elaborado só no fim da semana. Outra coisa é que você pode cadastrar amigos e acompanhar o que cada um está fazendo. Se estiver com o GTalk isso vai aparecer como se fosse um chat.
+O conceito é com certeza fútil mas ao mesmo tempo muito interessante, como um Big Brother às avessas e funcionou de maneira tão viral (com empurrõezinhos como da south by southest – vocês conhecem! certo!?) que praticamente do dia para a noite o Twitter se tornou uma febre.
+Twitter foi feito pelo mesmo pessoal que fez Odeo e isso nos interessa porque é mais uma empresa lançando produtos online no mercado feitos com Ruby on Rails. O problema é que Twitter se tornou famoso a ponto de atender mais de 11 mil requisições por segundo! E eis que chegamos à polêmica, quando Alex Payne disse:
+
+“Por várias métricas, Twitter é o maior site em Rails na net agora. Rodar em Rails nos forçou a lidar com problemas de escalabilidade – problemas que qualquer site em crescimento acaba enfrentando – muito mais cedo do que enfrentaríamos com outros frameworks.
+O sabedoria popular na comunidade Rails nesse momento é que escalar Rails é apenas uma questão de custo: apenas jogue mais CPUs nisso. O problema é que mais instâncias de Rails (rodando como parte de um cluster Mongrel, em nosso caso) significa mais requisições ao nosso banco de dados. Nesse ponto no tempo não existe facilidade no Rails para falar com mais de um banco de dados ao mesmo tempo. As soluções para isso são fazer uma montanha de caching de tudo ou configurar múltiplos bancos de dados escravos apenas para leitura, e nenhuma dessas coisas são fáceis de implementar. Então não é apenas custo, é tempo e tempo é mais precioso quando as pessoas não conseguem chegar a seu site.
+Nenhuma dessas técnicas de escalabilidade são tão legais ou fáceis do que desenvolver em Rails. Todos os métodos de conveniência e syntactical sugar que tornam Rails um prazer para codificadores acabam sendo absolutamente punidores, do ponto de vista de performance. Uma vez que você atinge uma certa carga de tráfico, ou arranca fora todas as coisas vistosas, mas custosas, que Rails faz para você (RJS, ActiveRecord, ActiveSupport, etc) ou move as partes lentas da sua aplicação para fora de Rails, ou ambos.
+Também vale a pena mencionar que não deve haver dúvida na cabeça de ninguém que nesse ponto Ruby em si é lento. É ótimo que as pessoas estão dando duro trabalhando em implementações mais rápidas da linguagem, mas agora mesmo, é duro. Se você está para lançar uma grande aplicação web e é neutro em linguagens, entenda que a mesma operação em Ruby vai tomar menos tempo em Python. Todos nós trabalhando no Twitter somos grandes fãs de Ruby, mas acho que vale a pena ser franco que isso não é uma daquelas discussões relativas sobre linguagens. Ruby é lento."
+
+Dá para imaginar que a comunidade – lá fora, claro – ficou empolvorosa. Vejam reações, aqui, aqui, aqui, aqui, aqui, aqui. Alguns anunciaram a morte do Twitter aqui e reações começaram a se seguir como aqui.
+As coisas ficaram mais quentes depois da resposta do próprio DHH no Loud Thinking. A parte que aumentou a polêmica foi quando ele disse:
+
+“Segundo, quando se trabalha com open source e se descobrem novos requisitos que o software não previa, é sua brilhante oportunidade de dar algo de volta. Em vez de se sentar e esperar algum fornecedor consertar seu problema, você tem a chance única se comandar seu próprio destino. Para se tornar um participante em uma comunidade em vez de um mero espectador. Isso é especialmente verdade com frameworks como Rails que são implementados em linguagens de alto-nível como Ruby. As barreiras para contribuição são excepcionalmente baixos.
+Nesse caso, parece que Twitter requer maneiras mais sofisticadas de falar com mais bancos de dados ao mesmo tempo. Alex coloca isso de forma meio preto e branca com “… não existe facilidade no Rails para falar com mais de um banco de dados ao mesmo tempo”, que não é realmente verdade, mas que poderia ser feito definitivamente de maneira melhor. Da última vez que falei com Twitter, discutimos isso e eles pareceram entusiasmados sobre serem capazes de melhorar essa área do Rails. É desapontante ouvir que eles pularam essa oportunidade e escolheram cruzar os braços."
+
+Reações apareceram logo como neste blog e neste:
+
+“Alôo … Eles têm um negócio para tocar também, você sabe. Sim, a beleza de open source é que você pode contribuir, mas quando se está tentando construir um negócio você não tem o luxo de cavar sob uma tonelada de código-fonte e então tentar descobrir onde os problemas estão e fazer mudanças.”
+
+Isso pode ficar chato: chegamos perto de mais uma discussão retórica sobre open source. Felizmente alguns membros da comunidade se levantaram e trouxeram alternativas. Por coincidência, Dr. Nic, que criou plugins fantásticos como o Magic Models já estava trabalhando em algo nesse sentido como ele descreveu neste post.
+Sua solução se chama Magic Multi-Connections. Em resumo seu plugin permite configurar bancos de dados que ele chamou de “clones” no próprio database.yml. E no seu código, em vez de usar os models desta forma:
+1
+
+@people = Person.find(:all)
+
+
+Vai usar desta outra:
+1
+
+@people = conn::Person.find(:all)
+
+
+A mágica está no proxy conn. Tirado do próprio post de Dr. Nic, ele começa instalando e fazendo uma demonstração com sqlite3:
+1
+2
+
+$ sudo gem install magic_multi_connections
+$ rails multi -d sqlite3
+
+
+A configuração do config/database.yml poderia ficar assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+development:
+  adapter: sqlite3
+  database: db/development.sqlite3
+  timeout: 5000
+
+development_clone1:
+  adapter: sqlite3
+  database: db/development_clone1.sqlite3
+  timeout: 5000
+
+development_clone2:
+  adapter: sqlite3
+  database: db/development_clone2.sqlite3
+  timeout: 5000
+
+
+Ou seja, a configuração normal está sob o usual :development e as outras auxiliares concatenando com _cloneX. Esse formato de configuração ainda não está fechado e possivelmente mudará para ficar mais conciso com algo parecido com isso, no futuro:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+development:
+  adapter: sqlite3
+  database: db/development.sqlite3
+  timeout: 5000
+
+  read_only:
+    clone1:
+      adapter: sqlite3
+      database: db/development_clone1.sqlite3
+      timeout: 5000
+    clone2:
+      adapter: sqlite3
+      database: db/development_clone2.sqlite3
+      timeout: 5000
+
+
+No exemplo do post, considere :development como seu banco de dados read-write (leitura e escrita) e os :development_cloneX como read-only (somente leitura). Para que isso? Para que a aplicação consiga consultar os dados de várias instâncias de bancos de dados aleatoriamente, distribuindo a carga entre vários servidores, por exemplo.
+E qual a idéia de um banco read-write e diversos read-only? A idéia parte do conceito que escritas são relativamente mais raras do que consultas. Por exemplo, a maioria das pessoas acessa um site mais para ler o conteúdo do que para criar esse conteúdo. Em alguns casos um sistema de caching (como o que o próprio Rails traz) somado a alguma solução de proxy reverso como Squid ou o próprio Apache podem resolver. Mas quando você precisa consultar dados atualizados constantemente (como no caso do Twitter), somente cache não ajuda.
+Numa arquitetura hipotética, você poderia ter as seguintes camadas:
+
+1 servidor de load-balancing (via software ou via hardware)
+
+
+2 servidores com meia dúzia de instâncias de Mongrel em cluster (o load balancing distribuiria a carga das requisições entre esses dois servidores e, em cada uma, o Mongrel Cluster distribuiria essa sub-carga entre cada uma das 6 instâncias Mongrel)
+
+
+1 servidor de banco de dados MySQL, mais parrudo, por trás dos panos (onde cada instância Mongrel teria uma conexão direta, ou seja, 12 conexões simultâneas)
+
+O problema: você pode aumentar de 2 para 20 servidores, se quiser atender mais requisições simultâneas. O problema é que seu banco de dados passará a atender de 12 conexões para mais de 100. Ou seja: existe um limite para a quantidade de servidores Mongrel que você pode aumentar horizontalmente. Esse limite é a capacidade máxima de seu servidor de banco de dados.
+A solução: uma das diversas possibilidades é ter um banco de dados dedicado a receber posts (que chamamos de master), replicar os dados a outros bancos de dados (que chamamos de slaves) e fazer deles bancos apenas de leitura. Com um plugin como o de Dr. Nic, as leituras seriam distribuídas entre múltiplos bancos de dados, diminuindo a pressão total em cima de um único banco e permitindo aumentar o limite de servidores de aplicação Mongrel que poderíamos colocar antes.
+
+‘E como fazer essa configuração master-slaves?’ Isso depende de cada banco de dados. No caso do MySQL existem diversas documentações na internet como esta e esta. Replicação não é nenhuma ciência de foguetes mas tem peculiaridades. Estudem bem o assunto antes de começar seguindo um HowTo qualquer em máquinas de produção (!)
+Voltando ao plugin, depois de configurar o database.yml precisamos tornar a aplicação Rails capaz de entender essa configuração mudando o config/environment.rb para conter estas linhas:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+require 'magic_multi_connections'
+connection_names = ActiveRecord::Base.configurations.keys.select do |name|
+  name =~ /^#{ENV['RAILS_ENV']}_clone/
+end
+@@connection_pool = connection_names.map do |connection_name|
+  Object.class_eval <<-EOS
+    module #{connection_name.camelize}
+      establish_connection :#{connection_name}
+    end
+  EOS
+  connection_name.camelize.constantize
+end
+
+
+Vejamos via ./script/console o que isso nos dá:
+1
+2
+3
+4
+5
+6
+7
+
+$ ruby script/console
+>> @@connection_pool
+=> [DevelopmentClone1, DevelopmentClone2]
+>> DevelopmentClone1.class
+=> Module
+>> DevelopmentClone1.connection_spec
+=> :development_clone1
+
+
+A variável global @@connection_pool representa um pool de módulos e cada módulo representa uma conexão a um banco. Esses nomes são irrelevantes porque isso será abstraído no proxy conn como vimos antes.
+Depois de criar os models como de costume, Dr. Nic usa o model Person como exemplo. Para configurar os schemas nos bancos clones (como o banco master é o padrão na configuração, os generators vão criar os models no banco read-write), o truque é o seguinte:
+1
+2
+3
+4
+5
+
+$ cp config/environments/development.rb config/environments/development_clone1.rb
+$ cp config/environments/development.rb config/environments/development_clone2.rb
+$ rake db:migrate RAILS_ENV=development
+$ rake db:migrate RAILS_ENV=development_clone1
+$ rake db:migrate RAILS_ENV=development_clone2
+
+
+No exemplo, Dr. Nic já criou dois registros do model Person no banco de dados master (:development). Aqui ele menciona que num exemplo real você teria que ter os mesmos dois registros criados no master replicados nos slaves. É exatamente o que eu mencionei no caso do MySQL acima, criando algum tipo de replicação Publisher-Subscriber, Master-Slave ou seja lá a nomenclatura no seu banco de dados favorito.
+E qual o truque por trás do método proxy conn? Veja por si só:
+1
+2
+3
+4
+5
+6
+7
+8
+
+$ ruby script/console
+>> def conn
+>>   @@connection_pool[rand(@@connection_pool.size)]
+>> end
+>> conn::Person.name
+=> "DevelopmentClone2::Person"
+>> conn::Person.name
+=> "DevelopmentClone1::Person"
+
+
+O método é nada mais nada menos do que um acesso randômico no array global @@connection_pool mencionado antes. Ele devolve o módulo que herda as propriedades da classe Model. Dessa forma, graças à natureza dinâmica do Ruby, Duck-typing, seu código não vai saber qual das conexões estará usando. Ou seja, quando fizer conn::Person.find(:all) você não sabe qual dos bancos está consultando mas quando usar diretamente Person.find(:all) sabe que estará acessando o banco master. Portanto ficou óbvio quem usar para métodos como Person.create e quem usar para métodos como Person.find.
+Esse plugin de Dr. Nic é outro excelente exemplo das vantagens de se usar linguagens dinâmicas como Ruby. A solução tem cerca de 75 linhas e praticamente dá a direção correta para solucionar problemas como o do Twitter.
+Por coincidência, neste exato momento que estou escrevendo este artigo, acabei de ver que DHH soltou mais um post sobre o assunto justamente sobre este plugin (agora são 16:00 de Domingo, 15/04). Mais polêmica: a discussão começou quando o pessoal do Twitter resolveu colocar a culpa da falta de escalabilidade no Rails. Então DHH entrou na discussão e jogou a culpa de volta no Twitter, por sentar no problema. Agora DHH, vendo a solução de Dr. Nic, escreveu um ácido “eu disse, eu falei, eu avisei que era simples. 75 linhas!”.
+A discussão é interessante mas pouco construtiva. Nenhum dos lados está correto. Dr. Nic entrou no tiro cruzado mas foi quem saiu primeiro com uma solução – ainda um rascunho, mas muito promissor e simples de entender. Na minha opinião o pessoal do Twitter se frustrou e disse o que não devia. DHH poderia ter ficado quieto, mas sabemos que isso não é feitio dele, e jogou um argumento vazio: esse blá blá de contribuir de volta à comunidade. No fim, ambos cruzaram os braços e o problema ficou para o resto da comunidade. Felizmente esse problema é conceitualmente muito simples e diversas soluções já foram usadas em diversas platarformas. Dr. Nic pegou o mais simples e implementou, o que para mim lhe dá mais pontos como um excelente resolvedor de problemas.
+
+Esse flame-war todo, Rails não escala, Contribua com sua solução, blá blá, não levou a lugar nenhum. O pragmatismo de um Dr. Nic foi o suficiente. Ele não entrou nem de um lado e nem de outro. É o que sempre digo: criticar é muito simples, mas se você não faz parte da solução, então faz parte do problema.
+tags: obsolete twitter
+

@@ -1,0 +1,209 @@
+
+Finalmente consegui fazer uma retrospectiva com os principais acontecimentos não só da última década de Ruby on Rails mas eventos em anos anteriores e durante que influenciaram nosso ecossistema de alguma forma significativa.
+Como base eu pedi permissão ao Luke Francl que publicou o artigo original Looking Backward: Ten Years on Rails. Sobre ele, adicionei diversas novas datas que não estavam lá mas que foram significativas.
+Certamente tem diversos outros que eu não coloquei ou me esqueci mesmo (vou adicionando aos poucos). Se quiserem contribuir eu coloquei um Gist para que todos possam fazer fork e me mandar mudanças.
+Quando vocês começaram a programar com Rails/Ruby e por que? Coloque nos comentários abaixo! Eu devo fazer um outro post separado também contando um pouco do meu começo com Rails mais pra frente.
+
+
+
+1972
+
+cerca de Janeiro - Lançado Smalltalk-72, a primeira versão usada em pesquisa.
+
+1978
+
+cerca de Janeiro - Pattern MVC criado pela primeira vez por Trygve Reenskaug na Xerox Parc.
+
+1995
+
+21 de Dezembro - Ruby 0.95 é lançado. (Primeira versão pública)
+
+1997
+
+27 de Maio - Eric S. Raymond lança os artigos que se tornariam o livro The Cathedral and the Bazaar: Musings on Linux and Open Source by an Accidental Revolutionary que delineiam a revolução open source que ganhou fôlego na década de 90, principalmente depois que a combinação GNU/Linux começou a fazer sucesso.
+
+1998
+
+cerca de Janeiro - XML-RPC é lançado, baseado no draft da especificação do protocolo SOAP.
+
+1999
+
+cerca de Janeiro - SOAP (“Simple Object Access Protocol”) 1.1 é lançado. Ele se torna o jeito padrão de se fazer chamadas de web services em Java e .NET.
+22 de Outubro - Dan Kegel escreve o canônico artigo The C10K Problem que se torna o marco para a implementação de I/O assíncrono nos diferentes sistemas operacionais para finalmente a web conseguir escalar. Isso se tornará as raízes de projetos como NGINX e Node.js no futuro.
+30 de Outubro - The Pragmatic Programmer: From Journeyman to Master por Dave Thomas e Andy Hunt é publicado. Recomenda que programadores aprendam uma linguagem de scripting.
+cerca de Novembro - SourceForge é lançado, fornecendo CVS hosting de graça para projetos de código aberto.
+
+2000
+
+cerca de Janeiro - Roy Fielding define “REST” em sua dissertação de Ph.D.
+10 de Março - A bolha das ponto-com explode.
+
+2001
+
+cerca de Janeiro - Microsoft lança o Outlook Web Access, a primeira grande aplicação a usar a biblioteca XMLHTTP que vem no Internet Explorer.
+cerca de Janeiro - Programming Ruby (primeira edição) por Dave Thomas e Andrew Hunt é publicado.
+cerca de Fevereiro - Agile software manifesto é criado.
+cerca de Abril - State Software (empresa do Douglas Crockford) começa a trabalhar num “JavaScript Message Language” para intercâmbio de dados. É rapidamente renomeado para JSON.
+22 de Outubro - Glyph Lefkowitz lança o Twisted, um dos primeiros frameworks de programação event-driven em Python. Node.js (lançado em 2009) seria um dos muitos sucessores que se seguiram ao Twisted.
+
+2002
+
+cerca de Janeiro - website JSON.org é lançado.
+11 de Fevereiro - Struts 1.0.2 é lançado.
+
+2003
+
+cerca de Janeiro - Patterns of Enterprise Application Architecture por Martin Fowler é publicado; inclui a descrição do pattern Active Record.
+cerca de Janeiro - RubyForge é lançado para fornecer hosting para a comunidade Ruby; é baseado num fork da plataforma SourceForge.
+7 de Dezembro - PEP 333 que define o Web Server Gateway Interface é publicado; ele fornece uma interface HTTP comum para frameworks web Python.
+5 de Fevereiro - Basecamp é lançado.
+10 de Fevereiro - Flickr é lançado; sua animação de edição "yellow fade" é amplamente copiado.
+cerca de Março - Java Server Faces 1.0 é lançado; é o jeito "do futuro" para desenvolvimento de aplicações web em Java.
+
+2004
+
+1 de Abril - Google lança GMail, demonstrando recarregamento ao vivo de aplicações web.
+14 de Março - Lançamento público inicial do Rubygems.
+24 de Julho - Primeiro lançamento do Ruby on Rails (0.5)
+
+
+Eu venho falando (e propagandeando) Rails por tanto tempo que é estranho finalmente vê-lo no mundo. Imaginem vocês, ainda não estamos falando de um lançamento 1.0, mas o pacote atualmente em oferta é algo que eu me sinto bem confortável compartilhando com o mundo. Sem dúvida, poderia ter mais documentação e mais exemplos, mas Artistas de Verdade Entregam, e esta peça vai crescer em público. Aproveitem Rails!
+
+
+2 de Outubro - DHH apresenta na Rails at RubyConf 2004. Francis Hwang estima 60 pessoas na audiência.
+5 de Outubro - a conferência apenas por convite Web 2.0 da O'Reilly populariza o termo "Web 2.0".
+25 de Outubro - Primeiro lançamento do Ruby on Rails como Rubygem (0.8)
+10 de Dezembro - Google lança o Google Suggest, que usa XMLHTTP para atualizar as sugestões de busca de forma assíncrona enquanto você digita. Desenvolvedores rapidamente fazem engenharia reversa da técnica.
+
+2005
+
+1 de Janeiro - A Robot Co-op lança o 43 Things; o site é é um early adopter de Ruby on Rails.
+20 de Janeiro - Rolling with Ruby on Rails é publicado.
+27 de Janeiro - Carlos Riberio discute o problema dos frameworks web Python.
+
+
+No mundo Python, existem diversos frameworks web competindo. É interessante ver como muitos deles são muito mal documentados, ou nem mesmo documentados. Mas mesmo projetos que tem um bom volume de documentação ainda falham em endereça o problema do modelo mental. Um manual que toca somente em problemas práticos - principalmente, especificações de APIs - é perto de inútil nesse sentido.
+
+
+Gostaria de ver mais esforços gastos na documentação dos problemas de arquitetura de um framework. Não somente 'como eu chamo este método', mas 'como eu estruturo minha aplicação'. Essa é a pergunta difícil, e a falta de uma resposta satisfatória para isso é normalmente uma boa razão para escrever mais outro framework.
+
+
+2 de Fevereiro - Primeira menção de Ruby on Rails no meu blog (do Luke Francl)
+
+
+A comunidade Java tem falado sobre esse Ruby on Rails por alguns meses já.
+
+Hoje eu finalmente dei uma olhada nisso.
+
+
+Parece bem legal. Um framework REST-ful para criar aplicações web dinâmicas com quantidade mínima de código. Escrever aplicações REST-ful com URLs limpas em outros frameworks pode ser uma enorme dor (experimente fazer isso só com servlets - você vai implorar por misericórdia).
+
+Fora isso, o que eu gostei é que ele é uma stack inteira, integrada junto de maneira bonita. Isso é algo que eu realmente sinto falta em Python. Python tem um milhão de frameworks web, mas nenhum deles tem um pacote completo como Rails.
+
+
+Considerei usar Python para alguns projetinhos meus, e eu ainda não encontrei o "melhor" framework web Python. Devo usar mod_python ou FastCGI? Qual mapeamento objeto-relacional é o melhor? Que linguagem de template devo usar? Qual framework de view vai me dar URLs bonitas, com bom SEO, que parecem profissionais? Finalmente, desses montes de frameworks, qual deles eu posso contar por uma comunidade ativa para boa documentação e suporte?
+
+
+É uma puta dor de cabeça.
+
+
+O mesmo problema se aplica ao mundo Java, mas lá você sempre pode se virar através do Servlet/JSP padrão, que tem suporte institucional da Sun, ou ir para frameworks como Struts, Spring, e Hibernate que tem milhares de desenvolvedores, boa documentação, livros publicados, etc.
+
+Mas no fim ... será que Rails vale o preço de ter que aprender Ruby? Hmmm ...
+
+
+5 de Fevereiro - Sam Stephenson lança o Prototype.js
+8 de Fevereiro - Google Maps lança para Internet Explorer e Firefox, redefinindo o nível de interação possível em um web browser.
+15 de Fevereiro - Jesse James Garrett cunha o termo Ajax para descrever as novas aplicações web ricas como Flickr, Google Suggest, ou Google Maps.
+16 de Fevereiro - Rodrigo Caffo cria a primeira mailing list brasileira de Rails, a Rails-BR
+7 de Abril - Lançamento inicial) do sistema de controle de versão distribuída git.
+2 de Julho - David Heinemeier Hansson grava o demo do blog de 15 minutos, demonstrando a velocidade do desenvolvimento rápido com Rails.
+cerca de Julho - Lançamento inicial do Groovy on Grails), um framework inspirado no Rails para a linguagem Groovy que roda na JVM.
+7 de Julho - script.aculo.us 1.0.0 é lançado, tornando fácil adicionar os efeitos de estilo Web 2.0 às suas aplicações.
+21 de Julho - Django é lançado depois de ficar em desenvolvimento por mais de 2 anos.
+cerca de Agosto - Locomotive é lançado; torna fácil a configuração de um ambiente de desenvolvimento Rails no Mac.
+4 de Agosto - Agile Web Development with Rails, primeira edição publicada.
+20 de Agosto - Foundations of Ajax publicado; um livro inteiro sobre como usar Ajax.
+26 de Outubro - Primeiro encontro do Ruby Users de Minnesota (Luke).
+3 de Dezembro - Conferência Snakes and Rubies trás juntos os criadores do Django e do Rails (video).
+13 de Dezembro - Rails 1.0 é lançado.
+
+2006
+
+21 de Março - Jack Dorsey posta primeiro tweet: “just setting up my twttr”
+23 de Março - Eustáquio Rangel lança primeiro livro de Ruby no Brasil.
+5 de Abril - Escrevo meu primeiro post no que viria a se tornar o blog AkitaOnRails.com.
+22 de Junho - A primeira RailsConf acontece em Chicago.
+30 de Junho - Hamptom Caitlin sobe o primeiro commit do SASS e inicia uma nova era de meta-linguagens para tornar possível codificar decentemente em linguagens ruins como CSS.
+5 de Julho - JRuby 0.9 consegue rodar Rails.
+
+
+Vamos ver até onde essa comunidade pode chegar. 
+
+Ruby on Rails poderá ser muito ou nada, tudo vai depender de como o mercado vai encarar a novidade. Mas muita coisa pode ser feita agora. Para começar, aprendendo sobre o assunto.
+
+Vou postar os principais assuntos sobre a plataforma aqui e espero que todos colaborem com idéias e sugestões ou mesmo críticas e opiniões.
+
+Infelizmente ainda existem muitos desafios a serem vencidos. Para começar, materiais de Rails em português virtualmente inexistem. Sites brasileiros idem. Portanto quando digo "começar do zero", estou falando sério.
+
+O maior desafio será convencer o mercado. E isso não se faz da noite para o dia. Significa que ainda não será possível deixar o legado do Java totalmente de lado. Vamos começar um período de transição onde tentaremos as duas coisas em paralelo.
+
+
+Os pioneiros sempre caminham por território árduo, mas a recompensa dos primeiros sempre será maior também. Esse é o sentido do investimento.
+
+
+29 de Julho - Django 0.95 é lançado, incluindo mudanças de "remoção de mágica".
+25 de Agosto - Amazon Web Services lança o Elastic Compute Cloud (EC2) e inicia de fato a Era do "Cloud Computing" como conhecemos hoje.
+26 de Agosto - John Resig lança o jQuery
+6 de Outubro - Meu livro "Repensando a Web com Rails" saiu da gráfica, o primeiro de Rails no Brasil.
+9 de Outubro - Ronaldo Ferraz lança o primeiro grande tutorial de Rails no Brasil.
+cerca de Outubro - Merb 0.03 é lançado ("Mongrel+Erb")
+11 de Dezembro - Eu (Luke) começo novo emprego com Rails.
+
+2007
+
+9 de Janeiro - O mundo da tecnologia recebe um novo marco: o lançamento do primeiro iPhone.
+18 de Janeiro - Rails 1.2 lançado com RESTful resources.
+20 de Fevereiro - Christian Neukirchen define a interface Rack, inspirado pelo WSGI.
+16 de Maio - Eu inicio meu primeiro emprego oficial como Railer full-time na Surgeworks.
+cerca de Abril - Inicia a famigerada controvérsia do "Rails não Escala" iniciada pelo Alex Payne, do Twitter. Essa controvérsia seguiria o Rails por anos (finalmente nos livramos disso!)
+cerca de Maio - Framework Play para Java é lançado.
+4 de Outubro - Lançamento inicial do microframework Sinatra; ele é largamente copiado em outras linguagens.
+19 de Outubro - Chris Wainstraith e Tom Preston-Werner começam a trabalhar no GitHub.
+22 de Outubro - A primeira vez que organizo um evento, em São Paulo, o RejectConf SP que teve praticamente todos os nomes do Ruby brasileiro que você reconhece até hoje como Carlos Brando (Enjoei), Danilo Sato (ThoughtWorks), Fabio Kung (Heroku), Vinicius Teles (HE:Labs), Carlos Villela (ThoughtWorks), George Guimarães (Plataformatec) e mais.
+cerca de Dezembro - Rails 2.0 é lançado.
+
+2008
+
+1 de Janeiro - o primeiro grande RubyDrama acontece com a declaração bombástica de Zed Shaw de sua saída da comunidade Ruby.
+1 de Janeiro - Heroku recebe seu primeiro seed de USD 20k da Y/Combinator.
+2 de Abril - Desenvolvimento do Rails move para o GitHub.
+10 de Abril - GitHub lança fora do beta.
+1 de Junho - Lançados o Ruby Enterprise Edition e Phusion Passenger. Pela primeira vez ganhamos uma forma robusta de fazer deployment de aplicações Rails e rodar múltiplos processos Ruby (na versão 1.8.6 ainda!) usando menos recursos do servidor.
+15 de Outubro - Organizei o primeiro grande evento de Rails do continente, o Rails Summit Latin America 2008, no Auditório Elis Regina, no Anhembi em São Paulo. Tivemos ninguém menos que Chad Fowler, Ninh Bui, Hongli Lai, David Chelimsky, Chris Wanstrath, Dr. Nic Williams, Obie Fernandez e mais. Ninguém achava a) que um evento desses fosse possível, nem b) que ele seria consistente e perduraria até hoje (2014)!
+23 de Dezembro - Merge do Rails/Merb anunciado; equipe do Merb se junta ao Rails core team.
+
+2009
+
+16 de Março - Rails 2.3 é lançado; Rails agora é uma aplicação Rack.
+27 de Maio - Lançamento inicial do Node.js, um ambiente de programação web para a máquina virtual V8. Ela permite que programadores escrevam Javascript client side e server side.
+13 de Dezembro - Jeremy Ashkenas sobe o primeiro commit do Coffeescript, um dos primeiros transpilers para tentar tornar programar em Javascript algo mais agradável.
+
+2010
+
+1 de Agosto - Rails 3.0 lançado com contribuições do Merb core team; havia passado um ano desde o lançamento do Rails 2.3.
+cerca de Abril - Steve Jobs publica o prego no caixão do Adobe Flash com o artigo Thoughts on Flash e sedimenta o caminho para HTML 5 + CSS 3 + Javascript não só em dispositivos móveis mas também em desktops. O Flash se tornou um morto-vivo desde então.
+
+2011
+
+12 de Julho - Criador do Ruby, Yukihiro Matsumoto (Matz), é contratado pelo Heroku.
+31 de Agosto - Rails 3.1 é lançado; jQuery agora é a biblioteca Javascript padrão.
+19 de Setembro - Anuncio a criação da minha primeira empresa de desenvolvimento de software própria, a Codeminer 42
+
+2013
+
+cerca de Junho - Rails 4.0 é lançado com funcionalidades como Turbolinks e caching para tentar fazer aplicações web "clássicas" tão rápidas quanto aplicações com front-end baseado em Javascript.
+
+
+tags: retrospective rails
+

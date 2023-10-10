@@ -1,0 +1,311 @@
+
+Hoje no Riding Rails, Josh publicou uma série de 3 posts apontando algumas das modificações disponíveis no novo Rails 1.2 Release Candidate 1 sobre o qual expliquei no post anterior.
+
+
+Novidades em ActiveRecord
+Aqui estão algumas das pequenas mas notáveis funcionalidades acrescentadas na versão Rails 1.2 do ActiveRecord desde a versão 1.1. (compilado por Josh Susser)
+Finding (Pesquisas)
+Adicionado hash simples de condições ao #find que simplesmente converterá um hash para uma string de equiparidade/baseado em AND. Exemplo:
+1
+
+Person.find(:all, :conditions => { :last_name => "Catlin", :status => 1 })
+
+
+É o mesmo que:
+1
+
+Person.find(:all, :conditions => [ "last_name = ? and status = ?", "Catlin", 1 ])
+
+
+Isso torna mais fácil passar para as opções valores vindos de formulários ou outro local externo.
+Adicionado find_or_initialize_by_x que funciona como find_or_create_by_x mas não salva o registro recém-criado.
+Registros e arrays de registros estão limitados com ids.
+1
+2
+
+Foo.find(:all, :conditions => ['bar_id IN (?)', bars])
+Foo.find(:first, :conditions => ['bar_id = ?', bar])
+
+
+Associações
+Permite :uniq => true com associações has_many :through. É o equivalente de fazer um SELECT DISTINCT em SQL, mas em vez disso é feito em código Ruby.
+Adicione registros a has_many :through usando <<, push e concat criando o registro de modelo de união (join model). Levanta uma exceção se o registro base ou a ser associado são novos pois ambos os ids são necessários para criar a associação. #build solta um erro porque não se pode associar um registro não-gravado. #create! recebe um atributo na forma de hash e cria ambos o registro associado e seu registro de modelo de união (join model) em uma transação.
+Por exemplo:
+1
+2
+3
+4
+5
+
+# antes:
+post.taggings.create!(:tag => Tag.find_by_name('finally')
+
+# depois:
+post.tags << Tag.find_by_name('finally')
+
+
+E:
+1
+2
+3
+4
+5
+
+# antes:
+transaction { post.taggings.create!(:tag => Tag.create!(:name => 'general')) }
+
+# depois:
+post.tags.create! :name => 'general'
+
+
+Adicionado suporte a #delete a associações has_many :through.
+has_one suporta as opções :dependent :destroy, :delete e :nullify.
+Miscelânea
+Suporte a trava em nível de linha (row-level locking) usando tanto a opção :lock do finder ou o método #lock!. Veja a documentação do ActiveRecord::Locking::Pessimistic para detalhes.
+1
+2
+3
+4
+5
+6
+7
+
+# Obtém um lock exclusivo na pessoa 1 para que possamos incrementar visitas de maneira segura.
+Person.transaction do
+  # SELECT * FROM people WHERE id=1 FOR UPDATE
+  person = Person.find(1, :lock => true)
+  person.visits += 1
+  person.save!
+end
+
+
+Novidades no Action Pack
+Como todo respeito ao repórter do Edge. aqui vão alguns pedaços saborosos do ActionPack no Rails 1.2 (CHANGELOG).
+(compilado por Geoffrey Grosenbach)
+Views
+Agora podemos acessar atributos hierárquicos (atributos dentro de atributos) no RJS:
+1
+2
+
+page['foo']['style']['color'] = 'red' 
+# => $('foo').style.color = 'red';
+
+
+Formulários agora usam blocos em vez de end_form_tag (notas do DHH):
+1
+2
+3
+4
+
+<% form_tag(products_url) do %>
+  <%= text_field :product, :title %>
+  <%= submit_tag "Save" %>
+<% end -%>
+
+
+E quantos blogs você visitou que dizem “Last updated 60 days ago” (“Atualizado pela última vez há 60 dias”)? Anos e meses foram adicionados ao distance_of_time_in_words, então veremos “2 months ago” (“2 meses atrás”) ou talvez até “5 years ago” (“5 anos atrás”) a partir de agora.
+Controllers
+Exceções que não foram tratadas disparadas de qualquer lugar na sua aplicação causará o RAILS_ROOT/public/500.html a ser lido e mostrado em vez da mensagem estática “Application error (Rails)”. Então faça ele ficar bonito se ainda não o está usando.
+Existe um novo método head(options = {}) para respostas que não tem corpo.
+1
+2
+
+head :status => 404 # retorna uma resposta vazia com status 404
+head :location => person_path(@person), :status => 201
+
+
+Podemos declarar extensões de arquivos a partir de layouts. Tragam os plugins geradores de CSS, PDF e gráficos!
+1
+
+ActionController::Base.exempt_from_layout 'rpdf'
+
+
+Recursos RESTful automaticamente recebem uma opção params[:format] que podem forçar um tipo de conteúdo. Se :format é especificado e encontra uma extensão declarada, esse tipo mime será usado em preferência ao cabeçalho “Accept”. Isso significa que podemos ligar a mesma ação para diferentes extensões e usar esse fato para determinar a saída (cheat sheet).
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+class WeblogController < ActionController::Base
+  def index
+    @posts = Post.find :all
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @posts.to_xml }
+      format.rss { render :action => "feed.rxml" }
+    end
+  end
+
+
+Podemos também registrar nosso próprio tipo customizado de MIME. Eles serão automaticamente incorporados aos controllers, portanto podemos usá-los no respond_to e como extensões :format de arquivos.
+1
+2
+
+Mime::Type.register(string, symbol, synonyms = [])
+Mime::Type.register("image/gif", :gif)
+
+
+Finalmente, ActionController.filter_parameter_logging torna mais fácil remover senhas, números de cartões de crédito e outras informações sensíveis de serem gravadas nos logs quando uma requisição é processada.
+1
+2
+
+filter_parameter_logging 'password' 
+# Não log campos que batam com 'password'
+
+
+Roteamento e URLs
+Roteamento (Routing) foi significamente reescrito para velocidade e consistência. Um dos benefícios é que podemos usar rotas nomeadas e rotas RESTful em nossos templates de mensagem (mailer).
+1
+2
+3
+4
+
+class MyMailer < ActionMailer::Base
+
+  include ActionController::UrlWriter
+  default_url_options[:host] = 'my_site.com'
+
+
+Testes
+Agora assert_response suporta códigos simbólicos de status adicionais.
+1
+2
+3
+4
+
+assert_response :success # You know this one
+assert_response :ok
+assert_response :not_found
+assert_response :forbidden
+
+
+Adicionado a regra assert_select para testes de seletores baseados em CSS (cheat sheet). Use isso em vez de assert_tag a partir de agora.
+1
+2
+
+assert_select "a[href=https://assert_select_rules.com]", @item.url, "Deve ter um link" 
+assert_select "div#products", nil, "Deve mostrar um produto div na página"
+
+
+Deprecado
+Veremos avisos quando rodarmos nossos suítes de testes. Aqui estão alguns que foram substituídos por uma sintaxe melhor:
+
+assert_tag → assert_select
+start_form_tag e end_form_tag → form_tag do end
+@cookies, @headers, @request, @response, @params, @session, @flash → cookies, headers, request, response, params, session, flash
+.png não é mais automaticamente adicionado a chamadas image_tag sem extensão
+
+Novidades em Active Support
+A seguir estão alguns dos menores, mas notáveis funcionalidades adicionados ao ActiveSupport ao Rails 1.2 desde o lançamento do Rails 1.1. 
+(compilado por Joshua Sierles)
+Module#unloadable marca constantes que requerem descarregamento (unloading) depois de cada requisição. Exemplo:
+
+
+CONFIG.unloadable
+
+Clones Module#alias_attribute atributos de classe, incluindo seus getter, setter e métodos de pesquisa (query). Exemplo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+class Email < ActiveRecord::Base
+  alias_attribute :subject, :title
+end
+
+e = Email.find(1)
+e.title    # => "Superstars"
+e.subject  # => "Superstars"
+e.subject? # => true
+e.subject = "Megastars"
+e.title    # => "Megastars"
+
+
+Enumerable#sum calcula a soma dos elementos do array. Exemplos:
+1
+2
+3
+
+[1, 2, 3].sum
+payments.sum { |p| p.price * p.tax_rate }
+payments.sum(&:price)
+
+
+Isso substitui:
+1
+
+payments.inject(0) { |sum, p| sum + p.price }
+
+
+Array#to_s(:db) produz uma lista separada por vírgulas de ids. Exemplo:
+1
+
+Purchase.find(:all, :conditions => "product_id IN (#{shops.products.to_s(:db)})"
+
+
+Module#alias_method_chain encapsula o padrão comum:
+1
+2
+
+alias_method :foo_without_feature, :foo
+alias_method :foo, :foo_with_feature
+
+
+With alias_method_chain:
+1
+
+alias_method_chain :foo, :feature
+
+
+Array#split divide arrays em um ou mais sub-arrays por valor ou bloco. Exemplos:
+1
+2
+
+[1, 2, 3, 4, 5].split(3) => [[1, 2], [4, 5]] 
+(1..10).to_a.split { |i| i % 3 == 0 }   # => [[1, 2], [4, 5], [7, 8], [10]]
+
+
+Hash.from_xml(string) cria um hash a partir de um string XML, mudar os tipos dos elementos se possível. Exemplo:
+1
+2
+3
+4
+5
+6
+
+Hash.from_xml <<-EOT
+  <note>
+    <title>This is a note</title>
+    <created-at type="date">2004-10-10</created-at>
+  </note>
+EOT
+
+
+… retornaria:
+1
+
+{ :note => { :title => "Isso é uma anotação", :created_at => Date.new(2004, 10, 10) } }
+
+
+O pacote Builder foi atualizado para a versão 2.0. Mudanças incluem:
+1
+2
+
+-- UTF-8 characters in data are now correctly translated to their XML equivalents
+-- Attribute values are now escaped by default
+
+
+
+tags: obsolete rails
+

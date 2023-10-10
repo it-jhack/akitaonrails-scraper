@@ -1,0 +1,406 @@
+
+David anunciou há poucas horas a disponibilidade do primeiro tag nomeado Preview Release, o primeiro passo rumo ao lançamento final da esperada versão 2.0. É o sinal verde para que todo o resto da comunidade comece a criar novas aplicações já preparadas para 2.0. Muita gente terá a velha pergunta: “será que devo migrar minha aplicação para 2.0?” É um dilema que não tem resposta absoluta. Depende.
+Se sua aplicação está no 1.0 ou 1.1 até hoje, estável, funcionando sem problemas e, principalmente, se você não pretende extendê-lo muito ainda, há poucos motivos para mudar. Se você já está no 1.2, ainda pretender melhorar a aplicação, ainda há chão para mudanças, então talvez haja vantagens em tentar o caminho da migração. Lembrando que ainda haverá o lançamento da versão 1.2.4 antes da 2.0, contendo principamente correções de bugs. São pelo menos 3 passos a considerar:
+
+
+
+No meu artigo de ontem eu linkei para um pequeno script que você colocar na raíz da sua aplicação, roda e ele dirá as principais mudanças que você precisará fazer.
+
+
+Ler este artigo para saber o resumo de quais foram as principais mudanças para avaliar o trabalho que terá na adaptação.
+
+
+Acompanhar os CHANGELOGs da tag rel_2-0-0_PR para cada um dos gems que compõe o Rails 2.0: Railties, ActionMailer, ActionPack, ActiveRecord, ActiveResource, ActiveSupport
+
+Mão na Massa
+Para começar a usar, existem duas maneiras simples, a primeira é instalar os gems:
+gem install rails —source https://gems.rubyonrails.org
+1
+2
+3
+4
+
+
+Mas lembrem-se que se você tiver inúmeros projetos esses gems serão acatados por todos a menos que você tenha fechado no seu environment.rb uma versão específica assim:
+
+--- rubyRAILS_GEM_VERSION = '1.2.3' unless defined? RAILS_GEM_VERSION
+
+Mas se você quiser testar apenas em um projeto, o ideal é congelar o Rails dentro dele assim:
+rake rails:freeze:edge TAG=rel_2-0-0_PR
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+
+É possível que vocês precisem rodar esse comando *duas vezes*, isso porque da primeira vez ele usará configurações do atual 1.2 e vai trazer o actionwebservice e não o activeresource. Na segunda vez ele trará o correto.
+
+Desde a versão 1.2, tudo que será tornado obsoleto já vinha sendo sinalizado nos logs via 'deprecation warnings'. Portanto, o melhor a se fazer é navegar pela sua aplicação e vasculhar o log por estes avisos. É o primeiro passo para migrar sua aplicação.
+
+Se você já tem projetos em Subversion, recomendo criar uma TAG do seu trunk atual antes de começar a migrar para 2.0. 
+
+h3. Mudanças Drásticas
+
+Para começar, o mais importante é entender o que entra e o que sai:
+
+* ActionWebService está fora do pacote principal. Ainda disponível como gem caso precise, mas é a sinalização para desconsiderar SOAP - a menos que seja extremamente necessária - para usar REST. O espírito do Rails 2.0 é empurrar aplicações RESTful. Lembrem-se disso: é um paradigma novo, diferente, com vários truques, mas que promete vantagens a longo prazo como melhor organização do código, facilidade em integração entre aplicações. No lugar do ActionWebService, o pacote principal é ActiveResource.
+
+* Dynamic Scaffold está fora, definitivamente. Estou falando do método de classe 'scaffold' que outrora colocávamos diretamente no controller e ele gerava, dinamicamente, todas as actions e views básicas. Acredito que ninguém mais use isso, muito menos em produção. O correto é usar o Generator 'scaffold'. E este também é diferente: não é o scaffold antigo mas sim o atual 'scaffold_resource', ou seja, ele irá gerar controllers com actions RESTful por padrão! Acostumem-se.
+
+* Novos plugins: como eu disse antes, acts_as_list, acts_as_tree, acts_as_nested_set, in_place_editor e autocomplete_for estão todos fora do Core. Isso é ótimo porque é menos peso para se carregar sem precisar. Se quiser de volta, use ./script/plugins install normalmente e tudo volta a funcionar. Se quiserem uma lista desses e outros plugins disponíveis diretamente pelo Core Team, cliquem "aqui":https://svn.rubyonrails.org/rails/plugins/
+
+* Database Adapters fora: firebird, frontbase, openbase, oracle, sqlserver, sybase estão todos fora do Core também. Além de eliminar peso inútil (ninguém usa todos os adapters ao mesmo tempo) também torna esses Adapters independentes. Ou seja, digamos que saia uma versão nova do Oracle. Antes você precisaria esperar o Rails como um todo lançar uma nova versão para ter o adapter estável, mas agora basta atualizarem o Gem, e você poderá ter a nova versão sem mexer no Rails. Isso porque a maioria das pessoas não vai viver no Edge Rails o tempo todo, então esta é uma excelente solução. Para instalar usem:
+
+<macro:code>gem install activerecord-[database]-adapter  
+--source https://gems.rubyonrails.org
+
+Infra Estrutura
+A limpeza que descrevi acima é muito bem vinda. Além disso houve uma boa limpeza na infraestrutura do Rails, por exemplo:
+
+Agora temos um ActionController::HttpAuthentication que torna praticamente trivial fazer autenticação via HTTP Basic Authentication. Combinado com uma conexão SSL esta é a maneira recomendada de se comunicar com recursos (APIs REST) externos que precisam de autenticação. E mesmo para seções de administração de um site, via SSL, HTTP Basic é a forma mais simples em vez de fazer autenticação via Forms.
+
+
+ActiveRecord um pouco mais rápido. Não sei se é impressão, mas eu acho que meus testes unitários realmente rodaram visivelmente mais rápidos que antes. Isso porque houve melhorias no mecanismo de carga de fixtures e um novo recurso chamado Query Cache para evitar idas desnecessárias ao banco.
+
+
+Finalmente, o excelente ruby-debug foi integrado. Instalem o gem, depois no seu código acrescente o comando ‘debugger’ e inicie o servidor com o parâmetro ‘-u’. Agora o antigo script/breakpointer foi retirado.
+
+
+O antigo config/environment.rb era uma terra de ninguém: não apenas configuração, mas pequenos Mixins e tudo mais acabava parando lá. Se tornou a peça mais macarrônica do Rails. Agora há um novo diretório chamado ‘config/initializer’. Os arquivos lá serão automaticamente carregados e isso deve levar a melhor modularização das configurações. Rails já traz dois exemplos: inflections.rb e mime_types.rb.
+
+
+Falando em configurações também ficou mais fácil definir a ordem de carga de plugins. Isso já era possível no Rails 1.2. Mas normalmente você quer apenas carregar um ou poucos plugins antes e todo o resto depois, não importa a ordem. Agora basta fazer:
+
+
+rubyconfig.plugins = [:seu_plugin, :all]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+
+
+* Na parte de segurança também há novidades. Primeiro, finalmente o método TextHelper#sanitize foi corrigido - pois antes ele não filtrava como deveria. Segundo, temos suporte a "HTTP only cookies":https://msdn2.microsoft.com/en-us/library/ms533046.aspx que não permite mais acessar cookies com 'document.cookies' - embora haja "outras maneiras":https://ha.ckers.org/blog/20070719/firefox-implements-httponly-and-is-vulnerable-to-xmlhttprequest/ e isso não seja suportado em todos os browsers. Finalmente, em terceiro, no "ActionController::RequestForgeryProtection":https://svn.rubyonrails.org/rails/tags/rel_2-0-0_PR/actionpack/lib/action_controller/request_forgery_protection.rb para evitar ataques Cross Site. Agora todo form ganha um token identificador baseado na sessão do usuário. Desta forma não será possível um site de fora tentar dar submit num form do seu site. Exemplo:
+
+--- rubyclass PostsController < ApplicationController
+  USER_NAME, PASSWORD = "dhh", "secret" 
+
+  before_filter :authenticate, :except => [ :index ]
+
+  def index
+    render :text => "Everyone can see me!" 
+  end
+
+  def edit
+    render :text => "I'm only accessible if you " +
+                "know the password" 
+  end
+
+  private
+    def authenticate
+      authenticate_or_request_with_http_basic do 
+                |user_name, password| 
+        user_name == USER_NAME && password == PASSWORD
+      end
+    end
+end
+
+Novos recursos
+Como disse, antes, os CHANGELOGs que listei acima são cruciais para entender no detalhe onde as coisas mudaram. Mas seguindo o post do David, eis alguns dos novos recursos:
+Action Pack: Resources
+Muita gente criticou a forma de extender além das actions RESTful. David chamou de “Syntactic Vinager”, ou seja, algo que fica propositalmente feio justamente para que você não repita. Isso no caso de URLs RESTful onde você quisesse enviar a uma action customizada, por exemplo: /people/1;edit. Agora o ponto-e-vírgula se tornou um backslash apropriado e a nova URL fica /people/1/edit.
+Fora isso Rotas ganharam namespaces:
+
+rubymap.namespace(:admin) do |admin|
+admin.resources :products,
+:collection => { :inventory => :get },
+:member     => { :duplicate => :post },
+:has_many   => [ :tags, :images, :variants ]
+end
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Com isso você ganha rotas como 'inventory_admin_products_url' e 'admin_product_tags_url'. Com uma quantidade potencialmente grande de rotas sendo criadas, agora você tem no novo *rake routes* que lista todas as rotas configuradas na sua aplicação.
+
+No Rails 2.0 a convenção é que controllers de resources sejam sempre no plural. Ou seja:
+
+--- ruby# /avatars/45 => AvatarsController#show
+map.resources :avatars
+
+# /people/5/avatar => AvatarsController#show 
+map.resources :people, :has_one => :avatar
+
+Action Pack: Multiview
+A partir de agora, poderemos usar templates com uma nova convenção:
+[nome da template].[mime_type].[engine]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+
+
+Por exemplo, 'show.html.erb' significa o template da action 'show', que será renderizada pela engine 'ERB' quando o mime-type no respond_to for 'html'. Se na realidade a requisição pediu por uma planilha Excel, o nome seria 'show.csv.erb'. Outros exemplos:
+
+* show.erb - o mesmo template para todos os mime-types
+* index.atom.builder - usar o formato do Builder, que antes era o .rxml, para renderizar quando o mime-type for application/atom+xml
+* edit.iphone.haml - usa a engine HAML (não inclusa) para renderizar a action edit ao formato customizado Mime::IPHONE
+
+Além disso se tornou mais fácil declarar tipos 'falsos' usados apenas para roteamento interno. Como quando se quer um HTML especial apenas para iPhone:
+
+--- ruby# deve ir em config/initializers/mime_types.rb
+Mime.register_alias "text/html", :iphone
+
+class ApplicationController < ActionController::Base
+  before_filter :adjust_format_for_iphone
+
+  private
+    def adjust_format_for_iphone
+      if request.env["HTTP_USER_AGENT"] 
+                && request.env["HTTP_USER_AGENT"][/(iPhone|iPod)/]
+        request.format = :iphone
+      end
+    end
+end
+
+class PostsController < ApplicationController
+  def index
+    respond_to do |format|
+      format.html   # renders index.html.erb
+      format.iphone # renders index.iphone.erb
+    end
+  end
+end
+
+Seus próprios mime-types, como disse antes, devem ir no config/initializers/mime_types.rb.
+Action Pack: Identificação de Registros
+Há agora inúmeras simplificações e convenções em métodos de controllers e views para lidar com URLs baseadas em Models, tornando Models em rotas de resources. Exemplos:
+
+ruby# person é um objeto Person que,
+
+por convenção será mapeada para person_url 
+redirect_to(person)
+link_to(person.name, person)
+form_for(person)
+
+1
+2
+3
+4
+5
+6
+
+
+h3. Action Pack: Browser performance
+
+Uma coisa que está muito em voga é 'pseudo-compilar' seus inúmeros pequenos arquivos de javascript e css em um único arquivo para acelerar sua carga, em vez de exigir que o browser faça uma request separada para cada arquivo. Esta é a nova sintaxe:
+
+--- rubyjavascript_include_tag(:all, :cache => true)
+
+Isso tornará todos os seus public/javascript/[tudo].js em um único public/javascripts/all.js, em production mode. Em development eles continuarão separados para facilitar o desenvolvimento, claro.
+Alguns browsers preferem não fazer requisições simultâneas e paralelas ao mesmo servidor, colocando as requisições em fila. Para evitar isso você pode usar:
+
+rubyActionController::Base.asset_host = “assets%d.example.com”
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+
+Com isso todas as chamadas a recursos via helpers como image_tag vão circular de asset1 até asset4 (pressupõe-se que todas essas chamadas sejam corretamente direcionadas ao seu servidor). Isso engana o browser e ele abrirá mais conexões de uma só vez, aumentando a velocidade 'percebida' da aplicação. E claro que para isso funcionar direito é bom que você tenha um web server como Apache configurado para servir seus elementos estáticos.
+
+h3. Action Pack: Exception Handling
+
+Antigamente, para pegar uma exception saída de uma action, bastava sobrescrever o método 'rescue_action_in_public'. Mas isso uma gambiarra. Agora há um novo método de classe do controller chamado "rescue_from":https://svn.rubyonrails.org/rails/tags/rel_2-0-0_PR/actionpack/lib/action_controller/rescue.rb. Exemplo:
+
+--- rubyclass PostsController < ApplicationController
+  rescue_from User::NotAuthorized, :with => :deny_access
+
+  protected
+    def deny_access
+      ...
+    end
+end
+
+Action Pack: Outros
+Fazer feeds Atom ficou mais fácil com o AtomFeedHelper. É um Builder ‘vitaminado’ para Atom. Exemplo:
+
+ruby# index.atom.builder:
+atom_feed do |feed|
+  feed.title(“My great blog!”)
+  feed.updated((@posts.first.created_at))
+for post in @posts
+feed.entry(post) do |entry|
+entry.title(post.title)
+entry.content(post.body, :type => ‘html’)
+entry.author do |author|
+author.name(“DHH”)
+end
+end
+end
+end
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+
+Fora isso há várias melhorias de performance, chamadas a asset (como imagens) agora são mais baratas e há caching de rotas nomeadas - onde antigamente havia muita crítica quanto à performance de rotas.
+
+h3. Active Record
+
+*Sexy Migrations* deve ser um dos novos recuros que ficou mais famoso, tanto pelo nome sugestivo quanto pela real usabilidade. Na prática não parece muito mas definitivamente torna suas migrations mais bonitas, pulando disto:
+
+--- rubycreate_table :people do |t|
+  t.column, "account_id",  :integer
+  t.column, "first_name",  :string, :null => false
+  t.column, "last_name",   :string, :null => false
+  t.column, "description", :text
+  t.column, "created_at",  :datetime
+  t.column, "updated_at",  :datetime
+end
+
+Para isto:
+
+rubycreate_table :people do |t|
+t.integer :account_id
+t.string  :first_name, :last_name, :null => false
+t.text    :description
+t.timestamps
+end
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Em um detalhe interessante para quem trabalha muito com Ajax é o suporte a JSON. Antes já tinhamos nos models o método .to_xml, que serializava um model em XML. Agora há o método reverso, Model.new.from_xml("xml") que alimenta uma nova instância com as propriedades corretas. E finalmente, temos .to_json, e com isso chamadas Ajax podem diretamente receber os dados num formato automaticamente processável.
+
+Acho que pouca gente realmente usa o método ActiveRecord::with_scope hoje, mas para quem usa, basta saber que agora ele é um método privado. Ou seja, só poderá ser usado dentro do próprio Model e não nos controllers ou views como algumas pessoas vinham erroneamente fazendo.
+
+h3. Active Support
+
+Este pacote tem todas as extensões aos objetos Core do Ruby e agora temos novos métodos de suporte como Array#rand para pegar aleatoriamente um elemento de um Array e Hash#except para filtrar um hash de chaves que não se quer. Também temos várias exceções para Date. Testes ganharam o novo método "assert_difference":https://blog.hasmanythrough.com/2007/5/2/getting-arbitrary-with-assert_difference.
+
+h3. Action Mailer
+
+Nada de muito novo aqui, tirando correções de bugs, agora há a opção de registrar engines de templates diferentes e 'assert_emails' à suite de testes que funciona asim:
+
+# Avalie o número de e-mails enviados dentro de um bloco: 
+
+--- rubyassert_emails 1 do post :signup, :name => ‘Jonathan’ end
+
+Conclusão
+Há muito para se descobrir no Rails 2.0. Quem não acompanhou o Edge Rails nos últimos meses tem muito de novo a experimentar. No próximo artigo farei um pequeno depoimento sobre migração.
+Um blog a se prestar atenção sobre isso é o has_many :through de Josh Susser. Ele vinha postando bastante sobre o Edge Rails e pelo visto irá revistar todos os posts antigos para atualizá-los ao novo Preview Release.
+E para quem quiser gerenciar diferentes versões de Rails em servidores controlados com Capistrano, tem esta receita baseada nas idéias de Rick Olson. Ela foi originalmente escrita para quando o Rails 1.2 foi lançado, mas o procedimento continua valendo.
+E para quem quiser apenas dar uma pequena fuçada no código, vá diretamente ao repositório SVN do Core Team, aqui.
+tags: obsolete rails
+

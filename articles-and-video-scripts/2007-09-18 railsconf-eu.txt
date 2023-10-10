@@ -1,0 +1,11 @@
+
+Ontem, hoje e amanhã está rolando a RailsConf Europe, em Berlim, na Alemanha.
+
+Dave Thomas, da Pragmatic Programmer, palestrou sobre o tema “Pode haver arte sem engenharia? Pode haver engenharia sem arte?” É a velha metáfora de uma tela de código em branco comparada a um quadro em branco. Dos pincéis e tintas como linguagens e frameworks. Uma maneira que eu particularmente gosto de imaginar. Assim como em arte, programação tem uma parte inegável de inspiração e talento envolvido, além das técnicas básicas. Requer treino, requer dedicação, requer estudo.
+
+
+David Hansson deu uma pincelada a respeito do Rails 2.0. Algumas coisas que já falei como tornar obsoleto o método scaffold dinâmico dos controllers. Os templates agora serão no formato *.[formato].[renderizador], por exemplo *.html.erb e, por que não, *.iphone.erb. Nomenclatura automática de partials, default para cookie-based session store, named routes, HTTP authentication, custom layouts para browsers específicos, um novo plugin para ajudar em feeds Atom, melhorias no breakpoint para debug. 
+Ao que parece o tema mais quente do momento é Tornando Rails (Artificialmente) Inteligente. O pilar são os classificadores bayesianos. Redes Bayesianas. Na prática podemos alimentar uma engine de decisão com dados, formar probabilidades independentes de uma série de variáveis e fazer o sistema decidir. No mundo de TI uma das aplicações mais populares são os filtros anti-spam inteligentes, com baixa taxa de falsos-positivos. Procurar por palavras-chave ou heurísticas estáticas sempre é ruim pois sempre é possível burlar heurísticas, mas utilizando redes bayesianas e matemática probabilísticas podemos tornar os sistemas mais “espertos”. Em vez de conjuntos estáticos de regras, temos um mecanismo de aprendizagem. Juntar isso em aplicações Rails é o atual desafio.
+Finalmente, hoje acontece a RejectConf, nos moldes de como aconteceu em Portland. Em vez de palestras do grande auditório, com todos os whistles and bells, o Reject Conf são micro-palestras feitas em um canto, bem improvisado, onde quem tiver algo interessante poderá apresentar. Coisas interessantes podem sair disso.
+tags: obsolete conference
+

@@ -1,0 +1,36 @@
+
+Quando falei de RejectConf pela primeira vez, o Thiago L. Christofoletti sempre mostrou interesse em querer participar. Mas ele está na França (!) portanto não pôde vir. Mas em compensação ele participou do Paris on Rails. Vejam as fotos que ele tirou do evento aqui.
+
+A Europe está começando a prestar atenção em Rails, mas ainda não é a mesma febre que nos Estados Unidos. Europeu sempre foi mais conservador :-) Mas parece que a comunidade lá também está ganhando tração. Abaixo coloco as impressões que ele teve do Rails francês nas suas próprias palavras.
+
+
+Thiago:
+Apesar de eu não entender quase nada de francês (hehe), o evento foi
+proveitoso pois deu para extrair bastante coisa conhecendo o contexto
+e “lendo” os slides. O que senti, e aí não sei se é por causa da
+própria cultura européia, é que o evento foi um tanto formal demais
+por ser algo da comunidade Rails. Durante o evento lembrei diversas
+vezes do RejectConf SP que, apesar de eu não ter participado
+justamente por estar aqui, rolou de uma maneira mais informal e
+amigável (pelo que senti lendo os relatos e vendo as fotos). O
+evento daqui foi patrocinado por algumas empresas, inclusive a Sun.
+Será que esse toque “formal e meio corporativo” vem daí?! Ainda
+prefiro o formato mais informal e descontraído :)
+
+Uma das apresentações que acrescentou algumas novidades para mim
+falava sobre HAML e SASS. Não consegui entender o suficiente para
+concluir se é legal ou não. Você já escreveu algum material sobre
+isso? Se sim, gostaria que me indicasse o link. (AkitaOnRails: nope, ainda não :-)
+O ponto alto do evento (e esse, ainda bem, rolou em inglês e eu
+entendi!) foi uma videoconferência com o DHH. Ele respondeu algumas
+questões dos participantes, ao vivo, lá de Chicago! Foi muito bacana,
+o cara foi super receptivo e simpático. Uma das perguntas que rendeu
+uma longa e detalhada resposta foi, claro, sobre as novidades do Rails
+2.0. De fato a participação do DHH foi bem bacana! Não sei se ele
+estava na casa dele ou na 37signals, mas tudo foi feito de maneira
+simples mesmo, com porta e parede branca no fundo, pelo Skype. Será
+que não rola, futuramente, convidar ele para uma videoconferência num
+encontro brasileiro? ;) (AkitaOnRails: se dependesse só de mim, com certeza, mas não custa tentar!)
+
+tags: obsolete conference
+

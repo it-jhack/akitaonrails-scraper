@@ -1,0 +1,143 @@
+
+Muitos ainda devem ter dúvidas de onde colocar suas aplicações Rails. Nos últimos dias andei testando algumas alternativas.
+Na prática está entre as opções:
+
+Instalar do zero seu próprio servidor e se responsabilizar pela manutenção
+Usar um PaaS (Platform as a Service) e deixar um serviço cuidar da infraestrutura por você
+
+Em ambas as opções as peças mais importantes são:
+
+servidor web (nginx, apache2)
+banco de dados (SQL: PostgreSQL, MySQL; NOSQL: MongoDB, CouchDB, Redis, Riak), incluindo facilidade em escalar verticalmente (mais CPU/RAM) e horizontalmente (replicação)
+load balancer (HAProxy), incluindo facilidade em aumentar os servidores web
+opcionais (Memcached)
+manutenção (aplicação de patches de segurança, backup)
+
+
+No próximo artigo vou falar de outra opção que estou gostando, o AppFog, mas no geral o PaaS que oferece o melhor balanço entre funcionalidades, facilidade, serviços ainda é o Heroku. Se ainda não viu, leia meu artigo Enciclopédia do Heroku. A grande vantagem é realmente preocupação perto de zero com infraestrutura.
+
+
+
+Tendo seu projeto, instale o Heroku Toolbelt e faça o seguinte:
+
+1
+2
+3
+4
+5
+6
+
+# caso ainda não tenha feito login (uma vez só)
+$ heroku login
+
+# cria novo aplicativo e faz o deployment
+$ heroku apps:create nome_do_seu_app --stack cedar
+$ git push heroku master
+
+
+De todas as funcionalidades a que mais se destaca frente aos concorrentes é a existência do Heroku Postgres que toda aplicação já tem por padrão e você pode escalar verticalmente com planos maiores. Na minha opinião essa é a funcionalidade mais importante que nenhum outro concorrente tem a não ser a Amazon com o RDS para MySQL.
+Esse serviço é importante primeiro porque ele se preocupa com a manutenção por você, escalabilidade vertical (mais espaço, mais cache, mais conexões simultâneas), replicação "slave"/read-only com o recurso de Follows, backups e restores automáticos que você também pode manualmente fazer download dos dumps. O seguinte procedimento é tudo que você precisa fazer:
+
+1
+2
+3
+4
+5
+6
+
+# para fazer backup e download do dump
+$ heroku pgbackups:capture
+$ curl -o latest.dump `heroku pgbackups:url`
+
+# para carregar o dump na sua base local de desenvolvimento
+$ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U myuser -d mydb latest.dump
+
+
+Pontos Importantes
+Existem alguns pontos importantes que vocês precisam estar cientes antes de cair de cabeça no Heroku:
+
+não há MySQL, portanto se sua aplicação depende de SQL específica de MySQL, primeiro você será obrigado a reescrever para ser puramente ActiveRecord ou reescrever em SQL de Postgres.
+no plano "free" com 1 dyno, esse dyno é "reciclado" de tempos em tempos e quando vem uma próxima requisição existe o tempo de carga da aplicação que, dependendo do tamanho, pode dar um timeout e o usuário recebe um erro de "Application Error". Uma das formas de manter a aplicação no ar é usar serviços que monitoram HTTP e fazem requisições de tempos em tempos. Ou a forma "correta" que é pagar por pelo menos mais uma dyno
+os dynos tem tamanho fixo, aproximadamente o equivalente a 512Mb de RAM e 4 CPUs virtuais. Por isso a recomendação de usar Unicorn em vez de Thin e configurar para no máximo 4 workers, mas aí a limitação é o tamanho da sua aplicação. Mesmo uma aplicação pequena Rails pode consumir facilmente 128Mb, 256Mb ou mais de RAM. O uso de Ruby 2.0 pode economizar até no máximo uns 30% de memória graças ao recurso de Copy on Write.
+não há recurso de deploy com zero downtime. Quando você faz um deploy ele derruba todas as dynos e sobe todas de uma vez. Isso é necessário para manter a integridade dos dados (já que seu novo código pode ter alterado regras que afetam o banco). Por outro lado você não tem a escolha de fazer rolling deploys, onde web apps antigas vão sendo substituídas pelas novas sem derrubar as requisições atuais sendo atendidas (se você controla seu próprio servidor com Unicorn, existe o recurso de graceful restarts via sinal HUP). Se quiser experimentar, existe um recurso ainda não considerado estável chamado Heroku Preboot.
+não há acesso direto à máquina, e nem deveria mesmo existir já que o Heroku é quem se responsabiliza em dar manutenção na máquina. Mas você pode fazer coisas básicas abrindo uma conexão remota com bash ou direto executando algumas tasks rake ou comandos rails como heroku run rails console
+
+Heroku "Router-Gate"
+Existem alguns problemas que ainda estão sendo resolvidos. Algum tempo atrás a startup RapGenius descobriu um enorme problema no sistema de filas do Heroku aliada à entrada da stack Cedar. O Heroku se retratou e se desculpou. A situação é que o tempo total de espera para um usuário será o tempo de processamento da sua aplicação mais o tempo de espera na fila do Heroku (que em alguns casos pode tornar o tempo total até 5 vezes mais lento do que deveria). O paliativo para diminuir esse tempo é o seguinte:
+
+aumentar as dynos para o tamanho 2X de 512Mb para 1GB de RAM usando o comando heroku ps:resize web=2x
+esse novo dyno deve suportar um Unicorn com no mínimo 2 workers (cuidado com o tamanho da sua aplicação)
+
+O problema é que a fila do roteador do Heroku manda as requisições aleatoriamente pras dynos que, por sua vez, também tem filas (nginx, unicorn). Significa que requisições que outras dynos menos ocupadas poderiam atender ficam represadas nas filas da dyno, que o roteador do Heroku não tem como gerenciar nesse momento.
+Uma forma de "devolver" as requisições de volta ao roteador do Heroku, para que ele possa mandar para outra dyno, é usar o truque do Unicorn Killer cujo objetivo principal é evitar que workers cresçam indevidamente no uso de memória, obrigando o servidor a usar swap. Matar o worker o obriga a devolver as requisições e o roteador, teoricamente, tem chance de mandar para outras dynos (importante balancear número suficiente de dynos). Cuidado com os parâmetros, mas para habilitar o unicorn killer faça o seguinte:
+
+1
+2
+
+# na Gemfile
+gem 'unicorn-worker-killer'
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+# na config.ru
+max_request_min =  ENV['MAX_REQUEST_MIN'].to_i || 3072
+max_request_max =  ENV['MAX_REQUEST_MAX'].to_i || 4096
+
+# Max requests per worker
+use Unicorn::WorkerKiller::MaxRequests, max_request_min, max_request_max
+
+oom_min = ((ENV['OOM_MIN'].to_i || 192) * (1024**2))
+oom_max = ((ENV['OOM_MAX'].to_i || 256) * (1024**2))
+
+# Max memory size (RSS) per worker
+use Unicorn::WorkerKiller::Oom, oom_min, oom_max
+
+
+
+Mude os tamanhos mínimo e máximo de 192 e 256, respectivamente, de acordo com sua aplicação. Junte isso ao número de workers configurado no config/unicorn.rb. O número de workers x o tamanho máximo de memória não pode ultrapassar 1GB de RAM.
+Preços
+Na prática, o que mais importa é quanto isso vai custar. Uma aplicação bem pequena teria minimamente o seguinte:
+
+2 dynos (com uns 2 ou 3 workers Unicorn, o que lhe daria um máximo de 6 conexões simultâneas, ou seja USD 106.50)
+Heroku Postgres Dev (USD 0.00)
+PG Backups Auto - One Month Retention (USD 0.00)
+Sendgrid Starter (USD 0.00)
+Memcachier Developer (USD 0.00)
+
+Ou seja, dá pra fazer pequenas aplicações gastando em torno de USD 50 a USD 100 por mês. Eu sei que alguns comparam preços com hospedans compartilhadas como Dreamhost. Não façam isso, hospedagem compartilhada é um péssimo modelo para qualquer site maior que um institucional de páginas estáticas. USD 100 por mês é considerado centavo no mundo de startups sérias.
+Um produto em produção, com tráfego, dados, pode chegar ao seguinte:
+
+3 dynos (2x, USD 178.50)
+7 workers (7 x USD 36.00)
+Heroku Postgres Fugu (USD 400)
+Hostname SSL (USD 20.00)
+Memcache 250Mb (USD 40)
+New Relic Professional (~ USD 560.00)
+Pusher Big Boy (~ USD 200.00)
+Redis To Go Medium (~ USD 170.00)
+SSL Endpoint (USD 20.00)
+Websolr Platinum (USD 100.00)
+
+Total: ~ USD 2,000.00
+Parece caro? Considere isso muito barato. Esse é o cenário de um produto em produção. Quanto custaria para você o custo da infraestrutura (preços da Amazon AWS) e equipe de sysadmins 24x7 em tempo integral?
+
+Notem que dá para diminuir os workers - se usar Resque - em no mínimo a metade ou mais se implementar o novo Sidekiq. Em projetos novos, não use Resque e nem muito menos Delayed Job, vá direto para Sidekiq.
+Em particular, um dos elementos mais caros de qualquer instalação em produção é de longe o New Relic. Veja que nessa lista, ele é sozinho quase 30% do total. Se considerar só o custo das dynos o New Relic custa o dobro! O Banco de dados é mais barato, e ele é altamente utilizado!!
+Estou à procura de alternativas ao New Relic pois apesar dele ser bom, considero que é muito caro para uma ferramenta que precisamos ver só de vez em quando para tomar alguma ação.
+Mesmo com todas essas considerações, na dúvida, eu não recomendaria nenhum outro serviço. Existem diversas outras opções que pretendo explorar mas de cara, comece com o Heroku.
+
+tags: obsolete hosting
+

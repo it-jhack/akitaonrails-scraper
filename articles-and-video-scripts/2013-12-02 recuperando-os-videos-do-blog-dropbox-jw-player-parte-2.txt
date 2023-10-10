@@ -1,0 +1,41 @@
+
+No post anterior listei os posts com embeds de vídeo atualizados. Aqui estão os vídeos avulsos que utilizei em diversas palestras que apresentei nos últimos 5 anos:
+
+
+Este foi um dos vídeos que mais usei para descrever alguns abstratos a respeito de Rails e sua sinergia com produtos web.
+
+
+
+
+
+Este clássico de Carl Sagan é uma explicação sobre evolução biológica e seleção natural. Eu usei como paralelo para explicar o conceito de seleção natural e como códigos open source passam por um processo semelhante de evolução e seleção natural/artificial. Os conceitos são os mesmos: mutações aleatórias (contribuições voluntárias), seleção artificial (committer), seleção natural (distribuição gratuita, feedback de usuários, exploits de segurança), melhoria cumulativa (repositórios abertos versionados, distribuição gratuita).
+
+
+[OBSOLETO] Quando Node.js ainda estava surgindo, surgiu um experimento de framework para aplicações assíncronas chamada Cramp. Não há novos commits faz pelo menos 2 anos, então considero que é obsoleto. Mantenho o vídeo apenas para posteridade.
+
+
+
+
+[DESATUALIZADO] Utilizei estes dois vídeos acima para mostrar como se otimiza muito o tempo de resposta deferindo tarefas que demoram para background, na época usando Resque. Não há nada de errado em ainda se usar Resque e muitos usam, mas temos uma opção muito melhor com Sidekiq. Sem falar que usei Paperclip, e hoje preferimos mais o Carrierwave, apesar dos dois serem usados. E, obviamente, era Rails 2.3, hoje estamos na versão 4.0.1.
+
+
+[DESATUALIZADO] Tudo no mundo Web de Ruby utiliza Rack como mediador entre frameworks e servidores. Você pode inclusive criar uma aplicação (simples) usando puramente Rack, sem depender de frameworks se quiser. Vale a pena aprender esse básico. Novamente, existem novidades no Rack desde então mas os conceitos básicos são os mesmos.
+
+
+[DESATUALIZADO] Sinatra continua na ativa, ganhou um irmão "assíncrono" chamado Async Sinatra mas no geral ainda tem os mesmos princípios e os mesmos propósitos: aplicações web pequenas, principalmente APIs Web. Este vídeo é antigo, existem muitas novidades, mas o básico ainda deve se aplicar.
+
+
+Este vídeo era para ser uma brincadeira em palestras que dei sobre Ruby. Quando explicava sobre "metaprogramação" eu fazia eu mesmo explicar (eu real falando comigo mesmo em vídeo). De qualquer forma, se você é iniciante este vídeo ainda deve ser útil explicando os conceitos de objetos e introdução à metaprogramação do Ruby.
+
+
+Esta é uma das minhas palestras favoritas, meu tema pelo ano de 2009 principalmente. Nela tento demonstrar porque o comportamento humano é tão "estranho" e alguns dos mecanismos já descobertos e descritos por áreas como sociologia. Recomendo muito assistir.
+
+
+Fui muito influenciado pelas pesquisas no campo de Redes, em particular sobre os assuntos que cruzam áreas como "Emergência". Usei muito este trecho do TED de Strogatz e em diversas palestras entre 2008 e 2009 eu realizei o experimento de bater palmas (que tem na versão original deste vídeo) para demonstrar como comportamentos aleatórios podem emergir e se sincronizar sem planejamento prévio.
+
+
+Finalmente, prefiro evitar vídeos motivacionais - considero o campo todo de "motivação" muito apelativo e superficial - mas este vídeo em particular é muito bem feito, acho que ainda vale a pena divulgar.
+Ufa! E isso termina minha enorme varredura em busca dos vídeos perdidos. Se você ainda encontrar algum post meu que tenha vídeos quebrados, por favor não deixe de avisar nos comentários.
+
+tags: obsolete blog
+

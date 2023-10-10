@@ -1,0 +1,220 @@
+
+Brasileiros: tradução abaixo
+
+Around one year ago, a small group of computer science students from the Netherlands unveilled the ultimate deployment tool for Ruby on Rails: Phusion Passenger. It feels like forever since I deployed my last app using Mongrel + Mongrel Cluster + God. Passenger became a no-brainer choice for Rails deployment.
+But, some people weren’t so excited because Passenger was introduced as an Apache-only module. The thing is that many from the Rails community discovered the wicked fast Russian webserver named Nginx. It became known for being faster, more memory efficient and easier to set up than Apache. But you couldn’t use Passenger with it.
+Not up until right now! Celebrating one year since they registered the Phusion Company, they just released Passenger that can run under Nginx! And don’t miss Peepcode’s Geoffrey Grosenbach screencast on installing the new Passenger. Follow Phusion’s Twitter for more up to dates on this!
+
+
+Installation and Configuration
+Installation is pretty straight-forward, just the usual:
+1
+2
+
+gem install passenger
+passenger-install-nginx-module
+
+
+This new installer has a twist: it will offer to download, compile and install Nginx itself for you if you still don’t have it configured. So it’s even more convenient than before, for those of you – like myself – that are not that much into system administration ;-)
+Then you can edit your ‘nginx.conf’ adding the snippet that the installer itself will recommend using, something like this:
+1
+2
+3
+4
+5
+6
+
+server {
+   listen 80;
+   server_name akitaonrails.local;
+   root /Users/akitaonrails/Sites/rails/spree/public;
+   passenger_enabled on;
+}
+
+
+The same way as before, be sure to point to the ‘public’ folder of your Rails app. This is pretty much it, 5 minutes installation procedure. Restarting the web application is the same thing as before:
+1
+
+touch tmp/restart.txt
+
+
+Just have in mind that since Passenger 2.1.2 this file will not be deleted after restart, Passenger just checks out the file’s timestamp, which is updated whenever you ‘touch’ it.
+Benchmarks?
+BIG DISCLAIMER: From now on, take my words with a grain of salt. Benchmarks are only valuable under very controlled and specific situations. What I will show you now is just a very very naive set up. Be sure to fire up your own application and test it under both Apache and Nginx if you need hard data. As I am running these tests on my personal notebook, there are several things that can disrupt those numbers, such as background processes I forgot to turn off, and so on.
+I have a 2.4Ghz Macbook Pro, with Leopard. I am using the Nginx that Passenger installed for me and an out-of-the-box Apache server that came pre-installed on my Mac. I am using 3 test scenarios:
+The first one is the fantastic e-commerce Spree, and in this particular case just loading up the homepage, where you have products listing. Get to my results running httperf at gist. Bottom line is:
+1
+2
+3
+4
+5
+6
+7
+8
+
+# Spree
+httperf --server=akitaonrails.local --uri=/ --rate=10 --num-conns=100
+Nginx+Passenger:
+        test-duration 10.292 s
+        Request rate: 9.7 req/s (102.9 ms/req)
+Apache+Passenger:
+        test-duration 10.267 s
+        Request rate: 9.7 req/s (102.7 ms/req)
+
+
+As you can see, total test running time and request rate are very very similar. The second scenario is a bare bone Rails app, with a simple controller and an action that returns “render :text => ‘Hello World’”, without database calls or anything like that (gist):
+1
+2
+3
+4
+5
+6
+7
+8
+
+# Hello World
+httperf --server=akitaonrails.local --uri=/posts --rate=10 --num-conns=100
+Nginx+Passenger: 
+        test-duration 9.906 s
+        Request rate: 10.1 req/s (99.1 ms/req)
+Apache+Passenger:
+  test-duration 9.904 s
+  Request rate: 10.1 req/s (99.0 ms/req)
+
+
+Again, not very different. Finally, another bare-bone Rails app with a simple scaffold for a Post model, and I am testing loading up the index page, rendering 1,000 rows without any pagination out of a simple sqlite3 database (pretty heavy – gist):
+1
+2
+3
+4
+5
+6
+7
+8
+
+1000 Posts
+httperf --server=akitaonrails.local --uri=/posts --rate=5 --num-conns=5
+Nginx+Passenger:
+  test-duration 28.137 s
+  Request rate: 0.2 req/s (5627.3 ms/req)
+Apache+Passenger:
+  test-duration 32.832 s
+  Request rate: 0.2 req/s (6566.4 ms/req)
+
+
+So, these are hardly a conclusive testing, as I said in the disclaimer, you need to understand that these scenarios are just too simplistic. But I think I can speculate a little bit and come to some conclusions.
+Conclusion
+Which one is faster, Apache or Nginx? For Rails apps, I think both are equally fast. With Passenger running equally well on both, I could say that you can take off “performance” as a criteria to choose between the two. If you think about it, the web server just has to dispatch the request to the Passenger module, which should be a reasonably trivial task for both web servers, and once inside Passenger, they should behave just the same in any of the aforementioned scenarios.
+So, you can choose Apache for being more industry compliant, or choose Nginx because you like exotic tools, but not for one being faster than the other to run Rails. And as Passenger was already the faster solution on Apache, I think it will similarly beat Nginx + [Mongrel|Thin|etc] solution as being both faster and easier to deploy.
+And, again, I am using vanilla Apache. If you tweak it enough to remove unnecessary clutter, I believe Apache can be nearly as memory efficient as Nginx. I think most distributions bring Apache heavily loaded, so if you know how to optimize Apache, do it. The thing with Nginx is that it is very bare-bone by default. On the other hand Nginx can’t have all the modules several people came to rely on in Apache.
+Bottom line is: you like Nginx, fine. You like Apache, equally fine: they both run Passenger and this is the important part. Congratulations again to the Phusion guys for creating this great solution. They just smashed the last stronghold to pump up Passenger adoption. No excuses now ;-)
+
+Acabaram de Lançar: Phusion Passenger para Nginx!
+
+Cerca de um ano atrás, um pequeno grupo de estudantes em ciências da computação da Holanda anunciaram a melhor ferramenta de deployment para Ruby on Rails: Phusion Passenger. Parece que faz anos desde que fiz meu último deployment usando Mongrel + Mongrel Cluster + God. Passenger se tornou a escolha óbvia para deployment de Rails.
+Mas algumas pessoas não ficaram tão empolgadas porque o Passenger foi apresentado como um módulo apenas para Apache. O problema foi que muitos da comunidade Rails descobriram o rápido web server russo chamado de Nginx. Ele ficou conhecido por ser mais rápido, ter uso de memória mais eficiente e ser mais fácil de configurar que o Apache. Mas você não poderia usar Passenger com ele.
+Não até agora! Celebrando um ano desde que eles registraram a empresa Phusion, eles acabaram de lançar um Passenger que consegue rodar sob o Nginx! E não percam o screencast do Geoffrey Grosenbach sobre como instalar o novo Passenger.
+Instalando e Configurando
+Instalação é bem direto, apenas o de sempre:
+1
+2
+
+gem install passenger
+passenger-install-nginx-module
+
+
+Este novo instalador tem um truque novo: ele oferece para fazer o download, compilar e instalar o próprio Nginx para você se ainda não tiver configurado. Então está ainda mais conveniente do que antes, para aqueles que – como eu – não são muito pro lado de administração de sistemas.
+Então você pode editar o ‘nginx.conf’ adicionando o trecho de configuração que o próprio instalador recomenda usar, algo parecido com isto:
+1
+2
+3
+4
+5
+6
+
+server {
+   listen 80;
+   server_name akitaonrails.local;
+   root /Users/akitaonrails/Sites/rails/spree/public;
+   passenger_enabled on;
+}
+
+
+Assim como antes, garanta estar apontando para a pasta ‘public’ da sua aplicação Rails. Isso é basicamente tudo, um procedimento de instalação de 5 minutos. Reiniciar a aplicação web é como antes:
+1
+
+touch tmp/restart.txt
+
+
+Apenas lembre-se que desde o Passenger 2.1.2 esse arquivo não é mais apagado depois do reinício. O Passenger apenas checa a data e horário do arquivo, que é atualizado sempre que você usa o comando ‘touch’ nele.
+Benchmarks?
+GRANDE AVISO: De agora em diante, não leve minhas palavras ao pé da letra. Benchmarks são valiosos sob situações controladas e específicas. O que vou mostrar é apenas uma configuração bem ingênua. Faça seus próprios testes com suas aplicações sob Apache e Nginx se precisar de dados mais precisos. Como estou rodando esses testes no meu notebook pessoal, existem várias coisas que podem incomodar os números, como processos em background que eu esqueci de desligar, e assim por diante.
+Eu tenho um Macbook Pro de 2.4Ghz, com Leopard. Estou usando o Nginx que o Passenger instalou para mim e um servidor Apache padrão que veio pré-instalado no meu Mac. Estou usando 3 cenários de teste:
+O primeiro é o fantástico e-commerce Spree e, nesse caso em particular, somente carregando a homepage, onde você tem todos os produtos listados. Veja meus resultados rodando httperf em gist. A conclusão é:
+1
+2
+3
+4
+5
+6
+7
+8
+
+# Spree
+httperf --server=akitaonrails.local --uri=/ --rate=10 --num-conns=100
+Nginx+Passenger:
+        test-duration 10.292 s
+        Request rate: 9.7 req/s (102.9 ms/req)
+Apache+Passenger:
+        test-duration 10.267 s
+        Request rate: 9.7 req/s (102.7 ms/req)
+
+
+Como podem ver, o tempo total rodando o teste e a taxa de requisição são muito, muito similares. O segundo cenário é uma aplicação Rails pelada, com um simples controller e uma ação que retorna “render :text => ‘Hello World’”, sem chamadas a banco de dados ou qualquer coisa assim (gist):
+1
+2
+3
+4
+5
+6
+7
+8
+
+# Hello World
+httperf --server=akitaonrails.local --uri=/posts --rate=10 --num-conns=100
+Nginx+Passenger: 
+        test-duration 9.906 s
+        Request rate: 10.1 req/s (99.1 ms/req)
+Apache+Passenger:
+  test-duration 9.904 s
+  Request rate: 10.1 req/s (99.0 ms/req)
+
+
+Novamente, não muito diferente. Finalmente, outra aplicação Rails pelada, com um simples scaffold para um modelo Post, e eu estou testando a carga na homepage, renderizando mil linhas sem nenhuma paginação, a partir de um banco de dados sqlite3 (bem pesado – gist):
+1
+2
+3
+4
+5
+6
+7
+8
+
+1000 Posts
+httperf --server=akitaonrails.local --uri=/posts --rate=5 --num-conns=5
+Nginx+Passenger:
+  test-duration 28.137 s
+  Request rate: 0.2 req/s (5627.3 ms/req)
+Apache+Passenger:
+  test-duration 32.832 s
+  Request rate: 0.2 req/s (6566.4 ms/req)
+
+
+Então, esses são testes bem inconclusivos, e como disse antes no aviso, vocês precisam entender que esses cenários são muito simplistas. Mas acho que posso especular um pouco e chegar a algumas conclusões.
+Conclusão
+Qual é mais rápido, Apache ou Nginx? Para aplicaçoes Rails, acho que ambos são igualmente rápidos. Com o Passenger rodando igualmente bem em ambos, eu diria que você pode tirar o critério “performance” para escolher entre eles. Se pensar sobre isso, o servidor web serve apenas para rotear a requisição para o módulo de Passenger, o que deveria ser uma tarefa razoavelmente trivial para ambos os servidores web, e uma vez dentro do Passenger, eles deveriam se comportar da mesma maneira em qualquer um dos cenários citados.
+Então, você pode escolher Apache por ser mais aceito pela indústria, ou escolher Nginx porque você gosta de ferramentas exóticas, mas não por um ser mais rápido do que o outro para rodar Rails. E como o Passenger já era a solução mais rápida no Apache, acho que vai igualmente bater a solução Nginx + [Mongrel|Thin|etc.] como sendo o mais rápido e fácil de instalar.
+E, novamente, estou usando um Apache padrão. Se você mexer o suficiente para remover gordura desnecessária, eu acredito que o Apache pode ser quase tão eficiente em uso de memória quanto Nginx. Eu acho que a maioria das distribuições trazem o Apache carregado demais, então se você souber como otimizar o Apache, faça. O negócio com o Nginx é que ele é bem pelado por padrão. Por outro lado Nginx não tem todos os módulos que as pessoas se acostumaram no Apache.
+Resumo: se você gosta do Nginx, ótimo. Se gosta de Apache, igualmente ótimo: ambos rodam Passenger e essa é a parte importante. Parabéns novamente ao pessoal da Phusion por criar esta ótima solução. Eles acabaram de destruir a última barreira para o aumento da adoção do Passenger. Sem mais desculpas agora ;-)
+tags: obsolete passenger english
+

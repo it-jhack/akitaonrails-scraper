@@ -1,0 +1,9 @@
+
+
+
+
+Pessoal, quem recentemente fez a atualização para 1.2.4 deve fazer novamente a atualização 1.2.5 conforme acabou de ser anunciado.
+Dentre as manutenções estão correções um bug de cross-site scripting com JSON: se você usar JSON, atualize. Fora isso há outras correções de bugs mas menos prioritárias. Se tudo estiver funcionando e você não usa JSON, pode pular reto.
+Não esqueçam de verificar o RAILS_GEM_VERSION no environment.rb.
+tags: obsolete rails
+

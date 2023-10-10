@@ -1,0 +1,23 @@
+
+
+
+
+Essa é uma dica rápida que meu amigo José Arthur (da equipe Linux da Locaweb) acabou de me ensinar.
+
+Quem tem blog que não tem colorização de código tem outra opção para gerar esse tipo de HTML.
+
+Abra seu Vim
+Escreva seu código
+No modo de comando digite :set syntax=ruby
+Em seguida faça :TOhtml
+
+Voilá! Você acabou de ganhar o HTML que coloriza seu código. Basta copiar e colar no post do seu blog. E o Vim faz isso para todas as linguagens que ele sabe colorizar (depende da sua configuração e do color scheme que você escolheu).
+O código que está no screenshot acima é exatamente este aqui:
+
+1 def hello(name)
+2   puts "hello world, #{name}"
+3 end
+
+E em Vibrant Ink !
+tags: obsolete vim
+

@@ -1,0 +1,266 @@
+
+Se você sabe o que é Tail Call Optimization (TCO), provavelmente também já deve ter ouvido falar que Ruby não suporta TCO. Se você não sabe o que é 'tail call' vale definir:
+Em ciência da computação, um 'tail call' é uma sub-rotina que acontece dentro de uma procedure como sua ação final; ela pode produzir um retorno que é então imediatamente retornada pela procedure que a chamou.
+
+
+
+
+TCO também é chamado às vezes de Tail Recursion Elimination, que é uma parte de TCO na verdade. Esse nome é mais simples de entender. Todo programador sabe o que é uma recursão - uma função que chama ela mesma em algum ponto - e como isso deve ser evitado sempre que possível por uma versão iterativa, para fugir do perigo de estourar a pilha pois recursão tem limite.
+O equivalente "hello world" de recursão é o bom e velho fatorial que, em Ruby, poderíamos escrever desta forma:
+
+1
+2
+3
+
+def fact(n)
+  n == 0 ? 1 : n * fact(n-1)
+end
+
+
+Dependendo da versão do Ruby que estiver usando ela vai estourar num número n não muito alto. No meu Macbook Pro, com Ruby 1.9.3-p392, essa execução recursiva estoura com stack level too deep (SystemStackError) no n = 8180.
+Quem estudou Algoritmos e Estruturas de Dados aprendeu a tentar buscar a versão não-recursiva. No caso do Ruby temos a sorte dela ser expressiva para poder ser escrita da seguinte forma com a ajuda de closures:
+
+1
+2
+3
+4
+5
+
+def fact(n)
+  sum = 1
+  sum.upto(n) { |i| sum *= i }
+  sum
+end
+
+
+Esta versão vai aguentar valores muito mais altos que o vergonhoso 8180 da versão recursiva. Uma discussão que vi hoje o Rafael Rosa e o Henrique Bastos twitando fala sobre porque Python não suporta TCO. Então, curioso, resolvi investigar o que eu achava que sabia: de que Ruby também não tem TCO. Mas acabei encontrando esta issue de 5 meses atrás no Ruby Core sobre habilitar TCO que já existe no MRI 1.9 mas não é ativada por padrão.
+Para possibilitar essa otimização, precisamos modificar a versão recursiva que mostrei antes para que ela não precise de um call stack, e para isso a última ação precisa ser direto a chamada recursiva. Então a nova versão (ainda recursiva) fica assim:
+
+1
+2
+3
+
+def self.fact(n, m = 1)
+  n < 2 ? m : fact(n-1, m*n)
+end
+
+
+No Ruby 1.9 você pode ativar o TCO e executar o código com tail call desta forma:
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+RubyVM::InstructionSequence.compile_option = {
+  :tailcall_optimization => true,
+  :trace_instruction => false
+}
+
+RubyVM::InstructionSequence.new(<<-EOF).eval
+  # código com tail call
+EOF
+
+
+Vamos fazer um teste com o seguinte código:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+require 'benchmark'
+module Test
+  def self.fact_recursive(n)
+    n == 0 ? 1 : n * fact_recursive(n-1)
+  end
+
+  def self.fact_tail_call(n, m = 1)
+    n < 2 ? m : fact_tail_call(n-1, m*n)
+  end
+
+  def self.fact_iterative(n)
+    sum = 1
+    sum.upto(n) { |i| sum *= i }
+    sum
+  end
+end
+
+def fact1(n)
+  Benchmark.bm do |x|
+    x.report { Test.fact_iterative(n) }
+    x.report { Test.fact_tail_call(n) }
+    x.report { Test.fact_recursive(n) }
+  end
+end
+
+fact1(8180)
+fact1(10000)
+
+
+Notem que vamos iniciar com o TCO desligado :tailcall_optimization => false e o resultado é o seguinte:
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+$ ruby factorial.rb
+    user     system      total        real
+0.030000   0.000000   0.030000 (  0.030289)
+0.040000   0.010000   0.050000 (  0.056056)
+0.030000   0.010000   0.040000 (  0.043861)
+    user     system      total        real
+0.050000   0.000000   0.050000 (  0.042917)
+factorial.rb:14: stack level too deep (SystemStackError)
+
+
+Vejam que rodando até o limite de 8180 temos pouca diferença entre as versões iterativa não-recursiva, recursiva com tail call e recursiva normal. Mas com o valor mais alto de 10000 as versões recursivas estouram como esperado.
+Agora vamos ativar o TCO:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+
+RubyVM::InstructionSequence.compile_option = {
+  :tailcall_optimization => true,
+  :trace_instruction => false
+}
+
+RubyVM::InstructionSequence.new(<<-EOF).eval
+  require 'benchmark'
+  module Test
+    def self.fact_recursive(n)
+      n == 0 ? 1 : n * fact_recursive(n-1)
+    end
+
+    def self.fact_tail_call(n, m = 1)
+      n < 2 ? m : fact_tail_call(n-1, m*n)
+    end
+
+    def self.fact_iterative(n)
+      sum = 1
+      sum.upto(n) { |i| sum *= i }
+      sum
+    end
+  end
+
+  def fact1(n)
+    Benchmark.bm do |x|
+      x.report { Test.fact_iterative(n) }
+      x.report { Test.fact_tail_call(n) }
+      x.report { Test.fact_recursive(n) }
+    end
+  end
+EOF
+
+fact1(8180)
+fact1(10000)
+
+
+Agora temos o seguinte resultado:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+$ ruby factorial.rb
+    user     system      total        real
+0.030000   0.000000   0.030000 (  0.030832)
+0.030000   0.000000   0.030000 (  0.033130)
+0.030000   0.000000   0.030000 (  0.029922)
+    user     system      total        real
+0.040000   0.000000   0.040000 (  0.043725)
+0.050000   0.000000   0.050000 (  0.046619)
+<compiled>:4: stack level too deep (SystemStackError)
+
+
+Desta vez a versão com tail call sobrevive ao valor acima do meu limite de 8180 e a recursiva que não tem tail call estoura por causa da sequência de call stacks que ele é obrigado a fazer.
+E podemos ir mais longe e chamar um valor bem maior como fact1(100_000):
+
+1
+2
+3
+4
+5
+
+$ ruby factorial.rb
+    user     system      total        real
+5.190000   1.290000   6.480000 (  6.474756)
+5.650000   2.010000   7.660000 (  7.676733)
+<compiled>:4: stack level too deep (SystemStackError)
+
+
+Novamente, podemos ver que a versão com recursão e tail call performance só um pouco pior que a versão iterativa não-recursiva.
+Portanto, detonamos o mito de que Ruby não suporta Tail Call Optimization. Não sei ainda se existe algum efeito colateral mas pelo menos temos a opção de ativá-la e executá-la somente dentro da instância de RubyVM::InstructionSequence. Não consigo imaginar um caso de uso prático, então se souber de algum não deixe de comentar.
+
+tags: learning ruby
+

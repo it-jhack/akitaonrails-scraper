@@ -1,0 +1,35 @@
+
+Finalmente, foi anunciado hoje o tão esperado iPhone SDK. Faz tempo que centenas de aplicações já existem via o Unofficial SDK e o (complicado) toolchain. Funcionou por um tempo para toy-applications, mas agora finalmente teremos aplicações robustas de verdade. Um exemplo? Que tal o ultra-esperado Spore no iPhone?
+
+Vejam a cobertura completa pelo Gizmodo, AppleInsider, ArsTechnica
+
+
+Porém a loja online não deve sair até Junho, o que dará tempo para todos os desenvolvedores credenciados ($99 no developer.apple.com) construam suas aplicações. Muitos parceiros já tem demonstrações prontas como a Electronic Arts, a Sega, Salesforce.com, AOL (AIM), e outros.
+O kit completo inclui suporte total no excelente Xcode/Interface Builder, análises completas pelo Instruments (que é o dtrace), debug remoto ou pelo iPhone Simulator, todas as APIs incluindo Open GL e todos os frameworks Core e o novíssimo Core Touch.
+
+Além disso o iPhone suportará totalmente o Exchange Server, tornado-se o melhor Smartphone corporativo, com suporte total ao ActiveSync da Microsoft. Push Email, Push Calendar, etc, Em poucos segundos o iPhone se auto-configura e puxa todas as informações que precisa do Exchange.
+E vem mais por aí: Cisto IPSec VPN, WPA2/801.x, mais políticas de seguranças, certificados digitais, um meio de fazer remote wipe (matar os dados do iPhone à distância, por exemplo, em caso de furto), etc.
+
+O iPhone é um grande fenômeno e ninguém está sequer próximo de alcançá-lo. Em seus 8 meses de mercado já abocanhou 28% do mercado de smartphones, ficando atrás apenas da RIM (BlackBerry) e é o único smartphone realmente usado em massa como Internet device, com 71% de uso do Safari Mobile. Isso é competência. Como John Doerr, da Kleiner Perkins disse, o Steve é um grande empreeendedor. Fazer o que a Apple está fazendo não é para qualquer um. Alguns negativos tentam dizer que o iPhone não é isso, não é aquilo. Contra números não há o que discutir. Quero ver conseguir esse mesmo feito em menos tempo e com a mesma qualidade. Com ou sem distortion field o iPhone está conseguindo repetir a História do iPod, e isso é inegável.
+Infelizmente nós brasileiros ainda não fomos saudados com um suporte adequado ao iPhone, graças às nossas infinitas burocracias, nossos antiquadíssimos impostos, e incompetência do país em demonstrar potencial para mercados desse tipo.
+
+E não, no que foi visto até agora, o Android não é concorrente para o iPhone. É uma outra categoria de smartphones commodities. Não será perto do que é o iPhone hoje. Lembrando que o iPhone está evoluindo a cada dia. Quem pensa o contrário com certeza nunca lidou com esse tipo de mercado. Não quer dizer que o Android não seja importante, mas estamos falando de maçãs e bananas aqui, literalmente.
+Coisas como suporte a Exchange e muito mais vem via Software Update. Muitos recursos já foram adicionados e muitos mais ainda aparecerão até Junho. E quando a loja de aplicativos online abrir, só vai me deixar com água na boca para comprá-los. Será um excelente canal de compras assim como o iTunes Store já é hoje para música e vídeo. E quando, quando o iTunes Store chegará ao Brasil. Ninguém sabe. Infelizmente a Apple do Brasil e nada é a mesma coisa. E enquanto os impostos forem o absurdo que é hoje, via canais oficiais, não será viável comprar um iPhone com preço justo.
+De qualquer forma, os termos para desenvolvedores é muito boa e quem já lidou com o mercado corporativo e de telecom sabe que as coisas não são cor de rosa e fáceis. Eu sei do que falo.
+US$ 99 para participar do Developer Program é muito barato, chega a parecer apenas um preço simbólico. Quando seu aplicativo estiver pronto e você quiser vendê-lo, terá que usar a infra-estrutura da Apple, o App Store, que funcionará como o iTunes Music Store. Óbvio, marketing, infratrutura (banda, servidores, suporte, etc), distribuição, nada disso é de graça.
+
+Para que nós, como desenvolvedores ou software houses, não tenhamos que arcar com esse tipo de custo, damos 30% do preço nominal do produto que criarmos. Nós estabelecemos o preço, mas ficamos com 70%. É um preço justo.
+Por que algo assim não pode ser de graça? Por diversas razões. Para começar, os US$ 99. Isso é padrão, não é invenção da Apple, mas eu gosto de explicar assim: imagine uma balada com entrada de graça … é, seria uma porcaria. É preciso ter uma barreira mínima para começar a filtrar.
+Um servidor central com App Store. Isso é ótimo. Nenhum usuário final quer ficar procurando aplicações em sites obscuros. Ninguém quer se preocupar se o aplicativo é corrupto ou malicioso. Um local central lhe garante visibilidade e credibilidade. Não adianta, precisa ser assim. Meu Installer.app está cheio de repositórios que me mandam aplicações bugadas, mal terminadas, que dão crash, alguns repositórios eu desconfio e não uso. E assim por diante. Mas eu sou geek. Um não-geek não quer se preocupar com esses “detalhes técnicos”.
+O SDK é de graça (free as in  “beer”), mas não importa. Se como eu vocês já tentaram lidar com o toolchain não-oficial, sabem como é uma droga. XCode + Interface Builder + Instruments + iPhone Simulator custando US$ 0, é uma barganha. Procure outros SDKs para outras plataformas móveis, não se iguala. Distribuição então? Anos Luz!
+Ainda acha que as coisas deveriam ser de graça? Get real!
+Nenhum outro smartphone do mercado conseguiu o que a Apple fez: 28% do mercado em 8 meses não é coisa para amadores. Agora pensem : neste momento existem 10 milhões de usuários de iPhone. Digamos que você faça uma ótima aplicação e consiga vendar sua aplicação de US$ 10 para apenas 0,5% desses usuários depois de 1 ano.
+10 milhões de usuários x 0.5% = 50 mil x US$ 10 = US$ 500 mil – 30% da Apple = US$ 350 mil
+
+Óbvio, a conta nunca é tão direta assim. Conseguir um market share relevante num mercado crescente e concorrido não custa barato. Não é com fragmentação e nenhum plano de ação que as coisas acontecem. Muitos já tentaram e fracassaram miseravelmente. Portanto, pense duas vezes se acha que os termos são ruins.
+Estou baixando o SDK neste momento no Developer Site da Apple. Vai demorar um pouco afinal são 2.10Gb de tamanho. Vejam mais detalhes no iPhone Atlas, no MacRumors e mais sobre iPhone Enterprise na AppleInsider. E, claro, não deixem de assistir diretamente o vídeo streaming do evento no site da Apple
+Novamente, uma pena que por aqui ainda não há nem sinais de um roll out da App Store. Espero que não demore. Iria com certeza melhorar o mercado de aplicações móveis e seus toy-applications. Eu já lidei com aplicações móveis e vou lhes dizer: são muito ruins e tediosas de se escrever aplicações. Qualquer um que já tenha lidado com coisas como Brew, J9, Codewarrior, etc sabe do que estou falando. Prefiro Objective C a C++ a qualquer hora do dia. Novamente: não nenhuma outra plataforma móvel hoje chega perto do que o iPhone oferece. Ainda estão muito longe.
+O iPhone está a cada dia se tornando uma excelente plataforma. Pena que estamos no Brasil … sigh.
+
+tags: obsolete iphone
+

@@ -1,0 +1,22 @@
+
+
+
+
+Essa semana muita gente instalou o novo Safari 3.1, tanto para Mac quanto para Windows. Um excelente browser, diga-se de passagem. Só abro o Firefox agora quando sou forçado a usar Firebug, senão eu prefiro não tê-lo aberto.
+Enfim, depois da atualização um projeto que estou trabalhando começou a dar problemas. O problema foi com o Active Scaffold. Erros de Javascript começaram a aparecer. Esse erro foi reportado no activescaffold-talk
+Em seguida, no caboose saiu uma informação sobre um método javascript chamado getElementsByClassName que existe no Prototype mas agora existe implementado nativamente tanto no Safari 3.1 quanto no Firefox 3. Ou seja, eles conflitam e a versão nativa em vez de devolver um Array devolve um NodeList.
+Para solucionar isso, no caso do ActiveScaffold, precisei editar o arquivo active_scaffold.js (o plugin copia para public/javascripts), perto da linha 266 troquei esta linha:
+1
+
+this.adapter.getElementsByClassName('cancel').each(function(elem) { 
+
+
+Por esta:
+1
+
+this.adapter.select('.cancel').each(function(elem) { 
+
+
+Isso resolveu meu problema. Dêem uma olhada no link acima para o site do caboose para mais detalhes.
+tags: obsolete rails
+

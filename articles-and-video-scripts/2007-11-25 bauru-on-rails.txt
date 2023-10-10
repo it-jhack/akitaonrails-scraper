@@ -1,0 +1,11 @@
+
+Ontem, eu e o Vinicius apresentamos duas palestras durante o sábado todo para os estudantes de Bauru, no interior de São Paulo. O evento começou às 8:30 e terminou às 16:30.
+
+
+
+A organização foi por conta do Lucas Húngaro e seus amigos, com apoio de entidades como a UNESP. Aliás, eles estão de parabéns pelo empenho e preparação. Fomos muito bem recebidos e o evento foi bem organizado.
+Foi um dia inteiro de palestras, primeiro o Vinícius explicou XP – aliás, é difícil não se convencer depois de ouví-lo – e depois eu apresentei um pouco do panorama Ruby on Rails. Foi um dia muito legal, vieram várias pessoas e acredito que deu para dar um “gostinho” do que é possível quando você foge da ‘mesmisse’.
+
+Este fim de ano está agitado. Semana que vem estarei no WebDevCamp São Paulo no sábado, dia 01/12. Em seguida no Rio on Rails no dia 8/12 e finalmente no Rails for Kids no dia 15/12. Bastante coisa mas vale a pena!
+tags: obsolete conference
+

@@ -1,0 +1,13 @@
+
+
+
+
+There was a very exciting news recently regarding the Windows software E-TextEditor becoming open source. The E is a very good editor, still in need of more features, reliability, stability.
+But, the news is not as good as it seemed. You can certainly build E for Linux for “free” (as in beer), but you cannot do that for Windows. They are using a “modified” BSD style license, which is very restrictive (and therefore CANNOT be called BSD anymore). Calling it “essentially BSD with one extra clause” is extremely misleading. You can contribute if you like to work for free, but you cannot fork the project, you cannot remove the licensing functionality and you don’t get anything for contributing: you will still have to pay for it. So, what they want is just free labor. The “extra clause” goes like this:
+Any redistribution, in whole or in part, must retain full licensing
+  functionality, without any attempt to change, obscure or in other ways
+  circumvent its intent.
+I am certainly not against commercial applications, as I paid for TextMate myself for the Mac and I am very happy paying for high quality software. I am against paying for low quality software  and I am very very against trying to misuse the open source values in a misleading way.
+You either ARE Free Open Source Software or you are not. There is no such thing as “almost like FOSS, but with an extra restrictive clause”. If it is restrictive, it is, by definition, not FOSS anymore. Bummer.
+tags: obsolete english
+

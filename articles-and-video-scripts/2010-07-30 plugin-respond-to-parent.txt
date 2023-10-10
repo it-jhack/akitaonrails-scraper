@@ -1,0 +1,80 @@
+
+Este é um pequeno truque para a seguinte situação: estou abrindo um dialog box via Ajax (e para isso existem vários plugins como os de jQuery, de YUI e assim por diante). O formulário que se abre serve para fazer upload de imagens ou arquivos. A primeira vontade é usar algo como um remote_form_for e enviar um POST via Ajax. Mas isso não é possível para situações de upload – Javascript não deveria mesmo ter privilégios para acessar arquivos na sua máquina local, a menos que você use Firefox e use esta configuração. O que fazer?
+
+
+
+O truque é bem conhecido e simples: basta ter um iframe escondido na página e mudar o target do form para mandar o POST para lá. Algo assim:
+1
+2
+3
+4
+
+<% form_for(user, :html => { :target => "hiddenForm", :multipart => true }) do |f| %>
+...
+<% end %>
+<iframe id="hiddenForm" name="hiddenForm" style="display:none" />
+
+
+Isso vai funcionar bem, o POST vai para o controller e a action adequada e ele pode retornar Javascript para atualizar o que for necessário na página, como fechar o dialog box. Mas há um problema: o Javascript vai rodar dentro do iframe e não fará o que precisa.
+A solução é simples: basta que o Javascript rode no contexto do window.parent no iframe e aí tudo vai funcionar. Existe um plugin que facilita isso, se chama respond_to_parent e no controller basta fazer algo assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+  def create
+    @user = User.create(params[:user])
+
+    respond_to_parent do 
+      respond_to do |format|
+        format.js
+      end
+    end
+ end
+
+
+Para instalar, tendo o Git já pré-instalado, claro, basta fazer isto no seu projeto:
+1
+
+ruby script/plugin install git://github.com/markcatley/responds_to_parent.git
+
+
+Ou seja, basta passar coisas como o respond_to ou render como um bloco ao método respond_to_parent. Daí ele vai retornar algo assim:
+1
+2
+3
+4
+5
+6
+7
+
+var loc = document.location;
+with(window.parent) { 
+  setTimeout(function() { 
+    window.eval('Element.insert(\"users\", ... );\nModalbox.hide();\n'); 
+    window.loc && loc.replace('about:blank'); 
+  }, 1) 
+}
+
+
+Para facilitar o entendimento eu coloquei no Github um micro-app só para demonstrar essa funcionalidade. Você pode baixar assim:
+1
+2
+3
+4
+
+git clone git://github.com/akitaonrails/demo_responds_to_parent.git
+cd demo_responds_to_parent
+rake db:migrate
+ruby script/server
+
+
+Garantindo que você tem ImageMagick, RMagick e Paperclip instalado para o exemplo funcionar. Para não sair muito do padrão do Rails 2.3 (que usa Prototype e Scriptaculous) também estou usando o ModalBox que é um dialog box razoável se você não usa jQuery ou YUI.
+Uma pequena dica, talvez seja útil.
+tags: obsolete rails
+

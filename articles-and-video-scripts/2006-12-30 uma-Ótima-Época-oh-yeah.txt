@@ -1,0 +1,107 @@
+
+Como último post do ano, nada melhor do que uma retrospectiva 2006 para relembrarmos quanta coisa aconteceu. Tanto Ruby quanto Rails deram passos gigantescos, talvez os maiores avanços que qualquer outra tecnologia em qualquer outra época já tenha dado. Felizmente, nós no Brasil não ficamos tanto para trás desta vez, mas eu realmente espero que em 2007 caia a ficha nos brasileiros, ficha essa que já caiu na mente de milhares de pessoas em todos os continentes do mundo este ano.
+
+
+Do RedHanded : Ei, que ano engraçado, você sabe?
+Janeiro - Zed Shaw lança Mongrel 0.1. O clássico Learn to Program de Chris Pine é publicado. Ruby-doc é redesenhado. O Um Pequeno Anti-Anti-Hype separa Steve Yegge como um dos mais ouvidos proponentes de Ruby, provando que Rubystas (deixando de lado ser apenas “legal”) podem ainda ser chatos e bêbados e tudo mais. Camping é a pequena engrenagem.
+Fevereiro - YARV 0.4.0 chega. Minero Aoki faz Rails rodar nele. Brigadas Ruby é um tópico quente.
+Março - Começa a tradução para inglês do Guia de Hacking de Ruby. Rubystas no SCSW Interactive. Um monte de gente ataca o pobre, pobre James McGovern.
+Abril - No Canada on Rails, DHH fala a palavra-com-F. E vira a multidão ou coisa parecida. É um caso bem sério. No fim do mês: cura. (Nota do Akita: 26 de abril, fechamos com a Brasport para publicar o primeiro livro nacional de Rails. É quando começo a trabalhar nisso).
+Maio - Ruby Inside aparece, de repente, ajudando vários pequenos projetos e coisas interessantes em todo lugar. O Google Summer of Code começa, patrocinando 10 projetos Ruby. Pat Eyler entrevista Zed (disponível no meu livro Repensando a Web com Rails) e então dá mais uma centena de entrevistas depois disso.
+
+
+A Equipe Núcleo do Ruby no RubyKaigi no Japão
+
+Junho - RailsConf 2006, os Railers apertam as mãos e vão à loucura. Try Ruby aparece no Second Life. Codificadores intangíveis de vários polígonos vão à loucura. (Nota do Akita: 14 de Junho, o material final do livro é entregue à Brasport para o processo de revisão e editoração).
+
+
+Painel de mensagens do RailsConf, uma boa memória
+
+Julho - Tim Bray começa a ficar sério sobre Ruby. Ele e Sam Ruby descendem no RedHanded. Um monte de Rubystas na OSCON. FOSCON, uma conferência tematizada de Ruby faz seu segundo ano.
+Agosto - Depois de um ano e meio, o novo site do Ruby vai ao ar. O LLRing acontece no Japão. RubyConf-MI. Rails Blob.
+
+
+Londres
+
+Setembro - Matz começa a bagunçar no laboratório (:symbol.is_a? String => true) e (String < Enumerable == false). RailsConf Europe em Londres. Eu conheço Chris Neukirchen e Hampton Caitlin dá uma conversa com uma boa cerveja em sua mão. Aaron Patterson abre sua webcam e BetaBrite para hacking remoto.
+Outubro - RubyConf 2006 e o subsequente Denver Accord. Rails ganha UTF-8. Um monte de especulação sobre o futuro do Ruby deixam os blogs ocupados por enquanto – InfoQ sumariza. (Nota do Akita: 10 de outubro, o livro Repensando a Web com Rails nasce. 24 de outubro, evento de lançamento na FNAC).
+Novembro - Abrem os sites traduzidos para espanhol e polonês do Ruby. Pilhas de outras linguagens começam equipes de tradução. Avi escreve smalltalk.rb enquanto um monte de trabalho transpira na Rubinius.
+Dezembro - A equipe do Ruby muda para Subversion. Zed Shaw começa uma missão para ganhar um concurso de popularidade e ganha!
+
+Espero que isso não tenha saído muito auto-congratulatório até aqui. Só estou brincando de historiador um pouco.
+Então, pedi a vários Rubystas para resumir esse ano em uma única sentença. Se não perguntei a você, é provavelmente porque fiquei cansado de caçar endereços de e-mail, então vá em frente e deixe uma sentença nos comentários.
+
+Tenho a impressão que em 2006 Ruby foi reconhecido por seus próprios méritos além do Rails.
+Marcel Molina Jr.
+YARV.sub(/Yet Another/, ‘The’)
+Sasada Koichi
+Esse ano Ruby ficou mais incrível.
+Chris Wanstrath
+Ruby esse ano foi mais difundido; estou feliz que muitas pessoas se interessaram por ele.
+Urabe Shyouhei
+O prazer que é Ruby me atacou este ano; estava em todos os lugares como uma horda de porcos negociando por um rio de fogo.
+Bil Kleb
+Ruby compartilhou seu poder e espalhou sua luz por todo 2006 – com uma grande onda de publicação de livros, numerosas conferências pelo mundo, encontros de grupos de usuários, publicações em fóruns, e atividades de codificação de todos os tipos – e é como será, com alguma sorte, por anos a vir!
+David Alan Black
+diamantes
+em um caminho sujo vermelho
+uma casca
+nas montanhas
+mas não estamos em guerra
+Evan Weaver
+Não houve uma revista de computador onde “Ruby” (assim como Matz) não foram vistos no Japão.
+Daigo Moriwaki
+Uma corrida ao ouro está chegando ao fim, deixando parte da excitação original para trás, e mesmo que novos (e alguns semi-abandonados) depósitos mostram grande promessa, miná-los se provará difícil.
+Mauricio Fernandez
+begin; Ruby.extend(World) ensure defined? MINSAWAN end
+James Edward Grey II
+código ruby – 
+maravilhoso como o sol
+não olhe perto demais.
+Zed Shaw
+2006 foi o ano que Ruby trouxe prazer à programação de volta para os aventureiros, os criativos, os gentis, os bravos, em grandes números desde o Commodore 64.
+Peter Cooper
+Julho/Agosto: chegou aos Países Baixos, visitou Chicago, começou um blog e teve um bebê; ambos indo bem.
+Dr Nic Williams
+300 blogs, 25 livros, 7 interpretadores, 5 conferências, mas ainda apenas um Ruby.
+Pat Eyler
+No começo do ano eu esperava que Ruby fosse mudar minha vida. Com minha mudança para a Sun e o progresso que fizemos no JRuby, posso dizer seguramente que ele superou minhas mais gigantescas expectativas.
+Charles Oliver Nutter
+Se nada é segredo, é porque eu não pensei em um ainda.
+Geoff Grossenbach (repetindo Sam Stephenson)
+map.resources :posts
+Jamis Buck
+Nosso pequeno desafiante se tornou incumbente, a vanguarda deu alguns passos à frente e muitos de nós que normalmente somos orgulhosos de ficar à frente do jogo estamos começando a perceber que Ruby está se tornando o jogo.
+Chad Fowler
+lance aulas lance consultoria lance entusiasmado lance conferência lance.
+Ryan Davis
+Ruby em 2006: um catalisador de mudanças pessoais e profissionais.
+James Britt
+Faça isso por você mesmo.
+David Heinemeier Hansson
+
+
+Uma foto imortal de DHH, Matz e Babie fazendo um tributo a algum gato que posa como um avião
+
+2006 foi o ano em que Ruby virou de implementação para linguagem, JRuby cresceu e rodou Rails e Rails se tornou maior.
+Ola Bini
+Golpeei por mim mesmo e realmente paguei contas com trabalho de Rails, lancei algumas aplicações OSS legais e fiz um monte de grandes contatos no rubyverso tanto offline e online.
+Rick Olson
+Um brilhante novo web site, o mercado de trabalho Ruby crescendo a largos passos, uma tonelada de novas bibliotecas Ruby e projetos – o que vem em seguida?
+John W. Long
+Esse ano lancei documentação e automação com uma boa porção de destruição ao lado .. ano que vem trarei à comunidade Ruby destruição automatizada.
+Eric Hodel
+Rápido! Está saindo!
+Todos à bordo do trem ruby
+para o incrível bytecode
+Evan Phoenix
+De repente, não estamos sozinhos.
+MenTaLguY
+
+E vamos dar a matz uma porção mais espaçosa, certo?
+
+2006 é o ano da aceitaçao, o ano do movimento social. Fizemos pouco em deixar a linguagem melhor esse ano. Mas muitos encontraram as coisas boas que já fizemos, e correram em direção ao prazer da programação. É uma coisa boa. Espero que esse movimento social continue em 2007 também. Espero que possamos ter avanços técnicos também no próximo ano.
+matz
+
+tags: obsolete
+

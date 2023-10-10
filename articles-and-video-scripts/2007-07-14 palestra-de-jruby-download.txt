@@ -1,0 +1,11 @@
+
+
+
+
+Ontem a noite o Carlos Eduardo da eGenial organizou a palestra comigo falando sobre JRuby. Espero ter conseguido apresentar o que é o JRuby e eliminar alguns mitos urbanos sobre ele. De qualquer forma, o Carlos quis testar uma versão beta do TreinaTom. Acredito que com o evento de ontem ele tenha conseguido identificar pontos de melhoria. Parece que no pico chegamos a 75 pessoas simultâneas e uma média de pelo menos 60 pessoas durante toda a palestra.
+Infelizmente algumas pessoas tiveram problema de estabilidade, ou de não conseguir ouvir o áudio. Mas felizmente o Carlos tomou precauções e gravou toda a palestra. Ele deixou disponível na página do evento e todos podem baixar (abram o arquivo ‘abrir.html’ que ele vai descomprimir, o vídeo está em Flash). Quem não assistiu vai achar o começo meio estranho, mas é porque meu Firefox resolveu tossir um pouco, mas depois estabiliza. E quem estiver interessado nos slides da apresentação pode baixar a versão PDF aqui.
+Finalmente, quem ainda tem dúvidas sobre a plataforma, cadastrem-se neste Google Group. Apenas peço que não confundam com Suporte Técnico. Eventualmente outras pessoas do mesmo grupo possam ajudar, mas eu realmente não terei tempo de responder todo tipo de dúvida do tipo “por que este comando dá este pau”  ou “por que ele reclama que não encontra este gem”. Nesse caso recomendo os caminhos tradicionais do Google.
+A última dica: como eu disse no começo da palestra, eu basicamente adaptei os mesmos slides do próprio Charles Nutter que foram apresentados no evento Mountain West. Meu atual chefe, Carl Youngblood, nas horas vagas também dirige um grupo chamado ConFreaks, cujo objetivo é gravar as diversas palestras nas conferências Ruby e Rails que estão acontecendo o tempo todo. Portanto, a Mountain West inteira está disponível em vídeo para quem quiser assistir. Absolutamente recomendado.
+No mais, agradeço a presença de todos na palestra. Espero ter conseguido ajudar. Nos vemos em breve!
+tags: obsolete jruby
+

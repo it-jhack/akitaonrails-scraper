@@ -1,0 +1,205 @@
+
+Ainda existem alguns problemas entre o Rails 2.3, o Ruby 1.9 e seu suporte a UTF-8 e a forma como ambos o ERB (Embedded Ruby, a engine padrão para templates que usamos no ActionView) e o adapter de MySQL tratam encoding.
+Notei isso quando testei meu próprio blog rodando sobre Ruby 1.9 e ele dá o seguinte erro quando tento carregar a aplicação em algum navegador:
+1
+
+incompatible character encodings: UTF-8 and ASCII-8BIT
+
+
+O erro aponta justamente para uma linha onde eu puxo dados de um activerecord. Há duas chances para isso: ou o ERB está tratando o encoding errado ou o ActiveRecord está recebendo o dado com encoding errado. No meu caso acho que é o segundo caso.
+
+
+Esses erros estão sendo tratados em tickets no Lighthouse como o #2188 Encoding error in Ruby1.9 for templates e o #2476 ASCII-8BIT encoding of query results in rails 2.3.2 and ruby 1.9.1. Existem alguns hacks para ambos os casos. No meu fork do blog Enki eu acabei de subir isso. Mas se quiser corrigir na sua aplicação, faça assim:
+Crie um arquivo como “config/initializers/fix_params.rb” com o conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+
+module ActionController
+  class Request
+    private
+
+      # Convert nested Hashs to HashWithIndifferentAccess and replace
+      # file upload hashs with UploadedFile objects
+      def normalize_parameters(value)
+        case value
+        when Hash
+          if value.has_key?(:tempfile)
+            upload = value[:tempfile]
+            upload.extend(UploadedFile)
+            upload.original_path = value[:filename]
+            upload.content_type = value[:type]
+            upload
+          else
+            h = {}
+            value.each { |k, v| h[k] = normalize_parameters(v) }
+            h.with_indifferent_access
+          end
+        when Array
+          value.map { |e| normalize_parameters(e) }
+        else
+          value.force_encoding('utf-8') if '1.9'.respond_to?(:force_encoding)
+          value
+        end
+      end
+  end
+end
+
+
+Em seguida, crie um “config/initializers/fix_renderable.rb” com:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+
+module ActionView
+  module Renderable #:nodoc:
+    private
+      def compile!(render_symbol, local_assigns)
+        locals_code = local_assigns.keys.map { |key| "#{key} = local_assigns[:#{key}];" }.join
+
+        source = <<-end_src
+          def #{render_symbol}(local_assigns)
+            old_output_buffer = output_buffer;#{locals_code};#{compiled_source}
+          ensure
+            self.output_buffer = old_output_buffer
+          end
+        end_src
+        
+        # workaround
+        source.force_encoding('utf-8') if '1.9'.respond_to?(:force_encoding)
+
+        begin
+          ActionView::Base::CompiledTemplates.module_eval(source, filename, 0)
+        rescue Errno::ENOENT => e
+          raise e # Missing template file, re-raise for Base to rescue
+        rescue Exception => e # errors from template code
+          if logger = defined?(ActionController) && Base.logger
+            logger.debug "ERROR: compiling #{render_symbol} RAISED #{e}"
+            logger.debug "Function body: #{source}"
+            logger.debug "Backtrace: #{e.backtrace.join("\n")}"
+          end
+
+          raise ActionView::TemplateError.new(self, {}, e)
+        end
+      end
+  end
+end
+
+
+Finalmente, crie um “config/initializers/fix_mysql_utf8.rb” com:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+
+require 'mysql'
+ 
+class Mysql::Result
+  def encode(value, encoding = "utf-8")
+    String === value ? value.force_encoding(encoding) : value
+  end
+  
+  def each_utf8(&block)
+    each_orig do |row|
+      yield row.map {|col| encode(col) }
+    end
+  end
+  alias each_orig each
+  alias each each_utf8
+ 
+  def each_hash_utf8(&block)
+    each_hash_orig do |row|
+      row.each {|k, v| row[k] = encode(v) }
+      yield(row)
+    end
+  end
+  alias each_hash_orig each_hash
+  alias each_hash each_hash_utf8
+end
+
+
+Para garantir, leia meu artigo recente sobre Convertendo meu Banco de Latin1 para UTF-8, garanta que no seu “config/database.yml” há a configuração:
+1
+
+  encoding: utf8
+
+
+O último fix é especificamente para MySQL, procure no Lighthouse sobre fixes para outros adapters. Espera-se que isso seja ajustado até o lançamento do Rails 3 ou pelo menos até a próxima release de manutenção do Rails 2.3 com ajustes nos demais adapters. O assunto ainda está em discussão.
+tags: obsolete rails
+

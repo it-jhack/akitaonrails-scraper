@@ -1,0 +1,11 @@
+
+Meu blog não é muito diferente da maioria. Tem uma página principal com os posts mais recentes, uma barra lateral dando acesso a arquivos, posts mais antigos, últimos comentários e outras coisas.
+Hoje resolvi fazer um pequeno ajuste cosmético. Até agora eu colocava uns 10 posts com um texto de introdução de cada. Porém na maior parte dos casos acho que isso não era muito útil pois meus posts costumam ser grandes e só alguns trechos de texto não eram úteis. Além disso só 10 posts na homepage significa que muitos (deste mesmo mês) eram arquivados rápido demais. E pouca gente vai atrás de posts arquivados.
+
+
+Por isso resolvi colocar uma lista mais enxuta, somente com o título (que na maior parte dos casos é suficiente), e dando um máximo de até 90 posts possíveis (a média por mês tem sido entre 10 e 15, então o número mais realista será uns 30 a 40) mais uma seção ao final de posts que eu marco como “favorite”.
+Quem quiser ver mais posts antigos, não deixe de explorar a barra lateral. Para achar mais artigos técnicos vá em Dicas e Tutoriais que também está listado na seção “Pages”. No “Archives” dá para explorar mês a mês no passado. Fora as diversas entrevistas por escrito, em áudio, e links para slides de palestras que eu já dei.
+Eu sei que no favoritos principalmente tem vários Off-Topic. De fato os artigos mais técnicos tem uma vida razoavelmente curta porque às vezes eram coisas que se aplicavam a Rails 2 e não se aplicam na 2.3 ou 3.0 por exemplo. Já os Off-Topic são mais relacionados a assuntos gerais da nossa área e costumam ter vida longa mesmo 2 ou 3 anos depois. Particularmente gosto deles :-)
+Aproveitando, comentem que tipos de artigos, assuntos, discussões vocês gostariam que eu blogasse mais? Sugestões são sempre bem vindas, seja por aqui no blog ou via Twitter no @akitaonrails.
+tags: obsolete blog
+

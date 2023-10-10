@@ -1,0 +1,13 @@
+
+
+
+
+I'm glad to announce that right after Rubyconf Brazil 2012 this week I will embark in a new journey. Starting by the end of next week I'll travel first to San Francisco and my first activity there will be to represent my company, Codeminer 42, at the Brazillian Pavillion on the Techcrunch Disrupt conference.
+I'll stay in San Francisco until the 24th and my goals are to meet old friends, get to know the software development communities and really make this a networking and learning travel. If you're from San Francisco, let me know. I'll be visiting the offices of Twitter, Facebook, Heroku and many others.
+After that, by the first week of October I'll try Europe, visiting Amsterdam first to attend Bubbleconf, the great event assembled my good friends from Phusion. Right after the conference I'll do an extra leg directly to Tel Aviv, Israel, again to network with the local Ruby communities and learn what's going on there.
+Finally, probably in the beginning of November (pending confirmation), I'll talk at a regional Rubyconf in Ahmedabad, India. Thanks go to Saurabh from Safewlabs. It's going to be fun to finally meet the indian community where I have many friends.
+If you're in my itinerary contact me, I'd love to meet your company, learn what developers outside of Brazil are up to nowadays, hopefully close good business deals, and have a good time.
+Seeya!
+
+tags: obsolete sanfrancisco2012 english
+

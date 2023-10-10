@@ -1,0 +1,9 @@
+
+
+
+
+Durante a Campus Party eu conheci o Hugo, que é aluno de Ciências da Computação na USP e também é monitor de aulas de Smalltalk (é isso? :-)
+Estávamos conversando sobre Seaside e agora ele fez o primeiro screencast apresentando o ambiente Squeak. Ainda não é o Seaside, mas apenas algo para se acostumar com alguns dos aspectos do Squeak.
+Então, sem mais delongas, dêem uma olhada no blog dele para baixar o vídeo.
+tags: obsolete smalltalk screencasts
+

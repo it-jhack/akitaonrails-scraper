@@ -1,0 +1,10 @@
+
+
+
+
+
+Faz algum tempo que queria mostrar a alguns amigos como é o recurso de colaboração do Git via Github. O Git em si é fantástico mas o Github torna tudo ainda mais simples. Vejam este vídeo onde demonstro isso na prática:
+
+Git é uma excelente ferramenta para equipe realmente ágeis. Nada de permissões de commit, nada de servidor centralizado, nada de branches difíceis de fazer merge depois. Tudo muito simples. Quem quer começar com Git pode dar uma olhada no meu micro-tutorial
+tags: obsolete github git screencasts
+

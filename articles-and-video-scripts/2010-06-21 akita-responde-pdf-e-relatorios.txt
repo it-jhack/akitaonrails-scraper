@@ -1,0 +1,102 @@
+
+Uma coisa que estava na minha lista de “to-do” era começar a divulgar alguns e-mails que os leitores do blog me mandam. Muitas vezes a resposta para eles é útil para mais gente. Então vou ver se consigo me disciplinar a publicar as respostas de volta no blog. Vou evitar colocar nomes dos remetentes ou outras referências para manter a privacidade – mas se for ok publicar, indiquem isso no e-mail.
+Este primeiro é sobre relatórios. Vou expandir a resposta que dei via e-mail, então se o autor do e-mail estiver lendo, talvez tenha mais informações pra você.
+Primeiramente parabéns pelo seu trabalho, divulgando e difundindo o Rails por aqui. Assisti a uma palestra sua aqui no Ceará. Um amigo meu falou que talvez você pudesse me ajudar.
+
+Seguinte, onde trabalho infelizmente estamos usando o JRuby por causa da dependência de relatórios no IReport, como já temos um sistema já rodando com esses parâmetros (JRuby e relatórios do IReport) gostaria de saber se tem alguma gem ou alguma lib que pudéssemos utilizar para abolirmos o uso do JRuby, mas continuarmos a gerar nossos relatorios do IReport (já que o Ruport é bastaaaaante limitado).
+
+Desde já agradeço a sua ajuda… e aguardo ansiosamente um retorno seu!
+
+
+Nao conheço o IReport mas imagino que o Ruport seja mesmo um problema, mesmo porque o autor dele migrou para outro projeto, o Prawn, que talvez você queira ver.
+Antes de mais nada, por que você precisa sair do JRuby? Eu diria que não é uma opção ruim ficar no JRuby, porque já é uma plataforma muito boa para produção. Se puder listar as dificuldades que está tendo com o JRuby talvez não seja uma questão de encontrar outra forma de lidar com relatório no Ruby MRI, mas lidar com as outras dificuldades que o JRuby possa estar trazendo.
+Isso tudo dito, o Ruport foi criado sobre outro projeto, o PDF Writer, porém essa biblioteca foi praticamente descontinuada. O autor do Ruport, o Gregory Grown, resolveu criar uma nova biblioteca que substituísse tanto o PDF Writer quanto partes dos casos de uso do Ruport. Daí nasceu o projeto Prawn.
+Posso pensar em algumas alternativas. O próprio Prawn, se você achar que serve. Tem outras bibliotecas como o RGhost que é um layer em Ruby para a biblioteca “Ghostscript”. Outra que nao lembro o nome usa o html2pdf. Esta última alternativa é mais limitada, pois nem sempre apenas com HTML e CSS será possível criar os layouts que você precisa. Nesse sentido tanto o Prawn quanto o RGhost são excelentes opções para obter controles mais precisos. Esta apresentação pode dar mais algumas dicas a respeito:
+PDF Generation in Rails with Prawn and Prawn-to: John McCaffreyView more presentations from johnny_zebra.
+Não sei se IReport é a mesma coisa que JasperReport. Essa é uma coisa antiga que a comunidade tinha respondido no antigo Wiki do site do Rails. Em resumo a idéia é criar um método que basicamente chama o Java via linha de comando. Leia o Wiki todo mas o trecho em questão é este:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+
+# document.rb
+class Document
+  include Config
+  def self.generate_report(xml_data, report_design, output_type, select_criteria)
+    report_design << '.jasper' if !report_design.match(/\.jasper$/)
+    interface_classpath = File.join(Dir.getwd, "jasper/bin")
+    separator = case CONFIG['host']
+      when /mswin32/ then ":"
+      else ";"
+    end
+    Dir.foreach("jasper/lib") do |file|
+      next if file == '.' or file == '..' or file.match(/.jar/)
+      interface_classpath << separator + File.join(Dir.getwd, "jasper/lib/", file) 
+    end
+    pipe = IO.popen "java -cp \"#{interface_classpath}\" XmlJasperInterface -o#{output_type} -freports/#{report_design} -x#{select_criteria}", "w+b"
+    result = begin
+      pipe.write xml_data
+      pipe.close_write
+      pipe.read
+    ensure
+      pipe.close
+    end
+    result
+  end
+end
+
+
+Não sei se esse trecho precisa ser alterado, visto que ele foi dado como exemplo quando o Rails ainda estava na versão 1.×. De qualquer forma, depois do trecho acima, ele começa a mostrar como alterar a resposta do Rails para devolver o arquivo binário com o mime-type correto. Isso provavelmente não vai funcionar mais porque algumas coisas mudaram desde quando esse Wiki foi criado.
+E de qualquer forma não recomendo de forma alguma executar linha de comando dentro de uma Action do Rails porque significa que o fluxo ficaria assim:
+
+requisição sai do browser, abre conexão com servidor e fica pendurado, esperando;
+Action do Controller recebe a requisição e executa o JasperReport via linha de comando;
+o Java tem que carregar do zero, o que é lento, e quando termina ele derruba o processo, ou seja, da próxima vez vai precisar recarregar o Java;
+o arquivo binário é enviado de volta ao browser, e até agora o browser ficou pendurado no servidor, esperando, o que será muito lento.
+
+Se você não precisar que seus relatórios sejam em real-time – e normalmente não precisa -, então a cada requisição ele apenas grava em algum lugar os parâmetros para gerar o relatório (numa tabela que representa uma fila, ou num sistema real de fila como o Resque). A resposta volta instantaneamente com uma página do tipo “Aguarde, seu relatório está sendo gerado”.
+Daí você tem duas alternativas: um Ajax do lado do browser que fica checando se o PDF já foi gerado, e nesse caso ele trás de volta o link para o arquivo PDF. Ou então quando a fila for executada e processada, ele envia um e-mail ao usuário que pediu o relatório, com o link para o arquivo PDF.
+Portanto, a resposta curta seria:
+
+Precisa mesmo sair do JRuby?
+	
+Quer manter o mesmo gerador de relatórios em Java?
+		
+Faça a aplicação enfileirar um job numa fila (tabela ou Resque)
+Quando o PDF for gerado, faça um Ajax checar ou envie o link do PDF por e-mail
+
+Quer recodificar os relatórios em Ruby?
+		
+Escolha entre Prawn ou RGhost, ambos são bons
+Se os relatórios forem bem simples, talvez o html2pdf seja suficiente.
+
+
+Pode ficar no JRuby?
+	
+Quais são os outros problemas que o JRuby não está suportando?
+
+
+Espero ter ajudado.
+tags: obsolete rails
+

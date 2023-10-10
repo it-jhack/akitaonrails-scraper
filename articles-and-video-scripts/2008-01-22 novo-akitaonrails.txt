@@ -1,0 +1,11 @@
+
+
+
+
+Provavelmente ninguém notou – nem eu – mas meu blog saiu do plano de shared hosting da RailsPlayground para uma VPS. O motivo: o shared hosting mais barato dá direito a usar 30Gb/mês de banda. Por um tempo isso foi suficiente, mas todo mês eu estou perigosamente batendo nesse teto. Esse mês ainda nem acabou e já quase esgotei esse limite. E isso sem um único download direto (meus screencasts estão todos na veoh.com). Desse mês não ia dar pra passar então chamei o suporte da RailsPlayground.
+
+Aliás, isso é uma coisa que eu não estou acostumado: um suporte técnico que realmente resolve o problema. O extremo oposto disso se chama Telefônica, talvez a definição do que é ser o pior serviço ao consumidor que a história da humanidade já viu.
+Enfim, chamei eles antes do almoço pedi a migração e eles fizeram todo o serviço! Eu não precisei fazer nada. Agora meu blog está numa VPS rodando CentOS com Mongrel e NginX. O DNS parece que já propagou e ninguém nem notou! Impressionante. Apenas por esse nível de serviço, o preço deles já me compensa (eu perderia algumas horas fazendo isso, e não iria compensar).
+A RailsPlayground não tem o mesmo tamanho de uma Dreamhost, são pequenos, mas talvez graças a isso eles podem nos “bajular” um pouco mais. Renovei com eles e já peguei o plano anual. Estou com eles desde 2006 e sempre compensou.
+tags: obsolete
+

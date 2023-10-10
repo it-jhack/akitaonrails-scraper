@@ -1,0 +1,30 @@
+
+Se não está feliz com algumas das opções existentes para fazer autenticação HTTP em Rails, temos mais uma opção no mercado. Agora temos um plugin oficial Rails para Http authentication no repositório Rails que torna isso algo simples.
+
+
+Alguns métodos convenientes agora estão disponíveis nos seus controllers para segurar sua mão: authenticate_or_request_with_http_basic que segura o username e senha básicos em um bloco para execução e request_http_basic_authentication que pede ao cliente para se autenticar usando autenticação http básica. Usá-los é muito simples – suas inclusões em um filtro de autenticação parece ser de uso mais intuitivo:
+class DocumentsController < ActionController
+  before_filter :verify_access
+
+  def show
+    @document = @user.documents.find(params[:id])
+  end
+
+  # Use autenticação básica no meu domínio para pegar um 
+  # objeto de usuário. Como isso é um filtro de segurança -
+  # retorne false se o usuário não está autenticado.
+  def verify_access
+    authenticate_or_request_with_http_basic(“Documents Realm”) do |username, password|
+      @user = User.authenticate(username, password)
+    end
+  end
+end
+Quando o bloco authenticate_or_request_with_http_basic executa e retornam false, request_http_basic_authentication é invocado e requisita que o usuário entre com suas credenciais. Você pode manualmente invocar request_http_basic_authentication se estiver fazendo um mistura de métodos de autenticação e quer usar autenticação http somente se a autenticação de session falhar etc.
+E qual o problema? Bem, autenticação digest ainda não foi adicionada ao plugin – de qualquer forma a estrutura e o framework foram colocados a seus pés para que possa contribuir com a lógica digest. Dê uma olhada em HttpAuthentication::Digest e veja quão fácil seria de contribuir de volta para seu framework favorito. Apenas preencha os espaços em branco que diz coisas como # Fancy nouncing goes here e # You compute me e o mundo o reverenciará.
+Referências
+
+~:caboose’s Htpasswd Plugin
+Coda Hale’s Basic HTTP Authentication with Rails & simple_http_auth
+
+tags: obsolete rails
+

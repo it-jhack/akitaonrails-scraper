@@ -1,0 +1,155 @@
+
+
+
+
+Não, não! Não é mais um daqueles artigos “Ruby vs Smalltalk”. Estava hoje lendo um fórum e caí nesse dilema novamente. Quando se fala que Smalltalk é mais orientado a objetos que Ruby o exemplo mais usado é que em Ruby fazemos condicionais de maneira imperativa (uma das maneiras):
+1
+2
+3
+4
+5
+
+a = if expression
+  1
+else
+  2
+end
+
+
+E em Smalltalk se faz passando mensagens ao objeto True ou False:
+
+expression ifTrue:[ a := 1 ] ifFalse:[ a := 2 ]
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+Onde ifTrue e ifFalse são representados como se fossem 'envio de mensagens' ao objeto true ou false. A primeira diferença é que se o objeto não for true ou false isso normalmente pode dar uma exception do tipo MustBeBoolean. Em Ruby tudo é true e apenas os objetos 'nil' e 'false' são considerados 'não-true'.
+
+Outra coisa é que em Smalltalk podemos enviar várias mensagens ao mesmo objeto de uma só vez, em Ruby o método precisa devolver a si mesmo para encadear mensagens, mas fica parecido. 
+
+Então, e se em Ruby pudéssemos fazer assim:
+
+--- ruby
+expression.if_true { a = 1 }.if_false { a = 2 }
+
+
+Hm, acontece que podemos! Vejamos como ficaria isso:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+class Object
+  def if_true(&block)
+    block.call if self
+    self
+  end
+
+  def if_false(&block)
+    block.call unless self
+    self
+  end
+end
+
+
+Podemos fazer isso graças aos blocos, que expliquei em detalhes no artigo anterior. Além disso já sabemos que todas as classes no Ruby são abertas, em especial a Object que é a pai de todas. Nesse caso todas as classes do Ruby passam a ter esta funcionalidade, não apenas TrueClass ou FalseClass.
+Vejamos como ficaria com a notação de do..end em vez de chaves:
+1
+2
+3
+4
+5
+
+expression.if_true do
+  a = 1
+end.if_false do
+  a = 2
+end
+
+
+Feinha. 
+Isso é apenas um exercício de metaprogramação no Ruby porque esta implementação não tem absolutamente nenhuma vantagem sobre a notação nativa de if; else; end. Como apontado em inúmeras discussões a respeito como esta a notação imperativa atual do Ruby não é ambígua e o interpretador não precisa trabalhar dispatch de métodos. Em algumas implementações de Smalltalk ifTrue;ifFalse é mais um syntatic sugar porque internamente eles também não fazem dispatching de métodos e fazem o branch condicional normal. Motivo: performance.
+Existe outra diferença, em Ruby e Smalltalk podemos enviar múltiplos blocos a um mesmo método, mas Smalltalk tem uma sintaxe mais simples para isso, como é o caso do próprio ifTrue;ifFalse. No fundo o efeito é o mesmo. Se eu quiser muito mesmo posso não usar o ‘if’ imperativo do Ruby, mas não há nenhum ganho ao fazer isso. O Ruby poderia colocar um ‘syntatic sugar’ semelhante que permitisse usar a notação ‘puramente de objetos’ mas que internamente reconvertesse num if imperativo para não impactar a performance.
+Outra coisa que Ruby faz de maneira ‘imperativa’: herança de classes. Em Ruby fazemos assim:
+1
+2
+
+class Carro < Veiculo
+end
+
+
+Em Smalltalk (sem usar a IDE) se faz:
+
+Veiculo subclass: #Carro
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+
+Ok, ok, se realmente quisermos fazer assim em Ruby podemos usar mais metaprogramação:
+
+--- ruby
+class Object
+  def self.subclass name
+    eval "class #{name} < #{self}; end"
+  end
+end
+
+Veiculo.subclass :Carro
+
+
+Pronto, conceitualmente parecido novamente. As características de metaprogramação de Ruby nos permitem criar praticamente qualquer nova sintaxe e é o motivo dele ser uma linguagem tão poderoda para Domain Specific Languages (DSL). E nunca se esqueçam da maior diferença: Smalltalk não é apenas uma linguagem, é um ambiente, coisa que Ruby não é e não planeja ser. Então não se trata apenas de sintaxe, são filosofias completamente diferente de programação que vai além de simples ‘ser OOP’ ou não.
+No fundo, tanto faz, pessoalmente prefiro algo pragmático do que apenas ‘intelectualmente puro’, e nesse caso tanto Ruby quanto Smalltalk se encaixam, pois ambos fazem compromissos em alguma das etapas. Existem mais alguns Ruby vs Smalltalk interessantes, mas não os leve muito a sério a menos que você pretenda se engajar na tarefa de ajudar a codificar o compilador do Ruby. Caso contrário whatever.
+Update: Na realidade, para ficar um pouco mais parecido com o jeito Smalltalk de passar dois blocos ne mesma mensagem, a versão Ruby deveria ser parecida com esta:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+class Object
+  def if(true_block = nil, false_block = nil)
+    if self
+      true_block.call if true_block
+    else
+      false_block.call if false_block
+    end
+  end
+end
+
+n = 10
+puts ( n > 1 ).if( proc { "true" }, proc { "false" } )
+
+
+Novamente, a performance decai. Comparei os tempos de 500 mil operações, na primeira vez com ‘if’ condicional e nesta versão via passagem de método e a diferença foi de 2 a 4 vezes mais devagar passando como métodos, portanto não se atenham a essas versões exóticas além de apenas servir como curiosidade acadêmica.
+tags: learning beginner ruby smalltalk
+

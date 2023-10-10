@@ -1,0 +1,70 @@
+
+
+Desde que o Windows NT 3.1 foi lançado em 1993, ele sempre teve algum suporte a sub-sistemas. Os bons engenheiros contratados da DEC, que efetivamente desenvolveram o NT, levaram à Redmond tecnologias e conceitos desconhecidos a eles como portabilidade (na época ele rodava em processadores PowerPC, MIPS, etc), access control lists, microkernel, multi-tarefa preemptiva, etc. O NT suportava, além do sub-sistema Win32, também OS/2 e um ambiente mínimo POSIX.1.
+De qualquer forma, esse suporte era bem rudimentar. Ele foi substituído anos depois pelo Services for Unix 1.0 em 1999 no NT 4.0 SP3+. Mas foi só no SFU 3.5, lançado em 2004, que esse suporte finalmente amadureceu a ponto de ser minimamente usável. Eu me lembro de usar o SFU 3.5 no meu desktop em vez do Cygwin (embora o Cygwin ainda pareça ter mais aplicativos e mais flexibilidade), mas pelo menos era um suporte “oficial” da Microsoft – se isso significa alguma coisa.
+Junto ao SFU temos o suporte opcional da Interix, que completa esse suporte com um ambiente GNU mais completo, incluindo SDKs para recompilar ferramentas Unix para Windows com SFU. Com ele conseguimos finalmente ter ferramentas úteis no mundo Windows, como acesso ao OpenSSH.
+Para os puristas, que não gostam de instalar nada que não seja “default” da Microsoft, saibam que no próprio Add and Remove Programs (no Windows 2003) como no Add Feature (no Windows 2008) você tem a opção Subsystem for UNIX-based Applications, também conhecido agora como SUA. Primeiro você precisa instalar esse sub-sistema.
+
+
+
+Feito isso, você precisa baixar o Utilities and SDK para o Windows XP/2003 ou Windows Vista/2008, eles pesam uns 190Mb e 490Mb, respectivamente. A instalação deles é demorada, e a única coisa a se lembrar é:
+
+Escolha a opção “Custom Installation” e não “Stantard”. Daí escolha todos os “opcionais” desmarcados, você precisará deles.
+Quando aparecer opções como setuid, sutoroot, case-insensitive, também marque todas as opções.
+
+
+Terminada a instalação, no caso do Windows 2008, você pode diretamente já baixar um dos bundles que já vem com todas as ferramentas que você precisa. Selecione o link correto para W2K8 e já baixe de uma vez o “Complete Toolset” para facilitar.
+No Windows 2003, por alguma razão estranha – não sei se é somente na minha máquina – a instalação do bundle não funcionou. Em vez disso precisei baixar e instalar o Bootstrap Installer 3.5. No Windows 2008, se não quiser o bundle e quiser escolher os pacotes manualmente, nessa mesma página, baixe o Bootstrap Installer 6.0. Em todo caso esse é o mínimo para ter um Package Manager. Ele te dará condições de instalar pacotes mais ou menos como num Ubuntu você consegue fazer “apt-get install apache2”.
+Ele provavelmente pedirá que você reboote a máquina, pelo menos no caso do Windows 2003. Depois, as duas primeiras coisas que eu instalei foram:
+1
+2
+
+pkg_update -L bash
+pkg_update -L openssh
+
+
+Pode parecer estranho o comando se chamar “pkg_update” mas existe um “pkg_add” que parece que é antigo e eles recomendam o primeiro. Outro detalhe: eu executei esses comandos via o “C Shell” que tem link no Start Menu. No Windows 2008, depois de instalar o Bash eu ganho um novo atalho, mas no Windows 2003 deu algum problemas e eu criei o atalho manualmente copiando a partir do “C Shell” e editando o caminho para executar “/usr/local/bin/bash -l”.
+
+Para iniciar o daemon do OpenSSH basta fazer:
+1
+
+/etc/init.d/sshd start
+
+
+Pelo visto o SUA reinicia automaticamente os daemons configurados no /etc/init.d, como deveria mesmo. Isso lhe dá outras coisas como um daemon de cron, sendmail, dentre outros. Para acessar o sshd, não se esqueça de liberar incoming connections na porta 22 no Firewall do Windows (que vem ativado por padrão no 2008 e desligado no 2003).
+
+Se você cair em algum problema de core dumps, segmentation faults, talvez você precise desligar o DEP. Para isso edite o arquivo C:\boot.ini e troque a opção “/NoExecute=…” por “/NoExecute=AlwaysOff”. Isso deve resolver esses problemas.
+Finalmente, você precisa configurar uma variável de ambiente chamada “HOME” apontando para seu diretório padrão. No Windows 2003 foi “C:\DOCUME~1\ADMINI~1” e no 2008 foi “C:\Users\Administrator”. Feito isso, a partir do meu Mac, conectei nos Windows via SSH normalmente. Ele me pediu senha e me jogou no meu diretório com shell Bash. Até parecia que eu havia conectado num Unix normal.
+Para ficar mais padrão, eu criei symbolic links para a pasta ‘home’:
+1
+2
+3
+4
+
+# Windows 2003:
+ln -s /dev/fs/C/Documents\ and\ Settings /home
+# Windows 2008:
+ln -s /dev/fs/C/Users /home
+
+
+Então, eu criei um projeto Rails básico, sem nada. Rodei o meu Locarails para gerar uma receita básica de capistrano. Editei o “config/environment.rb” criado e comentei as linhas 74 e 88:
+1
+2
+
+#run "cd #{release_path} && rake db:migrate RAILS_ENV=production"
+#run "ln -s #{deploy_to}/current/public #{public_html}/#{application}"
+
+
+Lembrando que as configurações são case-sensitive e, no meu caso, estava testando com usuário “Administrator” (com “A” maiúsculo):
+1
+
+set :user, "Administrator"
+
+
+Fiz um “cap deploy:setup”, depois um “cap deploy” e, voilá funcionou! Ele foi capaz de se conectar via SSH e realizar operações básicas como mkdir, ln, test e inclusive foi capaz de fazer upload dos arquivos via SCP.
+Esse sub-sistema deveria vir instalado por padrão nos Windows, isso os tornaria mais úteis e incentivaria existir mais serviços como Capistrano que conseguem se comunicar com sistemas POSIX. No Windows tirando shares de rede (inseguro), RDP (inseguro), RPC (inseguro), FTP (inconveniente e inseguro) não sobra muita coisa para integrar. Com OpenSSH ganhamos um canal seguro, com autenticação simplificada graças ao sistema de troca de chaves e um ambiente POSIX onde podemos executar scripts e comandos para administrar as máquinas remotamente.
+
+Vou fazer mais brincadeiras com esse ambiente, talvez coisas como Puppet, Chef, AutomateIt consigam fazer tarefas básicas em servidores Windows também. Outro detalhe: a conexão SSH só lhe dá acesso ao Bash ou outro shell Unix, mas não ao Command Prompt ou Powershell do Windows. Para isso você precisa de um servidor SSH comercial.
+“Click e click Não é administração de sistemas. Um bom sysadmin tem intimidade com o console/shell.”
+tags: obsolete windows
+

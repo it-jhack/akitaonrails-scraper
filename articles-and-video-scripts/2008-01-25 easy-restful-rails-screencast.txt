@@ -1,0 +1,18 @@
+
+Update 2013: This video is very obsolete. It has been superceded by Inherited Resources later, but most programmers prefer to not go so deep in metaprogramming “magic” and keep the controllers less implicit for maintenance purposes.
+Update 28/01: Seems like myself and James Golick were in sync here :-) We both did screencasts at the same time. He just recorded one for his other great plugin “attribute_fu” and I did it for “resource_controller”. He posted both at his blog. Check it out.
+This is my second try to make a useful screencast. I think my last one The First Rails 2.0 Screencast was reasonably good but far from good enough. I thank everybody that has seen it and helped making it one of the most successful pieces I’ve ever made.
+I’ve been wanting to explore the Restful Rails concepts in a screencast. First and foremost, I highly recommend Geoffrey Grosenbach’s Peepcode screencast as one of the most comprehensive and easy to understand out there. My screencast is not nearly at the same level of quality or depth. But on the other hand I didn’t want to reinvent the wheel.
+
+
+Explanation
+So, the idea came when I saw James Golick’s excelent resource_controller plugin. It does what I always thought should be part of Rails itself: it made Restful Controller as easy to use and understand as ActiveRecord originally does for Models and the database.
+This screencast is a quick rendition to this plugin and how to use to leverage the power of Restful controller in your applications. This is one of those great ideas that – who knows – could find its place in the Rails Core one day, the same way Sexy Migrations did.
+The concept is that now that we treat a controller’s action in a standardized way (through the abstraction of HTTP verbs) it could perfectly be refactored away from the day-to-day development. So, instead of scaffold creating a bunch of repeated code in every controller, why not have a bare-bone controller, totally empty, to start with?
+Another clever idea was to create dynamic helpers for named routes in the views. That way you can move your views around, and even reuse them in different sections without ever copying & pasting several different named routes between them. This is particularly useful for polymorphic controllers and namespaced routes as I show in this video.
+At the very end of the video I do a quick summary of what Restful Rails provides you in terms of routes organization, that could be helpful to some.
+Hope you enjoy it!
+
+Disclaimer: this video is long, around 50 min long. I first recorded it, live, in english and I tried to do voice over it in portuguese. But it was so difficult that I decided to record again another version in portuguese. This second video ended up being having a different concept and I explain Restful Rails in a bit more detail because the Brazilian audience can’t understand english well enough to learn through Peepcode. So, if you can understand portuguese, you will want to check it out as well.
+tags: obsolete rails screencast english
+

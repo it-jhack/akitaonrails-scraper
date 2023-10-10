@@ -1,0 +1,108 @@
+
+Update Jul/2016: Microsoft has just released the Windows 10 Anniversary Edition and it comes with the very good “Bash on Ubuntu on Windows”. You can use this instead. This post is now obsolete and you should read my latest The Year of Linux on the Desktop: It’s Usable!
+Update 04/27/09: I made some updates that you can read about here
+So you’re willing to start on Ruby on Rails. You’re not from neither Linux nor Mac worlds. What’s the best development environment for you?
+Before starting out, ignore some of what’ve already read elsewhere: it is not necessary to use full blown IDEs such as Netbeans or Aptana. You can, but you don’t need to. You can also ignore one-size-fits-all bloated installers such as Instant Rails (sorry, I don’t mean to bash as I know people made lots of effort to assemble them). Let’s install a clean environment from scratch for Windows.
+
+I am translating the original article I wrote in Portuguese just yesterday as people seem to have liked it. To answer some questions people posted in the comments, first, I have nothing against the efforts in Java IDEs, per se. I think they are great if you really, really need to use them or perhaps you have to split your time doing Java and Ruby development at the same time. The same goes for Windows: some Railers would say that you need to give up on Windows completely and simply go to Ubuntu or Mac OS X. I know for a fact that there are lots of people simply unable to do just that. And “give up their jobs” – as some kindly suggest – is not an option. Some of the people that are starting Rails in closed-minded companies are exactly the seeds those companies need to start to change their minds and every time we, Railers, tell them to just move to another job, we are killing a precious opportunity to introduce Rails to those companies.
+So, if you need an IDE to start on Rails, please feel free to try Netbeans or Aptana, they are both reasonably good. But if you have no particular reason to do so but your own previous knowledge,  so please try this new one. It is absolutely necessary to change, to learn new tools and open yourself important new possibilities that will just increase your great skills. Learning Rails, learning Vim, learning to not be afraid of the command line is not like condemning everything you did in the past. You were not wrong by using Visual Studio and doing C#. Now you’re just adding up to your previous knowledge and this will make you a greater programmer.
+As I always say, a professional that is master in just one thing, is an amateur in all the other things.
+
+
+Needed System Components
+First of all, download the One-Click Ruby Installer. This is the official Ruby installer for Windows and the result of the great job Luis Lavena and his friends have been doing for some time now. Ruby on Windows has very little cooperation from both Microsoft and the open source community so it is amazing that it is still going on and I want to use this moment to ask you: if you can help, please do. Well, after downloading, just double-click on it and follow the wizard. Use the default options.
+Railers use Git, therefore download msysGit. Again, follow the wizard steps. But, in one of the screens you’ll see 3 radio buttons explaining about PATH, just choose the red last option. And in the SSH part, leave the default OpenSSH option.
+To start your learning SQLite3 will do (you can use MySQL or PostgreSQL later). Download this zip file, uncompress it and copy the sqlite3.exe file to c:\Windows. Then download this other zip file, uncompress it and copy the sqlite3.dll file to c:\Windows\System32. Disclaimer: yes, I am aware that it is not considered ‘good practice’ to put stuff in the system folders. I just wanted this to be easy for newcomers. But if you know how to set up a folder at Program Files and add it to the PATH variable environment, that’s the way to go.
+To use gVim with the plugins I will talk about, you will need to download Exuberant CTags. Uncompress it and copy the ctags.exe file to c:\Windows.
+Now, we need a decent text editor, so just download gVim. In the installer, pay attention to the screens. You will find one with many check boxes, most of them checked. One of the unchecked one tells about creating a .bat file to allow execution through the command line, just check it on. Answering Luis, yes, fortunatelly this version of gVim already comes pre-compiled with the necessary Ruby bindings, so you don’t need to do anything else, just install it.
+If you have Office 11 or Visual Studio you probably already have the Consolas type set. If not, download from here because we´re going to use it to make gVim look better.
+Personalizing your Command Prompt Console
+msysGit comes with a weird default on which it will try to convert unix line breaks (\n) into Windows style (\r\n), which is obviously a bad choice. So edit “c:\Program Files\Git\etc\gitconfig” and replace “autocrlf = true” for “autocrlf = false”.
+I like to customize my console, because the default one is just plain ugly and a nice looking environment is key for a comfortable programming routine. Type in Windows Key+R to open up the “Run” dialog box and type in “cmd”. This should open the command prompt console. On the upper left icon, there is a Property menu item. Click it and then configure like this:
+
+On the “Options” Tab, mark the “Quick Edit” option
+On the “Font” Tab, choose “Lucida Console” with 14pt size
+On the “Layout” Tab, choose (in Screen Buffer Size) Width 90, Height 1200, and choose (in Window Size) Width 90, Height 40
+On the “Colors” Tab, select “Screen Text” and then choose the White color on the right side edge of the color palette.
+
+When you click OK, on Windows XP, it will ask if you want to change just the current window or apply them globally. Choose the global option. On Windows 7 it will save it globally automatically. Do the same thing on the Git Bash console window (this icon will be in your Desktop once you install msysGit). In this case, you need to right-click it and choose “Run as Administrator” if you’re running over Windows 7 (and possibly on Vista). This should leave a better looking console window.
+You can also follow Luis´ recommendation and download Console2 (download the beta devel build instead of the older 1.5 version). This is a great Command Prompt replacement that has tabs!
+Installing some Ruby Gems
+Now, you will still have your console opened, so let’s use it to install some gems. Type in these commands:
+1
+2
+3
+
+gem install rails ruby-debug capistrano rspec ZenTest webrat  image_science mini_magick mechanize RedCloth  fastercsv piston sashimi ruport json newgem open4 rubigen --no-ri --no-rdoc
+gem install sqlite3-ruby --no-ri --no-rdoc --version=1.2.3 --platform=mswin32
+gem install mongrel mongrel_service mysql ruby-postgres oniguruma ultraviolet libxml-ruby --no-ri --no-rdoc --platform=mswin32
+
+
+You will also need an specific version of the ImageMagick for Windows. After downloading and uncompressing the file, open up another console and type this in (without pressing Enter after it and with an extra space after ‘install’):
+1
+
+cd 
+
+
+Then, from the Windows Explorer window, drag and drop the folder containing rmagick-2.7.1-x86-mswin32.gem file right into the Console window. You will end up having a command line like this:
+1
+
+cd C:\Users\akitaonrails\Documents\Downloads\RMagick-2.7.1-ImageMagick-6.4.5-3-Q8\
+
+
+Then just do:
+1
+
+gem install rmagick-2.7.1-x86-mswin32.gem
+
+
+On the same folder you should have an installer called ImageMagick-6.4.5-3-Q8-windows-dll.exe. Double click it to start the installer and just follow the wizard with the default settings. This kind of thing is somewhat necessary for a few Gems on Windows. In the Ruby world, “Gems” are reusable libraries. Some of them contain native extensions written in C – for performance or reusability reasons. The problem is: Windows doesn’t come built in with decent compilers such as gcc. Therefore it is necessary to download specific versions of those gems, with the extensions already pre-compiled into DLLs. ImageMagick is one of them, but there are a few others. For some gems, sometimes it is enough to just use the “—platform=mswin32” option while running the “gem” command. You will need to experiment. Luis also have a msys compiler project going on, but it is not ready yet for prime time.
+Configuring gVim for Rails
+With your Console still open, you’re probably inside your “home” directory. On Windows XP it will be “c:\Documents and Settings\your-username” and on Windows 7 and Vista it should be “c:\Users\your-user”. From there you will have to type in the following command:
+1
+
+git clone git://github.com/akitaonrails/vimfiles.git
+
+
+Then do (copy, paste and execute one line at a time in the console):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+cd %HOME%\vimfiles
+
+vim after\plugin\snippets.vim +":%s/.vim/vimfiles/g" +":x!" 
+vim plugin\fuzzyfinder_textmate.vim +":%s/.vim/vimfiles/g" +":x!" 
+vim vimrc +":%s/desert/vibrantink/g" +":x!" 
+vim vimrc +":%s/monaco/Consolas:h12/g" +":x!" 
+vim vimrc +":%s/<c-f>/<c-t>/g" +":x!" 
+
+copy /y vimrc ..\_vimrc
+
+
+Ok, you now have everything you need to start. Watch my screencast about Rails on Vim to understand a little bit more and then research on Vim tutorials. I think the vimbook should help.
+Follow my Github fork of scrooloose’s vimfiles project.
+Why not another IDE?
+Before I forget you will also need the Firefox web browser and the good old Firebug extension to help you out on Javascript, CSS development.
+You need to throw away old preconceptions. Specially if you excessivelly developed using monumental IDEs such as Eclipse and Visual Studio. You will feel intimidated by the Console and you will understimate editors such as Vim. You won’t have visually appealling dialog boxes, wizards. Understand this: old visual environments are ineffective and unproductive. The first time you have a Regular Expression saving your day, you’ll start to understand it.
+Another thing: forget features such as auto-complete in Ruby. It simply doesn’t work. This is not a ‘defect’ on the IDEs or on the language. Ruby being dynamic means that it is impossible to actually figure out its methods and properties without having them running. Auto-complete is static editors are only good for static languages, where the interface never changes. The only true dynamic editor that can actually infer the objects proper behavior is Squeak. So, unless you have the objects running, you won’t be able to have auto-complete. There are several heuristics, but they are very ineffective and will just get in your way with tons of options that mean nothing. This is not a drawback: languages such as Ruby and frameworks such as Rails simply won’t make you need it.
+You only need auto-complete on monumental languages. You can simply memorize simple constructs. That’s one of beauties of using Ruby and Rails, or even other dynamic platforms such as Python. Writing visual dialog boxes to wrap up a simple command line is also a big waste of time. You create visual stuff for really complicated stuff. For simple commands, use the console itself! If you rely on visual dialog boxes and the underneath command line is upgraded to new versions, the screens will simply break and you won’t know what’s the problem, because you will not be aware of the command line.
+Try to make yourself comfortable with the command line. This is key to proper Rails development.
+More References
+For quick API reference, bookmark the APIDock website. And to know more about how Rails works, read the entire Rails Guides.
+You will need more material, but if you’re still new into programming, start with Chris Pine’s free online book Learn to Program (pt-BR translation). If you already program, then learn Ruby through the classic and free Why’s (Poignant) Guide to Ruby (pt-BR translation). Finally, understand the Agile and Pragmatic philosophy on which the Rails community is build reading Getting Real (pt-BR translation). And if you want to learn it through an online course, then follow RubyLearning.org from Satish Talim.
+This should be enough to start. Then get used to follow the Rails world through news websites such as the RailsEnvy Podcast. Read Peter Cooper’s websites such as Ruby Inside and Ruby Flow. And, of course, the official Rails webblog: Riding Rails.
+To learn even more, buy Geoffrey Grosenbach’s Peepcode high quality and comprehensive screencasts. Don’t leave Ryan Bates’ video podcasts, Railscasts out of your list as well.
+You will also need to learn Git and Scott Chacon’s Git Community Book is a great place to get started. Almost all Rails related open source projects are under Git repositories under both Github or Gitorious.
+First Steps
+We’ve just configured a state-of-the-art and efficient Ruby on Rails development environment. You won’t need much more than that. Vim is a very versatile, light and powerful editor although its learning curve is kind of steep. But if you’re able to overcome the first few days, you will be very comfortable with it in no time.
+Rails, Ruby, Git, Vim. If you’re a C#, Visual Studio or Java, Eclipse developer, this new environment will be very challenging. But the journey is very worthwhile. You will finally step up from the coder level to the true developer level. No one said it will be easy, but if you’re able to do so, you will certainly acquire a brand new set of skills that are above the market average.
+The first week will be the worst one. After that everything should start to flow better. I would say that in 6 months you will be very comfortable with this new environment.
+tags: obsolete windows english
+

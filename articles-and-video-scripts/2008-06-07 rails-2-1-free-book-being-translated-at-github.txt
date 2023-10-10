@@ -1,0 +1,16 @@
+
+
+
+
+Update 06/09: Carlos just reported that they already have ready the First Rails 2.1 PDF Book thanks to the contributors from the Brazilian community that translated from the original Portuguese to English. This is a first!
+Carlos Brando and Marcos Tapajós are two of the best Railers in Brazil and long time collaborators of our community and they just released a very high quality material today.
+Carlos has been tracking down every new addition to the Edge Rails since 2.0 for the brazilian audience and since 2.1 was released, he decided to publish his series in a book format. But not only a simple HTML to PDF convertion but a full quality PDF book based on a Ruby DSL he wrote for that purpose and which should be released soon.
+Marcos Tapajós is a long term Brazilian Rails Contributor who created the Brazilian Rails plugin which localizes Rails for Brazil (including routes). And he jumped right in to massively help Carlos in this endeavor and the outcome is that the book was finished very fast.
+They just released it, not only in PDF format but also the full Ruby source code they created, in order for it to be collaboratively translated from Portuguese to English.
+Chris Wanstrath himself was very kind to blog a call to arms at the Github blog to increase the chances of the English version be ready soon.
+In Brazil we’ve been working together on English to Portuguese translations for a long time. Recently Carlos has been leading the famous Why’s Poignant Guide to Ruby translation into Portuguese with many other Brazilian collaborators.
+I am very proud to blog that the other way around has finally came to be: a Portuguese source material being translated to English! This has to be a first in our community.
+Both Carlos and Marcos are very close friends of mine and I am very happy for this announcement. It is a nice thing to collaboratively work in educational material other than source code. As David Hansson himself said at RailsConf: share knowledge is one of the most important things to do. Hope you help and enjoy!
+  It is interesting how great endeavors start.
+tags: obsolete rails book english
+

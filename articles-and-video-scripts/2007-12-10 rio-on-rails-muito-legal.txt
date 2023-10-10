@@ -1,0 +1,14 @@
+
+Este sábado tivemos o Rio on Rails, o pessoal da Improve it, pra variar, está de parabéns! Foi um ótimo dia para conhecer pessoas e discutir Rails. Reunimos num lugar só o RejectConf (eu), o Minas on Rails (Ronaldo) e o Rio on Rails (Improve it), o Sudeste fez sua parte, e aí galera do Sul, Nordeste, Centro-Oeste, Norte, quando vamos cobrir o país todo? :-)
+A maratona para mim começou no dia 17/11 no RejectConf e desde então não parei um único fim de semana. O último capítulo desta saga será no sábado que vem, no Rails for Kids. Não se esqueçam, será um sábado inteiro de palestras online com objetivo beneficiente! Todos já se inscreveram? Quem viu o screencast que postei hoje já teve um gostinho do que será minha palestra: Rails 2.0.
+
+
+
+Claro que tivemos que concorrer com o show do The Police, mesmo assim o pessoal compareceu mesmo. Uma pessoa que eu queria conhecer no Rio era o Demetrius Nunes. Ele foi um pioneiro, um dos primeiros brasileiros a usar Rails. Inclusive o primeiro acts_as_taggable foi escrito por ele e adicionado ao Rails Core. Sua apresentação mostrou Ruby e Rails como a pílula vermelha do Matrix, ótima metáfora. O cara é fera.
+
+O pessoal da Improve it demonstrou o Brazilian Rails um plugin que deve ajudar os projetos brasileiros a nacionalizar as mensagens e formatações padrão. E assim como na RejectConf o Vinícius falou do case Projeto Lucidus, com integrantes do projeto presentes para responder perguntas. Um caso real do casamento feliz entre XP e Rails.
+O Eduardo mostrou seu case ocurioso que é um capturador de scraps do Orkut feito em Rails que está fazendo um bom sucesso. Mais uma startup tirando proveito das funcionalidades que o Rails pode oferecer. Ele mostrou como é o caso de uma aplicação Rails rodando em produção e com muita carga. O Ronaldo Ferraz também estava presente e apresentou sobre o que é essa tal de DSL, como desenvolver DSLs em Ruby e quais as vantagens e utilizações. O Danilo Sato também foi desbravar o rSpec no Rio, mostrando um novo paradigma de desenvolvimento chamado Behavior-Driven Development, é uma técnica muito promissora e que funciona ainda melhor em Rails graças às características dinâmicas do Ruby.
+
+O Rio é realmente uma grande cidade. Depois de um bom chopp na beira da praia em Copacabana, no dia seguinte ainda deu tempo de alugar o Tapajós para um tour ao Pão de Açúcar. Como não podia deixar de ser, turista que é turista tem que ir ao Pão de Açúcar ;-) Pena que eu não tinha muito tempo disponível. Da próxima vez volto pra lá pra tirar férias e conhecer melhor a cidade. Ir apenas a trabalho nunca nos dá tempo para passear.
+tags: obsolete conference
+

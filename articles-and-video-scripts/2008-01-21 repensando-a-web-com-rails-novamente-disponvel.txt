@@ -1,0 +1,27 @@
+
+
+
+
+Desde o fim do ano passado, meu livro sumiu das livrarias. Literalmente acabou a edição. É tanto uma boa notícia (porque significa que vendeu tudo) quanto ruim para quem não conseguiu comprar. E foi o dilema: reimprimir uma nova edição (de centenas de livros) seria arriscado. Eu ainda estou escrevendo meu novo livro e deve demorar (estou bem atrasado).
+Felizmente, a Brasport conseguiu uma solução: impressão sob demanda. Dessa forma quem estiver interessado pode comprar diretamente pelo site deles. A impressão sob demanda é mais cara, mas como não tem distribuição e livrarias no meio, o preço não é tão ruim. O preço final é de R$ 95,00.
+A partir de quinta-feira a mensagem “Não disponível” vai sumir do site e vocês poderão comprar esse livro. A primeira pergunta que aparecerá é: “Mas agora que saiu o Rails 2.0 esse livro não é obsoleto?” Sim e não. Ainda não existe nenhum livro sobre Rails 2.0 (fora o do Obie Fernandez que na verdade apenas adicionou algumas informações de última hora). Mesmo o que eu estou revisando agora, o Agile Web Development with Rails, do Dave Thomas, é da versão antiga.
+Porém, não se preocupem, tudo que se aprende com o Rails antigo funciona quase tudo no Rails 2.0 (com poucas exceções, como o antigo método dinâmico ‘scaffold’ nos controllers, que desde antigamente já não era considerado uma boa prática de qualquer maneira). Além disso vocês podem rodar Rails 1.1, 1.2 ou 2.0 lado-a-lado na mesma máquina, sem nenhum problema. Para instalar basta rodar:
+
+gem install rails -v 1.2.6
+1
+2
+3
+4
+5
+
+
+Depois, para criar o projeto, basta rodar:
+
+<macro:code>
+rails _1.2.6_ [nome do projeto]
+
+
+Assim, todos os tutoriais, livros, exemplos que estão disponíveis impressos e na web vão funcionar sem nenhum problema. Para quem está iniciando isso é importante porque ainda há muito pouco material sobre Rails 2.0. E ninguém precisa esperar esse material aparecer, dá para aprender agora mesmo e depois apenas atualizar. Para quem não viu, eu criei um tutorial sobre Rails 2.0 que justamente ajuda a complementar o conhecimento de quem já sabia a versão anterior. Vocês podem ver que, a grosso modo, um tutorial de 2 páginas cobre o que falta. Portanto, qualquer dos livros de Rails na versão anterior serve para o aprendizado.
+Todo dia recebo e-mails e mensagens de pessoas procurando meu livro, e finalmente posso lhes dar uma resposta positiva: a partir do dia 24 de janeiro, quinta-feira, ele estará novamente disponível para comprar online no site da editora.
+tags: obsolete my-book
+

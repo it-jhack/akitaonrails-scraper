@@ -1,0 +1,27 @@
+
+English readers, click here
+ Novo Logo OficialSegundo este artigo o Matz deve lançar o Ruby 1.9 HOJE!!  Provavelmente umas 22hs de hoje! (1AM EST).
+Quem quiser saber o que tem de novo no Ruby 1.9 deve seguir o blog do eigenclass que há dois anos vêm relatando as mudanças na linguagem através de um script automatizado para analisar os CHANGELOGS. São 50 mil linhas analisadas!
+Feliz Natal à Todos! Boas Festas!
+
+
+Update 25/12: Conforme eu cantei a bola ontem, o Matz anunciou oficialmente o Ruby 1.9. Veja também aqui, aqui e aqui E a primeira pergunta que todos farão é: “Rails 2.0 roda em Ruby 1.9?” e a resposta curta é Não. Nem Rails, nem Mongrel (Jeremy Kemper, diz que falta pouco) e nem uma dezena de outras gems ainda estão prontas. O Ruby 1.9.1 deve sair em pouco tempo também. Todos os desenvolvedores de gems precisam retestar e modificar seus códigos levando em conta principalmente o que foi deprecado e as sintaxes que mudaram. Aguardem mais um pouco antes de tentar Rails com Ruby 1.9.
+Update 2 25/12: Esta apresentação deve ajudar a apresentar as novas funcionalidades do Ruby 1.9. Lembrando que 1.9 é uma versão ímpar – experimental – a próxima versão considerada stable deve ser a 2.0, assim como foram 1.8 e 1.6. Não esperem rodar projetos em produção com 1.9 tão cedo ainda, mas é o tempo necessário para assimilar as diferenças com a versão anterior. Este outro link deve ajudá-los a instalar o novo Ruby sem estragar seu ambiente atual (recomendação, teste numa Virtual Machine!!)
+
+ | View | Upload your own
+
+Resumindo? Nova sintaxe de lambdas/blocos, mais splats, novo Enumerator, diferenças sutis de Módulos, suporte a Unicode, novo I/O assíncrono. Novamente, a melhor fonte para checar as mudanças?  Eigenclass e, claro, em breve o novo livro do Dave Thomas: a referência definitiva de Ruby 1.9.
+Update 26/12: Exatamente como eu recomendei e é bem sabido, 1.9 é experimental. Dave Thomas nos lembra novamente que esta versão é direcionada a todos os interessados em experimentos, atualizar código de gems, etc mas não foi feito como substituto para o 1.8. Existem bugs conhecidos que serão eliminados nos próximos meses antes de finalmente termos uma versão 2.0 estável.
+Update 12/27: Este é um post antigo mas foi um dos primeiros a explicar bem como instalar Ruby 1.9 sem quebrar sua instalação existente de 1.8 (embora eu ainda recomende usar uma virtual machine para testar coisas experimentais). Basicamente é assim (atualizado para a tag 1.9):
+
+svn co https://svn.ruby-lang.org/repos/ruby/tags/v1_9_0_0/ ruby19
+pushd ruby19
+autoconf
+./configure -prefix=/usr/local —program-suffix=19 —with-readline-dir=/usr/local
+make
+sudo make install
+popd
+--
+Chris Shea explica bem: Certamente mãos antigas sabem disso, e há muito no README. Mas o secredo é o  —program-suffix=19, que deixa o ruby isolado e lhe dá ruby19 como seu executável 1.9.
+tags: obsolete ruby
+

@@ -1,0 +1,265 @@
+
+Nos últimos dias, trabalhando num projeto legado, encontrei uma situação que me fez perder pelo menos um dia inteiro. É uma situação que já vi algumas outras vezes e que achei interessante explicar para que ninguém mais caísse no mesmo problema.
+TL;DR
+Pense numa associação muito básica:
+
+1
+2
+3
+4
+5
+6
+7
+
+class ShoppingList
+  has_many :shopping_items
+end
+
+class ShoppingItem
+  belongs_to :shopping_list
+end
+
+
+Se você não souber como associações funcionam, poderia começar pensando da seguinte forma:
+
+1
+2
+3
+
+lista = ShoppingList.first        # pega uma lista
+item = lista.shopping_items.first # pega um item dessa lista
+lista2 = item.shopping_list       # a partir do item pega a mesma lista
+
+
+
+
+
+Se fizer uma comparação simples, terá o seguinte:
+
+1
+2
+
+lista == lista2
+# => true
+
+
+De fato, os #id dos dois objetos serão os mesmos. "Tecnicamente" parece que deveriam ser iguais. Só que "ser igual" e "ser o mesmo" não é a mesma coisa. Entenda o seguinte:
+
+1
+2
+3
+4
+5
+6
+
+lista.tax_rate
+# => 0.15
+lista.tax_rate = 2.0
+# => 2.0
+lista2.tax_rate
+# => 0.15
+
+
+Esta é a raíz do problema: se não prestar atenção, pode acabar assumindo que ambos os objetos são os mesmos e, portanto, se mexer nos atributos de um estaria automaticamente mexendo no segundo, já que as variáveis "apontariam" para o mesmo objeto. Mas os objetos na realidade não são os mesmos. Todo objeto Ruby tem um método #object_id que o identifica unicamente:
+
+1
+2
+3
+4
+
+lista.object_id
+# => 25485980
+lista2.object_id
+# => 44491200
+
+
+Caso Completo
+No caso do meu projeto ainda estava mais complicado porque era uma hierarquia profunda de classes e nomenclaturas fora do comum, o que dificultou identificar logo de cara o problema. Para este artigo escrevi um pequeno app com uma versão simplificada da mesma situação.
+Baixe na sua máquina e execute da seguinte forma:
+
+1
+2
+3
+4
+5
+6
+
+git clone https://github.com/akitaonrails/shopping-list-demo.git
+cd shopping-list-demo
+git checkout -b bug b156b84dfaf2968a218955e09c8d15a9048e8f59
+bundle install
+rake db:migrate
+rails s
+
+
+Agora crie uma nova lista e alguns itens e brinque por alguns momentos. Esse aplicativo é muito simples. A peculiaridade é que o model ShoppingList possui dois campos especiais: um total que funciona como se fosse um counter cache e um campo tax_rate que representa um imposto a ser adicionado. Existem algumas formas de implementar isso, obviamente escolhi a forma que dá problemas nesse aplicativo.
+O problema acontece quando você atualiza o tax_rate de um ShoppingList. Neste exemplo, existe um callback chamado update_total que é executado antes do ShoppingList ser salvo.
+Nesse update_total ele pega todos os items associados, multiplica sua quantidade e preço, adiciona o imposto, e vai somando até ter o total, então atualiza o total do objeto pai, ShoppingList e finalmente salva. O código é assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+# app/models/shopping_list.rb
+before_save :update_total
+
+private
+
+  def update_total
+    @calculator = ShoppingCalculator.new(self)
+    self.total = @calculator.total
+  end
+
+
+Para ilustrar o que quis dizer com "hierarquia mais profunda" digamos que estamos delegando a tarefa de calcular (no meu projeto era um cálculo bem mais complexo do que neste exemplo, claro).
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+# app/services/shopping_calculator.rb
+class ShoppingCalculator
+  def initialize(shopping_list)
+    @shopping_list = shopping_list
+  end
+
+  def shopping_items
+    @shopping_list.shopping_items
+  end
+
+  def total
+    shopping_items.map(&:total).reduce(&:+)
+  end
+end
+
+
+Para quem achou a sintaxe do método total estranho, é apenas uma forma mais curta de escrever isto:
+
+1
+
+shopping_items.map { |item| item.total }.inject(0) { |total, valor| total += valor }
+
+
+Ou ainda
+
+1
+
+shopping_items.inject(0) { |total, item| total += item.total }
+
+
+Note que ele precisa do método total no model ShoppingItem vamos ver como ele é:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+# app/models/shopping_item.rb
+class ShoppingItem < ActiveRecord::Base
+  belongs_to :shopping_list
+  attr_accessible :name, :price, :quantity
+
+  def sub_total
+    quantity * price
+  end
+
+  def total
+    sub_total + ( sub_total * shopping_list.tax_rate )
+  end
+end
+
+
+Conseguiram ver o problema? Ele acontece exatamente quando o método total chama shopping_list.tax_rate. Nesse momento ele dispara a associação definida em belongs_to :shopping_list e faz uma nova query ao banco, puxando um objeto novo. Você pode ver isso ao notar que no log aparece um novo SELECT sendo executado.
+Exemplo
+Para ilustrar digamos que salvamos um novo ShoppingList com tax_rate de 0.0, ou seja, zero de imposto.
+Na mesma lista gravamos um ShoppingItem de price igual a 10.0 e quantity de 5 o que nos dá um total de 50.0.
+Salvamos outro ShoppingItem de price igual a 15.0 e quantity de 3 o que nos dá um total de 45.
+Portanto o total da ShoppingList será de 95.
+
+Até aqui tudo bem. Agora, na aplicação, queremos editar novamente a lista e mudar o tax_rate para 0.1 (10%). Isso deveria aumentar o total para 104.5. Porém ao mandar salvar, o total continua inalterado em 95.0!
+
+Mais estranho, é que se mandar editar novamente, o campo tax_rate vai aparecer corretamente como 0.1 e, sem alterar nada, se mandar salvar novamente, agora sim o valor total vai aparecer alterado para 104.5!
+Esse é o comportamento estranho que o usuário vai perceber: "Funciona quando mando salvar duas vezes."
+
+Do ponto de vista do código isso acontece porque o valor do novo tax_rate é atualizado na primeira instância de ShoppingList que é puxado pelo controller, mas no callback de before_save cada um dos ShoppingItem puxa novamente do banco o ShoppingList e faz o cálculo com o tax_rate antigo que veio do banco. O total, portanto, permanece inalterado e só em seguida é que o novo tax_rate é gravado no banco. Por isso que se tentar salvar novamente, agora ele refaz o cálculo usando o tax_rate que foi salvo por último.
+O erro é achar que quando puxamos o ShoppingList a partir da associação do ShoppingItem estamos puxando o objeto com valor alterado em memória, mas na verdade ele puxa novamente do banco.
+Identity Map
+A premissa errada é achar que porque o objeto já foi carregado uma vez em memória, outras tentativas de acessar o "mesmo objeto" deveria apontar para o objeto que já está pré-carregado em vez de puxar novamente do banco.
+Esse era justamente o cenário que se tentou corrigir com o IdentityMap. Porém sua implementação nunca ficou estável o suficiente e por isso ele acabou sendo retirado definitivamente no Rails 4.
+Portanto entenda o seguinte: dois objetos ActiveRecord, só porque possuem os mesmos valores (incluindo id), não signfica que se tratam do mesmo objeto, e atualizar ambos separadamente pode levar a inconsistências como a descrita neste artigo.
+Como Corrigir?
+Existem várias formas, mas uma delas é retirar o método #total do model ShoppingItem e delegar o cálculo complementamente para a classe ShoppingCalculator visto que em seu construtor ele recebe o objeto correto de ShoppingList com o tax_rate que acabou de ser modificado. Daí ele ficaria assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+class ShoppingCalculator
+  def initialize(shopping_list)
+    @shopping_list = shopping_list
+  end
+
+  def shopping_items
+    @shopping_list.shopping_items
+  end
+
+  def tax_rate
+    @shopping_list.tax_rate
+  end
+
+  def total
+    shopping_items.inject(0.0) do |total, item|
+      total += item.sub_total + (tax_rate * item.sub_total)
+    end
+  end
+end
+
+
+Bônus
+Esta aplicação de exemplo é muito simples, note que de propósito ele tem testes Rspec que não pegam o erro que descrevi. Fica de exercício completar os specs para cobrirem essa situação.
+Além disso notem que estou usando o Twitter Bootstrap para ter um mínimo de estilo decente, o Simple Form para facilitar a edição dos formulários (e note que ele já se integra ao Bootstrap) e, finalmente, o Cocoon que torna trivialmente simples fazer edição de múltiplos objetos ao mesmo tempo, no estilo Lista e Itens, Pergunta e Resposta, Projeto e Atividades ou qualquer tipo de associação onde se queira editar o objeto pai e os objetos filho num mesmo formulário.
+
+tags: obsolete rails
+

@@ -1,0 +1,12 @@
+
+
+
+
+Parece que faz meses que o Rails Summit passou! E eu ainda não consegui descansar. Dia 23/10 participei do evento Seccomp, na Unesp de Rio Claro. Sábado retrasado, dia 25/10 teve a InterCon 2008, onde palestrei a convite do grande Luli. E sábado passado palestrei no evento de lançamento da InfoQ Brasil, promovido pela Fratech. O Hugo Borges conseguiu capturar metade da palestra e me enviou o link, confiram:
+Akita On Rails no Lançamento do InfoQ (parcial) from hugo borges on Vimeo.
+E ainda não acabou! Hoje, dia 7/11 vou fazer um Webcast na Locaweb, ao vivo, para dar uma pequena introdução ao GIT. Quem se interessar por controle e versionamento de código moderno, não deixem de conferir.
+Daí, semana que vem, dia 14/11 estarei em Fortaleza, para o CearaOnRails. No dia seguinte, dia 15/11 vôo para São Francisco para participar da QCon, mas só para assistir. Mal retorno e já no dia 27/11 vou palestrar no Encontro de TI, promovido pela Revista WebDesign.
+E só para completar, estou assumindo mais responsabilidades dentro da Locaweb, tanto em projetos internos como em produtos para o ano que vem. Peço que todos tenham paciência porque estou tendo dificuldades em encontrar tempo até para blogar, mas pretendo reorganizar minhas tarefas o mais rápido possível e voltar com força total em alguns dias. Estou com um artigo (daqueles enormes) quase acabando e mais novidades ainda pela frente.
+Como diria um grande amigo meu: No Pain, No Gain!
+tags: obsolete conference
+

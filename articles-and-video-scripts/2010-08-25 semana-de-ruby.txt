@@ -1,0 +1,29 @@
+
+Ao mesmo tempo que eu estava numa semana atípica de eventos, o mundo Ruby também estava numa semana atípica de lançamentos.
+
+
+
+O primeiro grande lançamento foi do Ruby 1.9.2. A gerente da série 1.9 é a Yuki Sonoda, se você entende japonês siga-a no Twitter :-) A versão 1.9.1 tinha vários probleminhas chatos, mas a versão 1.9.2 evoluiu até que rápido nos meses finais antes desse lançamento. Essa é a versão considerada estável da série 1.9 e o Rails 3 suporta ele inteiramente. Novos desenvolvimentos devem usar essa versão. A partir de agora o Ruby Core Team deve ir em direção à versão 2.0.
+Alguns reclamam da forma como o Ruby é versionado porque o Ruby 1.9.2 é incompatível com a antiga série 1.8, portanto poderia ter sido já chamada já de 2.0. A versão 1.9.1 seria a versão de “desenvolvimento” e o 1.9.2 agora é a “estável”. Mas o Ruby não segue bem o padrão de número ímpar para versão instável e par para estável já que a versão estável do Ruby 1.8 é a versão 1.8.7 agora. Enfim, você se acostuma :-)
+Também foi meio estranho ser listado apenas o Debian 5 32-bits como versão oficialmente suportada, faltando suporte oficial à versão 64-bits também. De qualquer forma, ele funciona bem na maioria das plataformas mais usadas. Por exemplo, recomendo que vocês usem RVM, claro, e faça:
+1
+2
+3
+
+rvm update
+rvm reload
+rvm install 1.9.2
+
+
+O Luís Lavena também já atualizou as versões de Windows e com isso você pode usar o Ruby mais recente no Windows também. Instale também o DevKit, que permite que algumas gems com extensões em C sejam compiladas a partir do código-fonte mesmo no Windows. O Luís havia me dito que a série 1.9 usava algumas APIs não otimizadas de I/O no Windows, tornando essas operações de I/O comparativamente mais lentas do que num Linux. Não sei se isso já foi corrigido ou não.
+O Ruby 1.9.2 é uma versão moderna de Ruby. Dentre as principais características, ele finalmente fecha o gap de performance em comparação a outras linguagens de script como Python e Perl, sendo bem mais competitivo.
+Falando no RVM, acho que hoje em dia não há quem pelo menos não saiba para que ele serve. E graças ao Ruby Summer of Code, ganhamos uma versão 1.0. Os créditos vão para Darcy Laycock, inclusive o codenome dessa versão é “Laycock” em sua homenagem. O RVM se tornou bem maduro, polido e com excelentes APIs. Se você ainda não usa, vale a pena tentar. Para quem é de Windows o problema é que o RVM é uma coleção de scripts de Bash. Uma alternativa é usar o Pik, que não é tão completo quanto o RVM mas deve ajudar para quem está limitado ao uso do Windows.
+Finalmente, o último grande lançamento foi o Rails 3 Release Candidate 2. O Rails 3 evoluiu muito no último ano e meio. Porém diversos problemas de última hora começaram a atrasar seu lançamento. Desde a RailsConf, em Baltimore, estamos esperando pela versão final e parece que desta vez estamos chegando perto disso.
+O Rails 3 sofreu muitos refatoramentos, ganhou muito código novo, e isso significa muita coisa que precisou amadurecer mais nos últimos meses. Em particular o novo ActiveRecord + ActiveModel teve perdas de performance, que só foram corrigidas recentemente. Além disso há dependências grandes com outros componentes como o Bundler, que levou meses para estabilizar. Para ter uma idéia de como a operação do Bundler em combinação com outras características do sistema pode ser difícil de debugar, leia este último artigo do Yehuda.
+No final, o Rails 3 conseguiu corrigir os principais pontos de lentidão, ganhou polimento em suas APIs. Componentes como o Arel e o Bundler estão se aproximando também de estar maduros o suficiente e tudo indica que em poucos dias deve sair o Rails 3 versão final. Eu não me surpreenderia se isso fosse esta semana mesmo.
+Com tudo isso, sempre vem aquela velha pergunta: “devo já começar projetos novos com Rails 3 e Ruby 1.9.2?” E a resposta simples é: “Sim!” Tecnicamente eles devem funcionar bem para a grande maioria dos casos. Muitos já estão usando Rails 3 em produção. Algumas gems e plugins não vão funcionar, porém ou os autores já estão atualizando ou você mesmo fazer uma correção normalmente não chega a ser muito complicado.
+Se você quer aprender a migrar uma aplicação Rails 2.3 para a 3.0, recomendo o Rails 3 Upgrade Handbook do Jeremy McNally e a última série de screencasts do Ryan Bates, parte 1, parte 2 e parte 3.
+Para aprender as diferenças do Ruby 1.8 para 1.9, também recomendo os screencasts da EnvyCasts, à venda via Peepcode, parte 1 e parte 2.  Além disso o Nando Vieira tem um bom e-Book com o que mudou no Ruby 1.9 que recomendo comprar.
+A comunidade Ruby/Rails está se movendo depresssa e o lançamento do Ruby 1.9.2 e do Rails 3 RC2 com certeza vão acelerar ainda mais essas mudanças.
+tags: obsolete
+

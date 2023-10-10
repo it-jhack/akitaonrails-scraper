@@ -1,0 +1,638 @@
+
+Alguns dias atrás expliquei o que são e como usar RubyGems. No final deixei algumas dicas para explorar a criação de uma Gem. Mesmo assim, da primeira vez, pode ser mais difícil entender como isso funciona, então vamos tentar explicar o básico aqui. 
+Existe um pré-requisito: você precisa entender como Ruby funciona. Assumindo que você já entende os Rubismos, vamos avançar.
+O guia oficial de RubyGems é bastante claro, ele diz:
+
+Este é um breve resumo, veja o DeveloperGuide para ver o resto.
+Digamos que temos um pacote chamado ‘rmagic’ que está na versão 2.1. Construir uma gem envolve os seguintes passos:
+
+Criar um arquivo de especificação de gem, que é código Ruby; e
+rodar gem build my.gemspec para criar o arquivo gem (rmagic-2.1.gem)
+
+A especificação contém código Ruby para criar um objeto Gem::Specification, que define toda a informação que vimos acima em Vendo uma gem instalada.
+O arquivo gem contém todo o necessário para se instalar em outro computador, incluindo a especificação e todos os arquivos de dados.
+Viram? Construir uma gem é muito fácil!
+
+
+
+De fato, é muito fácil, porém o guia acaba aí. De resto temos a documentação separada Gemspec Reference e uma menção a um DeveloperGuide que na realidade não existe e isso é desde 2006.
+Criando uma pequena Gem de exemplo
+Vamos criar um projeto Ruby que será empacotado numa Gem. Talvez aí os passos fiquem mais óbvios. O mais básico é fazer o seguinte a partir de algum Terminal/Console/Shell:
+
+mkdir rmagic
+mkdir rmagic/lib
+touch rmagic/lib/rmagic.rb
+touch rmagic/my.gemspec
+cd rmagic
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Como conteúdo do arquivo 'rmagic.rb', para fins de exemplo, coloque:
+
+--- ruby
+# rmagic.rb
+class RMagic
+        def        say_hello
+          "Hello Gem!"
+        end
+end
+
+
+E como conteúdo do arquivo ‘my.gemspec’, coloque:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+Gem::Specification.new do |s|
+  s.name = %q{rmagic}
+  s.version = "2.1"
+
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.authors = ["Fabio Akita"]
+  s.date = %q{2009-02-07}
+  s.description = %q{Gem de exemplo.}
+  s.email = ["fabioakita@gmail.com"]
+  s.files = ["my.gemspec","lib/rmagic.rb"]
+  s.require_paths = ["lib"]
+  s.rubyforge_project = %q{rmagic}
+  s.rubygems_version = %q{1.3.1}
+  s.summary = %q{Gem de exemplo.}
+end
+
+
+Agora, ainda no Terminal, no diretório rmagic, rode o seguinte:
+
+$$ gem build my.gemspec
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+O resultado que você deve ver é o seguinte:
+
+<macro:code>
+WARNING:  RDoc will not be generated (has_rdoc == false)
+  Successfully built RubyGem
+  Name: rmagic
+  Version: 2.1
+  File: rmagic-2.1.gem
+
+
+E com isso você também já construiu o arquivo ‘rmagic-2.1.gem’ que pode ser instalado assim:
+
+sudo gem install rmagic-2.1.gem
+1
+2
+3
+4
+5
+
+
+Para testar execute no Terminal:
+
+<macro:code>
+irb -rubygems
+
+
+E a partir do IRB teste sua gem assim:
+
+irb(main):001:0> require ‘rmagic’
+=> true
+irb(main):002:0> RMagic.new.say_hello
+=> “Hello Gem!”
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+Como a documentação disse. Fácil mesmo. Pronto, esse é o básico do básico para se construir uma gem.
+
+h3. Jeweler
+
+O que mostrei acima foi o jeito básico, vamos ao jeito mais interessante, usando uma gem para criar outra. Em particular, vamos criar a mesma gem usando o micro-framework "Jeweler":https://technicalpickles.com/posts/craft-the-perfect-gem-with-jeweler. Primeiro, instale-o da seguinte forma no Terminal:
+
+<macro:code>
+sudo gem install technicalpickles-jeweler
+
+
+Essa gem está no Github, então, se você não leu meu artigo anterior, garanta que tem o Github como repositório fonte antes de tentar instalar:
+
+gem sources -a https://gems.github.com
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+O Jeweler foi feito para criar Gems já preparadas para serem lançadas no Github. Para isso você precisa já ter uma conta lá, com sua chave SSH já cadastrada. Uma vez logado no website deles, vá em "Your Account" onde você encontrará seu "token". 
+
+<p style="text-align: center">!https://s3.amazonaws.com/akitaonrails/assets/2009/2/7/Picture_2.png!</p>
+
+Feito isso, configure seu git local na sua máquina desta forma:
+
+<macro:code>
+git config --global user.email fabioakita@gmail.com
+git config --global user.name 'AkitaOnRails'
+git config --global github.user 'akitaonrails'
+git config --global github.token ee...e2
+
+
+Obviamente, note que eu não coloquei meu token todo, mas garanta que você colocou o seu corretamente, com seus dados. O próximo passo é já criar um novo projeto no Github que será o repositório do seu projeto de Gem.
+
+Pronto, agora você pode criar sua gem com o comando ‘jeweler’, assim:
+
+jeweler —create-repo —summary ‘Gem de exemplo.’ rmagic_exemplo
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+
+Atenção: crie sua gem com o mesmo nome do projeto que criou no Github. No caso deste exemplo, o projeto se chama 'rmagic_exemplo'. Se tudo deu certo você verá o seguinte:
+
+<macro:code>
+        create        .gitignore
+        create        Rakefile
+        create        LICENSE
+        create        README
+        create        lib
+        create        lib/rmagic_exemplo.rb
+        create        test
+        create        test/test_helper.rb
+        create        test/rmagic_exemplo_test.rb
+        create        features
+        create        features/rmagic_exemplo.feature
+        create        features/support
+        create        features/support/env.rb
+        create        features/steps
+        create        features/steps/rmagic_exemplo_steps.rb
+Jeweler has prepared your gem in rmagic_exemplo
+Jeweler has pushed your repo to https://github.com/akitaonrails/rmagic_exemplo
+Jeweler has enabled gem building for your repo
+
+
+Pronto, isso não só criou o esqueleto da sua Gem, como ele já criou um repositório local de Git, fez o commit inicial e já fez o primeiro push para o projeto que você criou no Github. Tudo para tornar conveniente criar gems para o Github. Não se esqueça de acessar o menu “Admin” do seu projeto no Github e habilitar o checkbox “RubyGem”. Com essa flag ativada o próprio Github irá gerar a gem automaticamente para você.
+
+Agora é só desenvolver sua gem normalmente a partir do ‘lib/rmagic_exemplo.rb’. No caso, o Jeweler já cria um Rakefile com tasks para rodar testes. Ele inclui um diretório de testes (você pode escolher entre o tradicional test/unit ou o shoulda) e também já trás um diretório de features de cucumber onde você pode escrever suas histórias em linguagem humana. Se não quiser esses diretórios, basta apagá-los.
+Para usar o Jeweler siga as instruções neste tutorial. O principal diferencial realmente é a integração com o Github. Ele inclui algumas tarefas de Rake para ajudá-lo a gerenciar versões e a já subir seu código para o repositório. Segundo o tutorial, para subir versões, basta fazer assim:
+
+$ rake version:bump:patch # 1.5.1 → 1.5.2
+$ rake version:bump:minor # 1.5.1 → 1.6.0
+$ rake version:bump:major # 1.5.1 → 2.0.0
+1
+2
+3
+4
+5
+6
+
+
+Para entender isso você precisa entender o conceito de versões: Em 1.5.2, "1" é a versão major, "5" é a minor e "2" é o patch. Funciona assim: você fez um pequeno refatoramento, uma correção de bug, coisas pequenas que não alteram o comportamento da biblioteca, um patch apenas para liberar isso rapidamente é suficiente. Se for acrescentar uma pequena nova feature, um refatoramento maior ou atualizações um pouco maiores mas que, no geral, alteram pouco o comportamento padrão, é um minor. Já uma alteração de APIs, substituições mais drásticas de código, ou seja, coisas grandes, é um major. Alguns mantenedores administram suas versões um pouco diferente. Por exemplo, o Charles Nutter é mais conservador, precisou de uns puxões de orelha para sair do JRuby 1.1.7 para finalmente ir para 1.2, mas durante muitos meses ele lançava apenas 1.1.4, 1.1.5, 1.1.6, etc. Mas com o tanto de evolução realmente já merecia ter ido para 1.2 há algum tempo.
+
+E para jogar tudo no repositório do Github, também é fácil:
+
+<macro:code>rake release
+
+De qualquer forma o Jeweler é bem atrelado ao Github. Se você quer criar gems mais simples, sem se comprometer com repositórios nem nada disso, uma boa opção é o Gemhub do Diego Carrion. É bem leve, bem espartano e coloca apenas o mínimo necessário. Leiam no blog dele para entender como funciona.
+Gems no Github
+Todo arquivo gemspec tem uma lista de arquivos neste formato:
+
+rubys.files = [“lib/rmagic.rb”]
+1
+2
+3
+4
+
+
+Aí você precisa listar todos os arquivos que tem no diretório do seu projeto e que você quer que componham sua gem. Eu particularmente preferia usar a seguinte linha:
+
+--- rubys.files = Dir.glob("**/*")
+
+Esse comando busca todos os arquivos do diretório. Se você fizer uma gemspec assim e rodar o comando “gem build” na sua máquina, ela vai criar a gem. Porém, se você colocar no Github, verá que ele não vai gerar a gem automaticamente. Para entender basta ler no próprio site de gems do Github, mas como pouca gente lê, o problema é o $SAFE.
+Um arquivo gemspec é um arquivo Ruby como qualquer outro. Obviamente, o Github não vai deixar rodar coisas perigosas nos servidores deles. Por isso eles usam uma restrição que o próprio Ruby provê. O Github exige gemspec em nível $SAFE = 3 (vai até o máximo de 4), ou seja, objetos não-confiáveis não são suportados. Exemplo disso são os objetos String que estão no Array devolvido pelo comando Dir.glob que mostrei acima. Por isso você precisa descrevê-los manualmente.
+Procure na versão online do livro Programming Ruby. Este link leva direto à explicação sobre o que são Tainted Objects, ou seja, objetos criados a partir de dados lidos externamente, como o conteúdo de um arquivo externo lido via objeto File.
+Use o script abaixo (faça download num arquivo chamado github-test.rb, dê chmod +x github-test.rb):
+Com esse script você pode passar sua gemspec como parâmetro e ele lhe dirá se existe algum problema de segurança que vai impedir o Github de criar a gem. Lembre-se, só porque funciona na sua máquina não quer dizer que vai funcionar no servidor.
+Feito tudo isso, com seu projeto habilitado no Admin para gerar RubyGem, você pode checar na lista oficial do Github se sua Gem já foi criada. Esse processo será reiniciado toda vez que você subir uma atualização da gemspec com uma versão diferente da que tinha antes.
+Raio X de uma Gem
+Voltando ao primeiro exemplo, quando geramos o ‘rmagic-2.1.gem’, o que é este arquivo? Uma gem é, nada mais nada menos, que um arquivo Zip com extensão de .gem. Você pode usar quaisquer programas que descompactar Zips para abrir esse arquivo. Dentro dele teremos estes dois arquivos:
+
+data.tar.gz
+metadata.gz
+1
+2
+3
+4
+5
+6
+7
+
+
+A extensão Gz, para quem não sabe, trata-se de GZip ou Gnu Zip. Resumidamente: um Zip. Se você descompactar esse dois arquivos terá o seguinte:
+
+<macro:code>
+my.gemspec
+lib/rmagic.rb
+metadata
+
+
+No seu computador, dependendo da distribuição de Linux e como você instalou o Ruby, você terá seu repositório Gem em algum lugar. Leia meu artigo anterior para entender esses locais de instalação.
+De qualquer forma, considere que no meu computador esse diretório é o “/opt/local/lib/ruby/gems/1.8”. A partir desse diretório temos os seguintes sub-diretórios:
+
+cache – aqui ele guarda o arquivo .gem inteiro, da forma como foi feito o download, para o caso de precisar reinstalar (caso do comando “gem pristine”)
+doc – se você escreveu um código Ruby bem feito, ele usará os comentários para gerar a documentação RDoc, que ficará neste diretório
+gems – aqui ele descompacta o data.tar.gz que mencionei acima, com o nome completo da gem mais a versão (ex. rmagic-2.1)
+specifications – aqui ele guarda o arquivo de gemspec (ex. rmagic-2.1.gemspec)
+
+Aprendendo mais sobre Gemspecs
+O melhor jeito de aprender os truques de como criar uma Gemspec decente é o de sempre: pesquise em projetos de gems que já existem. Existem milhares disponíveis no Github. Acesse a página deles e veja como eles estão estruturados. Sabendo o básico que mostrei aqui, o resto é fácil. Por exemplo, vejamos a Gemspec do Paperclip :
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+
+# -*- encoding: utf-8 -*-
+
+Gem::Specification.new do |s|
+  s.name = %q{paperclip}
+  s.version = "2.2.2"
+
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.authors = ["Jon Yurek"]
+  s.date = %q{2008-12-30}
+  s.email = %q{jyurek@thoughtbot.com}
+  s.extra_rdoc_files = ["README.rdoc"]
+  s.files = ["README.rdoc", "LICENSE", ... "shoulda_macros/paperclip.rb"]
+  s.has_rdoc = true
+  s.homepage = %q{https://www.thoughtbot.com/projects/paperclip}
+  s.rdoc_options = ["--line-numbers", "--inline-source"]
+  s.require_paths = ["lib"]
+  s.requirements = ["ImageMagick"]
+  s.rubyforge_project = %q{paperclip}
+  s.rubygems_version = %q{1.3.1}
+  s.summary = %q{File attachments as attributes for ActiveRecord}
+
+  if s.respond_to? :specification_version then
+    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
+    s.specification_version = 2
+
+    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<right_aws>, [">= 0"])
+      s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_development_dependency(%q<mocha>, [">= 0"])
+    else
+      s.add_dependency(%q<right_aws>, [">= 0"])
+      s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_dependency(%q<mocha>, [">= 0"])
+    end
+  else
+    s.add_dependency(%q<right_aws>, [">= 0"])
+    s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+    s.add_dependency(%q<mocha>, [">= 0"])
+  end
+end
+
+
+Eu cortei a lista de arquivos para caber aqui mais facilmente. Como podemos ver, é mais ou menos o que já expliquei acima. As configurações acima são auto-explicatórias, basta ler. O último bloco de código, que começa com a checagem do método :specification_version é onde colocamos as dependências a outras Gems. Nesse caso vemos que o Paperclip depende do right_aws, thoughtbot-shoulda e mocha. Inclusive vemos que eles não especificaram uma versão específica de cada um deles (o que é uma má-prática, pois quando um deles for atualizado e a API quebrar, o Paperclip pode quebrar).
+De qualquer forma, o ponto importante é que o código acima parece uma duplicação mas é porque a API mudou do RubyGems 1.2 para cima. Onde antes era apenas “add_dependency” agora ficou separado em “add_runtime_dependency” e “add_development_dependency”. Isso serve para diferenciar a instalação de dependências para rodar e as outras que são necessárias para quem é desenvolvedor (como o shoulda).
+Para instalar essas dependências de desenvolvimento, você deve usar a opção “—development” no comando “gem install”. Você pode usar esse recurso de adicionar dependências para criar Gems que são apenas “pacotes” que agrupam outras Gems. É assim que o Merb é empacotado. A gem principal não tem nada, ela apenas serve para instalar todas as outras. Esse exemplo é interessante para mostrar inclusive que podemos subverter as convenções. No caso, eles não usam um arquivo Gemspec. A especificação está embutida dentro do arquivo Rakefile, que define tarefas para a ferramenta Rake.
+Uma gemspec é nada mais nada menos do que um objeto Ruby normal, instância da classe Gem::Specification. E como é um código Ruby, podemos escrever de diferentes maneiras. Veja um trecho do Rakefile do Merb com a Gemspec:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+
+NAME = "merb"
+AUTHOR = "Merb Team"
+EMAIL = "team@merbivore.com"
+HOMEPAGE = "https://merbivore.com/"
+SUMMARY = "(merb-core + merb-more + DM) == Merb stack"
+ 
+# For RubyForge release task
+RUBY_FORGE_PROJECT = "merb"
+PROJECT_URL = HOMEPAGE
+PROJECT_SUMMARY = SUMMARY
+PROJECT_DESCRIPTION = SUMMARY
+ 
+GEM_AUTHOR = AUTHOR
+GEM_EMAIL = EMAIL
+ 
+GEM_NAME = NAME
+PKG_BUILD = ENV['PKG_BUILD'] ? '.' + ENV['PKG_BUILD'] : ''
+GEM_VERSION = Merb::VERSION + PKG_BUILD
+ 
+RELEASE_NAME = "REL #{GEM_VERSION}"
+ 
+gems = [
+  ["merb-core", "~> #{GEM_VERSION}"],
+  ["merb-more", "~> #{GEM_VERSION}"],
+  ["dm-core", "~> 0.9.6"],
+  ["do_sqlite3", "~> 0.9.6"],
+  ["dm-timestamps", "~> 0.9.6"],
+  ["dm-types", "~> 0.9.6"],
+  ["dm-aggregates", "~> 0.9.6"],
+  ["dm-migrations", "~> 0.9.6"],
+  ["dm-validations", "~> 0.9.6"],
+  ["dm-sweatshop", "~> 0.9.6"]
+]
+ 
+merb_spec = Gem::Specification.new do |s|
+  s.rubyforge_project = 'merb'
+  s.name = NAME
+  s.version = GEM_VERSION
+  s.platform = Gem::Platform::RUBY
+  s.author = AUTHOR
+  s.email = EMAIL
+  s.homepage = HOMEPAGE
+  s.summary = SUMMARY
+  s.description = SUMMARY
+  s.files = %w(LICENSE README Rakefile) + Dir.glob("{lib}/**/*")
+  s.required_rubygems_version = ">= 1.3.0"
+  gems.each do |gem, version|
+    s.add_dependency gem, version
+  end
+end
+
+
+Neste exemplo, o pessoal do Merb separou todas as configurações em forma de constantes. É apenas uma escolha, não tem nem vantagem nem desvantagem relevante para diferenciá-la dos exemplos anteriores. Mas a parte que interessa é ver como em “s.files” não tem nenhum arquivo importante a não ser o Rakefile propriamente dito. Em seguida o loop onde ele adiciona todas as gems definidas no Array ‘gems’ como dependências. Neste caso, veja como eles fizeram bom uso do controle de versões para baixar qualquer gem acima de 0.9.6 mas antes de 1.0, usando o modificador “˜>”.
+Outro exemplo interessante é o servidor Thin (uma das alternativas ao Mongrel, também suportada pelo Rails). Veja um trecho dele:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+
+--- !ruby/object:Gem::Specification 
+name: thin
+version: !ruby/object:Gem::Version 
+  version: 1.1.0
+platform: ruby
+authors: 
+- Marc-Andre Cournoyer
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-02-03 00:00:00 -05:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: rack
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 0.3.0
+    version: 
+...
+description: A thin and fast web server
+email: macournoyer@gmail.com
+executables: 
+- thin
+extensions: 
+- ext/thin_parser/extconf.rb
+extra_rdoc_files: []
+
+files: 
+- COPYING
+- CHANGELOG
+- README
+- Rakefile
+...
+- ext/thin_parser/parser.rl
+has_rdoc: true
+homepage: http://code.macournoyer.com/thin/
+post_install_message: 
+rdoc_options: []
+...
+
+
+Você sabe que é um Rubista quando olha a listagem acima e sabe imediatamente do que se trata :-) Brincadeiras à parte, no mundo Ruby um formato muito disseminado é o YAML. Todo objeto Ruby pode sofrer um processo de Marshalling e Unmarshalling. Marshal é o processo de tirar uma “fotografia” do estado atual de um objeto e persistí-lo em algum formato (por exemplo, XML, JSON, YAML ou algum formato binário). O pessoal de Java deve conhecer esse processo por “Serialização”. Já Unmarshalling é o contrário: carregar o estado persistido e receber um objeto. Para quem ainda é iniciante em orientação a objetos, os objetos estão “vivos” enquanto ainda estão na memória. Desligue a virtual machine e eles deixam de existir.
+Quando você reinicia um programa, todos os objetos são criados do zero. O processo de marshalling permite persistir esses estados. É a ponta do iceberg para o processo de Objetos Distribuídos, onde você transfere o estado de um objeto de um computador a outro na rede. Muita gente costuma usar XML para isso, mas eu particularmente prefiro YAML ou JSON. Existem casos mais extremos onde formatos XML, por serem mais explícito, dão menos conflitos, mas na grande maioria dos casos, não é necessário.
+Vejamos como convertemos nosso arquivo “my.gemspec” da gem de exemplo “rmagic” em YAML. Abra um IRB e digite os seguintes comandos:
+1
+2
+3
+4
+
+# isso criará a instância de Gem::Specification
+spec = eval(File.read("my.gemspec")) 
+# isso faz o marshall do 'spec' em YAML e grava no arquivo 'my2.gemspec'
+File.open("my2.gemspec", "w") { |f| f.write(spec.to_yaml) } 
+
+
+Saindo do IRB, podemos normalmente recriar a gem desta forma:
+gem build my2.gemspec
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+O comando 'gem' é inteligente o suficiente para saber se está lendo um arquivo Ruby ou YAML, ou seja, para ele tanto faz. Somente tome cuidado com o formato YAML pois a identação faz diferença nesse formato.
+
+Ainda sobre o "thin.gemspec":https://github.com/macournoyer/thin/blob/d6334d80e2c21af8b6d9647b9ae17d687df825df/thin.gemspec acima, existe outro trecho importante:
+
+--- ruby
+...
+executables:
+- thin
+...
+
+
+No código fonte desta gem, existe um diretório ‘bin’ e dentro dele um script chamado ‘thin’. A configuração acima dirá ao comando ‘gem’ para copiar esse executável no mesmo diretório onde estiver o interpretador ruby. No meu caso será em /opt/ruby-enterprise/bin. É assim que comandos como ‘rake’, ‘rails’, ‘mongrel’, ‘cap’ e outros existem depois de instalar suas gems.
+Conclusão
+Como podem ver, criar uma Gem é realmente muito fácil. A parte mais difícil é realmente escrever um código Ruby de qualidade, bem testado e organizado. O formato gemspec é muito flexível e poderoso, permitindo criar gems super simples ou ultra-sofisticadas, com todo um sistema de gerenciamento de versões, dependências e tudo mais. Existe outro recurso mais avançado que não vou detalhar aqui: a possibilidade de assinar digitalmente sua gem usando uma certificação digital X.509. Se você sabe o que é isso, leia online, mas se não sabe, primeiro aprenda sobre PKI.
+De qualquer forma, sempre se lembre: o melhor jeito de aprender é fazendo e estudando o que os outros já fizeram. Nenhum desses dois passos é opcional pois se você apenas estudar, nunca terá prática. Mas se somente praticar, estará sempre praticando o jeito errado – você garantidamente sempre vai fazer errado da primeira vez.
+Use o Github: existem centenas de ótimas gems para explorar. Não fique no ciclo de apenas instalar, usar e reclamar. Baixe o código, estude-o, melhore-o, contribua de volta. Graças ao Git e ao Github, colaborar em open source nunca foi tão fácil.
+tags: obsolete ruby
+

@@ -1,0 +1,154 @@
+
+Yesterday I wrote about my exercises with Chef Solo. I’ve spent several hours experimenting different cookbooks, writing my own recipes, tweaking attributes, reverting snapshots of my virtual machine several times to execute everything again. That got me pretty excited as I was getting more and more confortable.
+So, as the Solo exercise was great I decided to try the full blown client-server model. And, to my surprise, it was easier than I expected.
+
+
+Now I’ve installed 2 Debian virtual machines, bare bone with the 1st CD-ROM and no optionals. I recommend that you already choose 2 different hostnames for each of them, such as “chefserver.localdomain” and “chefclient.localdomain”. Then I installed build-install and ssh from the apt repositories. Manually downloaded and installed Ruby Enterprise Edition .deb package.
+Recently, Rubygems was updated to 1.3.6 to add Gemcutter features. So you need to manually update and then install chef’s gems:
+1
+2
+
+gem update --system
+gem install chef ohai --no-ri --no-rdoc
+
+
+Just so you don’t need to switch between articles, I am going to repeat what I said in the previous article about downloading cookbooks:
+1
+2
+3
+4
+5
+
+wget https://github.com/akitaonrails/cookbooks/tarball/master
+mkdir -p /srv/chef
+cd /srv/chef
+tar xvfz ~/akitaonrails-cookbooks-2b4edeb.tar.gz
+mv akitaonrails-cookbooks-2b4edeb cookbooks
+
+
+Again, beware of the “2b4edeb” hash ID as it will change whenever I push a new commit to Github. Now, do the following:
+1
+2
+3
+4
+
+mkdir /etc/chef
+touch /etc/chef/solo.rb
+echo "file_cache_path  \"/tmp/chef-solo\"" >> /etc/chef/solo.rb
+echo "cookbook_path    \"/srv/chef/cookbooks\"" >> /etc/chef/solo.rb
+
+
+Consider that I am building up 2 virtual machines with the same configurations. If you followed my hostname suggestion above, I recommend adding the “chefclient.localdomain” IP in your chefserver /etc/hosts file and vice-versa, so that each machine can reach each other through their full domain names. This is only necessary because I will not bother installing a DNS server, but in a production setting, of course you will need a DNS server to resolve names.
+Now, for the chefserver machine, edit /etc/chef/server.json with the following:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+{
+  "bootstrap": {
+    "chef": {
+      "url_type": "http",
+      "init_style": "runit",
+      "path": "/srv/chef",
+      "serve_path": "/srv/chef",
+      "server_fqdn": "chefserver.localdomain"
+    }
+  },
+  "recipes": "bootstrap::server"
+}
+
+
+Pay attention to the server_fqdn attribute, it requires a Fully Qualified Domain Name, so “locahost” will not work, you need a full domain name. Now, in the chefclient machine, create and edit /etc/chef/client.json with the following:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+{
+  "bootstrap": {
+    "chef": {
+      "url_type": "http",
+      "init_style": "runit",
+      "path": "/srv/chef",
+      "serve_path": "/srv/chef",
+      "server_fqdn": "chefserver.localdomain",
+      "client_interval": 300,
+      "client_splay": 10
+    }
+  },
+  "recipes": "bootstrap::client"
+}
+
+
+Again, pay attention to the server_fqdn as it should point to a reachable Chef Server in the network, hence why I said to add the server domain name to the client’s hosts file.
+One caveat: Up until this version, there is a small bug with the newest JSON 1.2 gem. You need to manually remove it and downgrade to the previous version:
+1
+2
+3
+
+gem install json json_pure -v 1.1.9 --no-ri --no-rdoc
+gem uninstall json json_pure -v 1.2.0
+ohai hostname
+
+
+The last command should print out your hostname without any errors.
+Now, time to install the chefserver and the chefclient machines. This is a good opportunity to Take a Snapshot so you can revert back in case anything goes wrong. In the chefserver machine, run this command:
+1
+
+chef-solo -c /etc/chef/solo.rb -j /etc/chef/server.json
+
+
+And obviously enough, run this command in the chefclient machine:
+1
+
+chef-solo -c /etc/chef/solo.rb -j /etc/chef/client.json
+
+
+The client side should be fast, the server side should take a while. The recipes are robust enough and you should not have any problems.
+Once it’s finished, edit the /etc/chef/server.rb file. Uncomment the last two lines and add your open ID provider and open ID so you can log in.
+1
+2
+
+authorized_openid_providers   [ "https://debian.localdomain", "myopenid.com", "akitaonrails.com" ]
+authorized_openid_identifiers [ "www.akitaonrails.com" ]
+
+
+In the same file you will find a line similar to this:
+1
+
+validation_token   "ALC8rmTryYO1nAK6bdX2"
+
+
+Copy this line, edit the /etc/chef/client.rb in the chefclient machine and paste that line there. This is not really necessary but for our controlled exercise purpose, it should make things easier. Read the Securing Chef Server documentation for more information.
+Now, you open your web browser and go to https://chefserver.localdomain:4000 (considering that you registered the chefserver in your desktop hosts file too).
+
+The way chefclient is configured makes it call back home to the chefserver every 1200 seconds (20 min) with a splay of 20 seconds. The splay thing is so that if you have dozens of nodes, they don’t try to hit the server all at the same time, causing a denial of service attack in the server (thundering herd problem). The splay randomly distributes the reconnections within a 5 min range, so each node will call back within 20:00 and 20:20 since the last reconnection. In the client.json above I overrided these options to have it call back every 5 min (300 sec) with a smaller splay of 10 sec as I only have 1 node in my exercise. You should increase this interval if you have many nodes.
+When it connects back, it will validate itself with the server. So if you go to the “Registration” page in the admin app, you should see the Node already registered. Now you can go to the “Nodes” tab and Edit your client node.
+
+You will be presented to a list of available recipes and a Run List box. You can drag and drop individual recipes in the top thin grey bar at the top of the Run List box (that’s the droppable area). Below you will find a JSON attributes editor. You can use “Add Child” to add new nodes to configure the recipes you added just like you did manually with the previous when you edited the dna.json file.
+
+When you save the node configuration, next time the client reconnects with the server, it will push the recipes and run what you configure. You will also notice that there is a Roles box in the same page. Instead of dragging and dropping dozens of individual recipes, you can group them in a Role, such as “web server” ou “load balancer” and so forth. Read the Roles documentation.
+Now that you have a server, you can add as many node machines as you want. The default recipe installs the Chef Server over Mongrel but there are procedures for Thin, Passenger and more. Another detail: the chef-client runs as a daemon on the node machines. It will consume around ~30 MB of RAM. Depending on your usage this can be too much or it can be nothing. If you have a cheap VPS server with 360 Mb of RAM, this client alone consumes almost 10% of the available RAM. If you have a big iron server with 16 GB of RAM, the extra 30 MB of the client weights absolutely nothing. But keep in mind that the client is not cheap.
+One complain I hear a lot from some people is the concern between CF Engine and Puppet/Chef on dependencies and weight. Because CF Engine is made in C it depends on almost nothing whereas Puppet/Chef depends on a full Ruby and Gems installation to bootstrap. Another thing is that the CF Engine client is very lightweight, but a puppet or chef client will consume at least 30MB, which is not cheap.
+Again, this is convenience vs flexibility vs performance, there’s always a trade-off. That’s why you need to study these tools and the scenarios you intend to use them to better evaluate what and how to use. There is no free lunch. Chef is a light enough, very flexible configuration management tool, the installation process was easier than I thought and the recipe DSL is very expressive. I definitely intend to use it more.
+tags: obsolete rails english
+

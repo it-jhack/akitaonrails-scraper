@@ -1,0 +1,11 @@
+
+
+
+
+Pessoal, eu e o James Golick criamos um novo grupo no Reddit específico para blogs e websites brasileiros de Ruby e Rails.
+Para quem não conhece, entre no subdomínio acima (rubybr), registre-se ou logue-se se já tiver uma conta e enquanto dentro do rubybr.reddit.com, clique em submit no topo para publicar o link de um artigo do seu blog. Apenas o link e o título.
+Daí as pessoas podem assinar o feed desse grupo e todos que escrevem sobre Ruby e Rails no Brasil pode publicar seus links ali. A idéia não é publicar seu blog inteiro, mas sim os artigos que vocês acham que seja mais interessante. O Reddit, assim como o Digg.com, tem o sistema de votos: se seu link tiver abaixo de -4 votos, ele sai da lista. As pessoas podem votar para banir, etc.
+Inicialmente acho que você não pode postar mais do que um link a cada 10 minutos. À medida que seus links ficam populares você ganha pontos de “karma”, quanto mais karma, mais rápido você pode publicar seus links.
+Então peço às pessoas que votem à favor ou contra para fazer a lista mais dinâmica. O grupo é aberto: qualquer um que escreva sobre Ruby ou Rails em português, por publicar ali. Vamos lá!
+tags: obsolete
+

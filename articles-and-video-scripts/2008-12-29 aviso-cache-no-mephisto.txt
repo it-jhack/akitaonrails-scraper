@@ -1,0 +1,15 @@
+
+
+
+
+Recentemente esbarrei no blog post do Paul Gross falando de Mephisto com Phusion Passenger, mais especificamente em como as versões mais recentes do Mephisto passam a gravar cache num diretório chamado “/public/cache/unusednow.com” em vez de gravar diretamente na raíz pública “/public”. Essa mudança aconteceu depois da 0.7.×. Acabei de atualizar meu blog a partir do repositório Git do Mephisto, que deve ser versão 0.8.x unstable.
+Opa! Eu não tinha percebido isso. Eu atualizei meu Mephisto faz algum tempo e lembro que antigamente o cache ficava no /public. Isso significa uma coisa: que meu site está inteiro sendo servido dinamicamente o tempo todo! Péssimo para os recursos do servidor.
+Existem duas maneiras de se corrigir isso. A primeira é exatamente como o Paul comenta no seu blog (leiam no link acima). Porém isso só é válido se você tem acesso a editar o arquivo de configuração do Apache. Num servidor compartilhado isso Não deve acontecer (e se acontece não é uma boa coisa para a estabilidade do servidor). Além disso, por alguma razão, não consegui fazer funcionar via .htaccess também. O Passenger, desabilita o mod_rewrite porque toda aplicação Rails antiga pré-cria um arquivo .htaccess padrão que mapeia tudo para CGI, o que é obviamente péssimo. Existe como religar isso no Passenger mas também significa que as aplicações que tem esse .htaccess vão começar a subir com CGI, o que não é bom.
+Então, em vez de mexer no rewrite. Resolvi entender porque diabos o Mephisto transferiu tudo para esse diretório "/public/cache’. Ao que parece ele tem uma funcionalidade bastante experimental (leia-se: bugada e incompleta) para multi-sites, por isso essa diferença. Como eu não pretendo ter múltiplos sites na mesma aplicação, basta desligar a opção abaixo no arquivo “config/initializer/custom.rb”:
+
+rubySite.multi_sites_enabled = false # originalmente estava true
+
+Feito isso, não esqueça de fazer “touch tmp/restart.txt” para forçar o reinício do Passenger e pronto! Em testes básicos usando o Firebug do Firefox, a chamada à minha homepage caiu de 5 seg. para 50ms (milissegundos!). Acho que é bem considerável.
+E não se esqueça: sempre configure Page Caching nas suas páginas de maior acesso, principalmente na homepage. É razoávelmente simples, precisa entender como ele funciona, mas uma vez entendido e configurado, funciona perfeitamente e dará um aumento de ordens de grandeza em páginas altamente dinâmicas (minha homepage mesmo, tem dezenas de queries que não precisa executar o tempo todo).
+tags: obsolete
+

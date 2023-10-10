@@ -1,0 +1,364 @@
+
+Para este artigo, pressupõe-se que você já sabe como configurar DBI, como instalar FreeTDS e UnixODBC (se estiver no Linux ou Mac). Este artigo também irá utilizar o banco de dados de exemplo AdventureWorks. Siga tudo que está no meu artigo anterior para entender do que estou falando.
+Minha intenção nesta segunda parte era tentar ‘dobrar’ as convenções do ActiveRecord. Porém, pensei por um segundo e acho que isso não será muito ‘agradável’. O ActiveRecord foi criado exclusivamente para projetos green-field, ou seja, projetos que não dependem de nenhum trabalho anterior, incluindo aqui o banco de dados. Ou seja, foi feito para projetos que irão começar do zero usando as convenções do Rails.
+
+
+A melhor alternativa ao ActiveRecord é o DataMapper, que é muito mais que um simples ORM para bancos de dados relacionais. Ele possui uma poderosa infra-estrutura de plugins que permite conectá-lo a praticamente qualquer tipo de storage de dados incluindo CouchDB, além dos tradicionais MySQL e PostgreSQL. Infelizmente ainda não existe um bom adapter para MS SQL Server.
+Finalmente, nos resta outra alternativa: Sequel, que se auto-entitula “o toolkit de banco de dados para Ruby”. É provavelmente o ORM mais minimalista de todos e, pelo menos para mim, o menos intuitivo de se usar para quem ainda não está acostumado. Uma vantagem é que por baixo ele usa o Ruby-DBI e Ruby-DBD, se estiver no JRuby ele usa JDBC, Ruby-OCI8 para Oracle e assim por diante. É um verdadeiro canivete-suíço de bancos de dados para Ruby. E ele suporta MS SQL Server, tanto via DBI quanto via ADO (se você estiver usando Ruby no Windows).
+Antes de Começar
+Novamente, leia a Parte I, entenda como configurar ODBC no Linux/Mac. Importante também é configurar seu SQL Server para responder a conexões TCP na porta 1433 como também explico nesse artigo.
+Se você estiver no Windows e quiser testar o suporte a ADO, provavelmente vai precisar fazer o seguinte:
+
+Acesse o site do Ruby-DBI no RubyForge e faça download da versão 0.2.2
+Descompacte o zip e procure por lib\dbd\ADO.rb
+Crie o diretório C:\Ruby\lib\ruby\site_ruby\1.8\DBD\ADO
+Copie o arquivo ADO.rb para esse novo diretório
+
+Por alguma razão, versões mais recentes do DBI não vem mais com o ADO.rb e também por alguma razão o Ruby para Windows não vem com ele nativo. Então lembre-se de fazer isso toda vez que instalar o Ruby no Windows do zero. E, claro, preferivelmente use o One-Click Ruby Installer em vez da versão para Cygwin, pois ele costuma vir com suporte melhor ao Windows.
+Agora, não esqueça de instalar a gem do Sequel, porém neste momento (21/04/2009), existem algumas pequenas correções que precisam ser feitas no Sequel e por isso é melhor baixar diretamente do meu fork no Github:
+1
+2
+3
+4
+
+git clone git://github.com/akitaonrails/sequel.git
+cd sequel
+rake gem
+sudo gem install pkg/sequel-2.12.0.gem
+
+
+Conectando via DBI/ODBC (Linux/Mac)
+Se você fez a lição de casa, agora é simples. Para começar, vamos abrir um IRB e fazer o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+
+>> require 'sequel'
+=> true
+>> DB = "DBI:ODBC:WindowsServer", :user => "sa", :password => "admin", :db_type=>"mssql"
+=> #<Sequel::DBI::Database: "dbi:sa:admin@/DBI:ODBC:WindowsServer">
+>> DB["select count(*) as count from Person.Address"].first
+=> {:count=>19614}
+>> DB["select top 1 * from Person.Address"].first
+=> {:city=>"Bothell", :stateprovinceid=>79, ... :addressline2=>nil}
+
+
+Se você não estiver vendo a mesma coisa que está na listagem acima, das duas uma: ou você não seguiu as instruções corretamente ou está errando alguma coisa simples como a senha do seu usuário ou o DSN (no exemplo, eu usei “WindowsServer”).
+Conectando via ADO (Windows-only)
+Mesma coisa, vamos abrir o IRB e fazer o seguinte:
+1
+2
+3
+
+irb(main):015:0>  DB = Sequel.dbi 'ADO:Provider=SQLNCLI; 
+Data Source=HAL9002\SQLEXPRESS; Database=AdventureWorks; 
+Integrated Security=SSPI', :db_type => 'mssql'
+
+
+Neste exemplo estamos conectando usando o driver nativo do SQL Server e autenticando usando o usuário que está logado no momento (99% de chances que você está rodando como o Administrador :-). Mas se quiser logar como um usuário nomeado sem integração SSPI, faça assim:
+1
+2
+3
+
+irb(main):015:0>  DB = Sequel.dbi 'ADO:Provider=SQLNCLI; 
+Data Source=HAL9002\SQLEXPRESS; Database=AdventureWorks; 
+UID=sa; PWD=admin', :db_type => 'mssql', :db_type => 'mssql'
+
+
+Logo em seguida, não esqueça de configurar o seguinte também:
+1
+2
+3
+4
+
+irb(main):003:0> db.identifier_input_method = nil
+=> nil
+irb(main):004:0> db.identifier_output_method = nil
+=> nil
+
+
+Pequeno Gotcha com SQL Server
+Ainda no IRB, podemos tentar fazer o seguinte:
+1
+2
+
+>> DB[:"Person.Address"]
+=> #<Sequel::DBI::Dataset: "SELECT * FROM [PERSON].[ADDRESS]">
+
+
+Como vamos nos lembrar do artigo anterior, estamos testando com o banco de dados AdventureWorks. Por alguma razão estranha, esse banco (para a versão 2005 pelo menos) usa o collate Latin1_General_CS_AS, ou seja “Case Sensitive”. Agora, olhando o SQL que o Sequel gerou acima vemos que ele fez o nome da tabela ficar em caixa alta. Isso dará um erro do tipo:
+1
+
+Invalid object name 'PERSON.ADDRESS'.
+
+
+Para corrigir isso temos que fazer o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+
+>> DB.identifier_input_method = nil
+=> nil
+>> DB[:"Person.Address"]
+=> #<Sequel::DBI::Dataset: "SELECT * FROM [Person].[Address]">
+>> DB[:"Person.Address"].first
+=> {:addressline2=>nil, :rowguid=>"9AADCB0D-36CF-483F-84D8-585C2D4EC6E9", 
+:city=>"Bothell", :stateprovinceid=>79, :postalcode=>"98011", :addressid=>1,
+ :modifieddate=>"1998-01-04 00:00:00 0", :addressline1=>"1970 Napa Ct."}
+
+
+Como podem ver, configurando o ‘identifier_input_method’ para nil resolveu esse problema. Mas executando o SQL e recebendo a primeira linha como no exemplo acima, vemos outro problema: as chaves que identificam os nomes das colunas estão todas em minúsculo, isso dará problemas se depois quisermos re-enviar esse mesmo hash para criar outra linha no banco, por exemplo, pois ele espera receber “PostalCode” e nao “postalcode”, por exemplo. Então temos que também fazer isto:
+1
+2
+3
+4
+5
+6
+
+>> DB.identifier_output_method = nil
+=> nil
+>> DB[:"Person.Address"].first
+=> {:PostalCode=>"98011", :rowguid=>"9AADCB0D-36CF-483F-84D8-585C2D4EC6E9", 
+:AddressID=>1, :AddressLine1=>"1970 Napa Ct.", :ModifiedDate=>"1998-01-04 00:00:00 0",
+ :AddressLine2=>nil, :City=>"Bothell", :StateProvinceID=>79}
+
+
+Agora sim, a entrada e saída estão corretos. Neste momento não pretendo escrever sobre todas as funcionalidades do Sequel, por isso recomendo começar pelo Cheat-Sheet do próprio site oficial.
+Sequel no Rails
+Agora podemos começar a testar a integração do Sequel num projeto Rails. Mais uma observação: neste exato momento, as equipes do Rails Core e Merb Core estão trabalhando num projeto chamado ActionORM, que ainda está em desenvolvimento no branch do Yehuda Kats. Ou seja, até a versão 2.3.x o Rails é bastante dependente do comportamento do ActiveRecord.
+Porém, existem “workarounds” para esse problema. Mas você tem outra escolha: pode escolher usar o Sequel em conjunto com o ActiveRecord ou então usar apenas o Sequel e desativar totalmente o ActiveRecord (e nesse caso, significa não contar mais com o config/database.yml, com migrations, etc). Farei uma recomendação mais no fim do artigo, por enquanto, se a intenção é usar somente o Sequel, podemos fazer o seguinte também no config/environment.rb
+1
+
+config.frameworks -= [ :active_record ]
+
+
+Isso deve desativar o ActiveRecord. Para continuar, crie um arquivo chamado config/initializers/sequel.rb e acrescente o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+
+Sequel.identifier_input_method = nil
+Sequel.identifier_output_method = nil
+# habilita plugin de validação
+Sequel::Model.plugin :validation_class_methods
+
+DB = case Rails.env
+when "development"
+  Sequel.dbi "DBI:ODBC:WindowsServer", 
+    :user     => "sa", 
+    :password => "admin", 
+    :db_type  =>"mssql"
+when "test"
+  Sequel.dbi "DBI:ODBC:WindowsServer", 
+    :user     => "sa", 
+    :password => "admin", 
+    :db_type  =>"mssql"
+when "production"
+  Sequel.dbi "DBI:ODBC:WindowsServer", 
+    :user     => "sa", 
+    :password => "admin", 
+    :db_type  =>"mssql"
+end
+
+require 'sequel_model'
+
+
+Digamos que isso é um primo-pobre do config/database.yml, que é um arquivo que o Sequel não entende nativamente. Continuando o “workaround”, crie um arquivo chamado lib/sequel_model.rb e coloque o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+class Sequel::Model  
+  # Allows Rails resource path helpers to work correctly
+  def to_param
+    pk.to_s
+  end
+  
+  # Make new? play nice with Rails
+  def new_record?
+    new?
+  end
+end
+
+
+Isso conclui nossos “workarounds”. Agora vamos testar com alguns models. Para começar, crie manualmente um arquivo app/models/production_product.rb com:
+1
+2
+3
+4
+5
+6
+7
+
+class ProductionProduct < Sequel::Model
+  set_dataset DB[:Product.qualify(:Production)]
+  set_primary_key :ProductID
+  many_to_one :production_product_subcategory, :key => :ProductSubcategoryID
+  
+  validates_presence_of :ProductNumber, :Size, :Weight
+end
+
+
+E crie app/models/production_product_subcategory.rb com:
+1
+2
+3
+4
+5
+
+class ProductionProductSubcategory < Sequel::Model
+  set_dataset DB[:ProductSubcategory.qualify(:Production)]
+  set_primary_key :ProductSubcategoryID
+  one_to_many :production_products, :key => :ProductSubcategoryID
+end
+
+
+Somente com isso, podemos tentar entrar no script/console e testar coisas como estas:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+
+# select count(*) as count from [Production].[Product]
+>> ProductionProduct.count
+=> 504
+
+# Sequel tem uma sintaxe muito legal para critérios
+>> ProductionProduct.where(~{:ProductSubcategoryID => nil})
+=> #<Sequel::DBI::Dataset: "SELECT * FROM [Production].[Product] 
+=> # WHERE ([ProductSubcategoryID] IS NOT NULL)">
+
+>> ProductionProduct.where(~{:ProductSubcategoryID => nil}).first
+=> #<ProductionProduct @values={:SellEndDate=>nil, ... :Color=>"Black"}>
+
+# Associações funcionam basicamente como se espera
+>> ProductionProduct.where(~{:ProductSubcategoryID => nil}).first.
+production_product_subcategory
+=> #<ProductionProductSubcategory @values={:ProductCategoryID=>2, 
+=> #:rowguid=>"5515F857-075B-4F9A-87B7-43B4997077B3", ... :ProductSubcategoryID=>14}>
+
+>> ProductionProductSubcategory.first
+=> #<ProductionProductSubcategory @values={:ProductCategoryID=>1, 
+=> #:rowguid=>"2D364ADE-264A-433C-B092-4FCBF3804E01", ... :ProductSubcategoryID=>1}>
+
+# Temos acesso direto ao objeto Dataset por baixo
+>> ProductionProductSubcategory.first.production_products_dataset
+=> #<Sequel::DBI::Dataset: "SELECT * FROM [Production].[Product] WHERE 
+=> #([Production].[Product].[ProductSubcategoryID] = 1)">
+
+# Com o Dataset podemos fazer muitas coisas
+>> ProductionProductSubcategory.first.production_products_dataset.count
+=> 32
+
+# Sequel conta com alguns plugins, como validações
+>> p = ProductionProduct.new
+=> #<ProductionProduct @values={}>
+>> p.valid?
+=> false
+>> p.errors
+=> {:ProductNumber=>["is not present"], :Size=>["is not present"], 
+:Weight=>["is not present"]}
+
+
+Não espere que o Sequel funcione exatamente igual ao ActiveRecord, nem ao DataMapper. Ele segue outra filosofia, por exemplo, validações são opcionais (habilitadas somente como plugin). Enquanto a filosofia do DHH é que o model seja o dono de toda a lógica e o banco deve ser apenas um mero storage, a filosofia do Jeremy Evans (o criador do Sequel) é o oposto: o banco deve cuidar de tudo, portanto validações devem estar no schema da tabela, coisas mais complexas devem ser triggers, validações de associações deve ser via constraints e foreign keys, single table inheritance (que também é um plugin) não deve ser recomendado pois viola a integridade relacional, etc. Na realidade é mais próxima do discurso de um DBA tradicional.
+Mas não se engane, o Sequel tem opções para configurar muita coisa fora do comum. Eu mostrei nos exemplos acima, que posso definir uma chave primária diferente de “id” ou chaves estrangeiras que não seguem a convenção de nomenclatura do Rails. Na realidade, o ActiveRecord do Rails também permite configurar isso.
+Em vez de “has_many” temos “one_to_many” em vez de “belongs_to” temos “many_to_one”. Na realidade, o que o Sequel faz é não ter muitas das “mágicas” e premissas do ActiveRecord – que para projetos green-field ajudam bastante. Por exemplo, colunas “updated_at” e “created_at” que se preenchem sozinhas.
+Leia toda a documentação do Sequel para entender as diferenças. Vale a pena dar uma fuçada no código-fonte também. Não é muito difícil de entender as partes principais.
+De qualquer forma, ainda há alguns problemas que encontrei no adapter específico de MS SQL Server. Algumas coisas pequenas eu corrigi no meu fork, mas algumas coisas ainda preciso pensar melhor como resolver. Em especial dois problemas meio chatos:
+
+O adapter não tem implementado conversão de tipos por isso coisas como campos de timestamp retornam como string em vez de retornar como uma instância da Time ou TimeWithZone.
+
+
+Tem um bug – que ainda não sei se é falta de configuração ou bug – onde uma tentativa de alterar um model já existente e salvar (update) está dando erro pois ele está tentando salvar novamente o campo de ID. Como a maioria das tabelas de SQL Server usa chave primária auto-incremental, isso dá erro.
+
+Conclusão
+Depois vou fuçar mais o Sequel e talvez escrever mais um artigo e ver se consigo completar algumas das coisas que faltam ao adapter de SQL Server (alguém se habilita a colaborar?).
+Por enquanto eu diria que meu objetivo em encontrar um ORM que minimamente se conecte ao SQL Server é para servir como um “meio-do-caminho”. Eu usaria em duas situações apenas:
+
+Quando eu precisar fazer um sistema que vai tomar o lugar de um legado que usa SQL Server e, nesse caso, quero fazer código em Ruby para migrar os dados do SQL Server para um PostgreSQL, por exemplo. Ou seja, em cenários de ETL (Extract-Transform-Load).
+
+
+Quando eu quiser integrar com uma base de dados legado em SQL Server que estará basicamente em modo “read-only”, ou seja, minha aplicação normal terá models em ActiveRecord mas terá alguns poucos models em Sequel que servem apenas para consultar os dados antigos.
+
+Ou seja, eu não usaria para criar um novo projeto em Rails que usa tabelas pré-existentes de SQL Server. Se eu precisar fazer um projeto green-field em Rails + SQL Server, então eu usaria o adapter específico de ActiveRecord. Eu só usaria o Sequel para SQL Server nas situações que expliquei acima, apenas read-only.
+Agora, se eu quiser usar Rails + Sequel para MySQL, PostgreSQL já seria uma opção interessante para read-write pois acredito que esses adapters já estejam muito mais maduros e aí sim, daria para usar tabelas “legadas” desses bancos para continuar evoluindo. Mas nesse caso não sei se já não iria diretamente para DataMapper. De qualquer maneira existem outros legados em Firebird ou Informix que vale a pena avaliar como está a qualidade dos adapters.
+Além disso não se esqueça que existe adapter de JDBC, portanto para projetos JRuby, onde eu queira um ORM bem leve, esta é outra opção.
+Portanto, usuários de MS SQL Server, nem tudo está perdido :-) Aos poucos vamos migrar esses bancos para opções open source melhores. Mas, claro, nem tudo é simples assim. Se você depende de SQL Server Analysis Services, soluções proprietárias de relatórios, Sync Server, aí a coisa é mais embaixo. Nesse caso, quando não há chance de se livrar do banco por um bom tempo, só nos resta conviver com ele. Para isso invista o máximo possível em projetos green-field que dependem menos e menos desse banco, criando bancos separados, integrando apenas read-only ou via web services que sirvam como Anti-Corruption Layer
+De qualquer forma, acho que para meus objetivos pessoais, pelo menos, isso já é um começo. Espero que os ajude em seus projetos.
+Finalmente, agradecimentos ao Jeremy Evans que respondeu minhas dúvidas prontamente.
+tags: obsolete rails
+

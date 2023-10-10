@@ -1,0 +1,36 @@
+
+Estive pensando, que tal um encontro de Rails em Sampa?
+Não estou pensando em nada grande, talvez alguma coisa um pouco maior do que um BarCamp :-) Se possível alugar algum lugar que tivesse possibilidade de ter pelo menos um projetor pra ligar um notebook.
+Mas antes eu gostaria de saber se há pessoas o bastante interessadas para ajudar no custo, nada muito caro mesmo. Se vocês tiverem interesse, assinalem no poll abaixo:
+
+
+
+Take the pollFree Poll by Blog Flux
+
+
+Take the pollFree Poll by Blog Flux
+
+
+
+Estou aberto a sugestões. Não necessariamente uma palestra ou workshop mas algo mais interativo para trocar experiências. O que vocês acham?
+
+
+Update – 6 horas depois: O feedback pela comunidade está muito bom! Em 6 horas quase 40 pessoas já clicaram “Yes” acima. Continuem clicando e comentando! Se todos puderem mesmo comparecer já daria um ótimo encontro.
+Esqueci de explicar o conceito que tenho em mente. Eu gostei muito do estilo RejectConf que aconteceu nas últimas duas RailsConf US e EU. Em vez de um grande show, com centenas de pessoas assistindo a várias palestras de grandes nomes, a RejectConf foi um evento underground “não-organizado”, vamos dizer, onde todos que estavam assistindo poderiam participar também. Literalmente ter seus 15 minutos de fama e ao mesmo tempo dividir com todos no que estavam trabalhando ou estudando. Pode ser uma ótima chance de compartilhar conhecimentos de maneira descontraída.
+Por enquanto é apenas uma idéia na minha cabeça, mas se o suporte de todos se mantiver, vamos ver onde conseguimos chegar. Eu já fiz algumas ligações e estou esperando algumas respostas, mas enquanto isso se alguém souber de algum lugar em Sampa, de preferência perto de metrô para quem não tem carro, que tenha um auditório ou outro local com projetor e com preço razoável, não deixe de indicar!
+Continuem comentando. Que dia da semana, que horário seria indicado? E quem quiser participar vá preparando seus notebooks, meia dúzia de slides e muita vontade de discutir e dividir idéias ;-)
+Update – 1 dia depois: Pessoal, o feedback está sendo maior do que eu esperava, pelo menos 70 pessoas já disseram “Sim” na enquete.
+Recebi idéias muito boas por e-mail, pessoas se colocando para colaborar, idéias de bons locais acessíveis.
+Agora vem a segunda parte: quem quer participar como palestrante?
+Minha idéia:
+
+Apresentações com slides para 15 a 30 minutos
+Qualquer tema relacionado a Rails. Não precisa ser um case. Pode ser alguma técnica que acha legal no Rails. Pode ser algum plugin, algum gem.
+As pessoas poderão interromper à vontade, discutir o tema em tempo real.
+Postar como comentário aqui para que eu possa organizar. Assim não teremos temas repetidos e eu poderei saber se será um evento de poucas horas ou se terá temas (e pessoas) suficientes para um dia inteiro, quem sabe.
+
+Pensem bem, não precisa responder agora. Enquanto eu ainda não defino uma data, está valendo! Qualquer um pode participar. Nem precisa ser de Sampa, se quiser vir aqui de outro Estado ou Cidade, serão bem vindos.
+Assim que tiver mais detalhes, vou postando aqui.
+Update – 1 dia e 3 horas depois: Pessoal, ultrapassamos a marca de 90 votos na primeira enquete, muito bom! E agora coloquei uma nova enquete lá em cima para saber qual o dia que a maioria prefere para o encontro. Eu acho que já sei a resposta :-) Mas não custa perguntar. E estamos fracos de candidatos a palestrantes! Não se acanhem! Todo mundo tem a algo a dizer, é só falar. Eu falo demais, precisa de mais gente pra me deixar quieto hehe.
+tags: obsolete rejectconf
+

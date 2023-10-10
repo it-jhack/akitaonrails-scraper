@@ -1,0 +1,9 @@
+
+
+
+
+Agora falta pouco. Segundo os posts de Charles Nutter e Thomas Enebo esta versão Release Candidate 3 é praticamente a mesma que será entregue como 1.0 final.
+O que pode mudar daqui até lá são pequenas correções. Esta versão é muito importante, daqui para frente isso marcará a transição de aplicações Rails feitas inteiramente para rodar em ambiente Java.
+A ThoughtWorks lançou seu produto Mingle, que deve rodar inteiramente sobre JRuby com a promessa de suporte 24/7 a esta plataforma. Os thoughtworkers estão a todo vapor.
+tags: obsolete jruby
+

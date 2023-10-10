@@ -1,0 +1,12 @@
+
+
+
+
+Para quem precisar de material para apresentar para gerentes, colegas ou qualquer outro formador de opinião, podem usar este material em formato PowerPoint (PDF PPT).
+Para apresentar para colegas ou comunidades mais técnicas, nos posts abaixo deixei dois PDFs apresentando Rails e a linguagem Ruby.
+E se alguém conseguir juntar turmas para palestras, workshops ou o que mais em São Paulo, podem tentar me contactar, sempre que possível tentarei ajudar.
+Peço ajuda a todos para divulgar Ruby on Rails ao máximo. Não se intimidem com pseudo-argumentos como “Ruby é lento”, “Rails não serve em corporações”, “Ruby é só mais um PHP” e bobagens deste tipo. Para cada argumento temos um contra-argumento convincente. Os americanos e europeus já passaram por essa fase desde o começo de 2005, e Rails continua crescendo cada vez mais forte, o que é prova que esses “argumentos” não passam de uma coisa: preguiça de quem não quer aprender algo mais novo e melhor. É o primeiro sinal de se tornar obsoleto.
+Não percam tempo em Guerras Ideológicas, não é esse o foco. Rails não veio para substituir Java ou quem for em todos os lugares. Com certeza, não veio para desbancar EJBs. Não, o foco são aplicativos Web. Não somente web sites mas “aplicativos” mesmo, principalmente os que usamos em intranets e extranets, apesar de termos excelentes exemplos de web sites estilo Web 2.0 de sucesso como Odeo e 43Things.
+Colaborem! Dica: existem muitas comunidades e mailing lists Java, Linux e PHP onde podemos divulgar a tecnologia e insitar discussões produtivas (Lembrem-se: sem flame wars!)
+tags: obsolete presentation
+

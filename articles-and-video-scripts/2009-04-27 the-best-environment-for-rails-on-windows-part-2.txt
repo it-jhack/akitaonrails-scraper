@@ -1,0 +1,64 @@
+
+Update Jul/2016: Microsoft has just released the Windows 10 Anniversary Edition and it comes with the very good “Bash on Ubuntu on Windows”. You can use this instead. This post is now obsolete and you should read my latest The Year of Linux on the Desktop: It’s Usable!
+If you’re a Windows user new to this article, I recommend you start reading my original The Best Environment for Rails on Windows article from a few months ago, so you know what I am talking about.
+Assuming you already have the Exuberant CTags and msysGit installed as described in my original article, then, once you get to the “Configuring gVim for Rails” section, you can avoid all those steps and just do this (on Windows):
+1
+2
+3
+4
+5
+6
+
+cd %HOME%
+git clone git://github.com/akitaonrails/vimfiles.git
+cd vimfiles
+git submodule init
+git submodule update
+copy vimrc ..\_vimrc
+
+
+If you’re on Mac OS X or Linux you can do:
+1
+2
+3
+4
+5
+6
+
+cd ~
+git clone git://github.com/akitaonrails/vimfiles.git .vim
+cd .vim
+git submodule init
+git submodule update
+ln -s ~/.vim/vimrc ~/.vimrc
+
+
+I don’t quite remember all the shortcuts, but the ones that you will immediatelly need are:
+1
+2
+
+Ctrl-F    Open up FuzzyFinder (similar to Textmate Command-T)
+\-P       Open up Nerd Tree (similar to the Project Pane in Textmate)
+
+
+If you’re a developer that had previously forked from my vimfiles repository, keep reading.
+
+
+Git Conflicts
+A few months ago I had forked from scrooloose’s repository and added several modifications, including a new set of snippets for the NERDSnippet plugin and configurations to respect Windows file path differences.
+Scrooloose accepted my changes but instead of properly merging them into his repository, he copied the changes and made major changes to his repository. He decided that it would be better for maintenance to have the ‘snippets’ sub-directory be a separated git project, which is now here in Github. Then he replaced the original ‘snippets’ folder for a git submodule, linking both projects together.
+Having no common ancestor no more, I was unable to easily merge back from his changes. I was getting this error whenever I tried to git pull —rebase or git pull -s resolve:
+1
+2
+3
+
+fatal: cannot read object c1a25b84627516da46b6c375f4dc874deedbb597 
+'snippets~a4c30e94d52232e958d4f53c6a633ed438c54bcc': 
+It is a submodule!
+
+
+The actual commit refs are different, but this is the error message I was getting. Unfortunately I am no Git-expert yet so I didn’t know if there’s a better solution for this problem. So, what I ended up doing was hard resetting back to commit 7e2366c20fb19b5709369e77aa3bc095a869e1ce, which was the last known common ancestor for our repos. Then I git pulled from scrooloose, which brought me back on track with his, but also made me lose all my custom changes.
+But as most of my work was on the snippets and he already merged them into the separated project, I decided I could lose my commits. Finally I manually added minor tweaks into just 3 files to make them compatible with Windows again and adding a little bit more of eye-candy for GUI-mode on Windows, Mac and Linux.
+If someone knows how to resolve this kind of situation in git without having to resort to those drastic measures, please let me know, I still don’t know how to handle submodule situations with git. I hope this doesn’t disrupt too much of your work if you were forking from me.
+tags: obsolete windows
+

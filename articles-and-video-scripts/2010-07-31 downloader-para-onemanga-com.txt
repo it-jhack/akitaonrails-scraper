@@ -1,0 +1,32 @@
+
+Atualização: Agora já é tarde, o OneManga encerrou suas operações no dia 30/07. Você ainda pode pegar estes scripts e atualizar para outro site similar. Fork it!
+Se você é leitor de manga deve conhecer o site One Manga, um dos maiores sites de fansubbers de manga. Fiquei sabendo ontem que o site vai fechar as portas devido à maiores restrições das editoras norte-americanas.
+
+Há algum tempo atrás eu fiz um pequeno script em Ruby para baixar os mangas que eu leio pois preferia ler offline (não gostava de ficar esperando uma página ficar carregando de cada vez). Aproveitando acabei de fazer outro que gera um PDF com as imagens para poder ler do meu iPad ou Kindle.
+Não demorem! Em breve não haverá mais o site e o conteúdo dele vai se perder!
+
+
+Coloquei os dois scripts como Gists no Github, dêem uma olhada. Note que ambos tem uma variável que guarda o diretório onde você vai salvar os mangas. Por padrão, no meu Mac estou deixando na pasta “Documents/OneManga”, mas você pode modificar isso nessa linha:
+1
+
+manga_download_folder = File.join(ENV['HOME'],"/Documents/OneManga/")
+
+
+Para usar é simples, basta fazer:
+1
+
+ruby onemanga_download.rb City_Hunter 10
+
+
+Isso vai baixar o manga “City_Hunter” a partir do capítulo 10. Se não colocar capítulo ele vai começar do primeiro e vai até o último. Se rodar sem parâmetro algum, o script vai checar os mangas que você já baixou e pesquisar no site para ver se tem novos capítulos.
+Depois, para gerar PDFs, basta fazer:
+1
+
+ruby onemanga_pdf.rb City_Hunter 10 30 100
+
+
+Isso vai gerar 10 arquivos PDFs (volumes), a partir do capítulo 30 até o 100. Os dois últimos parâmetros são opcionais também.
+Se você está aprendendo Ruby, estes scripts devem ser fáceis de entender. Para baixar as imagens estou usando a gem Mechanize que navega pelo site como se fosse um browser. E para gerar os PDFs estou usando o Prawn. Esses scripts são bem “crús”, tem muito que poderia melhorar, mas eles estão no estilo “a coisa mais simples que funciona”.
+Divirtam-se!
+tags: obsolete ruby
+

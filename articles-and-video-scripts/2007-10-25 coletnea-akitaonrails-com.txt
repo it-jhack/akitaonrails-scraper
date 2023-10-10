@@ -1,0 +1,99 @@
+
+Do ano passado para cá eu escrevi, e escrevi bastante! Fiz traduções de vários artigos que quis compartilhar, debati assuntos polêmicos, tentei quebrar preconceitos e abrir os olhos dos leitores. Acho que está num bom momento para uma repescagem. Muitos novos leitores provavelmente ainda não leram tudo e esta é uma boa chance de reler.
+Lembrando: as traduções estão marcadas no título como tal – não fui eu quem escreveu o original mas se traduzi significa que compartilho e defendo as mesmas opiniões. Obviamente muitos dos títulos tem efeito ‘chamativo’. Em alguns casos não dá para deduzir o conteúdo do artigo apenas pelo seu título. Dê uma chance ao artigo. Também recomendo muito ler os comentários (nunca apaguei o de ninguém): existem artigos onde eu praticamente escrevi sub-artigos inteiros como comentários e isso ajuda a complementar minhas idéias.
+
+
+Para iniciantes
+Para os recém-chegados, realmente é muito complicado saber como começar. Ainda existem muitas farpas pelo caminho do Rails. Estes artigos podem ajudar. Também recomendo vascular o site www.rubyonrails.com.br
+
+Conselhos para Iniciantes em Ruby (entrevista que o Satish Talim, da Índia, fez comigo)
+Rails Manifesto (para começar a entender a “filosofia” por trás do Rails)
+Evolução pela Concorrência (porque é importante ter opções)
+
+
+Tradução: 10 coisas que todo programador Java deve saber sobre Ruby (apresentação com algumas dicas para quem já é programador Java)
+Entendendo Rails (mais uma pincelada sobre como começar em Rails)
+Ruby on Rails no Brasil (alguns slides demonstrando que o mercado de Rails é viável)
+Flame War: Joel Spolsky VS Rails (a voz do Joel apenas ecoou as críticas de vários outros grupos contra Rails. Veja aqui porque elas são falsas)
+A Polêmica Twitter (a trajetória do Rails é cheia de polêmica e neste caso em particular chamou muita atenção porque a polêmica acabou, cresceu muito rápido e foi resolvida no dia seguinte!)
+Advento Rails Rubyisms (várias dicas interessantes sobre Rails)
+Tradução: Uma Ótima Época, Oh Yeah! (retrospectiva de fim de ano)
+Arquitetura RADAR: Aplicações RESTful, Recebedor Trivial (comece a entender os conceitos por trás de REST)
+Hanselminutes: Entrevista com David Hansson e Martin Fowler (acho que esta é uma das melhores entrevistas)
+Jogar Pedra em Gato Morto: por que Subversion não presta (não levem o título ao pé-da-letra, o assunto é GIT e repositórios descentralizados)
+GIT: Muito Promissor
+
+Quebrando Paradigmas
+Não gosto de nada “empurrado”, mal explicado. O mundo está cheio de argumentos-de-venda – que não são verdadeiros argumentos -, apenas slogans do tipo “faça assim”, “o melhor jeito é desse jeito”. Onde estão os “por quês”? Um fator importante de crescimento e evolução é praticar seu ceticismo e questionar. Não é simplesmente ser contra por ser do contra, mas de levantar questionamentos e buscar respostas.
+
+Tradução: Design Patterns representam defeitos nas Linguagens (um 
+convite a repensar os Design Patterns e não apenas aceitá-los como doutrina)
+Tradução: GoF Design Patterns – Sobreviveu ao teste do tempo?
+Tradução: MVC vs Model 2 (todos falam de ‘MVC’ mas poucos entendem o que realmente significa)
+Tradução: Pai do Unified Process diz ‘Chega de Processos’ (mais um convite para retirar a doutrina das metodologias de desenvolvimento)
+Tradução: Contar é Perda de Tempo (uma anedota engraçada)
+Por que Testar? (felizmente testes hoje em dia não é mais algo tão exotérico e impensável)
+Tradução: Perl está morto. Longa vida ao Perl. (sim, Ruby não é a única coisa do mundo, é mais uma alternativa e um não elimina o outro. Por exemplo, Perl está vivo e bem)
+Tradução – Programação Orientada a Linguagem: um passo evolucionário além de orientação a objetos? (Martin Fowler nos convida a pensar num paradigma diferente e complementar ao OOP)
+Imagem Utópica de Software Livre e Código Aberto do Brasil em Risco (apenas porque alguma instituição evangeliza uma idéia não quer dizer que ela a siga)
+Quick and Clean (todos sabem fazer ‘Quick and Dirty’. Aliás, é um dos lemas de Perl. O que fazer para ser ‘Quick and Clean’?)
+Um Desabafo (uma reclamação pública contra os programadores procrastinadores e acomodados)
+Um Desabafo, parte II (um aviso a todos os que trabalham como consultores ou autônimos)
+Heresia e Tartarugas com Avi Bryant (parte 1 de uma série que foi muito interessante, uma discussão saudável com o Ronaldo Ferraz. Foi acirrada, foi empolgante, foi disputada e – o mais importante – trouxe bons argumentos, informações e assuntos novos à mesa. Discutir com pessoas inteligentes sempre é legal.)
+100% pure Object-Oriented: The Fallacy (parte 2)
+“class Ruby < Smalltalk”:https://www.akitaonrails.com/2007/9/5/class-ruby-smalltalk (parte 3)
+
+Inspiração
+Acho que estes são os artigos que eu pessoalmente mais gosto. São apresentações de idéias. Sou totalmente contra doutrinas. Sou totalmente contra fazer as coisas sem saber porque. Afirmações não nascem do nada: tudo tem um raciocínio lógico por trás. Praticar o ceticismo é uma coisa altamente saudável. E claro, só porque eu disse, não quer dizer que estou correto :-)
+
+Seja Arrogante! (não há desculpa para não aprender coisas novas. Acho que este é um dos meus artigos favoritos)
+A Falácia do Custo Perdido (um dos maiores erros do nosso cotidiano)
+Inimigos da Razão (aprenda a raciocinar, argumentar e não ser enganado)
+Pálido Ponto Azul (apenas uma citação, mas mesmo assim, inspirador)
+Leopard no Brasil em 26/10! (a falácia do market share e porque a Apple é mais relevante do que nunca)
+Para eu ganhar, o outro precisa perder … (Não seja um bola-murcha. Inveja é um ótimo motivador de crescimento, mas é uma faca de dois gumes porque ela também pode levá-lo para baixo)
+Tradução: Steve Jobs, Discurso em Stanford, 2005 (não sabia que já havia outras traduções, mesmo assim acho que vale muito a pena assistir este discurso)
+
+Nossa Comunidade
+Nossa comunidade está em crescimento. Eu tento de vez em quando ajudar quanto posso no fórum da RubyOnBr. Fora isso já fiz algumas coisas extras:
+
+Vamos traduzir o livro ‘Getting Real’! (o primeiro call do arms do projeto comunitário de tradução)
+Getting Real: tradução completa! Chegamos ao 1.0! (o resultado do esforço da comunidade na tradução)
+Palestra de JRuby: 13 de Julho (minha primeira palestra para a eGenial, online, falando sobre JRuby)
+Akita lança plugin: Acts As Replica (meu primeiro plugin open source de Rails, que ainda não está acabado)
+RailsConf Brasil? (apenas lancei ao vento o desejo de um encontro brasileiro, mas até hoje nada aconteceu)
+RejectConf Sampa? (como nada aconteceu, mais um call-to-arms, lançada a idéia de um encontro paulista)
+Confirmado! RejectConf SP’07 para 17 de novembro (felizmente a comunidade respondeu com muita vontade. Mais de 120 pessoas já se inscreveram)
+Encontros pelo Brasil (Parece que desenterramos uma vontade mútua, depois do anúncio do RejectConf, encontros por todo o Brasil apareceram!)
+
+Minhas Colunas na RubyOnBr
+Por algum tempo eu escrevi colunas mensais para a RubyOnBr. Aqui vão os links
+
+Minha entrevista na Rubyonbr (esta foi minha primeira entrevista à comunidade)
+Por que aprender Ruby o torna um programador pior (motivos para aprender Ruby)
+Desenvolvimento Sustentável com Rails (um pouco sobre processos)
+Rails, Sucesso pela Arrogância? (qual o principal motivo não-técnico para o sucesso de Rails)
+David Hansson e Opinionated Software (leia o artigo anterior antes deste)
+A Dieta dos Controllers (repita o mantra: “coloque sua lógica de negócios nos Models!”)
+Memórias de uma Tradução (histórico sobre a tradução do livro Getting Real)
+Acampamento de Curiosos (um pouco sobre ser curioso e o micro-framework Camping)
+
+Conversando com …
+Conversar com pessoas mais inteligentes sempre nos ajuda a crescer mais. Nunca se deve achar que já se sabe de tudo: sempre há muitas que sabem mais, e no meu caso estes indivíduos com certeza são meus tetos hoje.
+
+Dr. Nic (ele tem diversos plugins open source, foi ponto de resolução na Polêmica Twitter e é o responsável pelo conceito de “RejectConf”)
+Geoffrey Grosenbach (publica alguns dos melhores materiais para se aprender Rails com a série PeepCode)
+Chad Fowler (escreveu livros muito importantes e é um dos responsáveis pela Ruby Central, a organizadora de eventos como a RailsConf)
+David Black (escreveu livros muito importantes e é um dos responsáveis pela Ruby Central, a organizadora de eventos como a RailsConf)
+Ola Bini (um dos responsáveis pelo desenvolvimento do famoso JRuby)
+Carl Youngblood (participa da comunidade Rails de Utah, escreveu projetos open source de Rails, sua empresa – ConFreaks – grava os eventos americanos de Rails e é meu chefe na Surgeworks)
+Jamis Buck (mais conhecido como criador do Capistrano, trabalha na 37signals ao lado de David Hansson)
+
+Sobre mim
+Todos os meus artigos falam sobre mim. São minhas opiniões, pontos de vista, desejo de ensinar e de disseminar motivação – mesmo quando parece uma martelada. Estes dois artigos falam sobre mim diretamente na primeira pessoa.
+
+AkitaOnRails, Retrospectiva 1985-2007 (muita gente pediu, perguntou, então escrevi mais um pouco sobre mim)
+Novidade! Akita na Surgeworks (minha saída do mercado SAP e entrada no mercado freelance offshore)
+
+tags: obsolete
+

@@ -1,0 +1,23 @@
+
+Pessoal, é com muita satisfação que anuncio que nosso encontro regional RejectConf SP’07 irá acontecer no dia 17 de novembro de 2007, sábado, das 11:00 às 17:00, no auditório Jacy Monteiro do Instituto de Matemática e Estatística da USP, em São Paulo/SP. Com entrada franca para todos que confirmarem presença através deste cadastro. Aliás, o local comporta no máximo 80 pessoas!! Quem se cadastrar primeiro terá prioridade, portanto não se cadastrem se não tiverem certeza e se desistirem por favor nos avise.
+Auditório Jacy Monteiro – Bloco B
+Instituto de Matemática e Estatística da Universidade de São Paulo (IME-USP)
+Rua do Matão, 1010 – Cidade Universitária
+CEP 05508-090     São Paulo – SP – Brasil
+Para quem não é de São Paulo, veja esta página com indicações de como chegar.
+Desde que eu coloquei a idéia aqui no blog, mais de 140 pessoas opinaram na enquete, muitos de vocês me contactaram pessoalmente, deram idéias, sugestões. Em especial gostaria de agradecer o empenho de algumas pessoas como Danilo Sato, Fabio Kung e André Santi que correram atrás do auditório do IME, do Paulo Silveira da Caelum que também está colaborando com o evento.
+
+
+Há mais pessoas, Alexandre Gregiane que ofereceu equipamentos, Clodonil Trigo – da UNASP – que também ofereceu local. Enfim, este evento está saindo da mesma forma como a tradução do livro Getting Real foi possível alguns meses atrás: colaborativamente. Será um evento da comunidade para a comunidade e como já vi nos comentários do post original, muita gente ficou inspirada a fazer seus próprios eventos regionais, em Brasília, no Rio de Janeiro, em Santa Catarina e por aí vai. Espero que este seja um bom sinal da expansão da comunidade por todo o Brasil.
+Palestras
+Como disse antes, o conceito original de uma RejectConf (no caso das RailsConf internacionais) era ser um evento dentro de um evento. Não é nosso caso, mas o resto continua valendo: qualquer um pode palestrar, e acho que este é o grande espírito de nossa RejectConf. Em vez de apenas nomes famosos como o Carlos Eduardo da eGenial ou o Vinícius da ImproveIt, pessoas que não tem empresa, não são necessariamente conhecidos, também terão igual palco para expôr suas idéias.
+A idéia é sermos muito dinâmicos. Temos no máximo 6 horas para falar. A regra é não fazer apresentações muito longas. O tempo ideal é entre 10 minutos a meia horas. Preparem seus slides em Apple Keynote ou PowerPoint, levem seus pen-drives e aí vocês poderão usar meu notebook. Eu espero algo muito rápido: um acaba logo o próximo começa.
+Quem quiser se palestrante, por favor, preencha este formulário. Eu preciso disso para saber como distribuir as palestras durante o dia. Quem já comentou no meu outro post ou me mandou e-mail peço que preencha também. Desculpe o incômodo, mas é tudo para evitar mal entendidos.
+Sorteios
+Ainda não defini uma regra exata – portanto esperem atualizações – mas minha idéia também será sortear alguns brindes aos participantes.
+Ao final do dia, vou sortear um livro meu para quem assistir até o final E se cadastrou e confirmou sua presença preenchendo o formulário acima.
+Ainda falta confirmar mas também pretendo sortear o recém-lançado livro do Ola Bini JRuby on Rails. Geoffrey Grosenbach também disse que vai colaborar com nosso evento, com cupons de crédito para baixar screencasts do excelente Peepcode e camisetas. A idéia é ou sortear entre os palestrantes ou a própria audiência votar nas palestras que mais gostaram.
+Algumas presenças ilustres
+Ainda estou aguardando confirmação mas alguns nomes conhecidos como, novamente, o próprio Carlos Eduardo da eGenial como o pessoal da ImproveIT talvez dê as caras para falar conosco!! Vamos torcer!
+tags: obsolete rejectconf
+

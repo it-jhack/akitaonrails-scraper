@@ -1,0 +1,14 @@
+
+
+
+
+Existe uma tendência em tentar adaptar outras linguagens para serem executadas sobre a JVM (Java Virtual Machine). Já temos o maduro JPython, por exemplo, que permite utilizar a linguagem dinâmica Python sobre a JVM, inclusive utilizando bibliotecas Sun como Swing.
+A Microsoft saiu na frente nessa tendência quando criou seu concorrente, o .NET e sua especificação de bytecode, CLR, para tornar simples diversas linguagens na mesma plataforma.
+Quem não conhece o conceito deveria dar uma olhada: quando codificamos um programa em Java, o compilador traduz em byte-codes, um tipo de código de máquina para uma máquina virtual, a JVM. Da mesma forma como podemos codificar em C, Fortran ou outras linguagens e todas gerarem código de máquina Intel, a mesma coisa pode ser feita com a JVM ou o CLR. No caso da Microsoft esse suporte veio desde sua incepção, por isso temos já diversas linguagens suportadas pelo .NET como os tradicionais C#, J#, Visual Basic.NET, Javascript.NET e diversos outros como Menarle, Python até Cobol.
+No mundo Java os evangelistas focaram demais na linguagem e si e menosprezaram a plataforma. Mesmo assim já temos iniciativas maduras como JPython. Finalmente, dentro da comunidade começamos a olhar seriamente para linguagens com características dinâmicas. Hoje já temos o Groovy, uma tentativa de uma linguagem parecida com Java com com suporte a lambdas, dynamic typing entre outras características.
+Mas para nós tem interessado a iniciativa JRuby, uma tentativa de criar um ambiente compatível com o Ruby. Infelizmente é um projeto ainda instável e com menos atenção do que merecia. A atual versão, 0.8.3, está compatível com o Ruby 1.8.2 e quase no ponto de conseguir executar Rails.
+Ainda faltam muitos passos, por isso convido quem tiver interesse e a capacidade técnica, para ajudar no projeto. Será uma excelente simbiose, podermos rodar Ruby on Rails sobre Tomcat ou Websphere e ainda utilizar bibliotecas consagradas como Quartz ou diretamente outras infraestruturas enterprise-ready como EJBs e JMS.
+O futuro da plataforma Java está diretamente ligada à sua capacidade em acompanhar a nova tendência de desenvolvimento baseado em conceitos Rails. Apesar das diversas tentativas de clonar Rails, como Trails, Grails, Sails, RIFE e diversos outros, nada será comparável ao original. Por isso mesmo o que faz mais sentido agora é JRuby on Rails.
+Eis o link do projeto: https://jruby.sourceforge.net/index.shtml
+tags: obsolete jruby
+

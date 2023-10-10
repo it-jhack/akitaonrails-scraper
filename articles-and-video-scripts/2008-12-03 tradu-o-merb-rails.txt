@@ -1,0 +1,84 @@
+
+Conheci o Matt Aimonetti durante a QCon (veja no artigo dele). Ele faz parte da equipe principal do Merb e é o principal evangelizador. Conversamos muito, nos tornamos bons amigos e vamos colaborar em divulgar mais o Merb como uma boa alternativa de framework web em Ruby. Acompanhe o Matt (e este blog, claro), ele vai anunciar algumas novidades interessantes em breve.
+Para explicar: o framework Merb foi criado por Ezra Zygmuntowicz. Depois o trabalho de mantenedor passou para Yehuda Katz, que já ajudava no projeto DataMapper também. Ezra e Yehuda são da Engine Yard, mas essa empresa não é dona nem dita o futuro do Merb. Trata-se de um projeto open source como qualquer outro e tem vida própria.
+Recentemente iniciou-se uma animosidade implícita entre as equipes do Rails e do Merb. Quem acompanha de perto sabia que uma pequena Guerra Fria estava se armando (e foi um dos meus objetivos tentar apaziguar isso durante minhas entrevistas na QCon). Hoje o Matt blogou um cessar-fogo. Vou traduzir o post dele.
+
+
+Merb
+Antes da tradução, para quem não conhece Merb, as principais características técnicas que eu acho interessante para considerar são:
+
+Merb-Core e Merb-More: o Merb foi concebido para ser ultra-modular e usar bastante o sistema de RubyGems. Ele vem dividido em duas grandes coleções de Gems, o Core e o More. Só com o Core você já consegue criar micro-aplicações web “bare-bone”. Além disso ele usa o conceito de Merb Stacks : uma Gem somente com a spec de dependências para amarrar um pacote mínimo de Gems de Merb (no caso as coleções Core e More tanto do Merb quanto do DataMapper).
+
+
+No Rails sempre temos uma estrutura padrão com tudo pré-instalado e configurado, todos os componentes MVC incluindo o ORM ActiveRecord e tudo mais. E tudo começa com o comando-gerador ‘rails’. No Merb temos o comando gerador merb-gen – que substitui tanto o comando ‘rails’ quando os scripts que todo projeto Rails tem como ‘generate’. Porém, ele tem 4 possíveis maneiras de iniciar um projeto : 1) ‘app’ que é uma estrutura completa parecida com Rails e já com DataMapper configurado como padrão; 2) ‘core’ que é uma estrutura parecida com Rails mas sem ORM configurado; 3) ‘flat’ uma aplicação com estrutura mínima em um único arquivo, com uma configuração separada; 4) ‘very_flat’ que é o mínimo do mínimo para fazer uma micro-aplicação num único arquivo.
+
+
+Antigamente o Rails tinha o conceito de ‘components’, mas não deu muito certo pois a implementação original era simplesmente pesada demais. Atualmente temos um plugin de terceiros chamado Engines que ajuda na componentização e também começou-se um movimento no trunk da futura versão 2.3 para melhorar as Engines. O Merb já foi criado para ter uma coisa chamada Merb Slices, que são justamente mini-aplicações MVC completas que podem ser compostas numa única aplicação, como componentes. São simples de criar e de usar.
+
+
+Merb pode usar tanto ActiveRecord quanto DataMapper. Eles seguem paradigmas diferentes. O primeiro é mais completo, mais usado e mais conhecido dos Railers. Já o segundo é bem mais leve, mas suporta – por enquanto – menos bancos de dados – e tem menos funcionalidades. Você pode escolher qual dos dois quer usar. No caso de migrations, o DataMapper suporta as Rake Tasks “db:automigrate” e “db:autoupgrade” (digite rake -T, o Merb tem muitas tasks parecidas com os do Rails), a primeira sendo uma migração destrutiva e a outra não, isso porque o sistema dele é baseado em comparar os schemas entre Models e a Base e fazer o SQL-Diff entre os dois.
+
+
+O sistema de rotas dele parece mais simples de usar e também parece ser uma das partes muito mais rápidas. E falando em rapidez, o Merb foi planejado do início para ser thread-safe, o que o torna um excelente candidato para rodar no JRuby e tirar proveito das threads-nativas da JVM.
+
+
+No merb-gen – tanto ‘app’ quanto ‘core’ – ele pré-configura a estrutura de diretórios para comportar uma suíte de testes, como no Rails. Mas em vez de usar o Test::Unit padrão do Ruby, o Merb já pré-configura direto com RSpec, o que é uma ótima escolha. Mais do que isso, ele tem o conceito de fazer os equivalentes a testes funcionais com o WebRat, que é como se fosse um simulador de browser, sem precisar instanciar um browser mesmo (como fazem o Selenium ou Watir). Isso é muito útil para testes que não exigem suporte de Javascript.
+
+
+Rails é famoso pelo scaffold, a parte que mais atrai pessoas e também a parte que mais é editada (ninguém usa os arquivos gerados pelos scaffold exatatamente como são gerados). No Merb, o comando merb-gen também tem geradores como o ‘resource’ (parecido com o ‘scaffold’). Ele gera controller, model e views, mas as views não vêm preenchidas: em vez disso nas views em um link para o Wiki deles explicando o que fazer. Eu discuti com o Matt se isso era bom ou não e no fim foi o único ponto em que amigavelmente concordamos em não concordar :-) Acho que um scaffold (melhorado) ajudaria um pouco
+
+
+A equipe principal do Merb leva a sério o suporte a APIs padrão. Portanto, agora que já temos a versão 1.0, as APIs principais só vão mudar na versão 2.0. Até lá, eles mantém uma suíte de testes específica da versão 1.0, que sempre será garantida que vai funcionar até a 2.0.
+
+Há muito o que se gostar sobre o Merb. Ele ainda não tem nem de longe o tamanho da comunidade Rails e, portanto, nem de longe a quantidade de plugins e gems específicas para ele. Aliás, ele já vem pré-configurado com uma versão de restful_authentication, portanto login já vem pré-configurado também, o que facilita a vida. Acredito que o Merb ainda vai evoluir muito e se tornará uma ótima alternativa quando você precisa de algo diferente do que o Rails oferece.
+Isso tudo dito, tanto a equipe Merb quanto a equipe Rails entraram em discussões que elevaram o nível de estresse entre eles. Finalmente, a tradução do artigo do Matt para apaziguar isso. Como sempre se diz: “quando um não quer, dois não brigam”. Portanto, àqueles que pretendiam usar Merb como desculpa para alfinetar Rails, esqueçam, não é esse o foco, se foi o que estavam pensando. A equipe do Merb não vai mais fazer comparações de provocação e vão se focar exclusivamente em fazer o Merb ficar famoso por mérito próprio.
+Merb ♡ Rails
+Sim, é verdade e não, não estou sendo passivo agressivo ou cínico.
+Como vocês devem ter ouvido falar tem havido alguma tensão entre a equipe Rails e a equipe Merb nas últimas semanas. Algumas vezes causadas por nós, algumas por eles. Eu já expliquei sobre isso neste post então vamos em frente.
+Primeiro, deixe-me explicar a razão deste post. Eu acredito que temos uma grande comunidade mas também acho que gostamos de bater.
+Como muitos Rubistas, eu uso um Mac e normalmente dou risada vendo as propagandas. Então eu vi uma propaganda de resposta da Microsoft e estava pensando … eles não entenderam, eu não sou um Mac, o cara na TV representa um computador Mac. Eu sou um ser humano.
+Pensando na nossa comunidade acho que isso rapidamente se tornou: ‘Oi, sou um desenvolvedor Rails’ e ‘Oi, sou um desenvolvedor Merb’.
+O que começou como uma simples comparação para explicar as diferenças entre Merb e Rails rapidamente escalaram em argumentos sobre qual framework é melhor e qual as pessoas deveriam usar.
+Ouço pessoas na comunidade Ruby falando bobagens sobre Rails e criticando a equipe principal Rails. Eu até mesmo vi pessoas insultando o DHH no IRC enquanto ele nem estava no canal.
+Eu mesmo tenho que admitir que tenho sido culpado de cruzar a linha algumas vezes e fiz alguns comentários que podem ser considerados “bater”.
+Acho que é uma boa hora para me desculpar e dizer que esse tipo de comportamento não é apropriado.
+Afinal, se quiséssemos nos definir como sendo “alguma coisa” provavelmente deveríamos dizer: “Oi, sou um desenvolvedor Ruby”. Rails não é perfeito, nem Merb é perfeito. Eu posso não concordar com algumas decisões feitas pela equipe principal do Rails mas eu ainda acho que Rails é um grande framework e que a equipe Rails fez um trabalho incrível e merece muito respeito por seus esforços. Somos todos partes da comunidade Ruby e eu acho que é hora de nós (começando por mim mesmo) agirmos como uma comunidade unida.
+Sem mais delongas, aqui está minha lista:
+10 Principais Razões de Porque Merb ♡ Rails:
+
+Sem Rails, a linguagem Ruby não seria uma das 10 maiores linguagens de programação.
+
+
+Sem Rails, ainda estaríamos escrevendo milhares de linhas de arquivos XML de configuração para começar uma pequena aplicação.
+
+
+Sem Rails, muitos desenvolvedores nem saberiam o que MVC significa.
+
+
+Sem Rails, eu não seria um desenvolvedor web Ruby.
+
+
+Sem Rails, não teríamos Merb.
+
+
+Sem Rails, não teríamos todos os outros frameworks super legais em Ruby.
+
+
+Sem Rails, testar seria alguma coisa que só a elite faz.
+
+
+Sem Rails, servir aplicações web Ruby seria um grande pesadelo.
+
+
+Sem Rails, Zed Shaw não seria famoso.
+
+Ítens de Bônus:
+
+Sem Matz, não existiria Ruby,
+
+
+Sem Ruby, não existiria Rails.
+
+Da próxima vez que pensar, sou um Merb ou sou um Rails, pense duas vezes ;-)
+tags: obsolete merb translation
+

@@ -1,0 +1,132 @@
+
+Eu vejo pouca gente comentando por aqui mas para quem gosta de abstrações, deveriam tentar Markaby. Para que serve? Que tal ‘escrever XHTML em Ruby’. Quem acha que templating tradicional é “feio”, existem opções muito simples e atrativas.
+
+
+Instale assim:
+1
+2
+
+script/plugin install
+http://code.whytheluckystiff.net/svn/markaby/trunk
+
+
+Para que ele serve? Como o próprio nome diz: para escrever markup (HTML) em Ruby:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+
+  head do
+    title action_name
+    stylesheet_link_tag 'scaffold'
+  end
+  body do
+    h1 'Listing products'
+
+    table.editor.classic do 
+      tr do
+        for column in Product.content_columns
+          th column.human_name
+        end
+      end 
+
+      for product in @products
+        tr do
+          for column in Product.content_columns
+            td product.send(column.name)
+          end
+          td { link_to 'Show', :action => 'show', :id => product }
+          td { link_to 'Edit', :action => 'edit', :id => product }
+          td { link_to 'Destroy', { :action => 'destroy', :id => product }, :confirm => 'Are you sure?' }
+        end
+      end
+    end
+
+    link_to 'Previous page', { :page => @product_pages.current.previous } if @product_pages.current.previous
+    link_to 'Next page', { :page => @product_pages.current.next } if @product_pages.current.next
+
+    br
+
+    link_to 'New product', :action => 'new'
+  end
+end
+
+
+
+Interessante. Eu pessoalmente prefiro o XHTML puro (uso o ERubis, que é um ERB mais performático e para o desenvolvedor é transparente).
+Outra opção semelhante ao Markaby é o HAML. A instalação é o de sempre:
+
+ruby./script/plugin install
+https://svn.hamptoncatlin.com/haml/tags/stable
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+
+De acordo com o tutorial do HAML, este é um XHTML "feio":
+
+--- xml<div id='content'>
+  <div class='left column'>
+    <h2>Welcome to our site!</h2>
+    <p>
+      <%= print_information %>
+    </p>
+  </div>
+  <div class="right column">
+    <%= render :partial => "sidebar" %>
+  </div>
+</div>
+
+
+E esta é a versão que vai gerar o mesmo resultado, mas escrito em HAML:
+
+css#content
+.left.column
+%h2 Welcome to our site!
+%p= print_information
+.right.column= render :partial => “sidebar”
+
+tags: obsolete ruby
+

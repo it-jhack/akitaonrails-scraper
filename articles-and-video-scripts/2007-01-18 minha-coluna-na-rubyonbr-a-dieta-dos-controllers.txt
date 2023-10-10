@@ -1,0 +1,9 @@
+
+Atualização 13-10-2015: como o rubyonbr não está mais ativo, agora só via Webarchive
+
+
+Alguns dias atrás, lendo o fórum do RubyOnbr me deparei com uma pergunta recorrente: “Onde devo colocar minhas regras de negócio, nos Models ou nos Controllers?”
+Parece algo trivial: “Claro, nos Models”. Mas a justificativa disso não é necessariamente clara, principalmente para iniciantes.
+Resolvi discorrer sobre esse assunto na coluna A Dieta dos Controllers que acabou de ser publicada no RubyOnbr.
+tags: rubyonbr obsolete
+

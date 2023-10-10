@@ -1,0 +1,13 @@
+
+
+
+
+Impressionante o nível de histeria dos javeiros hoje no TheServerSide.com. Primeiro, um serviço de utilidade pública: se você utilizar Rails 1.0 ou superior, obrigatoriamente deve atualizar para o patch 1.1.5 ou a versão 1.1.6. Foi descoberto um problema sério de segurança. David Hansson e o Rails Core Team recomendam que a atualização seja feita para ontem, sem titubear. Não existe “talvez”: principalmente se você tiver um website público em Rails, atualize!
+(Veja documentação completa com descrição do problema no blog Riding Rails)
+Agora a constatação: os javeiros estão realmente com MEDO da “ameaça” Rails, da desestabilização de seu porto seguro. Estão se agarrando a qualquer coisa. É a mesma coisa agora: um ataque terrorista foi evitado em Londres. O que significa: que andar de avião está fadado a desaparecer, que sempre foi uma porcaria, que nem deveria existir e que devemos todos voltar a andar de carroças puxadas a jumento. “É desconfortável, é mais lento, é menos prático mas pelo menos parece ser um pouco mais seguro”.
+Não subestimem nossa inteligência: não existem programadores perfeitos, portanto, NUNCA vai existir software perfeito. Os exemplos são óbvios: Windows tem dezenas de problemas de segurança e você usa! Linux também vira e mexe aparece com algum problema de segurança (em escala bem menor, claro). Até mesmo o excepcional Mac OS X tem brechas. Web browsers tem problemas, não somente o Internet Explorer como também o aclamado Firefox, e eu não vejo histéricos dizendo “ouch! Firefox não presta, vou voltar ao Internet Explorer”.
+Histeria infundada é burrice, dar ouvidos a essa histeria é mais burrice ainda. 30 segundos no Google são suficiente para encontrar brechas de segurança em praticamente toda grande plataforma já lançada, sem exceção. Exemplo é esta página da própria Sun com a cronologia de bugs de segurança no próprio Java. Por causa disso, apenas, Java é ruim? Claro que não.
+Rails se tornou famoso pelos méritos de produtividade, facilidade de desenvolvimento, código limpo. Em poucas palavras: pela qualidade de vida do programador. Bugs são encontrados e consertados (é por isso que você tem point releases). É um dos motivos de Rails ser um projeto open source, onde todos podem colaborar e onde a correção de bugs é mais dinâmica. Com mais ou menos bugs, a filosofia do Rails contra do J2EE não muda.
+Não subestimem nossa inteligência!
+tags: obsolete rails java pitch
+

@@ -1,0 +1,18 @@
+
+O livro Getting Real é uma excelente leitura. Publicada pela 37signals, a mesma empresa que nos trouxe Ruby on Rails, o livro detalha o negócio, design, programação e princípios de marketing da 37signals.
+O livro é recheado de idéias do tipo “keep-it-simple” (seja simples), contrariando pontos de vista, e ainda aproximações não-convencionais sobre design de software. Este não é um livro técnico ou um tutorial de design, é um livro de idéias. Qualquer um trabalhando com aplicativos web – incluindo empresários, designers, programadores, executivos ou marketeiros – encontrarão inspiração nesse livro.
+A 37signals usou o processo Getting Real para lançar cinco aplicativos web de sucesso (Basecamp, Campfire, Backpack, Writeboard, Ta-da List), e Ruby on Rails, um framework de aplicativos web open-source, em apenas dois anos, sem investimento externo, sem débitos e apenas 7 pessoas (distribuídas em 7 diferentes partes do mundo).
+Mais de 500.000 pessoas no mundo todo usam esses aplicativos para conseguir fazer suas coisas. Agora vocês podem descobrir como eles fizeram isso e como você também pode fazer. Não é tão difícil quanto parece se você Cair na Real.
+E agora, vamos trazer este excelente livro para todos, em português!
+
+
+Projeto Getting Real em Português
+Eu sou Fabio Akita, autor do primeiro livro de Ruby on Rails publicado no Brasil: Repensando a Web com Rails e publico artigos e notícias no weblog Balance On Rails. Quando a 37signals tornou este livro público, para acesso online, imaginei que seria uma excelente idéia traduzí-lo em português.
+Entrei em contato diretamente com David Heinemeir Hansson e ele também se empolgou com a idéia. Mais do que isso, habilitou uma conta Backpack com acesso a Writeboards ilimitados só para isso.  Ou seja, faremos a tradução usando as mesmas ferramentas que ele usaram para escrever a versão original.
+Mas há uma condição:
+Nenhum material em edição deverá se publicado em qualquer lugar, principalmente em nenhum website
+Nem eu mesmo poderei publicá-lo no meu site. Ao final dos trabalhos de tradução, deveremos lhe entregar todo o material traduzido e o livro em português será publicado diretamente no hosting da 37signals. O livro em inglês foi disponibilizado para leitura online mas isso não significa que ele não tenha copyrights. Não devemos usar de jeitinho e burlar esses direitos. Por isso mesmo entrei em contato com eles antes, para obter sua aprovação.
+As regras são simples, e espero que todos me ajudem. Inicialmente as pessoas devem enviar algumas traduções de amostra ao meu e-mail (fabioakita@gmail.com). À medida que um colaborador se mostrar realmente compromissado com o projeto, compartilharei acesso aos Writeboards na minha conta Backpack.
+Portanto, mão à obra: vamos fazer um Getting Real em português. Conto com a colaboração de todos!
+tags: obsolete 37signals getting-real
+

@@ -1,0 +1,60 @@
+
+Feliz Ano Novo. Vamos ao primeiro post de 2014 :-)
+Conforme prometido, o Ruby Core Team nos entregou seu presente de Natal no dia 25/12/2013. A versão 2.1 do Ruby foi lançado oficialmente.
+Se usa RVM basta instalar com rvm install ruby-2.1.0.
+Se usa rbenv com ruby-build basta instalar com rbenv install 2.1.0.
+A versão TL;DR é o seguinte: se o que você está programando funciona com Ruby 1.9.3 ou com Ruby 2.0.0, muito provavelmente vai funcionar com Ruby 2.1.0. Cada uma delas tem novas funcionalidades em relação à anterior, mas elas não quebram a compatibilidade a ponto de quebrar.
+Se sua aplicação utiliza Bundler modifique sua Gemfile para ter a seguinte linha:
+
+1
+
+ruby '2.1.0'
+
+
+Eu utilizo RVM e quando entro num projeto com uma Gemfile já associada a um Ruby ele automaticamente escolhe a versão certa. Ou mude manualmente como rvm 2.1.0 ou rbenv local 2.1.0. A partir disso rode o bom e velho comando bundle para instalar as gems novamente nesta nova versão de Ruby. O resto é a mesma coisa. Se tudo der certo, você não deve notar nada de diferente.
+
+
+
+De Ruby 1.9 para 2.0 para 2.1
+Se você ainda utiliza Ruby 1.8, saiba que ele já é obsoleto e não recebe mais manutenções nem correções de segurança. Você já deveria ter mudado para Ruby 1.9 ou 2.0 meses atrás. Não há desculpas para não fazê-lo. As desculpas são as mesmas que perpetuam abominações como Windows XP ou Internet Explorer 6.0 até hoje.
+Em Maio eu fiz um artigo chamado Indo de Ruby 1.8 e Rails 2.3 para Ruby 2.0 e Rails 3.2, não deixe de estudar com cuidado para migrar o quanto antes.
+Do 1.8 para 1.9, em resumo:
+
+Muito mais performance, especialmente a partir da 1.9.3 que é uma ordem de grandeza mais rápido
+Mudança para o YARV a máquina virtual baseada em bytecode por Koichi Sasada
+Suporte a Fibers, uma espécie de corotina, uma unidade de processamento que pode ser interrompido e manualmente recomeçado
+Suporte a Encoding e Unicode, com isso ficou fácil internacionalizar
+Integração do Rubygems à Linguagem
+Adição da nova sintaxe de hash de { :a => 1 } para { a: 1 }
+
+Do 1.9 para 2.0, em resumo teve poucas coisas também:
+
+Keyword arguments, def foo(param1: 1, param2: 2); end
+Module Prepend - achei que mais gente usaria isso em vez de include mas ainda não vi tanto uso
+Lazy Enumerators - novamente, achei que veria mais uso, mas no mundo real não usamos coleções tão longas, ou já sabemos a sub-seção que queremos
+Refinements - esta seria a "maior" nova funcionalidade no Ruby 2.0, mas ela nasceu sem consenso e com frustrações em seu uso. O Ruby 2.1 trás uma evolução nessa implementação.
+
+
+ 
+
+  O que tem de novo no Ruby 2.0?  from Fabio Akita 
+Do 2.0 para 2.1, em resumo também tivemos poucas mudanças (veja que isso é algo bom, pois todos podemos mover rápido pra nova versão):
+
+Refinements - deixa de ser experimental e pode ser aplicado dentro de um Module também
+Decimal Literals - assim como no 1.9 números complexos ganharam uma forma literal com Complex(3,4) == 3 + 4.im agora podemos fazer 0.3r para denotar um número racional
+Faster Numbers - Integers de 128bits e uso do GNU Multiple Precision Arithmetic Library, vai ajudar a criar bibliotecas científicas
+Method Cache - este é um velho problema sobre invalidação de cache de métodos, principalmente quando mudamos os ancestrais com monkey patching. James Golick propôs um patch para 1.9 que finalmente evoluiu para o 2.1. Mas a atual versão já pode ser até 10% mais rápido.
+RGenGC - esta é de longe a atualização mais empolgante. É um novo Garbage Collector, Generational, que promete mais performance e melhor uso de memória, bloqueando a virtual machine menos vezes e garantindo um processamento mais estável. Esta pode ser a semente para uma melhoria geral no Ruby.
+
+Este benchmark é de Maio mas já dá indicativos em testes sintéticos que o 2.1 pode ser cerca de 20% mais rápido que o 2.0 e até 30% mais rápido que o 1.9.3, na média, e muito mais rápido em testes individuais.
+Como podem ver, a maioria das coisas que mudam na linguagem são "opt-in", ou seja, você pode escolher usar ou não. E se não usar é praticamente como o Ruby 1.9. Por isso tanto o 2.0 quanto o 2.1 são praticamente atualizações "drop-in", ou seja, simplesmente atualize, rode sua suíte de testes, e faça deployment.
+E falando em deployment, com parte do Ruby Core Team trabalhando para o Heroku, não é de se espantar que o Heroku já suporta 2.1 e para rodar seus testes o Travis-CI também já suporta o 2.1.0.
+Materiais
+Se quiser rapidamente aprender o que apareceu de novo entre as versões 1.8 e 1.9 e depois da 1.9 para a 2.0, compre os screencasts do Peter Cooper.
+Se ainda é iniciante no Ruby, livros feitos para a época do 1.9 ainda são válidos. Em particular, recomendo o Eloquent Ruby do Russ Olsen.
+Outra excelente fonte de idiossincracias do Ruby é o Ruby Tapas do Avdi Grimm. Assine e acompanhe. E um ótimo curso para quem quer iniciar em Ruby on Rails continua sendo a trilha de Ruby do CodeSchool.com.
+Finalmente, entender como o Ruby funciona internamente é um estudo muito interessante e o melhor livro para isso é o Ruby Under a Microscope do Pat Shaughnessy. Vale a pena comprar.
+Enfim, existem diversas grandes fontes para se aprender
+
+tags: obsolete ruby
+

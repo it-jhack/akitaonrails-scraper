@@ -1,0 +1,11 @@
+
+
+
+
+Galera, é com muito orgulho que anuncio a versão final da tradução do livro Getting Real.
+Todos os tradutores e revisores desse projeto fizeram um excelente trabalho. Somos a primeira tradução completa do livro, anos luz à frente dos outros países. E agora vocês podem ler o excelente texto da 37signals na íntegra em português.
+Vocês podem ter um making of na minha coluna na RubyOnbr. Foi um longo projeto, que durou mais do que eu esperava mas que felizmente – e graças ao esforço de todos – fomos capazes de entregar.
+Agradeço muito, muito mesmo, ao esforço de tantos anônimos que se dispuseram a investir seu tempo livre nesse projeto. São atitudes como essa que levam a comunidade à frente.
+Valeu pessoal!
+tags: obsolete 37signals getting-real
+

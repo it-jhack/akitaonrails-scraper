@@ -1,0 +1,10 @@
+
+
+
+
+Como o grande Satish já blogou, a Locaweb é patrocinadora exclusiva do Free Online Ruby Programming Courses (FORPC101) do excelente site RubyLearning.org
+O Satish me fez este convite e a Locaweb prontamente se dispôs a colaborar. Os cursos do RubyLearning são muito conhecidos, com cerca de 4 mil alunos já formados por ele. Nas últimas turmas, se não me engano, cerca de 40% eram brasileiros, que foi um fator importante para a nossa decisão de ajudar.
+Se você sabe ler inglês e quer aprender Ruby, recomendo recorrer aos cursos do Satish. Aliás, dia 19 ele anunciou uma série paralela de cursos para JRuby. Portanto, se você já sabe Ruby e quer entender JRuby, este é o caminho.
+Atualização 23/07: O Satish me entrevistou a respeito da Locaweb e acabou de publicar no blog dele.
+tags: obsolete locaweb
+

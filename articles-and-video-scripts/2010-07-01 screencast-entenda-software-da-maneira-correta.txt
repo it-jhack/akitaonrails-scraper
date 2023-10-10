@@ -1,0 +1,15 @@
+
+
+
+
+Atualização 09/04/12: Este screencast foi liberado para visualização gratuita. Acesse este post
+Esta é a gravação em forma de screencast da palestra que ministrei esta semana na USP sobre o tema “Entenda Software da Maneira Correta”, no evento Wire 2010.
+O mundo de TI está cheio de processos, metodologias, consultorias, certificações, MBAs, mestrados, etc e ainda assim é comum ver projetos de software sofrendo para saírem com qualidade. Por outro lado, temos milhares de programadores, muitos hobistas, voluntariando para criar software sem coordenação central, saindo com código de alta qualidade que muitos dependem no dia a dia, desde Linux até Firefox.
+Este screencast não está mais à venda. Aguarde, em breve será liberado gratuitamente. Obrigado a todos que colaboraram até agora
+Dentro dessa premissa, assista este screencast para saber o que Open Source, Darwin, Galvão Bueno e até Dwayne “The Rock” Johnson tem a ver com o modelo correto de desenvolvimento de software.
+Parte deste tema eu discuti no meu outro blog, no artigo Processos, Metodologias e o Cérebro Humano e me inspirei também no paper de Ko Kuwabara, Linux: A Bazaar at the Edge of Chaos.
+Assista na íntegra aqui:
+
+Faça download
+tags: agile screencast
+

@@ -1,0 +1,921 @@
+
+Fim de Domingo, estava lendo os posts de Charles Nutter e os tutoriais da Atlantic sobre JRuby. Resolvi que deveria ver com meus próprios olhos. Seguindo o tutorial, vamos ao que interessa, lembrando que estou rodando sobre OS X 10.4.9.
+Primeiro, baixei o novíssimo binário do 1.0 direto do site. Feito isso, descompactei e coloquei onde queria, assim:
+1
+2
+3
+4
+5
+6
+
+tar xvfz jruby-bin-1.0.tar.gz
+mv jruby-1.0/ /opt/local/
+sudo mv jruby-1.0/ /opt/local/
+cd /opt/local/
+sudo ln -s jruby-1.0 jruby
+sudo chown -R root:admin jruby-1.0/
+
+
+
+
+
+No meu caso, eu prefiro manter essas coisas separadas. Como já uso o MacPorts, e ele cria um diretório /opt, coloquei o JRuby lá mesmo, tomando o cuidado de criar um symlink genérico, para não precisar atualizar meus paths caso amanhã saia uma versão 1.0.1.
+Falando em paths, o próximo passo foi atualizar meu .profile. Aqui vai:
+1
+2
+3
+4
+5
+6
+
+export PATH=/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:/Library/Python/2.3/site-packages/Django-0.95.1-py2.3.egg/django/bin:/opt/local/jruby/bin:$PATH
+export PYTHONPATH="/Library/Python/2.3/site-packages"
+export DISPLAY=:0.0
+export JAVA_HOME='/System/Library/Frameworks/JavaVM.framework/Home'
+export ANT_HOME='/Developer/Java/Ant'
+export JRUBY_HOME='/opt/local/jruby'
+
+
+Os pontos importante é colocar o diretório /opt/local/jruby/bin no Path. Depois eu configurei as variáveis JAVA_HOME, ANT_HOME, conforme o tutorial e coloquei o JRUBY_HOME, por conta (pra dizer a verdade, não sei porque ainda). De qualquer forma, prestem atenção ao seus próprios paths, esses caminhos vão variar de plataforma para plataforma, inclusive em Macs eles podem estar em outros lugares. No meu caso, estarei usando o Java 1.5, que veio automaticamente do site de Software Update da Apple.
+Além disso eu ainda preciso baixar o driver JDBC para MySQL, diretamente do site oficial. Agora é só fazer o seguinte:
+1
+2
+3
+
+tar xvfz mysql-connector-java-5.0.6.tar.gz 
+cd mysql-connector-java-5.0.6
+sudo cp mysql-connector-java-5.0.6-bin.jar /opt/local/jruby/lib/
+
+
+Ponto importante: copiar o jar do JDBC diretamente no diretório lib do jruby. Agora a diversão vai começar:
+1
+2
+3
+
+sudo jruby -S gem install rails -y --no-rdoc --no-ri
+sudo jruby -S gem install rake
+sudo jruby -S gem install activerecord-jdbc --no-rdoc --no-ri
+
+
+A partir daqui todos já conhecem: é como se estivéssemos em uma máquina “virgem”, onde acabamos de instalar um Ruby 1.8.5 normal. Portanto, precisamos instalar os Gems necessários do Rails.
+Para meu teste, vou utilizar o Redmine que é um gerenciador de projetos simples, com funcionalidades como controle de tarefas, colaboração, integração com Subversion. Eu tenho uma versão na minha máquina, fiz uma cópia em um diretório qualquer e, para efeitos de comparação rodei o comando rake normal, que eu já tinha, rodando sobre Ruby nativo. O resultado foi este:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+(in /Users/fabioakita/rails/sandbox/redmine)
+/usr/local/bin/ruby -Ilib:test (...) test/unit/wiki_test.rb" 
+Loaded suite /usr/local/lib/ruby/gems/1.8/gems/rake-0.7.3/lib/rake/rake_test_loader
+Started
+............................................................
+Finished in 2.696322 seconds.
+
+60 tests, 229 assertions, 0 failures, 0 errors
+/usr/local/bin/ruby -Ilib:test (...) search_controller_test.rb" 
+Loaded suite /usr/local/lib/ruby/gems/1.8/gems/rake-0.7.3/lib/rake/rake_test_loader
+Started
+..............................
+Finished in 1.943532 seconds.
+
+30 tests, 108 assertions, 0 failures, 0 errors
+/usr/local/bin/ruby -Ilib:test (...) projects_test.rb" 
+Loaded suite /usr/local/lib/ruby/gems/1.8/gems/rake-0.7.3/lib/rake/rake_test_loader
+Started
+.....F.
+Finished in 2.236334 seconds.
+(...)
+7 tests, 100 assertions, 1 failures, 0 errors
+
+
+Como podemos ver 100% dos testes unitários e funcionais rodaram. Deu uma única falha no teste integrado (alguma coisa que eu andei mexendo no Redmine, provavelmente). De qualquer forma, Apenas 1 falha em 507 asserções. Nada mau. Mas isso foi no Ruby 1.8.5 nativo. Vamos ver no JRuby 1.0.
+Começamos alterando o config/database.yml para passar a usar o driver JDBC:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+development:
+    adapter: jdbc
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/jredmine_dev
+    username: root
+    password: root
+
+test:
+    adapter: jdbc
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/jredmine_test
+    username: root
+    password: root
+        
+production:
+  <<. &development
+
+
+Como não quero bagunçar meus bancos de dados de desenvolvimento, vou criar novos:
+1
+2
+3
+
+mysql -u root -p
+mysql> create database jredmine_dev default character set utf8;
+mysql> create database jredmine_test default character set utf8;
+
+
+Ainda é necessário acrescentar um pequeno trecho de código para arredondar isso no config/environment.rb, logo abaixo da linha require File.join(… como mostro abaixo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+(...)
+require File.join(File.dirname(__FILE__), 'boot')
+
+# JRuby Support
+if RUBY_PLATFORM =~ /java/
+  require 'rubygems'
+  RAILS_CONNECTION_ADAPTERS = %w(jdbc)
+end
+(...)
+
+
+Hora de rodar o migrations!
+1
+
+jruby -S rake db:migrate
+
+
+Vocês precisam ver com os próprios para acreditar, mas por agora acreditem na minha palavra. Rodou tudo!! E para averiguar, vamos ver dentro do MySQL:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+mysql -u root -p jredmine_dev
+mysql> show tables;
++------------------------+
+| Tables_in_jredmine_dev |
++------------------------+
+| attachments            | 
+| auth_sources           | 
+| boards                 | 
+| changes                | 
+(...)
+| wiki_pages             | 
+| wikis                  | 
+| workflows              | 
++------------------------+
+42 rows in set (0.00 sec)
+
+
+Agora vamos pular diretamente para rodar a suíte de testes do Redmine!
+1
+
+jruby -S rake
+
+
+O resultado foi: CAOS!!! Tudo explodiu, nenhum teste passou! Desastre Total!!
+Mas nem tudo está perdido. Como não perco um único post sobre Ruby ou Rails, lembrei de ter lido este post, de Ola Bini, um dos membros do JRuby Core Team. Graças a ele entendi que o comando adequado deveria ter sido:
+1
+
+cp $JRUBY_HOME/lib/ruby/gems/1.8/gems/ActiveRecord-JDBC-0.4/lib/tasks/jdbc_databases.rake lib/tasks
+
+
+Tento rodar o rake novamente: nada. Agora a coisa começa a parecer ruim mesmo. Depois de algum tempo observando, notei que no db/schema.rb que o ActiveRecord::SchemaDumper gera, havia alguns avisos parecido com ‘Unknown Type BIT for column …’. Já é uma pista. Fuçando mais finalmente encontrei o que procurava: o Adapter do MySQL considera como boolean se encontrar um tinyint(1) ou um bit(1), mas não considera somente ‘bit’. Não sei se é um problema do meu MySQL ou do Adapter mas resolvi acrescentar um patch. Coloquei o seguinte código no final do meu config/environment.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+module JdbcSpec
+  module MySQL
+    module Column
+      def simplified_type(field_type)
+        return :boolean if field_type =~ /tinyint\(1\)|bit\(1\)|bit/i 
+        return :string  if field_type =~ /enum/i
+        super
+      end
+    end
+  end
+end
+
+
+A única diferença é o acréscimo de |bit na linha do return :boolean. Com isso, rodei novamente os testes. Agora as coisas parecem melhores:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+jruby -S rake                 
+(in /Users/fabioakita/rails/sandbox/redmine)
+/opt/local/jruby-1.0/bin/jruby -Ilib:test (...) wiki_test.rb" 
+Loaded suite /opt/local/jruby-1.0/lib/ruby/gems/1.8/gems/rake-0.7.3/lib/rake/rake_test_loader
+Started
+............................................................
+Finished in 9.775 seconds.
+
+60 tests, 229 assertions, 0 failures, 0 errors
+/opt/local/jruby-1.0/bin/jruby -Ilib:test (...) search_controller_test.rb" 
+Loaded suite /opt/local/jruby-1.0/lib/ruby/gems/1.8/gems/rake-0.7.3/lib/rake/rake_test_loader
+Started
+..............................
+Finished in 7.417 seconds.
+
+30 tests, 108 assertions, 0 failures, 0 errors
+/opt/local/jruby-1.0/bin/jruby -Ilib:test (...) projects_test.rb" 
+Loaded suite /opt/local/jruby-1.0/lib/ruby/gems/1.8/gems/rake-0.7.3/lib/rake/rake_test_loader
+Started
+FFFFFFF
+Finished in 4.458 seconds.
+(...)
+7 tests, 12 assertions, 7 failures, 0 errors
+
+
+Como podemos ver, as coisas mudaram bastante: 100% dos testes unitários e funcionais passaram. Mas por outro lado todos os testes integrados falharam miseravalmente. Observando melhor o problema temos basicamente o mesmo erro sempre:
+1
+
+Expected response to be a <:success>, but was <500>
+
+
+O teste integrado consiste em instanciar um processo CGI, realmente simulando um ambiente de navegação Web. Mas sempre está acontecendo um erro nesse processo que devolve erro HTTP 500, basicamente um Crash. Passei mais algumas horas debugando e cheguei muito próximo: parece algum erro causado no PStore, mais especificamente em jruby/lib/ruby/1.8/pstore.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+if content != ""
+  @table = load(content)
+  if !read_only
+    size = content.size
+    md5 = Digest::MD5.digest(content)
+  end
+else
+  @table = {}
+end
+content = nil                # unreference huge data
+
+
+É algo por volta deste trecho. Ele ainda chega a entrar no método load que vai até um Marshal::load(content). Eu fiz alguns testes isolados de Marshal no jirb, que é o bom o velho irb mas rodando sobre JRuby e ele pareceu normal. Portanto, caí um beco sem saída. Por outro lado, esse parece ser um erro isolado no suporte a CGI. Como não pretendo rodar CGI, resolvi deixar isso de lado.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+jruby script/server
+
+=> Booting WEBrick...
+GLoc v1.1 running in development mode. Strings can be modified at runtime.
+=> Rails application started on https://0.0.0.0:3000
+=> Ctrl-C to shutdown server; call with --help for options
+[2007-06-10 20:44:38] INFO  WEBrick 1.3.1
+[2007-06-10 20:44:38] INFO  ruby 1.8.5 (2007-06-10) [java]
+[2007-06-10 20:44:38] INFO  WEBrick::HTTPServer#start: pid=14512214 port=3000
+
+
+As coisas parecem melhores agora. Depois de subir o WEBrick eu consegui navegar normalmente por todo o aplicativo Redmine. Criei um novo projeto, acrescentei um novo usuário, mudei a configuração, tudo pareceu funcionar normalmente.
+Glassfish
+Mas isso não é o suficiente. JRuby para rodar apenas em WEBrick não tem a menor graça. Para que isso realmente valha a pena, ele tem que funcionar em um Application Server Java, como o  Glassfish, e é exatamente para onde eu vou.
+Primeiro baixei o Glassfish Version 2 Build 41, conforme o post do Atlantic sugere.
+1
+
+java -Xmx256m -jar glassfish-installer-v2-b41d.jar
+
+
+O comando acima vai abrir uma janela para você dar scroll até o fim e clicar em “Accept”. Isso vai deixar ele descompactar tudo num diretório “glassfish”.
+1
+2
+3
+4
+
+sudo mv glassfish /opt/local/
+cd /opt/local/glassfish/
+chmod -R +x lib/ant/bin
+lib/ant/bin/ant -f setup.xml
+
+
+Primeiro eu movi para meu diretório /opt/local, mas isso é opcional, depois tornamos tudo dentro do diretório bin do ant executável e finalmente deixamos ele se auto-configurar. Ao final, como o post aponta, ele descrever uma série de portas de serviços disponíveis:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+[exec] Option adminuser deprecated, use --user instead.
+[exec] Using port 4848 for Admin.
+[exec] Using port 8080 for HTTP Instance.
+[exec] Using port 7676 for JMS.
+[exec] Using port 3700 for IIOP.
+[exec] Using port 8181 for HTTP_SSL.
+[exec] Using default port 3820 for IIOP_SSL.
+[exec] Using default port 3920 for IIOP_MUTUALAUTH.
+[exec] Using default port 8686 for JMX_ADMIN.
+[exec] Domain being created with profile:developer, as specified by variable AS_ADMIN_PROFILE in configuration file.
+[exec] Security Store used should be: JKS
+[exec] Domain domain1 created.
+[exec] Login information relevant to admin user name [admin] for this domain [domain1] stored at [/Users/fabioakita/.asadminpass] successfully.
+[exec] Make sure that this file remains protected. Information stored in this file will be used by asadmin commands to manage this domain.
+
+
+Agora iniciamos o servidor:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+bin/asadmin start-domain
+
+Starting Domain domain1, please wait.
+Log redirected to /opt/local/glassfish/domains/domain1/logs/server.log.
+Redirecting output to /opt/local/glassfish/domains/domain1/logs/server.log
+Domain domain1 is ready to receive client requests. Additional services are being started in background. 
+Domain [domain1] is running [Sun Java System Application Server 9.1 (build b41d-beta2)] with its configuration and logs at: [/opt/local/glassfish/domains].
+Admin Console is available at [https://localhost:4848].
+Use the same port [4848] for "asadmin" commands.
+User web applications are available at these URLs:
+[https://localhost:8080 https://localhost:8181 ].
+Following web-contexts are available:
+[/web1  /__wstx-services ].
+Standard JMX Clients (like JConsole) can connect to JMXServiceURL:
+[service:jmx:rmi:///jndi/rmi://MacHal9001.local:8686/jmxrmi] for domain management purposes.
+Domain listens on at least following ports for connections:
+[8080 8181 4848 3700 3820 3920 8686 ].
+Domain does not support application server clusters and other standalone instances.
+
+
+Pelo menos no meu notebook, o Glassfish sobe quase instantaneamente. Agora basta abrir o browser e entrar em https://localhost:4848 com o usuário admin e senha adminadmin. Se abrir, estamos bem. Com o Glassfish de pé, nos resta voltar a preparar o Redmine para ser empacotado. Para isso precisamos da ajuda de outro plugin:
+1
+
+jruby script/plugin install svn://rubyforge.org/var/svn/jruby-extras/trunk/rails-integration/plugins/goldspike
+
+
+Isso vai instalar o vendor/plugins/goldspike_ que nos adiciona alguns tasks de rake para gerar o empacotamento WAR que precisamos para instalar nosso Redmine no Glassfish. Para suportar MySQL precisamos editar o arquivo vendor/plugins/goldspike/lib/war_config.rb:
+1
+
+add_java_library(maven_library ('mysql', 'mysql-connector-java', '5.0.4'))
+
+
+Procure por ‘add_java’ dentro desse arquivo e acrescente a linha acima próximo a eles. Finalmente, podemos criar o WAR:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+jruby -S rake war:standalone:create
+
+Assembling web application
+  Adding Java library commons-pool-1.3
+  Adding Java library activation-1.1
+  Adding Java library mysql-connector-java-5.0.4
+  Adding Java library jruby-complete-0.9.9
+  Adding Java library bcprov-jdk14-124
+  Adding Java library rails-integration-1.1.1
+  Adding web application
+  Adding Ruby gem ActiveRecord-JDBC version 0.4
+Creating web archive
+
+
+A saída desse rake pode variar (pois o Maven vai puxar as bibliotecas que não encontrar). No meu caso saiu como mostrei acima. O importante é verificar que o o driver mysql veio junto. Curiosamente ele trouxe o jruby-complete-0.9.9. Olhando novamente no war_config.rb, notei que aproximadamente na linha 80 ele pede explicitamente pela versão “0.9.9”. Troquei pela “1.0” :
+1
+
+add_java_library(maven_library('org.jruby', 'jruby-complete', '1.0'))
+
+
+A segunda linha é outra dependência que o JRuby (pelo menos o 1.0) precisa. Acredite, eu já tentei sem também, mas não rolou. Rodando o rake novamente, desta vez obtive:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+jruby -S rake war:standalone:create
+
+Assembling web application
+  Adding Java library jruby-complete-1.0
+rake aborted!
+  The library jruby-complete-1.0 could not be obtained from in any of the following locations:
+    + lib/java/jruby-complete-1.0.jar
+    + lib/java/jruby-complete.jar
+    + /opt/local/jruby/lib/jruby-complete-1.0.jar
+    + /opt/local/jruby/lib/jruby-complete.jar
+    + /Users/fabioakita/.m2/repository/org/jruby/jruby-complete/1.0/jruby-complete-1.0.jar
+    + https://www.ibiblio.org/maven2/org/jruby/jruby-complete/1.0/jruby-complete-1.0.jar
+
+
+Bem, era esperado que seria querer demais ele encontrar a versão 1.0 do nada. Realmente não sei se isso é necessário. Acredito que sim, pois jruby-complete-1.0.jar não existe no meu sistema e a última opção do Maven é buscar em um site. Portanto, farei o seguinte:
+1
+
+sudo ln -s /opt/local/jruby/lib/jruby.jar /opt/local/jruby/lib/jruby-complete.jar
+
+
+Mais um detalhe. O antigo jruby versão 0.9.9 ficou guardado! Gastei alguns minutos para entender isso mas basta apagar todo o diretório tmp/war:
+1
+
+rm -Rf tmp/war
+
+
+Agora, vamos rodar o rake novamente:
+1
+2
+3
+4
+5
+6
+7
+
+jruby -S rake war:standalone:create
+
+Assembling web application
+  Adding Java library jruby-complete-1.0
+  Adding web application
+  Adding Ruby gem ActiveRecord-JDBC version 0.4
+Creating web archive
+
+
+Agora sim! Gerou o .war com sucesso (e com o novo jruby 1.0) como podemos ver dando um ls -la. Temos um redmine.war finalizado. Com isso podemos perceber que o plugin Goldspike precisa ser atualizado de tempos em tempos para termos sempre os .jars mais recentes de cada uma de suas dependências.
+1
+
+1 fabioaki  fabioaki  6829506 Jun 10 21:43 redmine.war
+
+
+Razoável, com pouco mais de 6Mb. Agora, se você instalou o Glassfish conforme o procedimento, já deve ter se logado como admin e está com o browser aberto, esperando. Logo na primeira página haverá a opção Deploy Web Application (.war), nada mais óbvio.
+No campo Location procure a localização do seu redmine.war. Assegure-se que você não mudou o campo Type e que ele continua selecionado em Web Application (.war). Existem algumas configurações que você pode fazer, mas como estou ansioso depois de tantas horas de debug e experimentação, vou simplesmente clicar em “OK”. Isso deve criar minha aplicação no contexto /redmine.
+Para testar, podemos clicar no link “Launch” ou ir diretamente para https://localhost:8080/redmine
+BOOM! Pau!! Às 9hs da noite de Domingo, depois de tudo isso que já fizemos, a sensação definitivamente não é boa.
+Depois do Fantástico …
+Enfim. Eu debuguei, olhei logs, fiz e refiz o .war dezenas de vezes. No final, eu acabei ficando com o seguinte (espero não esquecer de nada, já é meia-noite, e eu estou nisso desde o meio da tarde!!). No arquivo vendor/plugins/goldspike/lib/war_config.rb eu tive que acrescentar várias coisas. Vou fazer o seguinte, em vez de copiar o arquivo todo, vou começar cada trecho com o número aproximado da linha. As com o sinal de “+” na frente foi o que eu acrescentei, com “-” o que tirei, e o que não tiver nenhum sinal é apenas para facilitar a busca:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+25
+# external locations
+attr_accessor :jruby_home
++attr_accessor :gem_home
+69
+home = ENV['HOME'] || ENV['USERPROFILE']
+@jruby_home = ENV['JRUBY_HOME']
++@gem_home = ENV['GEM_HOME']
+82
+-add_java_library(maven_library('org.jruby', 'jruby-complete', '0.9.9'))
++add_java_library(maven_library('org.jruby', 'jruby-complete', '1.0'))
+88
++add_java_library(maven_library ('mysql', 'mysql-connector-java', '5.0.4'))
++add_java_library(maven_library ('backport-util-concurrent', 'backport-util-concurrent', ''))
++add_java_library(maven_library ('asm', 'asm', '2.2.3'))
++add_java_library(maven_library ('asm-commons', 'asm-commons', '2.2.3'))
++add_java_library(maven_library ('emma', 'emma', ''))
++add_java_library(maven_library ('emma_ant', 'emma_ant', ''))
++add_java_library(maven_library ('bsf', 'bsf', ''))
++add_java_library(maven_library ('jarjar', 'jarjar', '0.7'))
++add_java_library(maven_library ('jline', 'jline', '0.9.91'))
+
+
+Feito isso, eu também alterei o arquivo vendor/plugins/goldspike/lib/create_war.rb com o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+<% if !config.standalone %>
+<!-- jruby.home can be set either here, or as the system property jruby.home -->
+<context-param>
+  <param-name>jruby.home</param-name>
+  <param-value><%= config.jruby_home || '/usr/local/jruby' %></param-value>
+</context-param>
+
++<!-- gem.home can be set either here, or as the system property gem.home -->
++<context-param>
++  <param-name>gem.home</param-name>
++  <param-value><%= config.gem_home || '/usr/local/jruby/lib/ruby/gems/1.8' %></param-value>
++</context-param>
+<% end %>
+
+
+Essas modificações solucionam dois problemas que eu tive durante meus testes: o primeiro foi o jruby reclamando da falta de dependências como o backport e o asm, então acrescentei todos os .jar que vieram junto com a versão 1.0 e ficam no diretório bin/. Em segundo, depois que o problema das dependências foi solucionado ele começou a reclamar do local dos Gems. Parece um bug com o Goldspike ou então com a localização fora do padrão de onde eu deixei o meu JRuby (talvez se eu tivesse deixado em /usr/local tivesse sido mais direto). Para consertar isso, somente configurar a variável de ambiente não resolveu, então tive que ajustar os hacks acima. Finalmente, alterei novamente meu ~/.profile (que no caso de vocês pode ser o ~/.bashrc ou similar). O importante é ter ambos JRUBY_HOME e GEM_HOME configurados corretamente:
+1
+2
+3
+4
+5
+
+export JAVA_HOME='/System/Library/Frameworks/JavaVM.framework/Home'
+export ANT_HOME='/Developer/Java/Ant'
+export JRUBY_HOME='/opt/local/jruby'
+export GEM_HOME=$JRUBY_HOME/lib/ruby/gems/1.8
+export PATH=/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$JRUBY_HOME/bin:$ANT_HOME/bin:$PATH
+
+
+Outra coisa que não funcionou muito bem foi o meu config/database.yml Eu estava reusando a configuração do ambiente de development no production, mas pelo jeito o parser de YAML em Java não gosta disso, então substituí assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+-production:
+-  <<. &development
+
++production:
++    adapter: jdbc
++    driver: com.mysql.jdbc.Driver
++    url: jdbc:mysql://localhost/jredmine_dev
++    username: root
++    password: root
+
+
+Feito tudo isso, apaguei o diretório tmp/war, para sumir com os .jar e configuração errados e agora regerei o .war novamente:
+1
+
+jruby -S rake war:shared:create
+
+
+Se tudo deu certo, no arquivo tmp/war/WEB-INF/web.xml deve constar a variável gem.home corretamente. Isso deve ser suficiente. Com o Glassfish ainda de pé, refiz o deployment do .war (nem vou detalhar, acreditem, é trivial).
+E … FUNCIONOU!! Depois de tanto trabalho parece que quase tudo funciona bem. Eu dei uma boa navegada pelo Redmine e a única funcionalidade que deu problema foi o upload de arquivos. Mas a esta hora do fim de semana, realmente vou deixar para depois. Só o fato de ter conseguido colocar essa coisa rodando já é alguma coisa! Se alguém tive paciência, acho que o trecho do log do Glassfish que interessa é este:
+1
+2
+3
+4
+5
+6
+7
+
+[#|2007-06-10T23:58:42.844-0300|INFO|sun-appserver9.1|javax.enterprise.system.container.web|_ThreadID=33;_ThreadName=httpSSLWorkerThread-8080-2;|PWC1412: WebModule[/redmine] ServletContext.log():rails: Failed to invoke rails
+  from /opt/local/glassfish/domains/domain1/applications/j2ee-modules/redmine/config/../vendor/rails/actionpack/lib/action_controller/cgi_ext/raw_post_data_fix.rb:38:in `loop'
+  from /opt/local/jruby-1.0/lib/ruby/1.8/cgi.rb:1067:in `read_multipart'
+  from /opt/local/glassfish/domains/domain1/applications/j2ee-modules/redmine/config/../vendor/rails/actionpack/lib/action_controller/cgi_ext/raw_post_data_fix.rb:38:in `initialize_query'
+  from /opt/local/jruby-1.0/lib/ruby/1.8/cgi.rb:2274:in `initialize'
+  from <script>:0
+|#]
+
+
+Outra coisa que me toquei: se você já tinha o Ruby instalado, e agora instalou o JRuby, provavelmente ficou com dois diretórios de gem, um antigo no /usr/local/lib/ruby/gems/1.8/ e outra nova agora em /opt/local/jruby/lib/ruby/gems/1.8_. Minha sugestão é fazer o *GEMHOME* acima apontar para o diretório antigo. Na verdade tanto faz, mas assim tanto o ruby quanto o jruby vão rodar usando os mesmos Gems.
+De qualquer forma, eu fiquei impressionado. Realmente o suporte do JRuby é muito completo. Algumas coisas ainda estão se desenvolvendo, como o plugin Goldspike e o resto do JRuby-Extra, o próprio ActiveRecord-JDBC ainda precisa evoluir muito para suportar Oracle e outros bancos mais pesados. O único que ele suporta 100% é o MySQL – e mesmo assim eu ainda encontrei o bug que descrevi acima.
+Com o esforço suficiente, mantendo os testes em dia (ainda preciso descobrir qual o problema om os testes integrados), tendo em mente as possíveis limitações (como o de upload, que eu ainda não pesquisei) é bastante possível sim, colocar aplicações Rails instaladas em ambiente Java hoje. Não é a toa que a Thoughtworks resolveu apostar pesado no JRuby.
+Mal posso esperar pela versão 1.1, mas por agora, preciso dormir um pouco!
+Update (2:20AM)
+Acabei de notar que eu estava usando uma versão mais antiga do Goldspike. Acabei de experimentar a versão mais recente. Para isso baixei diretamente da fonte:
+1
+
+svn co svn://rubyforge.org/var/svn/jruby-extras/trunk/rails-integration
+
+
+Também baixei o Maven 2.0.6. Descompactei e coloquei em /opt/local/maven-2.0.6. Com isso pude compilar o Rails Integration direto da fonte:
+1
+
+/opt/local/maven-2.0.6/bin/mvn install
+
+
+Isso tem que ser feito a partir da raíz do projeto Rails Integration, o que tem o arquivo build.xml. Feito copie o novo plugin por cima do antigo:
+1
+
+cp -R plugins/goldspike-snapshot ~/<projeto>/vendor/plugins/goldspike
+
+
+No meu caso, o projeto é o Redmine, como mostrei antes. Mesmo assim, esta versão também não é perfeita e eu precisei fazer praticamente as mesmas alterações de antes no vendor/plugins/goldspike/lib/war_config.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+30
+# external locations
+attr_accessor :jruby_home
++attr_accessor :gem_home
+82
+@jruby_home = ENV['JRUBY_HOME']
++@gem_home = ENV['GEM_HOME']
+92
+@java_libraries = {}
+# default java libraries
+-add_library(maven_library('jruby', 'jruby-complete', '1.0RC2'))
+add_library(maven_library('org.jruby.extras', 'goldspike', '1.3-SNAPSHOT'))
+add_library(maven_library('javax.activation', 'activation', '1.1'))
+add_library(maven_library('commons-pool', 'commons-pool', '1.3'))
+add_library(maven_library('bouncycastle', 'bcprov-jdk14', '124'))
++add_library(java_library('jruby-complete', '1.0'))
++add_library(java_library('mysql-connector-java', '5.0.6-bin'))
++add_library(java_library('backport-util-concurrent', ''))
++add_library(java_library('asm', '2.2.3'))
++add_library(java_library('asm-commons', '2.2.3'))
+
+
+Agora, esta versão já pulou do jruby 0.9.9 para 1.0RC2, mas ainda tem bugs! Tive que modificar também o arquivo lib/java_library.rb, assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+14
+def initialize(name, version, config)
+  @config = config
+  @name = name
+  @version = version
+-  check_locations = local_locations(name, version)
+- 
+-  if locations.is_a?(String)
+-    locations = [ locations ]
+-  end 
+-  check_locations += locations
+-  @locations =  check_locations
++  @locations =  local_locations(name, version)
+end
+94
+if config.local_java_lib
+-  paths << File.join(local_java_lib, "#{name}-#{version}.#{type}")
+-  paths << File.join.local_java_lib, "#{name}.#{type}")
++  paths << File.join(config.local_java_lib, "#{name}-#{version}.#{type}")
++  paths << File.join(config.local_java_lib, "#{name}.#{type}")
+end
+if config.jruby_home
+-  paths << File.join(jruby_home, 'lib', "#{name}-#{version}.#{type}")
+-  paths << File.join(jruby_home, 'lib', "#{name}.#{type}")
++  paths << File.join(config.jruby_home, 'lib', "#{name}-#{version}.#{type}")
++  paths << File.join(config.jruby_home, 'lib', "#{name}.#{type}")
+end
+
+
+E ainda tem a mesma modificação de antes no lib/create_war.rb:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+86
+<% if !config.standalone %>
+<!-- jruby.home can be set either here, or as the system property jruby.home -->
+<context-param>
+  <param-name>jruby.home</param-name>
+  <param-value><%= config.jruby_home || '/usr/local/jruby' %></param-value>
+</context-param>
++<!-- gem.home can be set either here, or as the system property gem.home -->
++<context-param>
++  <param-name>gem.home</param-name>
++  <param-value><%= config.gem_home || '/usr/local/jruby/lib/ruby/gems/1.8' %></param-value>
++</context-param>
+<% end %>
+
+
+Feito isso, basta rodar novamente jruby -S war:shared:create e ele vai gerar o novo redmine.jar. Novamente, basta substituir no Glassfish e a aplicação funciona como antes. Mas desta vez, fui testar o upload de arquivo e o erro foi outro:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+Errno::ENOENT in ProjectsController#add_file
+
+File not found
+
+RAILS_ROOT: /opt/local/glassfish/domains/domain1/applications/j2ee-modules/redmine/config/..
+Application Trace | Framework Trace | Full Trace
+
+#{RAILS_ROOT}/vendor/rails/activerecord/lib/active_record/transactions.rb:101:in `transaction'
+#{RAILS_ROOT}/vendor/rails/activerecord/lib/active_record/transactions.rb:121:in `transaction'
+#{RAILS_ROOT}/vendor/rails/activerecord/lib/active_record/transactions.rb:129:in `save_with_transactions'
+#{RAILS_ROOT}/vendor/rails/activerecord/lib/active_record/base.rb:451:in `create'
+#{RAILS_ROOT}/app/controllers/projects_controller.rb:438:in `add_file'
+#{RAILS_ROOT}/app/controllers/projects_controller.rb:440:in `add_file'
+:0
+
+Request
+
+Parameters: {"commit"=>"Add", "version_id"=>"1", "id"=>"2", "attachments"=>[#<StringIO:0xd322d3>]}
+
+Show session dump
+
+--- 
+flash: !map:ActionController::Flash::FlashHash {}
+:user_id: 2
+
+Response
+Headers: {"cookie"=>[], "Cache-Control"=>"no-cache"}
+
+
+Este erro, por alguma razão, parece mais ‘resolvível’ do que o outro. Na realidade eu imagino que o problema seja que o RailsServlet, que aqui faz o papel de um Mongrel, obviamente ainda não chega nem aos pés do nível de refinamento de Zed Shaw. Existem diversos parâmetros para configurar um pool de processos JRuby.
+Como este servlet ainda não é bom o suficiente, ainda estarei à procura da solução que me interessa mais: Glassfish + JRuby + Mongrel. Talvez esta seja a melhor resposta.
+Agora sim! Vou dormir!
+tags: obsolete jruby
+

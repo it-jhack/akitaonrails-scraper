@@ -1,0 +1,21 @@
+
+
+
+
+
+Pessoal, eu ainda estou batendo cabeça aqui na Locaweb – no bom sentido. Uma coisa que, como Gerente de Produtos, preciso fazer, é tentar tornar os produtos mais fáceis para os clientes. Então fiquei imaginando como um usuário que ainda não é avançado em Rails poderia tirar proveito da hospedagem da Locaweb sem precisar ter muito medo de errar alguma coisa.
+Comecei pensando num tutorial etc. Mas resolvi ir um passo além e rapidamente montar uma nova gem, que chamei de Locarails. Ainda é um pouco crua. Para quem já entende: é um configurador automático de Capistrano. Nesta primeira versão estou usando apenas a estratégia de cópia – sem svn, nem git, por enquanto! Mas para iniciantes, já ajuda!
+Só para ter uma idéia, partindo do princípio que você já tem uma aplicação Rails (e está em Linux! Eu não testei isso no Windows ainda!):
+
+gem sources -a https://gems.github.com
+sudo gem install akitaonrails-locarails
+cd seu_projeto
+locarails .
+[… responder as questoes …]
+cap deploy:setup
+cap deploy
+-
+Pronto! Só isso: criou a aplicação, contratou a hospedagem, rodou o locarails e já está online! A única coisa que (ainda) não é automática é apontar o dominio para o diretório, que é feito via Painel de Controle. Mas uma coisa de cada vez :-) Me digam o que acham.
+Publiquei um tutorial um pouco maior do que este no Blog de Produtos da Locaweb.
+tags: obsolete locaweb
+

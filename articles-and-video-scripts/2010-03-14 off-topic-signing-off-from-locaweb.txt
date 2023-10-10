@@ -1,0 +1,13 @@
+
+
+
+
+Since June of 2008, it’s been almost 2 years since I joined Locaweb, a Brazilian web hosting company. I first approached them with the intention of having them sponsor a Rails event. From there they invited me to sign in.
+The very first thing we did together was delivering the first big Latin American Ruby on Rails conference which became Rails Summit. Then I helped to increase their entrance in the Brazilian development communities, and also to implement Rails support on their Linux shared hosting environment. I think we were very successful on that.
+With Locaweb I did almost 50 talks in events in a year and a half. We organized 2 successful Rails Summits, won 2 annual Info Magazine Awards, and we engaged in several internal projects, always trying to improve the Agile culture within the company and breaking the status quo. There are several Rails-based projects going on there right now. I am satisfied with the results.
+
+Fortunately, I know when a cycle is reaching an end, that’s why I decided that it’s time to move on. I’ll still be there until March, 22nd to assure a proper smooth transition and only then decide what to do next. And as The Oracle would say “Everything that has a beginning, has an end.”
+Right now I’m open to new opportunities, so if you know anything interesting going on, let me know. And for all the good friends I’m leaving behind at Locaweb, I hope to keep up the friendship.
+I know that this raises a few questions, such as “what happens to Rails Summit now?” Rest assured, that we are still in negotiations, but I feel that we will be able to deliver the 3rd edition without problems.
+tags: obsolete locaweb english
+

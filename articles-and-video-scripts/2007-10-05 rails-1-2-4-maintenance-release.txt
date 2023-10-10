@@ -1,0 +1,11 @@
+
+
+
+
+David acabou de postar sobre a versão 1.2.4 que eu disse que estava para sair nos posts anteriores.
+Esta versão é para corrigir bugs e principalmente para adicionar avisos de deprecação (o que se tornará obsoleto na versão 2.0 final). Quando você ver ‘warnings’ de ‘deprecated’ preste atenção: esses warnings se tornarão mensagens de erro na 2.0.
+sudo gem update rails y—
+
+Isso deve bastar.
+tags: obsolete rails
+

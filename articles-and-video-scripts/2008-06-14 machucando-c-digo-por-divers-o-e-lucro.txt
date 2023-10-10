@@ -1,0 +1,13 @@
+
+
+
+
+Este ano, na GoRuCo, um evento de Ruby que acontece em Nova Iorque, eu assisti uma palestra do grande Ryan Davis da Seattle Ruby Brigade e atualmente trabalhando para a Engine Yard. Eu me encontrei com ele em Portland mas infelizmente não tivemos tempo de gravar uma entrevista.
+Aliás, eu não fui na GoRuCo, mas felizmente a Confreaks esteve lá e gravou todas as palestras, por isso recomendo muito assistir a todas elas. Mas nesse caso específico eu achei a palestra do Ryan muito interessante então falei diretamente com ele sobre fazer uma versão em português para nossa comunidade, e ele rapidamente achou muito legal, me enviou o arquivo original de Keynote.
+Eu traduzi o Keynote e gravei uma palestra-screencast. Espero que todos gostem. O assunto é sobre se importar com código, machucar código, e como se tornar um programador melhor.
+
+E quem quiser os slides em PDF, também deixei disponível via SlideShare
+ | View | Upload your own
+E o grande Marcos Tapajós já colocou também para download a versão em Alta Qualidade no site dele ! Valeu!
+tags: presentation screencasts
+

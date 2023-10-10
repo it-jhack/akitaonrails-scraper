@@ -1,0 +1,200 @@
+
+Hoje fiz um teste muito interessante com Capistrano. Mike Bailey criou um conjunto de receitas de Capistrano muito poderosa chamada Deprec. Muitos já devem conhecer outra coleção famosa, o Rails Machine mas o Deprec vai além. Para ver o que ele faz, sugiro baixar o screencast free do Geoffrey Grosenbach que demonstra exatamente o que o Deprec faz.
+De qualquer forma, o objetivo do Deprec é pegar um servidor (como aqueles que você aluga em hosts que oferecem virtualização) Ubuntu Dapper, do zero, e instalar e configurar absolutamente tudo que ele precisa, com as melhores práticas de deployment. Ou seja, ele vai instalar Ruby, Apache 2.2 configurado com Proxy Balancer, Mongrel Cluster, etc.
+
+
+Eu fiz esses testes em um Ubuntu “virgem” dentro de uma máquina virtual Parallels no meu Mac, mas o teste pode ser feito em qualquer outra máquina. Para começar, instale um Ubuntu Dapper normalmente. Ao final faça:
+1
+2
+3
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install openssh-server
+
+
+Feito isso, anote o IP do servidor (no meu exemplo, será 192.168.2.2). Agora, na sua máquina local instale os Gems necessários:
+1
+2
+3
+
+gem install capistrano -y
+gem install deprec -y
+echo “require 'deprec/recipes'“ >> ~/.caprc
+
+
+O arquivo ~/.caprc é utilizado pelo Capistrano caso você queira ter configurações personalizadas além do que está no config/deploy.rb. Um exemplo disso são usernames ou mesmo a localização da sua chave privada de SSH.
+1
+2
+
+ssh-keygen -t rsa
+echo ssh_options[:keys] = %{/Users/username/.ssh/id_rsa} >> ~/.caprc
+
+
+Acima é um exemplo de como gerar suas chaves pública/privada (conforme já expliquei no post anterior) e como acrescentar sua localização no seu arquivo .caprc. Obviamente troque “username” pelo nome correto do seu usuário local.
+Caso já tenha criado sua aplicação Rails, entre no seu diretório e digite:
+1
+
+deprec --apply-to . --name deprecdemo --domain 192.168.2.2
+
+
+“deprecdemo” é o nome da minha aplicação Rails de teste. O comando deprec —apply-to faz quase a mesma coisa que o antigo cap —apply-to, mas ele acrescenta mais no arquivo deploy.rb. Aliás, segue a fonte do meu deploy.rb adaptado para o Deprec:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+
+require 'deprec/recipes'
+
+# =============================================================================
+# ROLES
+# =============================================================================
+set :domain, "192.168.2.2"
+role :web, domain
+role :app, domain
+role :db,  domain, :primary => true
+role :scm, domain
+
+# =============================================================================
+# REQUIRED VARIABLES
+# =============================================================================
+set :application, "deprecdemo"
+set :deploy_to, "/var/www/apps/#{application}"
+
+set :user, 'capistrano'
+set :svn_root, '/var/www/repos/'
+
+set :repository, "svn+ssh://#{user}@#{domain}#{svn_root}#{application}/trunk"
+set :rails_env, "production"
+
+# =============================================================================
+# APACHE OPTIONS
+# =============================================================================
+set :apache_server_name, domain
+set :apache_default_vhost, true # force use of apache_default_vhost_config
+set :apache_default_vhost_conf, "/usr/local/apache2/conf/default.conf"
+set :apache_conf, "/usr/local/apache2/conf/apps/#{application}.conf"
+set :apache_ctl, "/etc/init.d/httpd"
+set :apache_proxy_port, 8000
+set :apache_proxy_servers, 2
+set :apache_proxy_address, "127.0.0.1"
+
+# =============================================================================
+# MONGREL OPTIONS
+# =============================================================================
+set :mongrel_servers, apache_proxy_servers
+set :mongrel_port, apache_proxy_port
+set :mongrel_address, apache_proxy_address
+set :mongrel_environment, "production"
+set :mongrel_config, "/etc/mongrel_cluster/#{application}.conf"
+
+# =============================================================================
+# MYSQL OPTIONS
+# =============================================================================
+set :mysql_admin, 'root'
+
+# =============================================================================
+# SSH OPTIONS
+# =============================================================================
+ssh_options[:username] = 'capistrano'
+
+desc "Bug fix: the svn task clears out the tmp folder that this other task relies on"
+task :before_set_perms_for_mongrel_dirs, :roles => :app do
+  sudo "test -d #{deploy_to}/current/tmp || mkdir #{deploy_to}/current/tmp"
+end
+
+
+Coisas importantes:
+
+Acrescentar o role :scm. Com isso ele irá criar seu novo repositório Subversion. Caso já tenha um, não acrescente essa linha e apenas configure corretamente o :repository, bem como as variáveis :svn_username e :svn_password.
+
+
+Caso resolva deixar o Deprec criar seu novo Subversion, acrescente a variável :svn_root como mostrado no exemplo. Não sei se é um bug, mas caso não faça isso ele vai criar o repositório em /usr/local/svn. Outras tasks vão querer buscar dentro de /var/www e isso dá problema, portanto, configure isso.
+
+
+No caso do Apache apenas descomente tudo menos a configuração de Alias e SSL. No caso do Mongrel descomente tudo menos as configurações de user e group.
+
+
+No meu caso, quero criar um usuário fixo no servidor para ser responsável por deployments, por isso fixei na variável ssh_options[:username].
+
+
+Finalmente, não esqueça de criar a task :before_set_perms_for_mongrel_dirs. Parece ser outro bug, mas o Deprec cuida de importar todo seu código ao Subversion sem o diretório tmp mas depois a task de permissões busca por esse diretório e dá problema. Essa minha task deve resolver por enquanto.
+
+Agora, de dentro do diretório da sua aplicação Rails digite:
+1
+2
+3
+
+cap setup_admin_account_as_root 
+cap setup_ssh_keys
+cap install_rails_stack
+
+
+Isso vai fazer o seguinte: criar um usuário (no meu exemplo, eu chamei de ‘capistrano’) com permissões de root, vai autorizar sua chave pública SSH dentro desse novo usuário e, finalmente, vai instalar e configurar absolutamente TUDO que você precisa no seu servidor. Isso demora porque ele vai baixar todos os pacotes de Apache, MySQL, etc. Tenha paciência.
+Terminado isso, agora é fácil:
+1
+2
+
+cap deploy_with_migrations
+cap restart_apache
+
+
+Só isso! Agora se você digitar https://192.168.2.2 ele vai acessar o Apache 2.2, passar pelo Proxy Balancer, ser direcionado a um dos processos Mongrel e cair na sua aplicação, que vai ter o banco de dados devidamente criado e com os usuários corretos conforme descrito no seu config/database.yml.
+No vídeo do Geoffrey, em 15 minutos ele configurou tudo isso. Recomendo muito que se veja esse vídeo, depois siga o procedimento deste post. Faça isso num Ubuntu “virgem” para evitar conflitos, depois tente coisas mais avançadas em instalações que já existem (que é exatamente meu próximo passo também).
+Bom divertimento!
+tags: obsolete
+

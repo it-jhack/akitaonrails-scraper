@@ -1,0 +1,28 @@
+
+This has been frustrating me for the longest time. Mac OS X has both L2TP and PPTP support for VPNs but for some reason it has a very difficult time dealing with Windows based PPTP VPNs. Speculation goes on along the lines that OS X uses a newer implementation of PPTP, and Windows doesn’t (or most probable, it has a buggy implementation that only works on Windows, same problem as SMB, LDAP3, etc).
+Whatever the reason, the behavior that I’ve been seeing is that Leopard is able to connect to a Windows VPN, it is able to authenticate, it is able to route correctly but then it won’t drop the connection but simply stops routing packages into the VPN tunnel after around 5 min of usage. So, I decided to Google around and I tried a few tricks.
+Up until now I am connected to my company’s Windows VPN for 1 hr – which might be a world record! Let me explain a few things I tried and that might have helped in this.
+
+
+First, I tried a trick I read in a forum:
+
+Open System Preferences → Network
+Click the “Location” drop down menu and choose “Edit Locations …”
+Create a brand new Location
+Configure your Wifi or Ethernet connection so you’re online
+On the lower left corner, click on the “+” button, then on “Interface” choose “VPN” and on “VPN Type”, choose “PPTP”.
+Configure your VPN using your company’s setting (IP address, “DOMAIN\username”, type your password clicking on the “Authentication Settings …” button.
+Again on the lower left corner, click on the 3rd icon, next to the “-” icon and choose “Set Service Order …”
+Drag and drop your VPN service to the top of the list
+
+If you have VMWare Fusion installed, I read that the virtual network adapters could be one of the reasons so you need to stop them typing this in the Terminal:
+sudo /Library/Application\ Support/VMware\ Fusion/boot.sh -stop—
+
+After that, again in the Network Preferences Pane, I connected into my VPN and surprisingly the connection stayed on for more than 1 hr whereas I couldn’t stay connected for more than 5 min before that. None of the steps above make much
+sense, but it seems to have worked for me.
+
+I also left a Terminal open constantly pinging some server inside the company network to make sure I am keeping the connection alive. I have no idea if those steps actually solve the problem or I just got lucky all of a sudden. Please drop a line in the comments if it solved it for you or if you have other insights around this issue.
+
+Bottom line: if you can, don’t build a Windows-based network.
+tags: obsolete mac
+

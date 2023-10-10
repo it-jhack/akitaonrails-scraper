@@ -1,0 +1,37 @@
+
+Essas últimas semanas foram bem corridas. Mal acabou o FISL 11 e o mês de Agosto já começou com um evento bombástico: o Oxente Rails 2010, organizado pelo grande Paulo Fagiani e a competente galera da Tink!. Aliás, se você quer bons Railers da Região Norte (Natal), não deixe de contactar esse pessoal.
+
+
+
+O evento foi dividido em 2 dias, com 2 tracks paralelos. Por algo imagino que participaram quase 300 pessoas que vieram de diversas partes do Nordeste como Ceará e Piauí (que vieram de caravana). Todos os suspeitos da comunidade Rails estavam presentes como a galera do Rio (Vinicius Teles, Marcos Tapajós, Henrique Bastos, Sylvestre Mergulhão, etc). Tivemos a ilustre presença do Caffo (!), também do Pedro Belo do Heroku e Thaís Camilo da HashRocket Chile. Brasileiros mostrando nossa competência no mercado Norte-Americano. Nós paulistas também marcamos presença, incluindo a Plataforma Tec em peso (José Valim, Hugo Baraúna, etc). Enfim, muita gente muito legal.
+
+Natal é uma cidade é fantástica, o clima estava muito bom, e bem quente. Quem pôde aproveitar a praia e as dunas se deu bem (minha segunda vez lá e, pra variar, eu não aproveitei de novo). Além disso o pós-evento a cada dia sempre foi muito bom, excelente networking, conhecendo mais pessoas novas e incríveis. O Nordeste está fervilhando Rails, sem dúvida nenhuma, e espero ver mais e mais vindo de lá!
+Fantástica Caravana do Piauí!
+A organização estava impecável, o hotel que escolheram para o evento foi muito bom, o ambiente estava agradável. Além de palestras tivemos atividades como o XP Game, todo mundo muito aberto para conversas. O Nordeste entrou no circuito dos grandes eventos Brasileiros. Espero ver muito mais edições do Oxente!
+Para esse evento, eu preparei uma palestra um pouco diferente do habitual. A idéia era uma palestra para quem já tem uma noção pelo menos de Ruby e Rails, contando alguns episódios dessa história. Uma das mudanças que fiz foi no estilo da apresentação. Slides de tecnologia normalmente tem uma “jeitão” meio parecidos, e para este resolvi pesquisar slides de apresentações do pessoal realmente de graphic design. Acho que para uma primeira tentativa foi bem sucedido e vocês podem ver meus slides abaixo:
+Oxente Rails 2010View more presentations from Fabio Akita.
+Ainda conheci o Nerdson (não sabia que ele era de Natal!) e ganhei até uma participação em uma de suas famosas tirinhas, com os cumprimentos dos muy amigos Cariocas pela tirada :-)
+
+Depois tive uma semana sem eventos, mas logo em seguida já comecei na GoNow, na segunda-feira. Na terça-feira mesmo fui para outro evento: o Consegi 2010 em Brasília, com participação do Serpro (agradecimentos ao Giuseppe e Luíz Guilherme pelo convite novamente). O evento foi na Esaf, a Escola de Administração Fazendária, onde também ficamos hospedados. Esse congresso, resumidamente, não deixa de ser como um FISL, com o tema de Software Livre e um certo foco também em governo eletrônico.
+Foram diversos assuntos acontecendo em paralelo, de Python, a PHP, a Linux e muito mais. Para falar a verdade eu estava um pouco preocupado quanto à minha palestra. Imaginava que fosse palestrar para uma sala quase vazia :-) Isso porque eu não conheço quase nenhum Railer em Brasília e estava imaginando qual seria o interesse sobre o assunto. Para minha surpresa a sala ficou bem cheia como podem ver abaixo:
+
+
+Railers de Brasília, é hora de se organizarem para aproveitar o interesse crescente e formar uma comunidade, reunindo-se frequentemente. Eu vi na lista Rails-BR que alguém está começando esse movimento novamente, dêem continuidade! Se eu puder dar uma humilde sugestão, que tal chamá-la de GURU-DF? Não há nenhuma obrigação, claro, mas seria legal ver diversos “Grupos de Usuários RUby” (GURU) aparecendo por todo o Brasil.
+A minha palestra no Consegi foi o “Dicas de Desenvolvimento Web com Ruby”, a mesma que dei no FISL. Os slides estão aqui:
+Consegi 2010 – Dicas de Desenvolvimento Web com RubyView more presentations from Fabio Akita.
+Exatamente no dia da minha palestra, tivemos a feliz coincidência do lançamento oficial do Ruby 1.9.2, que pude mencionar na palestra.
+Voltei de Brasília quinta-feira de manhã cedo e logo no fim do mesmo dia, fui até a Caelum para comemorar o WhyDay junto com o pessoal do GURU-SP. O José Valim deu uma palestra para dar o kick-off e passamos o resto da noite discutindo assuntos variados. Foi legal reencontrar o povo. Por coincidência, muitos dos encontros do Guru foram justamente quando estava acontecendo outros eventos que eu estava e por isso acabei não participando de muitos. Mas pretendo participar mais!
+
+E a Caelum sempre demonstrou grande participação nesta comunidade e só temos a agradecer ao Paulo e ao Guilherme pela força.
+No dia seguinte, coloquei o pé na estrada novamente e já estava voando para Porto Alegre (pela terceira vez este ano!) para participar do RS on Rails, o evento organizado pela Softa. Na sexta à noite me encontrei com o pessoal da Softa, Fande e o Marcelo Nogueira da Reload Brazil para uma boa Red Ale artesanal e conversas aleatórias :-)
+Gabriel da Fande e Juan Maiz da Softa
+Na manhã seguinte começamos com força total no auditório da PUC. Felizmente o tempo estava muito bom, então não morri de frio desta vez :-)
+O Carlos Antônio, da Plataforma Tec abriu com a primeira palestra e eu segui com a mesma palestra que dei no Oxente Rails (slides mais acima). O evento foi até quase umas 7 da noite, sem nenhum problema. Conheci mais pessoas legais e notei que tem muito mais gente interessada em Rails em Porto Alegre do que eu imaginava!
+Tive um bom papo com o pessoal da RedeHost, uma hospedagem de sites de lá mesmo e que está pensando em suportar Rails também. Conheci o Luíz Claudio Garcia que apresentou o case de uso de Rails no Tribunal Regional Eleitoral (TRE-RS). Ele me contou que hoje eles tem cerca de 11 desenvolvedores Rails e diversos projetos em andamento. Um bom exemplo para outros órgãos públicos relutantes em usar novas tecnologias.
+
+Além disso me surpreendeu a quantidade de empresas prestando serviços de Rails. Conheci o pessoal da Softa, Fande, Reload Brazil, Woompa, PowerTask, fora a ThoughtWorks, claro. A comunidade do Rio Grande do Sul vai crescer muito! Isso sem contar que recentemente começaram os esforços para o GURU-SC e o pessoal de Santa Catarina e Rio Grande do Sul devem começar a interagir mais. Pessoal do Paraná, onde estão vocês!?
+Terminamos o evento na Lagom, uma excelente cervejaria artesanal que abriu recentemente e tem excelentes cervejas. Recomendo muito que visitem o local! Aliás, fazendo as contas por alto, devo ter consumindo 2 dúzias de latinhas de Red Bull neste último mês. Se por acaso você, leitor, trabalha na Red Bull, estou aceitando patrocínio, em espécie! :-)
+E esta semana, dia 26 de Agosto, quinta-feira, teremos o Barcamp de Rails da Locaweb!! Você que é de São Paulo, já se inscreveu? Vamos nos encontrar para mais um happy hour, para networking e discussões geeks. Estaremos esperando vocês lá!
+Depois disso, finalmente terei um período sem eventos. Devo estar de volta à estrada só na segunda semana de Setembro agora. Foi um excelente mês. Cansativo, mas excelente! Nos vemos por aí!
+tags: obsolete conference
+

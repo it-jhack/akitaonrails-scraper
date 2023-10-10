@@ -1,0 +1,14 @@
+
+
+
+
+O encontro foi muito legal, só posso dizer que estou exausto! Hoje no começo da tarde estive primeiro no Web Expo Forum onde fiz uma palestra sobre filosofia de desenvolvimento de software e Ruby on Rails – claro :-) Quem estiver interessado nos slides, clique aqui. É uma variância da palestra que dei na Campus Party este ano,
+Em seguida, passei pelo pior temporal de São Paulo nos últimos tempos. E chuva aqui vocês sabem o que significa: CAOS! Alagamentos, semáforos quebrados, congestionamento, literalmente o inferno. Estava tão congestionado que dava pra twittar do carro :-P
+Comecei a achar que o Barcamp iria para miar. Felizmente, Railers são uma espécie muito resiliente e não é uma chuvinha à toda que irá detê-los :-) Brincadeira, claro, sei que teve muita gente que realmente quis vir mas seria loucura enfrentar uma marginal tietê parada, ainda mais na situação caótica de hoje. Alguns que vieram de mais perto, por exemplo da USP, que é praticamente do lado, levaram 2 horas para chegar.
+Foi muito legal. A galera levou notebooks em peso (muitos Macs!), o wi-fi do lugar começou a sentar, muita gente discutindo sobre Ruby, sobre Rails, dicas, experiências. Espero que todo mundo tenha aproveitado para estreitar laços, conhecer novas pessoas e aprender alguma coisa. Eu com certeza aproveitei, sempre aprendo algum truque novo.
+Meu colega Daniel Cukier (@danicuki) postou um vídeo que ele fez:
+
+Mais para o final sorteamos 2 livros do Rodrigo Urubatan de Ruby on Rails, gentilmente fornecidos pela editora Novatec. Obrigado pelo apoio!
+Acompanhem o Blog oficial do Barcamp Locaweb onde o pessoal vai postar as fotos, depoimentos e também onde vocês poderão acompanhar os próximos Barcamps.
+tags: obsolete locaweb
+

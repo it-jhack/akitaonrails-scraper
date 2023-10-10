@@ -1,0 +1,10 @@
+
+
+
+
+Semana passada algumas pessoas ficaram meio “empolgadas” com a descoberta de falhas de segurança em todas as versões de Ruby MRI a partir de 1.8.4. Os bugs tem a ver com buffer overflow em array, dentre outras coisas. Todos bugs simples mas que demoraram bastante para serem descobertos. A recomendação é baixar as versões mais novas “E” rodar sua suíte de testes para garantir que nada quebra.
+Cuidado: assim com o Ruby 1.8.7 é um grande problema para quem não tem suíte de testes, esses patches de segurança também quebram compatibilidade, por isso não devem ser considerados simplesmente como plug-and-play.
+Para quem já tem aplicações em produção e pode optar por instalar o Ruby Enterprise Edition do pessoal da Phusion, eu recomendo que o faça. Para quem ainda não sabe, o REE é um “fork” do Ruby MRI com otimizações para economizar bem mais memória e ainda aumentar performance. E eles acabaram de aplicar os patches de segurança e ajustar para não ser tão ruim com incompatibilidade.
+Por exemplo, se você está com o MRI 1.8.6 no patchlevel 111 e atualizar para o CVE 230, muita coisa pode quebrar. Mas se você baixar o REE novo terá as correções do 230 mas a compatibilidade com o 111. Baixe o REE daqui
+tags: obsolete security
+

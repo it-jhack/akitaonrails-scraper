@@ -1,0 +1,21 @@
+
+Quando estive em São Francisco, uma coisa que conversei com o Matt foi como é difícil conseguir bom material na língua nativa. Ele é francês então também entende isso. Quando uma tecnologia nova sai, alguém escreve um livro em inglês. Só depois que esse livro já fez algum sucesso é que alguma editora nacional resolve comprar os direitos para traduzir. Depois de um longo tempo de tradução e revisão, finalmente sai no mercado … já obsoleto pois a tecnologia anda muito mais rápido do que esse processo moroso.
+Pensando nisso, o Matt resolveu criar o projeto Merb-Book. Ele buscou colaboradores e os primeiros convocados foram eu e o Makoto Kuwata, que é rubista do Japão. Outros países se seguiram e ele ainda está procurando mais gente.
+Aproveitando: não percam o novo curso de Merb que o grande Satish Talim anunciou hoje para o RubyLearning.org
+
+
+Ele fará o seguinte: semanalmente fará pushes para o repositório dele, de onde depois eu vou fazer pulls no meu fork do Github. Qualquer brasileiros pode ajudar a colaborar. Nós já fizemos muito isso e felizmente nossa comunidade Ruby já está acostumada. Para que as pessoas não traduzam as mesmas coisas, gerando trabalho duplicado, é importante que todos peçam a mim para se inscrever na planilha do Google Docs. O processo é simples:
+
+Faça um fork do meu repositório: git://github.com/akitaonrails/merb-book.git
+Se ainda não sabe colaborar com Github, assista este meu screencast
+Se inscreva na planilha
+Antes de começar qualquer tradução veja se ninguém já está trabalhando nesse capítulo;
+Se não estiver, coloque seu nome
+Quando acabar ou achar que não terá tempo de acabar, tire seu nome da planilha
+Quando finalizar, me envie pull request que eu faço merge no meu fork
+
+Os coordenadores de tradução como eu já tem acesso de commit direto no repositório do Matt. Isso deve facilitar o trabalho do lado dele para não ter que ficar gerenciando dezenas de pull requests. O trabalho será dividido entre nós, ‘tenentes’, para cada qual gerenciar seu próprio projeto local de tradução. A discussão sobre a tradução do livro acho que pode ser feita diretamente no Google Groups Merb-br
+Contamos com a colaboração de vocês. O Merb é mais uma boa opção para os Rubistas. Eu mesmo, para alguns projetos vou usar Rails, para outros devo considerar Merb ou Sinatra. Esse livro será um recurso muito legal para quem está aprendendo Ruby.
+E não se esqueçam dos outros projetos de tradução em andamento: o de Rails Guides do Cássio Marques e o do Why’s (Poignant) Guide to Ruby com o Carlos Brando.
+tags: obsolete merb
+

@@ -1,0 +1,20 @@
+
+Esta semana estava organizando meu blog e finalmente adicionei ao menu principal o ítem "Iniciante". Logo se tornou o ítem mais acessado do meu blog. É um sintoma de um problema que sempre acontece: muitos dos Rubistas que iniciaram 5 anos ou mais atrás e hoje são reconhecidos escreveram muitos posts, partipavam dos foruns. Muita de nossa inspiração veio de blog posts de outros grandes Rubistas de fora. Ryan Bates, o próprio DHH, Jamis Buck, Dave Thomas e muitos outros que também estavam ainda aprendendo e postando sobre as coisas que aprendiam.
+Essa geração passou, uma nova surgiu, os blog posts agora tendem a ser mais avançados e, pior, existe uma abundância de material e pouca sequência. A vantagem de iniciar a aprender junto com o nascimento de qualquer plataforma é que você nunca se sente "ficando para trás" pois literalmente vimos absolutamente tudo que foi feito até então.
+
+
+
+
+Mas o "Iniciante" (não importa se iniciante em programação em geral, ou avançado em outra plataforma e iniciante nesta) não tem o histórico, acabou de chegar e se vê perdido numa montanha de informação e discussão. O que é mensageria assíncrona? O que são APIs RESTful? Que diabos é um MongoDB? Pra que serve Capistrano? Por que não posso colocar meus sites numa Dreamhost e preciso ir pra Heroku? Travis, isso é de comer???
+Eu frequentemente tento escrever artigos mais introdutórios, como os recentes que escrevi sobre hospedagem, mas mesmo eles já pressupõe um leitor não tão iniciante assim. Hora de voltar às raízes: se eu olhar meu histórico, o artigo mais lido do meu blog de todos os tempos foi escrito em 31 de Janeiro de 2008 e se chama Rolling with Rails 2.0 - O Primeiro Tutorial Completo - Parte 1.
+Rubistas, lembram da sensação quando assistiram o Blog em 15 minutos pela primeira vez? Óbvio, é brincadeira de criança, mas teve um enorme impacto na nossa geração, nos inspirou, nos motivou. Eu me empolguei e embarquei depois disso, o resto é história.
+E onde está o "Blog de 15 minutos" que vai inspirar a nova geração?
+
+
+
+Pensei muito sobre esse assunto, já comecei a escrever um novo material sobre isso mas nunca acabei. Dica: o "Blog de 15 minutos" não é mais um Blog :-) Ainda precisa ter a velocidade de no máximo 15 minutos mas sem ser acelerado demais e com a missão de expor as principais boas práticas de hoje. Screencast, tutoriais, eBook. Não é uma missão pequena mas está lançado o desafio.
+E se você é iniciante, comece seu próprio blog. Todos os grandes nomes de hoje começaram escrevendo sobre suas próprias experiências de aprendizado, esses posts se tornaram as primeiras referências para nossa geração. Existe um novo público ávido para ter acesso a essa experiência e ninguém pode explicar melhor o processo de "iniciar" do quem está "iniciando".
+Incentivo: um blog post toda sexta voltada aos iniciantes. Twittem com a hashtag #IF. Vamos fazer algo mais útil do que um mero #FF
+
+tags: obsolete
+

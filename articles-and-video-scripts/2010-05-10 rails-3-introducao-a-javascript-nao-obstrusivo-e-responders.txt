@@ -1,0 +1,323 @@
+
+A partir do objetivo de ser um framework mais agnóstico a outros sub-frameworks, o Rails 3 trouxe uma limpeza na sua funcionalidade de Javascript.
+Até o Rails 2.3.5 ele vinha embutido com Prototype e Scriptaculous. Em si, isso não seria um grande problema, mas ele também vinha com uma biblioteca chamada RJS que habilitava helpers como link_to_remote, remote_form_for, button_to_remote. Esse tipo de função gerava HTML desta forma:
+1
+2
+3
+4
+5
+6
+7
+
+<form action="/tasks" class="new_task" id="new_task" method="post" 
+  onsubmit="new Ajax.Request('/tasks', {asynchronous:true, evalScripts:true, 
+  parameters:Form.serialize(this)}); return false;">
+  <div style="margin:0;padding:0;display:inline">
+    <input name="authenticity_token" type="hidden" 
+      value="ktEpYwrizNA/bMEydEr9PdHDy1KMEgSVZxScc827gOg=" />
+  </div>
+
+
+
+
+
+Note o horroroso “onsubmit”. Isso sem contar os diversos “onclick” espalhados por links e outros lugares. Isso deixa o HTML bem feio, com código espalhado por todos os lados. Mais do que isso, quando um desses eventos era ativado, separávamos a resposta em views no formato “.html.rjs”, por exemplo, um “create.html.rjs” poderia ser assim:
+1
+2
+
+page.insert_html :bottom, "tasks", :partial => @task
+page.select(".new_task").first.reset
+
+
+E ele gera o seguinte Javascript como resposta à chamada Ajax:
+1
+2
+3
+4
+5
+6
+7
+8
+
+try {
+    Element.insert("tasks", { bottom: "<tr id=\"task_11\">..." });
+    $$(".new_task").first().reset();
+} catch (e) { 
+    alert('RJS error:\n\n' + e.toString()); 
+    alert('Element.insert(\"tasks\", { bottom: \"<tr id=\\\"task_11\\\">..." });
+    throw e 
+}
+
+
+Eu encurtei o HTML gerado para facilitar. Ou seja o RJS permitia escrever as respostas Ajax usando Ruby puro, porém o resultado sempre seria Javascript dependente de Prototype+Scriptaculous. Alguns projetos tentaram reimplementar a mesmo API para gerar uma saída em JQuery, ou outros, mas eles nunca se mantiveram atualizados o suficiente.
+A boa prática desde então era não usar RJS e simplesmente escrever Javascript em templates no formato “.js.erb”, com código deste tipo:
+1
+2
+
+$('<%= escape_javascript(render(:partial => @task))%>').appendTo('#tasks');
+$("#new_task")[0].reset();
+
+
+É exatamente a mesma coisa mas agora sem a camada extra do RJS que transformava o Ruby em Javascript. E com isso você poderia usar qualquer outra biblioteca como MooTools ou Dojo. Muito simples e pode ser feito hoje, no Rails 2.3.5 atual. O truque é usar ERB, da mesma forma como nos seus templates HTML. Mas quando o ERB gerar HTML, você precisa passar pelo método “escape_javascript”, para que o resultado possa ser incorporado a uma string Javascript sem erros de sintaxe. Daí esse blob é repassado de volta na chamada Ajax e interpretada pelo navegador para realizar as modificações necessárias ao DOM.
+UJS
+Não tenho certeza mas acho que “UJS” era acrônimo para “Unobstrusive JavaScript” (se alguém souber o correto, por favor me corrija). De qualquer forma a intenção no Rails 3 era desacoplar com a dobradinha Prototype+Scriptaculous. Eles ainda vem embutidos por padrão mas você agora pode optar por não usá-los sem precisar abrir mão das funcionalidades de Ajax do Rails.
+Para recapitular, até o Rails 2.3 escrevíamos código como este:
+1
+2
+3
+
+link_to_remote "Destroy", :url => task_path(task), 
+    :confirm => 'Are you sure?', 
+    :method => :delete
+
+
+Que gera o seguinte HTML+Javascript:
+1
+2
+3
+4
+5
+6
+
+<a href="#" onclick="if (confirm('Are you sure?')) { 
+    new Ajax.Request('/tasks/12', {
+        asynchronous:true, evalScripts:true, method:'delete', 
+        parameters:'authenticity_token=' + 
+            encodeURIComponent('ktEpYwrizNA/bMEydEr9PdHDy1KMEgSVZxScc827gOg=')}); 
+    }; return false;">Destroy</a>
+
+
+A diferença no Rails 3 é que métodos redundantes como “link_to_remote”, “remote_form_for” não existem (serão ainda depreciados, mas a boa prática é não usá-los). Em vez disso devemos usar os métodos padrão “link_to” ou “form_for”, mas agora temos uma opção à sua chamada: o “:remote => true”. Ou seja, o ERB deve ser assim agora:
+1
+2
+3
+4
+
+link_to "Destroy", task, 
+    :confirm => 'Are you sure?', 
+    :method => :delete, 
+    :remote => true
+
+
+Muito parecido com o que fazíamos antes, mas o HTML gerado é bem diferente:
+1
+2
+3
+4
+5
+
+<a href="/tasks/3" 
+    data-confirm="Are you sure?" 
+    data-method="delete" 
+    data-remote="true" 
+    rel="nofollow">Destroy</a>
+
+
+Notem: zero Javascript embutido no meio do HTML. Em vez disso os métodos do Rails que recebem opções como :confirm, :method, :remote geram atributos equivalente diretamente na tag HTML, adicionando semântica às tags. A vantagem disso é que os navegadores simplemente vão ignorar esses atributos em termos de renderização, mas Javascript pode acessar essa informação através do DOM.
+Agora vem a parte interessante: qualquer framework Javascript pode manipular essas informações. Para isso foram criados alguns “drivers” que mapeiam esses atributos para cada framework. Atualmente só conheço o do Prototype, que já vem no Rails 3, o do JQuery e do MooTools, mas qualquer outro framework como Dojo pode tirar proveito dessas informações.
+
+Driver do Prototype
+Driver do JQuery
+Driver do MooTools
+
+Eu particularmente prefiro usar JQuery a Prototype, portanto posso fazer isto:
+1
+2
+3
+4
+
+cd projeto
+rm public/javascript/rails.js
+wget https://github.com/rails/jquery-ujs/blob/master/src/rails.js
+mv rails.js public/javascript/
+
+
+Isso substitui o driver de Prototype pelo de JQuery. Agora no layout, “app/views/layouts/application.html.erb” posso declarar:
+1
+2
+3
+4
+5
+
+    ...
+    <%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" %>
+    <%= javascript_include_tag "rails" %>
+    <%= javascript_include_tag "application" %>
+</body>
+
+
+Notem que prefiro usar o JQuery a partir do CDN do Google. Em seguida carrego o driver e finalmente qualquer outro javascript customizado da aplicação. Também notem que prefiro colocar os javascripts perto do final da página, encostado no fechamento do “body”, retirando-as do cabeçalho (head). São todas boas práticas de desenvolvimento Web e você pode ler mais sobre elas no Yahoo Developer Network – Best Practices for Speeding Up your Website.
+Pronto, isso é suficiente para ligar os atributos “data-*” a eventos de JQuery.
+Responders
+Além de habilitar os eventos Ajax nos templates/views, claro, precisamos codificar as respostas corretas nos controllers. A forma de fazer isso no Rails 2.3 é assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+def destroy
+  @task = Task.find(params[:id])
+  @task.destroy
+  flash[:notice] = "Successfully destroyed task."
+  respond_to do |format|
+    format.html { redirect_to tasks_url }
+    format.js
+  end
+end
+
+
+O truque está no método “respond_to”, que recebe um bloco configurado com o que responder para cada tipo de formato de requisição. Se o usuário veio via HTML normal, sem javascript, ele será redirecionado, mas se a chamada foi via ajax, ele procurará o template “destroy.js.[…]”. Esse […] que coloquei significa que o respond_to não se importa com a engine de template, pode ser ERB, Builder, RJS, HAML ou qualquer outra coisa. No caso do Rails 2.3 o mais comum era usar RJS, portanto a resposta seria para “destroy.js.rjs”. Como expliquei acima, escreveríamos em Ruby e ele seria convertido para Javascript de Prototype.
+Mas agora temos outras soluções. O Rails 3 trás a funcionalidade de Responders. Em resumo, a maioria dos controllers segue alguns padrões muito próximos. Não exatamente idênticos o suficiente para refatorarmos em uma biblioteca estática, mas com linhas parecidas dadas algumas configurações extras. Gems como o antigo resource_controller tentavam abstrair justamente isso.
+O padrão atual é o que foi definido como “Responder”. Um controller pode estar atrelado a uma classe de Responder que, dependendo do tipo de chamada (se foi get, se foi post, se foi uma ação de criar um objeto, ou editar um objeto existente, etc) dará respostas como redirecionar para o índice, ou chamar o template padrão da ação, ou renderizar um XML em vez de HTML.
+O Rails 3 já vem com um Responder padrão que é basicamente o equivalente do que o Scaffold Generator construía. O Generator ainda não gera código de controller usando Responder, porque, segundo o DHH, talvez fosse mudança demais para uma transição. Então por enquanto, se apenas seguir os velhos tutoriais que usam geradores, você ainda não verá nada disso. Mas no nosso caso, já podemos começar a usar.
+Sem ir muito em detalhes no funcionamento interno dos Responders, o que você precisa fazer é primeiro declarar a que tipos de formatos o controller consegue responder:
+1
+2
+3
+
+class TasksController < ApplicationController
+  respond_to :html, :js
+  ...
+
+
+Agora, em cada ação, usamos o método “respond_with”, que literalmente passa o objeto principal (coleção ou objeto individual) ao Responder:
+1
+2
+3
+4
+5
+6
+
+def destroy
+  @task = Task.find(params[:id])
+  @task.destroy
+  flash[:notice] = "Successfully destroyed task."
+  respond_with @task
+end
+
+
+Se por acaso você quiser mudar o comportamento do Responder padrão, uma das formas é fazer assim:
+1
+2
+3
+4
+5
+6
+7
+8
+
+def destroy
+  @task = Task.find(params[:id])
+  @task.destroy
+  flash[:notice] = "Successfully destroyed task."
+  respond_with @task do |format|
+    format.html { redirect_to root_path }
+  end
+end
+
+
+Desse jeito ele funciona de forma muito parecida com o bloco do antigo “respond_to”, mas o “respond_with” segue mais a filosofia de “Convention over Configuration” que significa “se o programador não declarou nada, use padrões inteligentes, mas se precisar de algo diferente, ele deve configurar somente a exceção”. Da forma antiga estava mais para “configure tudo, mesmo que a maioria dos controllers faça tudo igual”.
+CSRF – Cross Site Request Forgery
+Uma coisa que não é tão nova, já que também existe nos Rails anteriores é proteção contra CSRF, ou seja, evitar que sistemas externos consigam fazer POST em nossos formulários. Para evitar isso, o Rails gera um identificador único, aleatório, que é criado quando o formulário é desenhado. Ele precisa ir junto com os outros parâmetros de submissão, caso contrário o Rails rejeita a submissão.
+A trava que garante isso está no ApplicationController, em “app/controllers/application_controller.rb”. Veja:
+1
+2
+3
+
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  ...
+
+
+Agora, para ter o identificador você precisa usar métodos como o form_for, que gera HTML como este:
+1
+2
+3
+4
+5
+
+<form action="/tasks" class="new_task" id="new_task" method="post">
+  <div style="margin:0;padding:0;display:inline">
+    <input name="authenticity_token" type="hidden" 
+      value="ktEpYwrizNA/bMEydEr9PdHDy1KMEgSVZxScc827gOg=" />
+      ...
+
+
+Veja o campo hidden chamado “authenticity_token”. Agora, se você precisasse manipular o formulário fora dos helpers do Rails, por exemplo, manualmente fazer uma chamada Ajax via jQuery, era necessário usar truques como este. O princípio era capturar o token numa variável Javascript e depois formatar as chamadas Ajax concatenando esse token:
+1
+
+<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+
+
+
+1
+2
+3
+4
+5
+6
+
+$(document).ajaxSend(function(event, request, settings) {
+  if (typeof(AUTH_TOKEN) == "undefined") return;
+  // settings.data é uma string serializada como "foo=bar&baz=boink" (ou nulo)
+  settings.data = settings.data || "";
+  settings.data += (settings.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);
+});
+
+
+Agora, no Rails 3, o token é gerado num meta tag, no cabeçalho:
+1
+2
+3
+
+<head>
+  <%= csrf_meta_tag %>
+  ...
+
+
+Isso gera um HTML como este:
+1
+2
+3
+4
+
+<head>
+  <meta name="csrf-param" content="authenticity_token"/>
+  <meta name="csrf-token" content="5gs67FrgQ7p4ZyDs/8VMDYopOpPs6Ploury0GMSCfPk="/>
+  ...
+
+
+Daí o driver UJS adequado consegue ler esse parâmetro também e já concatena para você. Se você mesmo precisar recuperar este dado via Javascript, pode fazer assim:
+1
+2
+
+var csrf_token = $('meta[name=csrf-token]').attr('content'),
+    csrf_param = $('meta[name=csrf-param]').attr('content');
+
+
+Esse é o código do driver UJS de JQuery, que depois gera um campo hidden desta forma:
+1
+2
+3
+
+if (csrf_param != null && csrf_token != null) {
+    metadata_input += '<input name="'+csrf_param+'" value="'+csrf_token+'" type="hidden" />';
+}
+
+
+Isso também deve simplificar e padronizar o uso do token de CSRF.
+Conclusão
+Há muito para gostar na nova forma como o Rails 3 trata Javascript e evento Ajax. Esse é o básico para começar. Se quiserem entender melhor e comparar a forma 2.3.5 e a nova 3.0 (beta 3), eu criei um projetinho no Github com o código fonte de uma aplicação de Task List simples (basicamente um scaffold). Clone e comece a estudar.
+1
+
+git clone git://github.com/akitaonrails/Unobstrusive-Demo.git
+
+
+
+tags: obsolete rails
+

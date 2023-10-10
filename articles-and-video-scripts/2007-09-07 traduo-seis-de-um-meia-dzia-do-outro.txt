@@ -1,0 +1,30 @@
+
+publicado por Glenn Vanderburg em 29/03/04
+“Faço minhas as palavras do Glenn” (tradução a seguir):
+Chad Fowler (via del.icio.us) me guiou a um post interessante à um mailing list. A discussão se virou para closures e objetos, e qual poderia ser considerado “mais rico” ou “mais poderoso” ou “mais fundamental”. Anton van Straazen entrou com um post que eu acho que resume a questão perfeitamente. Vale a pena ler a coisa toda mas o núcleo disso é:
+
+
+
+Dada essa tensão entre opostos. Eu mantenho que a questão de closures vs. objetos deveria realmente ser um koan […] Aqui vai:
+O venerável mestre Qc Na estava andando com seu discípulo, Anton. Esperançoso de trazer o mestre à discussão, Anton disse “Mestre, eu ouvi dizer que objetos são uma coisa boa – isso é verdade?” Qc Na olhou com dó o seu discípulo e respondeu, “Pupilo tolo – objetos são meramente closures de pobre.”
+Atônito, Anton foi embora e retornou à sua cela, intencionado em estudar closures. Ele cuidadosamente leu a série inteira de papers “Lambda: The Ultimate …” e seus primos, e implementou um pequeno interpretador Scheme com um sistema de objetos baseados em closures. Ele aprendeu muito, e queria informar a seu mestre de seu progresso.
+Em sua próxima caminhada com Qc Na, Anton tentou impressioná-lo dizendo “Mestre, eu estudei cuidadosamente a questão, e agora entendo que objetos são verdadeiramente closures de pobre.” Qc Na respondeu batendo com um bastão na cabeça de Anton, dizendo “Quando você vai aprender? Closures são objetos de pobre.” Nesse momento, Anton se iluminou.
+
+Por que eu gosto tanto disso? Se você ler este blog, sabe que gosto de linguagens dinamicamente tipadas. Eu frequentemente encontro blogs, artigos ou mailing lists de pessoas que acreditam que tipagem dinâmica é “o único caminho verdadeiro” (eu já fui culpado desse tipo de coisa, de fato). E então eu me viro e vejo pessoas clamando que tipagem forte estática tem benefícios indiscutíveis, e que é muito difícil construir software confiável em linguagens de tipagem dinâmica (ignorando numerosos contra-exemplos), etc, etc. E a coisa é … Eu não acho que nenhum dos lados está inteiramente correto ou inteiramente errado.
+Existem, eu acredito, muitas coisas em nossa área que exibem esse mesmo tipo de dualidade – o que Anton chamou “tensão entre opostos”. Aqui vão alguns:
+
+Funcional vs. O.O. (o koan de Anton é só um exemplo disso)
+Compilado vs. Interpretado
+código fonte baseado em arquivos vs. imagens vivas
+bancos de dados relacionais vs. O.O.
+testes como ferramentas de design vs. como ferramentas de qualidade
+apps. baseados em browser vs. rich clients
+dados como código vs. sintaxe rica
+
+Você poderia escrever um koan sobre cada um desses.
+(Vou observar que embora o Zen koan é uma forma ótima de capturar e expressas essas tensões, Zen não tem um monopólio dessas idéias. Para apenas um exemplo, compare Galatians e James. À primeira vista parecem em contradição, mesmo assim o núcleo de cada um pode ser encontrado no outro).
+Eu entitulei este artigo de “Seis em Um, uma Meia-Dúzia do Outro”. Para muitas dessas coisas, eu não acho que seja uma dividida bem no meio … mas as alternativas são pesadas de maneira diferente, e como você dá valor a elas depende de suas preferências, necessidades, medos e experiências. Até certo ponto, acho que vai até nossa predisposição à outro conjunto de conceitos opostos: direcionando vs. habilitando
+Por mais que eu goste de argumentar meu lado dessas coisas com toda força possível, estudar a história de nossa área me levou a concluir que existem vantagens e desvantagens inerentes a cada uma das escolhas acima. Nenhum dos lados resolve todo problema: em vez disso, cada lado tem alguma força e alguma fraqueza relativa ao outro. Embora possa ser divertido tomar lados (e eu sei que vou continuar fazendo isso), em algum ponto o curso mais produtivo é tentar realmente entender os méritos relativos.
+Uma vez feito isso, será claro que a escolha recai a o quê valorizamos mais … e pensar sobre esses valores seria ainda mais produtivo.
+tags: obsolete paradigms translation
+

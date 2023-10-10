@@ -1,0 +1,171 @@
+
+nota sobre o livro: só para informá-los que finalmente recebi a cópia impressa do texto revisado para que eu resolva algumas dúvidas do revisor e também repasse o texto. Devo entregar a versão final do texto nesta semana para o material seguir para o pessoal de editoração. Depois disso deve levar cerca de 15 a 20 dias para editorar e, finalmente, mais uns 10 dias até chegar à versão impressa final. O material impresso é grande: mais de 900 folhas de papel, é difícil imaginar a quantidade física quando se acostuma a trabalhar apenas nos arquivos Word. Não entendi ainda porque não usam o recurso de Track Changes do Word, mas enfim …
+Voltando ao assunto deste post, a versão 1.1 saiu faz pouco tempo mas estamos vendo com entusiasmo a chegada próxima da versão 1.2. Dentre as novidades provavelmente teremos um instalador mais simples para ajudar os iniciantes a ter um ambiente funcional mais rápido. Além disso também poderemos ver o servidor Webrick ser deprecado em favor do fabuloso Mongrel, de Zed Shaw. Felizmente foi uma previsão que fiz algum tempo atrás quando decidi detalhar o Mongrel no meu livro, em vez de alternativas com FastCGI ou mesmo simplesmente mostrar o Webrick. Finalmente, a funcionalidade técnica que deve mudar um pouco a maneira de desenvolver: simply_restful.
+
+
+Alguns posts atrás eu já me adiantei a esse assunto, principalmente por causa da apresentação World Full of Resources que David Hansson fez na Ruby Kagi, no Japão, este ano.
+David Goodlab fez um post em seu blog a respeito desse assunto. O plugin ainda está em pleno desenvolvimento por isso é difícil criar algum tipo de tutorial, pois em poucos dias ele já estaria obsoleto. Quem é curioso com a tecnologia deve baixar o Edge Rails do trunk principal de desenvolvimento para acompanhar sua evolução. A seguir, a tradução do post de Goodlab.
+Agora que Rick integrou a funcionalidade de simply_restful com o núcleo Rails, o interesse em design RESTFUL está fadado a crescer. Entendi que a maioria da documentação está um tanto obsoleta, precisando desencavar o código para compreender qual sintaxe deve ser usada para rotas nomeadas, geração de url, etc. Diferenças entre o README do simply_restful, a apresentação de DHH da RailsConf, e vários posts de blogs aleatórios, pode ficar bastante confuso! Vamos esclarecer, certo?
+Estrutura URL
+Primeiro de tudo, uma coisa que todos devem estar familiarizados: a estrutura URL. Existem três URLs básicas, mas cada um pode responder vários verbos HTTP em jeitos diferentes. Usando uma entidade Order:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+Rota Nomeada    URL              Verbo HTTP   Controller Action
+
+orders_url      /posts           GET          index
+orders_url      /posts           POST         create
+order_url       /posts/:id       GET          show
+order_url       /posts/:id       PUT          update
+order_url       /posts/:id       DELETE       destroy
+ner_order_url   /posts/new       GET          new
+edit_order_url  /posts/:id;edit  GET          edit
+
+
+A forma plural da rota nomeada pode ser entendida como uma “coleção” de URLs. Ela permite operações na coleção como um todo:
+
+Pegar uma lista de todas as entidades, nesse caso orders (GET)
+Criar uma nova entidade (POST)
+
+A forma singular da rota nomeada, por outro lado, é usado para se referir a uma entidade específica na coleção: nesse caso, um post. Usando os verbos GET, PUT e DELETE você pode operar na entidade:
+
+Mostrar os atributos de uma entidade específica (GET)
+Atualizar os atributos de uma entidade específica (PUT)
+Destruir uma entidade específica (DELETE)
+
+Configurando routes.rb
+Para mapear um modelo como um recurso (resource), uma entidade que pode ser operada da maneira mostrada acima, você adiciona uma linha no seu arquivo config/routes.rb:
+1
+2
+3
+
+ActionController:Routing::Routes.draw do |map|
+  map.resources :orders
+end
+
+
+Múltiplos recursos podem ser especificados na mesma linha, reduzindo a bagunça:
+1
+
+map.resources :orders, :invoices, :customers
+
+
+Recursos podem ser hierarquizados, para produzir URLs como /orders/1/invoices/3 (o recibo com ID 3 da ordem com ID 1):
+1
+2
+3
+
+map.resources :orders do |map|
+  map.resources :invoices
+end
+
+
+Existem vários parâmetros opcionais para o método #resource, mas deixaremos isso de lado por enquanto …
+Controller
+Existem sete actions padrões para o controller. Seguindo o exemplo da entidade Order:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+class OrdersController < ApplicationController
+  def index
+  end
+  
+  def show
+  end
+  
+  def new
+  end
+  
+  def create
+  end
+  
+  def edit
+  end
+  
+  def update
+  end
+  
+  def destroy
+  end
+end
+
+
+Esse esqueleto é suficiente para responder a todas as URLs padrão definidas pela chamada map.resources.
+Parâmetros
+Quando a URL de entidade singular é requisitada, você terá acesso à ID na variável params[:id].
+Uma requisição create (criar) ou update (atualizar) lhe dará os novos atributos em um hash acessado por params[:nome_da_entidade]. Por exemplo, param[:order].
+Quando uma URL hierárquica é requisitada (descrita acima), você terá acesso a todos os IDs “pais” baseados no nome da entidade. Por exemplo, se você tiver invoices (recibos) hierárquicos em orders (ordens), como no exemplo acima, você teria um params[:invoice_id] em seu controller. Sem surpresas, certo?
+Rotas Nomeadas
+Usar rotas nomeadas é trivial. Assumindo a entidader order, como antes, e que para urls singulares você tem uma instância de uma ordem disponívem na variável @order, você pode ligar para várias actions de controller:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+Controller Action  Método a chamar
+
+index              link_to orders_url
+show               link_to order_url(@order)
+new                link_to new_order_url
+create             form_for :order, 
+                     :url => orders_url,
+                     :html => { :method => :post }
+edit               link_to edit_order_url(@order)
+update             form_for :order,
+                     :url => order_url(@order),
+                     :html => { :method => :put }
+destroy            link_to order_url(@order),
+                     :method => :delete
+
+
+Note que você pode passar a instância que você quer diretamente na rota singular. Também perceba que o parâmetro :method não é passado para a rota nomeada, em vez disso é passada para link_to ou form_for (ou suas variantes). Esse último detalhe me frustrou anteriormente.
+As rotas nomeadas para recursos hierárquicos operam de maneira semelhante; você apenas precisa passar o(s) recurso(s) “pai” como primeiro(s) parâmetro(s):
+Rotas nomeadas:
+1
+2
+
+invoices_url(@order)
+invoice_url(@order, @invoice)
+
+
+O Básico: Checar!
+Esses são os conceitos básicos necessários para começar a usar a funcionalidade RESTful, correto até a data deste post. Existem muitas opções e métodos interessantes para extender essa funcionalidade, mas deixarei isso para outro artigo. O padrão parece cobrir uma grande horizonte de possibilidades de uso, então encontre um bom local para começar.
+tags: obsolete rails restful
+

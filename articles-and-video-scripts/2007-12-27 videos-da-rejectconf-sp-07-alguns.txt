@@ -1,0 +1,31 @@
+
+
+
+
+Olá pessoal, finalmente parei um tempinho para subir os vídeos da RejectConf SP 07. Mil desculpas pela longa demora. Mesmo assim infelizmente eu ainda estou tendo problemas. Alguns dos vídeos foram gravados sem som, ainda não entendi porque e se realmente o som não está lá ou se é alguma besteira que estou fazendo. Enquanto não descubro isso, segue a lista dos vídeos que disponibilizei.
+Primeiro, meus agradecimentos ao Rafael Walter, da Improve it, que disponibilizou 3 vídeos no Google Video:
+
+Fabio Akita – minha apresentação introdutória do evento
+
+
+Vinícius Teles – explicando o grande case Projeto Lucidus
+
+
+Entrevista – uma montagem muito legal entrevistando alguns dos participantes.
+
+E aqui vão os vídeos que disponibilizei hoje:
+
+Carlos Brando falando sobre “Está fazendo sua parte?”
+
+
+Carlos Villela explicando sobre a ThoughtWorks e Rails lá fora
+
+
+George Guimarães nos contando como foi o Rails Rumble e seu website PageStacker que foi feito durante o concurso
+
+
+Felipe Giotto que nos explica sobre Rails on Desktop
+
+Espero que gostem. Vou investigar sobre os outros vídeos e assim que conseguir mais eu vou postando.
+tags: obsolete rejectconf
+

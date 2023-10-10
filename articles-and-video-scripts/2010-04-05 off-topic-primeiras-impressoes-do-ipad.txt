@@ -1,0 +1,167 @@
+
+24 horas depois que o venerado iPad foi lançado, eu consegui colocar as minhas mãos nele, minha semana não ia prestar caso contrário :-) Comprei a versão com 64GB – eu sempre me arrependo comprando menos armazenamento, desta vez peguei o maior -, fora o dock e a capa protetora da Apple. Não estou escrevendo este artigo no iPad e explico mais abaixo porque.
+Pretendo não repetir o que já foi descrito tecnicamente sobre ele. Para mais detalhes, recomendo ler os seguintes artigos:
+
+Apple iPad Review – Engadget
+Apple iPad accessories hands-on / micro-review – Engadget
+Apple iPad Review – Macworld
+The iPad up close – Macworld Video Podcast
+First Look: Apple’s new iPad – AppleInsider
+Apple’s iPad is a touch of genius – Boing Boing
+Apple iPad Review: Laptop Killer? Pretty Close – Walt Mossberg – WSJ
+Looking at the iPad From Two Angles – David Pogue – NYT
+Review: iPad is pure innovation – one of best computers ever – Andy Ihnatko – CST
+Verdict is in on Apple iPad: It’s a winner – Ed Baig – USA Today
+Apple iPad (Wi-Fi) – PC Magazine
+iPad Teardown – iFixIt
+
+Todos os reviews são detalhados e precisos. E sim, visualmente falando, é um iPod Touch grande. O acabamento é impecável como sempre. Se você está acostumado com produtos Apple não há nenhuma surpresa, se está acostumado com todo o resto é como andar todo dia de Fusca e de repente comprar uma Mercedes. Resumindo temos o seguinte:
+
+0.68kg de peso, 13mm de espessura, 24×18 cm de área
+Processador A4 de 1Ghz
+256Mb de RAM
+16, 32 ou 64GB de armazenamento em drive Flash
+Saída de som estéreo de qualidade razoável
+Tela IPS de 9,7" com 1024×768 de resolução
+Tela Multitouch, Acelerômetro, Sensor de Luz Ambiente
+Bluetooth 2.1 + EDR
+WiFi 802.11 b/g/n
+
+Isso dito, vamos ao que interessa.
+
+
+O Produto
+Antes de começar a dissecar o aparelho, quero que dêem uma boa olhada na figura abaixo.
+
+Tente fazer um produto que faz tudo para todos e você acaba fazendo muito pouco para quase ninguém.
+A coisa que a Apple mais se orgulha não é apenas o que está sendo entregue, mas o que cuidadosamente foi deixado de fora. Milhares de pequenas decisões formam um produto. Eu sou contra focus groups para muitos cenários. Quando você quer fazer algo “inovador” não se pergunta às pessoas o que elas querem, pois é óbvio: se elas sabem o que querem então não há nada de inovador nisso. Pior ainda: compile dezenas de planilhas com dados estatísticos do que todos querem e você acaba de criar um produto médio, literalmente, medíocre.
+A Apple separa muito claramente duas grandes categorias de usuários: “Consumers” e “Pros”. Eles chamam de “consumers” seu pai, sua mãe, sua avó, estudantes, pessoas que precisam de muito pouco muito bem feito. Responder e-mails, navegar pela Web, escutar as músicas favoritas, assistir filmes e séries de TV, procurar restaurantes, encontrar direções num mapa, organizar sua agenda de endereços. Nenhuma delas se interessa por jargões tecnológicos porque eles não são geeks, eles não precisam ser geeks.
+Para completar, contraste com esta outra imagem:
+
+É um exemplo de um usuário da categoria “Pro”, que usa produtos feitos especialmente para eles, como Macbook Pro, Mac Pro, Logic Pro, Final Cut Pro e assim por diante, são músicos profissionais, fotógrafos, designers gráficos, programadores. É para eles que coisas como H.264, OpenGL, BSD, e coisas do tipo importam.
+Agora, o “grande” segredo (ohh …): iPod, iPhone, iPad, iMac, White Macbook, são produtos para “Consumers”, para o “average Joe”. São feitos para serem suficientemente simples e não exigir manuais complicados, cursos especializados. Precisam ser tão ou mais simples do que um controle remoto de TV, uma câmera digital. De fato, veja o que vem de “papel” no pacote do iPad:
+
+Um livreto obrigatório com informações de segurança, garantia, FCC, e outras burocracias. Os adesivos da maçã da Apple, claro :-) E um folheto com uma ilustração indicando os botões de liga/desliga, volume, trava do acelerômetro. Sabe o que tem no verso desse folheto? Veja:
+
+O melhor manual de instruções é aquele com zero páginas e a Apple está caminhando nessa direção. O sucesso do iPod elevou a Apple à uma categoria onde antes a referência eram empresas como a Sony. Depois ela lançou o iPhone, onde antes as referências eram empresas como RIM e Nokia. Graças ao sucesso do iPhone, o iPad é imediatamente acessível em termos de usabilidade a dezenas de milhões de pessoas em todo o mundo.
+A Apple foi a única empresa que conseguiu implementar MultiTouch com excelência. Todas as outras empresas ainda estão tentando mas só podemos dizer que até agora foram tentativas ridículas em imitar a mesma usabilidade, espero que eles se aperfeiçoem logo.
+Quando saímos da era do terminal de fósforo verde, onde apenas quem sabia digitar comandos crípticos conseguiria mexer em um computador, a Apple popularizou o instrumento mais icônico das 3 últimas décadas: o Mouse. Agora, o MultiTouch é ainda mais intuitivo do que o Mouse. Nós, que somos geeks, praticamente nascemos com um teclado e mouse no berço, por isso não é tão óbvio que milhões de pessoas tem muito medo de encostar em um teclado e mouse. Não é um exagero, se você já teve que ensinar pessoas com zero intimidade com um computador sabem do que estou falando. Por mais revolucionário que a interface gráfica e o mouse tenham sido 30 anos atrás, ainda não é tão trivial. O MultiTouch é apenas mais um (grande) passo nessa jornada.
+
+O Mais do que Óbvio
+Das críticas técnicas, a maioria envolve: falta de suporte a Flash, falta de suporte a multi-tarefa, falta de câmera. Sobre a câmera, não existe uma boa justificativa. Video-conferência é o cenário mais provável que está faltando aqui. Porém, tirar fotografias com um iPad é um cenário ridículo, espero que ninguém tenha pensado nisso. Imagino que uma câmera estilo iSight embutida acabe saindo na próxima versão do iPad.
+De qualquer forma, vamos pensar: um produto como o iPad, não é algo que alguém levantou com o pé esquerdo e pensou “ah, quero construir um tablet agora para lançar amanhã.” – seria idiotice fazer isso. Estamos falando de um investimento de milhões de dólares, milhares de horas homens de Pesquisa & Desenvolvimento. Mesmo assim, claro, erros acontecem, mas oras: qualquer moleque geek já pensou: “ah, porque não suportar Flash”, “ah, por que não suportar multi-tarefa” Pense de novo: se até você se fez essas perguntas, não acha que alguém na Apple se perguntou a mesma coisa?
+Só existe uma conclusão: todas essas decisões foram tomadas conscientemente. E se você é o tipo que bate na mesma tecla com essas perguntas, não ache que você é mais esperto do que Apple, ela já provou mais de uma vez que você não é.
+Não suportar Flash é uma decisão mais de negócios do que técnica. Por alguma razão não-divulgada, a relação da Adobe com a Apple não anda tão bem quanto antes. A Adobe investiu muito pouco no suporte a Flash no Mac e não é novidade que o plugin de Flash para Mac é muito ruim. Eu particularmente não gosto de Flash pois 90% dos casos podem ser resolvidos de forma mais elegante com HTML 5, CSS 3 e Javascript.
+Pior do que isso: a engine de Flash é fechada e não há oportunidade para a Apple melhorá-la, diferente do WebKit, que é código aberto e onde a Apple está investindo bastante. Do lado positivo, essa “teimosia” da Apple acelera a migração para HTML 5 nos grandes sites e em breve os menores devem seguir também, e isso eu acho bom. É como a transição do floppy disk para o CD-ROM, das portas seriais e paralelas para USB e Firewire, alguém precisa tomar o primeiro passo e defendê-la.
+Para nós, brasileiros isso é bem menos ruim. Nos Estados Unidos sites que fazem falta são como o Hulu, que disponibiliza episódios de dezenas de séries de TV. Outros como a ABC já lançaram uma aplicação nativa para possibilitar acesso aos episódios do seu canal. Mas esses sites são bloqueados para todos fora dos EUA, ou seja, já não funcionavam para nós. Todo o resto são, na grande maioria, (salvo exceções onde o Flash é obrigatório mesmo) irrelevantes. Portanto, quase todos os sites nacional que eu não consigo acessar no meu iPhone ou iPad eram ruins de qualquer jeito e não faz nenhuma diferença eu não acessar.
+Não suportar multi-tarefa é mais complicado e eu já expliquei isso no meu artigo de Janeiro sobre iPad. Resumindo: relembre do usuário-alvo que ilustrei na seção anterior. Não-geeks, na grande maioria, só conseguem focar uma tarefa de cada vez. O iPhone OS, assim como todo sistema operacional moderno, obviamente, duh, suporta multi-tarefa preemptiva. A Apple colocou código explicitamente no sistema operacional para bloquear a multi-tarefa de aplicativos de terceiros, não os dela. Isso não é um defeito: é uma funcionalidade.
+Existem diversas formas de “habilitar” isso. Uma delas é fazer como o Android, que armazena e restaura o estado da aplicação, permitindo que elas sejam finalizadas mas depois possam ser restauradas ao estado imediatamente anterior. Excelente na teoria, mas na prática não é tão simples assim e o Android eventualmente fica lento, não-responsivo e exige manutenção. Isso aparece menos hoje em dia com processadores mais rápidos e mais memória RAM para desperdiçar, mas mesmo assim não é um problema resolvido.
+Sinceramente, consegue ver sua avó tentando usar isto:
+
+Eu não consigo.
+Fanboys vs Haters
+Existe uma terceira categoria de usuários que a Apple não nomeia explicitamente:
+
+Resumidamente, se por acaso você gosta de futebol sabe exatamente o que é isso. Bambi, porco, gambá, etc, etc, são exatamente iguais. Vejamos racionalmente: futebol não te trás absolutamente nada de prático, não paga suas contas. Você joga dinheiro fora indo assistir em estádios, comprando camisetas “oficiais” caras. Você joga fins de semana fora assistindo jogos e abalando seu casamento. Eventualmente ainda te mete em confusão séria com torcidas organizadas rivais. Pior ainda é ter que escutar piadinhas no dia seguinte do seu time ter perdido de lavada.
+Enfim, futebol é, racionalmente, uma grande perda de tempo, do ponto de vista puramente do custo-benefício segundo a economia clássica. Mesmo assim, não importa o que eu, ou o que outros digam: você simplesmente adora seu time, idolatra suas conquistas, chora junto quando perdem. Quando você conseguir explicar o que é isso, também estará explicando a foto acima.
+Eu não consigo, pessoalmente detesto futebol. Porém sei de uma coisa: se você é um empresário, vende produtos, serviços, enfim, se você tem clientes, esses são exatamente os clientes que você adoraria ter. Eles são leais, fazem propaganda de graça para você, te defendem mesmo quando você está errado.
+A única conclusão que chego: Apple fanboys são exatamente iguais a corinthianos, são paulinos, colorados, etc. E todos que tiram sarro são os que tem inveja por não ter clientes leais como os da Apple. Porém, a conclusão mais óbvia ainda é: sua empresa faz produtos ou serviços de baixa qualidade, é claro que jamais terá clientes leais. Em vez de perder tempo tirando sarro, que tal inverter a questão e se perguntar: “o que eu deveria fazer para ter clientes assim?”
+O iPad não é um produto medíocre, nem de longe lembra os horríveis clones chineses feitos com materiais de baixa qualidade e que você encontra vendendo em barraquinhas de contrabandistas nos pontos mais sujos do centro da cidade. Acho que todos concordamos com isso. Todas as reclamações e cinismos que vemos são de pessoas que não são os usuários-alvo da Apple. Relembrem a primeira figura da avó com seu iPad e olhem esta última fatia da população consumidora:
+
+Apresento-lhes, os Trolls, os haters, pessoas que sentem prazer em ser do contra, independente contra o que. É um efeito colateral que precisa existir em todo mercado. Sem eles não existiria a necessidade dos fanboys. Se um lado aparece para atacar de forma extrema, naturalmente aparece outro lado que vai defender de forma extrema. É simplesmente uma lei da natureza.
+Ninguém explicou isso melhor do que a saudosa Kathy Sierra quando ela falou sobre Dilbert e a Zona da Mediocridade. Lembram do “falem bem ou falem mal, mas falem de mim?” – é exatamente isso. Para um produto ser realmente um sucesso que supera qualquer coisa, ela precisa estar acima da mediocridade. Se as pessoas apenas “gostam” do seu produto, ou pior ainda, se não dão a mínima, ele está fadado ao fracasso.
+Produtos da Apple atraem aqueles que amam e aqueles que odeiam, é a própria definição de um produto de grande sucesso. Portanto, haters, obrigado por existirem, vocês são a prova de que a Apple está fazendo a coisa certa. Empresas, produtos e pessoas que ficam em cima do muro, tentando – em vão – agradar os dois lados, serão apenas esquecidos como insignificantes e irrelevantes.
+Balance a emoção das pessoas, lembrando que emoções significa tanto o extremo do amor quanto do ódio.
+Smartphone vs Notebook
+Outra questão mais prática em discussão é: “o iPad substitui meu iPhone ou substitui meu Macbook? Posso deixar de ter desktop ou notebook se comprar um iPad?”
+Isso é relevante porque muitas críticas feitas ao iPad, e até mesmo ao iPhone na época, são de pessoas que partem da premissa que podem abandonar seus computadores. Não sei de onde surgem essas premissas estranhas e ilógicas, mas enfim, aparecem.
+Vamos retornar a Janeiro, mais especificamente no dia 28, quando o Steve Jobs oficialmente anunciou o iPad. Ele foi muito claro sobre o que é o iPad. Mas se você não assistiu, o próprio Steve Jobs explica:
+
+A história é simples: será que existe uma categoria diferente de produtos que se encaixa nas necessidades exatamente entre um smartphone e um notebook? Ou seja, um dispositivo para situações onde um smartphone é pequeno demais e você não quer necessariamente tudo que um notebook oferece, incluindo seu peso extra?
+
+Muitos imaginaram que essa categoria seria a dos NetBooks. Sinceramente Netbooks não são grande coisa. São lentos, com telas e outros componentes piores, rodando os mesmos softwares que rodam em notebooks maiores. Netbooks são notebooks de baixa qualidade e mais baratos. Não quer dizer que não tiveram sucesso, afinal já venderam dezenas de milhões de unidades apenas baseado em promessas, a Asus subiu muitos patamares por causa disso.
+Como muitos já lembraram, o próprio Bill Gates, em 2000 e 2001 tentou vender a idéia de Tablet PC, uma evolução dos handhelds da época. Porém, uma década depois, dezenas de fabricantes e tentativas, e o Tablet PC ainda não conseguiu se tornar realmente popular e usável. A maioria das pessoas sequer sabem que eles existem e não ficam impressionadas quando vêem. Já vi muitos que compraram simplesmente porque existe mas não dão nenhum uso prático àquilo.
+Segundo informações oficiais, foram vendidos 300 mil iPads no primeiro dia de lançamento. Em comparação o iPhone original, lançado em em 29/06/2007 vendeu cerca de 270 mil unidades no primeiro fim de semana. No ano passado todo foram vendidos 1.3 milhões de Tablet PCs, mas as previsões é que até o fim do ano sejam vendidos mais de 4 milhões de iPads e, se continuar nesse ritmo, é possível que seja muito mais que isso.
+
+Voltando à questão, o iPad complementa o iPhone e o Macbook/iMac. O cenário, de forma simplificada seria mais ou menos assim: em sua casa você tem ou um Desktop PC (ex. iMac) ou um Notebook que talvez seja usado também escritório (ex. Macbook). Nele você centraliza toda a sua vida digital. A premissa é que você já tenha alguma vida digital (fotos, músicas, vídeos, ebooks). Ou seja, é natural assumir que uma fração significativa da população moderna tenha um dia-a-dia digital. Atualmente, criar esse tipo de conteúdo não requer prática nem habilidade pois é natural as pessoas terem câmeras digitais, filmadoras digitais.
+Seu computador pessoal, na sua casa, é um Hub Digital, um centralizador de conteúdo. Porém, não é muito prático carregar um computador inteiro e às vezes nem o notebook – considerando que você precisa carregar uma bateria extra, ou um carregados e outras coisas que aumentam o peso total da sua mochila. Para ouvir música na rua, por exemplo, você sincroniza seu iPod e vai embora. O iPod é perfeito para consumir música enquanto se está andando, correndo, se exercitando. Esse nicho ainda continuará existindo embora com menor crescimento uma vez que seu boom já passou.
+Em paralelo, está o smartphone. Ele faz tudo que um iPod faz pois o ideal é não ter que carregar dois dispositivos portáteis. Porém, o usuário moderno tem à sua disposição a cobertura de antenas de 3G e também diversos hot spots de WiFi, como em Starbucks, hotéis, aeroportos. Portanto, consumir música ao mesmo tempo que rapidamente se consulta e-mails ou se navega em alguns sites, precisa ser simples e robusto. Daí a justificativa da existência do iPhone. Eu não vivo sem meu iPhone pois estou consultando e-mails, twitter e outros conteúdos o tempo todo.
+Para criar conteúdo de qualidade, no entanto, você ainda precisará de um computador de verdade ou um notebook. Não espere ver o Final Cut Pro funcionando num iPad tão cedo. Editar vídeos, fazer composições musicais digitais, desenvolver linhas de código para se criar um novo aplicativo, tudo isso exige um computador mais tradicional. Ao mesmo tempo você quer se locomover, e por isso um notebook é importante: para levar ao trabalho, à faculdade.
+O iPad não foi feito para ser portátil o bastante para caber no bolso da sua calça: para isso existe o iPhone. Ele também não foi feito para desenvolvedores de software ou criadores de conteúdo digital, para isso existe o Macbook. Porém, no meio do caminho existe um nicho que poderia tirar proveito de um dispositivo mais prático. Numa sala de reuniões, na sala da sua casa/no seu quarto, no auditório de uma conferência, na sala de aula, num Starbucks, no aeroporto esperando um avião. Existem vários cenários onde é muito pouco prático abrir um notebook e procurar uma tomada.
+
+Em particular, se você viaja de avião já deve ter passado por isso: seu notebook mal cabe naquela mesinha e quando o indivíduo da sua frente resolve reclinar sua cadeira, sua tela quase vai para o espaço porque ele fica muito justo naquele espaço. Daí vem o netbook, que cabe ali. Porém seu teclado é pequeno demais para trabalhar decentemente, por isso a maioria das pessoas não vai fazer isso, o iPad não melhora muito esse cenário. Mas você quer se distrair, e para isso quer ler um livro, assistir filmes, e nesse caso as telas de netbooks são extremamente ruins e suas baterias são ruins também. Aqui o iPad ajuda bastante, com sua tela nítica e de alta qualidade e bateria para 10 horas ininterruptas de vídeo.
+Quando estou num evento, o tempo todo quero checar meus e-mails, consultar alguns sites. Normalmente eu abro meu notebook, mas nem todo evento tem tomadas (organizadores, please, já passou da hora de assumir que tomadas são necessárias). Logo, eu levo meu carregador e também uma bateria extra. Eu provavelmente ainda vou continuar levando meu notebook, mas agora vou levar um iPad também pois será mais prático do que toda hora tirar o notebook e os cabos da mochila, guardar de novo, mudar de sala e fazer tudo de novo.
+
+Numa sala de reunião, normalmente eu me entedio rápido e saco meu iPhone ou Notebook e fico checando e-mails e outras coisas. O iPhone é bom porque é discreto, mas dependendo da reunião em vez de um notebook me vejo facilmente usando um iPad, seja para me distrair, seja para tomar notas mesmo. E se eu precisar, posso ligar meu iPad ao projetor e fazer apresentações ali mesmo.
+No Brasil eu jamais vou abrir um iPad – e nem mesmo meu iPhone – no meio de um ônibus, ou metrô. É pedir para ser assaltado. E nesse caso nenhum dispositivo ainda vai funcionar enquanto o fator mais básico de criminalidade na sociedade não for resolvido e eu não vejo isso acontecendo na minha geração. Portanto, para usar em ambientes públicos, só se eu mudar de país. Porém, em ambientes mais seletos e civilizados, por exemplo dentro de um shopping center, num Starbucks, sim, isso é possível.
+Para se usar em casa mesmo eu achei ele prático, principalmente porque não gosto de ficar transportando meu notebook do meu escritório para a sala. Mesmo quando visito parentes ou amigos, esse dispositivo é ideal. Não preciso levar uma mochila com cabos e tudo mais, não incomoda nada no transporte de carro, posso usar em qualquer cômodo da casa sem precisar de uma mesa ou uma tomada próxima, é agradável para compartilhar conteúdo com outras pessoas ao redor.
+
+Business
+A Apple tem uma estratégia muito clara em relação aos seus dispositivos: Macbook, iMac, Mac Pro são primariamente criadores de conteúdos. É para eles que existem os pacotes Pro como Aperture, Logic Pro, Final Cut e mesmo o pacote iLife e iWork. Em paralelo eles também são consumidores, com o iTunes acessando o iTunes Store.
+
+Porém, iPod, iPhone e iPad são primariamente – e quase exclusivamente – consumidores de conteúdo. Sua principal função é acessar o iTunes Store, App Store e agora o novo iBookstore e consumir. Esse modelo funciona há quase uma década quando o iTunes Store revolucionou a indústria de música. Em 2007 deu mais um passo além com o App Store e agora está tentando com o iBookstore.
+A Apple tem mais de 125 milhões de usuários registrados com cartões de crédito válidos. As lojas da Apple já venderam 3 bilhões de unidades de produtos digitais. É um mercado de quase 1 bilhão de dólares por ano para a Apple que atrai um ecossistema que não pára de crescer.
+
+Em 2003, a Apple precisou correr atrás de formar parcerias e foi justamente atrás de alguns dos piores para negociar: a indústria de música. Mas tão logo ela atingiu um certo Tipping Point, agora todos é que vão atrás da Apple para fazer negócios. Por isso mesmo hoje tem mais de 150 mil aplicações na App Store sendo mais de 3 mil específicas para iPad em menos de 3 dias de lançamento.
+Isso é uma vantagem que nenhum outro competidor possui e por isso é difícil querer comparar Nokias, RIMs, HTCs, Motorolas: eles não tem um Cult of the Mac, eles não tem o suficiente. E mesmo com “wishful thinking” do tipo “em breve alguém vai alcançar eles” não é relevante até que se alcance.
+Consumidores de Apple não estão interessados em saber benchmarks. Benchmarks só interessam a uber-geeks e mesmo assim por razões pouco práticas. Produtos que são desenvolvidos por geeks que não compreendem produtos se focam em coisas como “o processador é 400Mhz mais rápido”, “temos slots de micro-SD e portas USB padrão”, “a tela tem maior densidade de pixels”, “o sistema operacional suporta multi-tarefa” e outras coisas que, apesar terem sua importância, não são relevantes para o produto porque em última instância a experiência é ruim.
+Para mais uma perspectiva, considere:
+
+O gráfico acima compara as os 74 primeiros dias de venda do Motorola Droid em 05/11/2009, do iPhone original em 29/06/2007 e do Google Nexus One em 05/01/2010. Lembrando que na época o iPhone 1G custava a bagatela de US$ 499/599 sem subsídios.
+Repetindo, isto é um produto. Se ela não faz o que você “acha” que precisa, não deveria comprá-lo. Nunca vi alguém criticando a Nike porque os tenis da Reebok, por exemplo, tem uma característica que ela não tem. Você precisa de um sistema que tem plataforma aberta para hackear o quanto quiser, você quer mais resolução de tela mesmo que o multi-touch seja ruim, você quer uma câmera de 5MP ou mais, então não compre um iPhone nem um iPad, existe Droid, existe Nexus One.
+Alguns confundem o que foi a Microsoft monopolista dos anos 80 e 90 com a Apple e o Google hoje. No caso da Microsoft, ela proibia que os fabricantes de computadores instalassem qualquer outra coisa. No caso da Apple, ela limita seu próprio software e hardware e não há nada que ela possa fazer para impedir um Google de lançar um Nexus One. Portanto, não tem nada a ver. A Apple pode limitar sua plataforma como quiser, assim como a Sony pode bloquear o Playstation 3 tirando o suporte a Linux dela. Não há nada de errado nisso, não afeta 99% dos consumidores a não ser os uber-geeks.
+Querem uma plataforma para hackear, existem centenas de opções, diversos fabricantes de componentes. Você pode ir em qualquer RadioShack, comprar solda, aprender microeletrônica e criar seus próprios aparelhos. Pode usar qualquer CPU genérica, instalar Linux e hackear seu software. Nem a Apple, nem a Microsoft, nem o Google podem impedí-lo disso. Mas eles podem, e vão, limitar suas plataformas assim como você também o faria se estivessem no lugar deles.
+O objetivo final de uma empresa não é agradar as pessoas, isso é uma consequência. O objetivo final de uma empresa é ganhar dinheiro (de forma sustentável). O que temos discutido recentemente é a saúde financeira da Apple:
+9 anos atrás, a Microsoft valia US$ 586 bilhões e a Apple só valia US$ 17 bilhões. De lá para cá, os investidores da Microsoft perderam US$ 421 bilhões enquanto os da Apple ganharam US$ 95 bilhões.
+E para quem quiser comparar vejam esta tabela:
+
+
+Empresa
+Valor por ação
+Market Cap
+
+
+Apple
+US$ 238.49
+US$ 216 Bi
+
+
+Microsoft
+US$ 29.27
+US$ 256 Bi
+
+
+Google
+US$ 571
+US$ 181.57 Bi
+
+
+HP
+US$ 53.87
+US$ 126 Bi
+
+
+Dell
+US$ 15.20
+US$ 29.76 Bi
+
+
+RedHat
+US$ 30.36
+US$ 5.7 Bi
+
+
+Novell
+US$ 6.02
+US$ 2.1 Bi
+
+
+E não confundam. Muita gente acha que o Google é mais “aberto”. De jeito nenhum, assim com a Apple ela sabe escolher o que quer abrir ou não. Por exemplo, muita coisa do Mac OS X é composto por diversos componentes de código-aberto. O próprio Safari usa a engine aberta WebKit e a Apple contribui de volta. No caso do Google, alguém aqui já viu o código fonte da engine de search? Dos filtros anti-spam do Gmail? Dos algoritmos de redes sociais do Orkut? Claro que não, e isso ela vai guardar tão bem quanto a Coca-Cola guarda a receita do seu refrigerante. O mundo de SaaS (Software as a Service) é o ambiente ideal para esconder código-proprietário, se ainda não perceberam isso.
+A realidade é que jamais existirá um mundo 100% aberto simplesmente porque não faz sentido econômico fazer isso. Um cenário assim seria de auto-destruição.
+Para quem não lembra, o mundo Linux só decolou quando empresários como Larry Augustin aprenderam a criar modelos de negócio que geravam dinheiro de verdade, claro. Sem empresas que desenvolvem tecnologias proprietárias como a antiga SGI, IBM, Cisco, Novell e outras, o ecossistema Linux, baseado apenas na ideologia Stallmaniana de liberdade acima de tudo, jamais funcionaria. Foi com a abertura de capital da VA Linux de Augustin que coisas como o SourceForge surgiram. Dinheiro não dá em árvore.
+O modelo que tem dado certo por enquanto é justamente balancear as iniciativas abertas e fechadas e ir jogando de acordo com o mercado. Nem 100% fechado como era a Microsoft de uma década atrás, nem 100% como é o extremismo GNU. E não, o Big Brother não vai aparecer do nada e em 1948, George Orwell escreveu apenas uma literatura interessante e não uma previsão do futuro.
+Pintar a Apple de “má” é meramente conveniente para se contar uma história, mas não diz nada. A Apple é uma empresa. Como qualquer outra, toma decisões boas e más. O saldo positivo dessas decisões é que define se ela continua crescendo ou não e nisso não está embutido nenhum tipo de julgamento moral, que é irrelevante para desenvolvimento de produtos e crescimento de empresas.
+Me alonguei bastante nessas explicações porque o advento do iPad trás uma oportunidade para discutir questões não-técnicas. E isso tudo dito, sim, para pessoas como eu o iPad faz muito sentido. Enquanto consumidor eu gosto de ter produtos que “simplesmente funcionam”. Eu não tenho nenhum interesse em “hackear” um iPhone ou um iPad da mesma forma como não tenho nenhum interesse em “hackear” o computador de uso genérico que vem nos carros modernos, nem tenho interesse em “hackear” meu videogame. Quando eu queria hackear alguma coisa eu comprava minhas próprias peças, e para quem ainda quer isso não vai mudar, com ou sem iPad no mundo.
+Continuem lendo na Parte 2
+tags: obsolete apple
+

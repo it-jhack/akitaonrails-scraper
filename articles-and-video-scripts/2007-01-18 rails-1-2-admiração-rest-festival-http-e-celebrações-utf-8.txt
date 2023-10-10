@@ -1,0 +1,125 @@
+
+Fonte: Riding Rails, por David
+Encha suas bexigas e pegue seus chapéis engraçados porque estamos lá, baby. Sim, senhor, Rails 1.2 finalmente está disponível em toda sua glória. Levou um pouco mais de tempo do que imaginávamos inicialmente para deixar tudo alinhado (e mesmo chegando lá tivemos um pequeno empecilho que nos levou direto do 1.2.0 para 1.2.1 antes mesmo deste anúncio ter tido tempo de ser escrito).
+Então, com esperança a espera valeu a pena. Quem estou enganando. Claro que valeu a pena. Ganhamos o sabor RESTful com novo encorajamento para arquiteturas orientadas a recursos. Ganhamos mime types, códigos de status HTTP e múltiplas representações do mesmo recurso seriamente. E claro, temos a pizza internacional de UTF-8 multibyte seguro.
+Estes são apenas algumas das funcionalidades principais. Em cima disso, há uma quantidade monstro de refinamento entregue. O CHANGELOG apenas do Action Pack contém cerca de 200 entradas. Active Record tem mais uns 170.
+Tudo isso possível por causa do trabalho incrível de nossa maravilhosa e gloriosa comunidade. Pessoas de todos os cantos do mundo fazendo sua parte, seja grande ou pequena, para aumentar o diâmetro do seu sorriso. Isso é amor, pessoal.
+Como sempre, você pega a última e grande versão pelo gems:
+gem install rails --include-dependencies
+… ou se preferir congelar diretamente, você pode:
+rake rails:freeze:edge TAG=rel_1-2-1
+Se você for com os gems, lembre-se de mudar sua ligação de versão no config/environment.rb. Caso contrário, você ainda estará amarrado à seja lá qual versão que estava usando antes.
+Perceba, porém, que esta é uma atualização massiva. Alguns grandes componentes foram jogados fora e completamente reescritos (routing e auto-loading inclusos). Tentamos nosso melhor para nos manter compatíveis com versões anteriores. Rodamos múltiplos candidatos de lançamento para que todos ajudassem a atingir esse objetivo.
+Mas pode não ser perfeito – caramba, o que é? – então você está aconselhado a dar uma boa testada pela sua aplicação antes de qualquer novo deployment. Mas claro, você tem sido um bom testador e agora tudo que você precisa é um pequeno “rake” para ver se tudo passa pela sua suíte de testes, certo?
+
+
+Como começar a aprender tudo sobre Rails 1.2
+Tirando a conversa de fã do caminho, chamo sua atenção para uma nova rodada às anotações de lançamento do RC1 para as novas funcionalidades. Essa nova rodada apenas contém os chamarizes, porém. Fãs verdadeiros vão preferir ir direto nos CHANGELOG das APIs.
+Para todo o resto, há o caminho mais fácil de pegar a segunda edição do livro Agile Web Development with Rails. Essa edição foi escrita para ser compatível com 1.2 e contém um guia muito mais elaborado do que você encontrará nos CHANGELOGs.
+Então não é surpresa que a segunda edição vendeu todas as 15 mil cópias da primeira edição em apenas 3 semanas. Mas fique descansado sabendo que a segunda edição já deve estar disponível nas lojas. E para gratificação instantânea, nada bate pegar o combo PDF+livro do site da Pragmatic.
+REST e Recursos
+REST, e apreciação geral pelo HTTP, é a estrela do Rails 1.2. A maior parte dessas funcionalidades foram originalmente apresentadas ao público em geral no meu keynote da RailsConf sobre o assunto. Dê uma olhada nele para entrar no conceito de porque REST importa para Rails.
+Então comece a pensar sobre como sua aplicação poderia se tornar mais RESTful. Como você também pode transformar aquele controller de 15 actions em 2 ou 3 controllers cada um abraçando um único recurso com amor de CRUD. É onde o maior benefício está escondido: uma aproximação clara para design de controller que reduzirá complexidade para o implementador e resulta em uma aplicação que se comporta como um cidadão melhor na web em geral.
+Para ajudar a transição, temos um gerador scaffold que criará stubs de interface CRUD, como o scaffold original, mas de uma maneira RESTful. Você pode experimentá-lo com script/generate scaffold_resource. Rodando sem argumentos como no exemplo, terá uma breve apresentação sobre como ele funciona e o que criará.
+A única API real que amarra tudo junto é o novo map.resources, que é usado em vez do map.connect para ligar controllers baseados em recursos com verbos CRUD. Então, uma vez que tiver um controller amigável com recursos, poderá ligá-lo com nosso link de emulação de verbos link_to “Destroy”, post_url(post), :method => :delete. Novamente, rodando o scaffolder de recursos lhe dará uma pincelada em como isso tudo funciona.
+Formatos e respond_to
+Enquanto o respond_to esteve conosco desde Rails 1.1, adicionamos um pequeno ajuste no 1.2 que acaba fazendo uma grande diferença para utilidade imediata. Essa é a mágica do :format. Todas as novas aplicações terão uma rota padrão adicional map.connect ‘:controller/:action/:id.:format’. Com essa rota instalada, imagine o seguinte exemplo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+class WeblogController < ActionController::Base
+  def index
+    @posts = Post.find :all
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @posts.to_xml }
+      format.rss { render :action => "feed.rxml" }
+    end
+  end
+end
+
+GET /weblog     # returns HTML from browser Accept header
+GET /weblog.xml # returns the XML
+GET /weblog.rss # returns the RSS
+
+
+Usar o cabeçalho Accept para atingir isso não é mais necessário. Isso torna tudo mais fácil. Você pode explorar sua API no browser apenas adicionando .xml à URL. Não precisa de um before_filter para procurar por pistas sobre um leitor de notícias, apenas use .rss. E tudo isso funciona automaticamente com caching de página e action.
+Claro, essas benfeitorias de formato joga melhor ainda junto com map.resources, que automaticamente garante que tudo Apenas Funcione. O gerador scaffold de recursos até mesmo inclui um exemplo para isso usando format.xml, então /post/5.xml é automaticamente ligado. Muito legal!
+Multibyte
+Viva Unicode! Enquanto o Rails tem sido capaz de armazenar e mostrar unicode sem problemas, tem sido um pouco mais complicado para truncar, reverter ou conseguir o tamanho exato de um string UTF-8. Você precisa bagunçar por aí com KCODE por si próprio, e mesmo muita gente conseguindo fazer funcionar, não era tão plug and play como gostariam (ou até mesmo esperavam).
+Então, como Ruby não entenderá multibyte até mais ou menos um ano, Rails 1.2 apresenta ActiveSupport::Multibyte para trabalhar com strings Unicode. Chame o método chars no seu string para começar a trabalhar com caracteres em vez de bytes.
+Imagine o string ‘€2.99’. Se manipularmos no nível do byte, é fácil ter nossos sonhos qubrados:
+1
+2
+3
+
+'€2.99'[0,1] # => "\342" 
+'€2.99'[0,2] # => "?" 
+'€2.99'[0,3] # => "€"
+
+
+O caracter € gasta 3 bytes. Então, não só não conseguimos manipular facilmente os bytes, como String#first e TextHelper#truncate costumaram engasgar também. Antigamente, aconteceria isso:
+1
+2
+
+'€2.99'.first        # => '\342'
+truncate('€2.99', 2) # => '?'
+
+
+Com Rails 1.2, claro, teremos:
+1
+2
+
+'€2.99'.first        # => '€'
+truncate('€2.99', 2) # => '€2'
+
+
+TextHelper#truncate/excerpt e String#at/from/to/first/last automaticamente fazem a conversão do .chars, mas quando precisar manipular ou mostrar o tamanho, garanta que está chamando .chars. Assim:
+1
+
+You've written <%= @post.body.chars.length %> characters.
+
+
+Com Rails 1.2, estamos assumindo que quer jogar limpo com unicode. O charset padrão para renderização de actions, portanto, também é UTF-8 (você pode configurar outro com ActionController::Base.default_charset=(encoding)). KCODE é automaticamente configurado para UTF-8 também.
+Veja o screencast (mas note que configurar manualmente o KCODE não é mais necessário).
+Unicode estava muito requisitado, mas Multibyte está pronto para encarar outras codificações (digamos, Shift-JIS) quando forem implementadas. Por favor, extenda Multibyte para as codificações que você usa.
+Agradecimentos a Manfred Stienstra, Julian Tarkhanov, Thijs van der Vossen, Jan Behrens e (outros?) por criarem esta biblioteca.
+Rotas
+Action Pack tem uma nova implementação de Routes que é tanto mais rápida quanto mais segura, mas também é mais restrita. Vírgulas e pontos são separadores, então uma rota /download/:file que costumava bater com /download/history.txt não funciona mais. Use :requirements => { :file => /.*/ } para encontrar o ponto.
+Auto-loading
+Consertamos um bug que permitia bibliotecas padrão do Ruby serem auto-carregadas em referência. Antes, se você meramente referenciasse a constante Pathname, nós auto-carregávamos pathname.rb. Não mais, agora você precisará manualmente require ‘pathname’.
+Também melhoramos o manuseio da carga de módulos, o que significa que uma referência a Accounting::Subscription irá procurar por app/models/accounting/subscription.rb. Ao mesmo tempo, isso significa que meramente referenciar Subscription não procurará por subscription.rb em nenhum sub-diretório do app/models. Somente app/models/subscription.rb será tentado. Se você por alguma razão depender disso, ainda pode voltar adicionando app/models/accounting ao config.load_paths no config/environment.rb.
+Prototype
+Para melhor atender à especificação HTML, formulários baseado no Ajax do Prototype não mais serializa elementos desabilitados. Atualize seu código se depender da submissão de campos desabilitados.
+Para consistência métodos Element e Field do Prototype não mais recebem um número arbitrário de argumentos. Isso significa que você precisa atualizar seu código se usa Element.toggle, Element.show, Element.hide, Field.clear e Field.present em JavaScript escrito manualmente (os helpers de Prototype foram atualizados para automaticamente gerar a coisa correta).
+1
+2
+3
+4
+
+// if you have code that looks like this
+Element.show('page', 'sidebar', 'content');
+// you need to replace it with code like this
+['page', 'sidebar', 'content'].each(Element.show);
+
+
+Action Mailer
+Todos os e-mails são MIME versão 1.0 por padrão, portanto você precisará seus testes unitários de mailer: @expected.mime_version = ‘1.0’.
+Deprecação
+Desde Rails 1.0 mantivemos uma API estável, compatível com o passado, para que suas aplicações pudessem mover para novas versões sem muito trabalho. Algumas dessas APIs agora estão muito acima do peso, então vamos a uma dieta para cortar a gordura. Rails 1.2 depreca várias funcionalidades que agora tem alternativas superiores ou são melhor servidas como plugins.
+Deprecação não é uma ameaça, é uma promessa! Essas funcionalidades irão totalmente embora no Rails 2.0. Você pode continuar usando no 1.2, mas terá o calo apertado toda vez: procure por avisos de deprecação em seus resultados de testes e nos arquivos de log.
+Dê um tratamento moderno ao seu código da era 1.0. Para começar, apenas rode seus testes e observe os avisos.
+tags: obsolete rails restful
+

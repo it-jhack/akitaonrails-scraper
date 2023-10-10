@@ -1,0 +1,14 @@
+
+
+
+
+No dia 11 de Abril de 2006 eu subi o primeiro post do meu novo blog “Balance On Rails”, ainda hosteado no Blogger.com. Isso foi alguns dias depois – se não em engano – de ter começado a escrever o livro “Repensando a Web com Rails”, que nasceu no dia 6 de outubro.
+Mudei para a RailsPlayground no dia 27 de setembro, finalmente colocando o blog em um site próprio, rodando sobre o Typo, feito em Rails. Após o lançamento do livro e da mudança do site, fui convidado a escrever uma coluna mensal no site RubyOnBr, onde opino desde então.
+No dia 13 de novembro, fiz o primeiro call to arms para a tradução do livro Getting Real, da 37signals. No dia 26 de março, já de 2007, finalmente subimos a tradução final no site da 37signals.
+Fiz traduções, dei opiniões, criei polêmica, e acima de tudo, tentei fazer deste blog um espelho da minha persona. Eu peguei carona num assunto interessante – Rails – e venho tentando incentivar a nova geração de programadores a enxergar mais longe – às vezes na base do chicote, eu sei, é meu estilo.
+Agora, venho fazer uma repescagem. Quem chegou recentemente, busquem os artigos anteriores nas minhas categorias favoritas: Off-Topic, Opiniões e Colunas. Aos que procuram técnicas, tentem as traduções na categoria Dicas e Tutoriais. E aos que tem interesse específico na nova versão Rails 1.2, veja minha cobertura do assunto.
+Quarta-feira passada, dia 11 de abril de 2007, este blog completou seu primeiro aniversário – e eu quase me esqueci! O ano passou muito rápido. E para comemorar este aniversário, desde sábado postei um combo de artigos, a oportuna entrevista com o grande Dr. Nic e agora o anúncio de uma mudança: “Balance On Rails” deixa de existir e, em seu lugar trago simplesmente Akita On Rails. É a saída da fase balanceada para a desequilibrada? Espero que não, sou meio excêntrico mas continuo o mesmo.
+Por enquanto, os links antigos continuam funcionando, mas em algum momento vou cancelar o domínio antigo e peço que todos atualizem seus blogs, sites, rss readers, bookmarks e tudo mais para apontar para www.akitaonrails.com.
+Vocês me aturaram por um ano! Parabéns a todos! Espero que continuem me aturando mais tempo ;-)
+tags: obsolete
+

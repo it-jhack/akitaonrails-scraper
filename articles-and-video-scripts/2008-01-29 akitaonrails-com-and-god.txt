@@ -1,0 +1,277 @@
+
+Alguns devem ter notado que meu site ficou fora do ar por um bom tempo hoje. Isso aconteceu em outros dias. A razão: meus dois pobres mongrels estavam batendo no teto de memória da minha VPS  (256Mb) e parando com erro de Out of Memory.
+Eles começam razoavelmente pequenos, com uns 30Mb, rapidamente sobem para uns 70Mb, mas assim que ambos atingem mais de 120Mb cada, eles morrem. Daí só entrando e reiniciando manualmente. Obviamente isso não é prático :-)
+Entra DEUS !! … Quero dizer GOD
+
+
+God é mais ou menos como outro mais conhecido, o Monit, mas acho que God é mais simples :-) Vamos ver se é bom.
+Acabei de configurar ele no meu VPS, vamos ver se ele se segura. Eu usei basicamente a configuração de exemplo no site deles. No meu site ficou assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+
+# run with:  god -c /etc/god.conf
+RAILS_ROOT = "/home/www/railsapp/current"
+
+%w{4000 4001}.each do |port|
+  God.watch do |w|
+    w.name = "akitaonrails-mongrel-#{port}"
+    w.interval = 30.seconds # default      
+    w.start = "mongrel_rails start -c #{RAILS_ROOT} -p #{port} \
+      -P #{RAILS_ROOT}/tmp/pids/mongrel.#{port}.pid  -d"
+    w.stop = "mongrel_rails stop -P #{RAILS_ROOT}/tmp/pids/mongrel.#{port}.pid"
+    w.restart = "mongrel_rails restart -P #{RAILS_ROOT}/tmp/pids/mongrel.#{port}.pid"
+    w.start_grace = 10.seconds
+    w.restart_grace = 10.seconds
+    w.pid_file = File.join(RAILS_ROOT, "tmp/pids/mongrel.#{port}.pid")
+    
+    w.behavior(:clean_pid_file)
+
+    w.start_if do |start|
+      start.condition(:process_running) do |c|
+        c.interval = 5.seconds
+        c.running = false
+      end
+    end
+    
+    w.restart_if do |restart|
+      restart.condition(:memory_usage) do |c|
+        c.above = 90.megabytes
+        c.times = [3, 5] # 3 out of 5 intervals
+      end
+    
+      restart.condition(:cpu_usage) do |c|
+        c.above = 50.percent
+        c.times = 5
+      end
+    end
+    
+    # lifecycle
+    w.lifecycle do |on|
+      on.condition(:flapping) do |c|
+        c.to_state = [:start, :restart]
+        c.times = 5
+        c.within = 5.minute
+        c.transition = :unmonitored
+        c.retry_in = 10.minutes
+        c.retry_times = 5
+        c.retry_within = 2.hours
+      end
+    end
+  end
+end
+
+
+
+Para iniciar apenas:
+
+god -c /etc/god.conf
+1
+2
+3
+4
+5
+
+
+E para finalizer:
+
+<macro:code>
+god quit
+
+
+E posso fazer comandos como estes:
+
+> god status
+akitaonrails-mongrel-4000: up
+akitaonrails-mongrel-4001: up
+> god restart akitaonrails-mongrel-4001
+Sending ‘restart’ command
+…..
+The following watches were affected:
+  akitaonrails-mongrel-4001
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+
+
+O próprio God consome seus 10Mb de RAM. Tecnicamente, com isso ele deve reiniciar os processos automaticamente quando eles atingirem os tetos de memória e cpu que eu coloquei acima. Veremos se isso minimiza o downtime do meu blog :-)
+
+Meu VPS está configurado com o CentOS (que é um Fedora "enterprise level" vamos dizer). Para que o God se inicie a cada restart da máquina, precisamos definir o serviço. Primeiro, o arquivo */etc/init.d/god*:
+
+<div style="width: 400px; overflow: scroll">
+--- bash
+#!/bin/bash
+#
+# God
+#
+# chkconfig: - 85 15
+# description: start, stop, restart God (bet you feel powerful)
+#
+GOD_CONF=/etc/god.conf
+PID_DIR=/var/run/god
+PID_FILE=$PID_DIR/god.pid
+LOG_FILE=/var/log/god.log
+GOD_PATH=/usr/local/bin/god
+USER=root
+PATH=$PATH:/usr/local/bin
+RETVAL=0
+
+# Gracefully exit if the controller is missing.
+if ! [ -e $GOD_PATH ]; then 
+  echo "$GOD_PATH not found"
+  exit 0
+fi
+
+# Go no further if config directory is missing.
+if ! [ -e "$GOD_CONF" ]; then
+  echo "$GOD_CONF not found"
+  exit 0
+fi
+
+case "$1" in
+    start)
+      # Create pid directory
+      if ! [ -d "$PID_DIR" ]; then
+                mkdir -p $PID_DIR
+                chown $USER:$USER $PID_DIR
+          fi
+
+      $GOD_PATH -P $PID_FILE -l $LOG_FILE
+      $GOD_PATH load $GOD_CONF
+      RETVAL=$?
+  ;;
+    stop)
+      kill `cat $PID_FILE`
+      RETVAL=$?
+  ;;
+    restart)
+      kill `cat $PID_FILE`
+      $GOD_PATH -P $PID_FILE -l $LOG_FILE
+      $GOD_PATH load $GOD_CONF
+      RETVAL=$?
+  ;;
+    status)
+      RETVAL=$?
+  ;;
+    *)
+      echo "Usage: god {start|stop|restart|status}"
+      exit 1
+  ;;
+esac      
+
+exit $RETVAL
+
+
+

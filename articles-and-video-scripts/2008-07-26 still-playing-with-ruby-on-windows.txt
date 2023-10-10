@@ -1,0 +1,312 @@
+
+Leitores brasileiros: cliquem aqui
+A week ago I’ve tested the newest One-Click Ruby Installer build and found a few minor glitches. Since then I’ve been annoying  Luis and he and Gordon have been adding new stuff and all those glitches are gone! Right now, the new installer is very slick and well packaged. Built with the new MingW support, it is – in my home made casual testing – at least 20% faster and in some small cases almost twice as fast as 2007, December’s old installer.
+
+
+
+So, if you want to build everything from scratch, download the old installer, Git and Subversion. Install everything and, from the command line, follow this:
+
+git clone git://github.com/luislavena/rubyinstaller.git
+cd rubyinstaller
+rake CHECKOUT=1
+rake package
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+
+
+And you're done. If you don't want to go through all the trouble. Just download the newest "ruby_devkit-186-p279":/files/ruby_devkit-186-p279.msi from the link provided here. If you've installed it from my last article, uninstall it first. Gordon is working on a way to incrementally upgrade from now on, so we don't have to reinstall whenever a new installer comes up. It will intelligently upgrade for us without losing our gems and such. This is the Dev Kit version, which comes bundled with everything you should need to build *native extensions*! More about it below.
+
+By the way, don't forget to *delete* the RUBYOPT variable - if it is set in the Environment Variables settings - and add C:\Ruby18\bin in your PATH instead of the old C:\ruby.
+
+<p style="text-align: center; margin: 5px">!https://s3.amazonaws.com/akitaonrails/assets/2008/7/26/Picture_6.png!</p>
+
+For Windows developers, another recommendation: buy (or at least try it for 30 days) "e-TextEditor":https://www.e-texteditor.com/. I've been trying different editors under Windows and I think this is the closest you will ever get to the all mighty "TextMate":https://macromates.com/ that we, Mac users, have. It is nowhere near Textmate's full set of features, there are a few glitches, but it works well enough most of the time, so I recommend it. I still think Eclipse/Netbeans based solutions are overkill. If you're a beginner I recommend to stay away from heavy IDEs: they are not 100% ready for prime time yet. When you have a problem, you won't know if it is your code that is buggy or if it is the IDE misbehaving, and you will waste a lot of time. So, keep it simple. 
+
+It is not free by any means, it costs *USD 34.95* which is not cheap but I think it is fair if they start to speed up the development process a bit. Textmate (exclusive for the Mac) costs *USD 63* which is also not cheap but it is full featured. But I can understand that development for Windows is way more difficult, specially considering that on the Mac we can count on having a POSIX environment underneath. On Windows, they had to bake something in order for the Textmate bundles that depends on POSIX to be able to run - yes, one of the features of e-TextEditor is to be able to run some Textmate bundles.
+
+Because of this, on the first time you run it, it will recommend you to install Cygwin as well, which is a semi-POSIX compliant environment for Windows. It is very very far from perfect, but again, works well enough to be called usable. That way, lots of Textmate bundles would be able to run on the e-TextEditor environment, which is nice.
+
+Have the "cheatsheet":https://cheat.errtheblog.com/s/e/ near you while learning. If you already know Textmate, it should be fairly easy to use. If you've never used Textmate (you don't know what you're missing!), you will have to be open minded on its workflow.
+
+Personally, I think the following are the minimum you need to know to start being productive with e-TextEditor:
+
+|*Key combination*|*Command*|
+|Ctrl+Shift+T|This will scan all your project's files and allow you to find them quickly by just typing a few letters from the filename you want|
+|Alt+Win+Shift+R|This will change the file-type you're working on. By default .rb files will be Ruby and not Ruby on Rails. Be aware that you won't be able to use the Rails specific bundle if you're not using the correct file type. And if you're editing an ERB template, choose "HTML (Rails)"|
+|Ctrl+Alt+T|Memorizing the abbreviations from all bundles is difficult. Sometimes you won't remember, that's why you have this shortcut: to find the abbreviation from its description. Very handy|
+|Ctrl+L|When you're editing a Ruby file, you can navigate through its symbols (methods, etc) with this shortcut|
+|Ctrl+F|It will open a toolbar at the bottom of the editor. Notice an icon next to the "Search" field. Click it to change to "Use Regular Expressions". Learn Regular Expressions if you don't know them already, it is an extremely powerful tool and it is available in every serious text editor nowadays|
+|Esc|If you want to repeat some word you already have in the same text, type in the first few letters and press Escape. Then the editor will auto-complete it or show you a menu if there's more than one option|
+|F1|This will toggle folding of a block of code, such as a method|
+|Ctrl+F1|Will fold every block of code|
+|Alt+Ctrl+F1|Will unfold all blocks of code|
+
+<p style="text-align: center; margin: 5px">!https://s3.amazonaws.com/akitaonrails/assets/2008/7/26/Picture_2.png!</p>
+
+And to make it even closer to Textmate, I recommend you to download the "Monaco font":https://www.webdevkungfu.com/textmate-envy-aka-monaco-font-for-windows/, copy the TTF file to c:\windows\fonts. Then inside e-TextEditor, Choose Edit, Edit Theme ... There you can choose "Vibrant Ink" as the theme and at the bottom, change the font to Monaco, 10pt. Also make sure you have Cleartype enabled in Windows. That will make the environment that much pleasant to work with. Courier New should be destroyed as a system font. Lucida Console or "Bitstream Vera Sans Mono":https://www.bitstream.com/font_rendering/products/dev_fonts/vera.html are way better choices. Even Microsoft's own Consolas font is much better, though I personally still prefer Monaco.
+
+As an off-topic subject: stay in XP SP3 and just install "Vista's Cleartype font set":https://labnol.blogspot.com/2007/03/download-windows-vista-fonts-legally.html. Choose Consolas as the default monotyped font for editors and choose Segoe UI as the system wide default font. Again, have Cleartype enabled. I can't understand why some people prefer it disabled. Hurts my eyes not having either Cleartype or Anti-Alias.
+
+Almost set. Let's have some fun and install some gems. Fortunately the new One-Click Installer already comes bundled with the newest RubyGems 1.2.0. Keep in mind that Windows is handicapped in terms of tools. In Linux or Mac, when you try to install a gem with native extensions, it will compile from source. Obviously, Windows doesn't come bundled with compatible compilers. Luis and Gordon are working on the "DevKit":/files/ruby_devkit-186-p279.msi to solve exactly that. 
+
+If the C sources can be compiled by itself, the MingW environment bundled in the One-Click Installer should just show you: _"Building native extensions.  This could take a while..."_ This would normally fail in the old installers in Windows, but should succeed under the new version. But some gems depends on external source files (such as sqlite3). I know it is supported as well, but for some reason I wasn't able to accomplish it. So, for now, you can install them like this:
+
+<macro:code>
+gem install sqlite3-ruby --platform=mswin32
+gem install mysql --platform=mswin32
+gem install ruby-postgres --platform=mswin32
+gem install mongrel --platform=mswin32
+gem install thin --platform=mswin32
+gem install oniguruma ultraviolet --platform=mswin32
+gem install libxml-ruby --platform=mswin32
+gem install fxruby --platform=mswin32
+
+
+The other biggie that is always a pain to install and use is ImageMagick. For Windows download this. After the download, uncompress it and manually install “ImageMagick-6.4.1-5-Q8-windows-dll.exe”. Finally, install the gem file manually:
+
+cd “c:\Documents and Settings\AkitaOnRails\My Documents\Downloads”
+gem install rmagick-2.5.0-x86-mswin32.gem
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Now, let's install some more gems. Some of them will compile native extensions and, thanks to the RubyInstaller dev team, they will suceed flawlessly (such as RedCloth). Don't forget to add Github as a source for gems as well, then we can install all gems we would need:
+
+<macro:code>
+gem source -a https://gems.github.com
+
+gem install rails
+gem install ruby-debug capistrano mongrel_service mongrel_cluster erubis 
+gem install rspec ZenTest webrat
+gem install image_science mini_magick
+gem install mechanize RedCloth radiant
+gem install sequel datamapper
+gem install fastercsv piston sashimi ruport
+gem install json newgem open4 rubigen ruby2ruby
+gem install sproutcore merb-more merb-core
+gem install sequel datamapper
+
+
+Finally, I highly recommend you to install Windows Services for Unix. Microsoft bought it from Interix a long time ago and it is kind of stalled right now (probably because it is a direct opponent for their own Powershell). The SFU package will allow you to use several Unix-like commands directly in the default Windows Console command line window. So you will have access to useful tools such as grep, tail and so on.
+Luis warned me to not mix this Ruby installer within the Cygwin environment because you will get a lot of trouble. Cygwin itself comes with Ruby but be aware that right now it comes with the buggy 1.8.7 release, so don’t use it right now, prefer this new One-Click Installer.
+So, to summarize, the ideal Windows development environment for Ruby is:
+
+One-Click Ruby Installer 3.0
+e-TextEditor
+Windows Services for Unix
+This tutorial, with the directions for most of the gems you will need ;-)
+
+Almost forgetting: participate in the mailing lists as well. Give good feedback, and if you’re a developer, try to help.
+Have fun!
+
+h3. Tradução: Ainda Brincando com Ruby no Windows
+Há uma semana eu testei a nova compilação do One-Click Ruby Installer e descobri pequenos probleminhas. Desde então eu venho perturbando o   Luis e ele e o  Gordon adicionaram coisas novas e todos os probleminhas foram embora! Neste momento, o novo instalador é muito bom e bem empacotado. Compilado com o novo suporte MingW, ele é – pelos meus testes caseiros – pelo menos uns 20% mais rápido e em alguns pequenos casos até 2 vezes mais rápido que a versão anterior, de Dezembro de 2007.
+
+Portanto, se quiser construir tudo do zero, faça download do antigo instalador, Git e Subversion. Instale tudo e, a partir da linha de comando, siga isso:
+
+git clone git://github.com/luislavena/rubyinstaller.git
+cd rubyinstaller
+rake CHECKOUT=1
+rake package
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+
+
+Só isso. Mas se não quiser passar por tudo isso, apenas faça download do novo "ruby_devkit-186-p279":/files/ruby_devkit-186-p279.msi. Se já tinha instalado a versão do meu artigo anterior, primeiro desinstale. Gordon está trabalhando em uma maneira de fazer atualizações incrementais de agora em diante, de forma que não seja necessário desinstalar quando vier uma nova versão, ele irá fazer a atualização de forma inteligente sem perder suas gems e coisas assim. Esta é a versão Dev Kit, que vem junto com tudo que você precisa para compilar *extensões nativas*! Mais sobre isso abaixo.
+
+Aliás, não se esqueça de *apagar* a variável RUBYOPT, se ela ainda estiver nas suas Variáveis de Ambiente, e adicione C:\Ruby18\bin no seu PATH em vez do antigo C:\ruby.
+
+<p style="text-align: center; margin: 5px">!https://s3.amazonaws.com/akitaonrails/assets/2008/7/26/Picture_6.png!</p>
+
+Para desenvolvedores Windows, outra recomendação: compre (ou pelo menos teste por 30 dias) o "e-TextEditor":https://www.e-texteditor.com/. Eu testei diferentes editores no Windows e acho que este é o que mais se aproxima do todo poderoso "TextMate":https://macromates.com/ que nós, usuários Mac, temos. Não chega nem perto de todas as funcionalidades do Textmate completo, existem alguns probleminhas, mas ele funciona bem o suficiente na maior parte do tempo, então eu recomendo. Ainda acho que soluções baseadas em Eclipse/Netbeans são muito. Se você for iniciante recomendo fortemente que fique longe de IDEs pesadas: elas não estão 100% prontas ainda. Quando você tem um problema, não vai saber distinguir se é um bug no seu próprio código ou se é a IDE fazendo o que não deve, e isso fará com que você perca muito tempo. Portanto, simplifique, não complique.
+
+Ele não é grátis, custa *USD 34.95* o que não é barato mas acho que é justo, principalmente se eles acelerarem um pouco mais o desenvolvimento. O Textmate (exclusivo para Mac) custa *USD 63* que também não é barato, mas ele é completo. Mas eu consigo entender que o desenvolvimento em Windows deva ser muito mais difícil mesmo, especialmente considerando que no Mac podemos contar com um ambiente POSIX por baixo. No Windows, eles precisam colocar alguma coisa para que os bundles de Textmate que dependam de POSIX consigam rodar - sim, uma das funcionalidades do e-TextEditor é justamente ser capaz de rodar os mesmos bundles do Textmate.
+
+Por causa disso, da primeira vez que rodar, ele irá recomendar que instale o Cygwin também, que é um ambiente compatível, semi-POSIX para Windows. Está muito longe de ser perfeito, mas novamente, funciona bem o suficiente para se chamado de usável. Dessa maneira, muitos dos bundles do Textmante conseguem rodar no ambiente do e-TextEditor, o que é legal.
+
+Tenha o "cheatsheet":https://cheat.errtheblog.com/s/e/ por perto enquanto aprender. Se já sabe Textmate, deve ser fácil de usar. Se nunca usou Textmate (você não sabe o que está perdendo!), tenha a mente aberta para seu fluxo de trabalho.
+
+Pessoalmente, eu acho que o seguinte é o mínimo que você precisa para começar a ser produtivo com o e-TextEditor:
+
+|*Combinação de teclas*|*Comando*|
+|Ctrl+Shift+T|Isso irá ler todos os arquivos do seu projeto e facilitará sua procura rápida apenas digitando algumas letras do nome do arquivo que quer|
+|Alt+Win+Shift+R|Isso mudará o tipo de arquivo que está trabalhando. Por padrão .rb é Ruby e não Ruby on Rails. Saiba que não conseguirá usar os bundles de Ruby on Rails sem mudar o tipo. E se estiver num template ERB, escolha "HTML (Rails)" como o tipo de arquivo correto|
+|Ctrl+Alt+T|Memorizar as abreviações de todos os bundles é muito. Algumas vezes você não vai se lembrar, e é para isso que serve este atalho: para achar a abreviação a partir da descrição. Muito útil!|
+|Ctrl+L|Quando estiver editando um arquivo Ruby, pode navegar através de seus símbolos (métodos, etc) com este atalho|
+|Ctrl+F|Irá abrir uma barra de procura na parte de baixo do editor. Veja o ícone perto do campo "Search". Clique nele para mudar para "Use Regular Expressions". Aprenda Expressões Regulares se ainda não sabe, é uma ferramenta poderosa disponível em qualquer editor sério|
+|Esc|Se quiser repetir alguma palavra que já existe no mesmo texto, digite as primeiras letras e aperte Esc. Então o editor irá completar automaticamente ou mostrar um menu se houver mais de uma alternativa|
+
+<p style="text-align: center; margin: 5px">!https://s3.amazonaws.com/akitaonrails/assets/2008/7/26/Picture_2.png!</p>
+
+E para torná-lo mais próximo ao Textmate, eu recomendo fazer o download da "fonte Monaco":https://www.webdevkungfu.com/textmate-envy-aka-monaco-font-for-windows/, copiar o arquivo TTF para c:\windows\fonts. Então, de dentro do e-TextEditor, escolher Edit, Edit Theme ... Lá escolha "Vibrant Ink" como tema e selecione a fonte Monaco, 10pt. Também garanta Cleartype está habilitado no seu Windows. Isso fará o ambiente ficar muito mais agradável para trabalhar. Courier New deveria ser destruído como fonte de sistema. Lucida Console ou "Bitstream Vera Sans Mono":https://www.bitstream.com/font_rendering/products/dev_fonts/vera.html são escolhar muito melhores. Mesmo a própria fonte Consolas da Microsoft é muito melhor, embora eu pessoalmente prefira Monaco.
+
+Como assunto off-topic: fique em XP SP3 e apenas instale as "fontes Cleartype do Vista":https://labnol.blogspot.com/2007/03/download-windows-vista-fonts-legally.html. Escolha Consolas como padrão de fonte monoespaçada para editores e escolha Segoe UI como fonte padrão do sistema todo. Novamente, habilite Cleartype. Não consigo entender como algumas pessoas preferem isso desabilitado. Dói nos olhos não ter ou Cleartype ou Anti-Alias ligado.
+
+E estamos quase lá. Vamos nos divertir instalando algumas gems agora. Felizmente o novo One-Click Installer já vem com o novo RubyGems 1.2.0. Tenha em mente que o Windows é deficiente em termos de ferramentas. No Linux ou Mac, quando tentamos instalar uma gem com extensões nativas, ele compilará a partir da fonte. Obviamente, Windows não tem compiladores compatíveis. Luis e Gordon estão trabalhando no "DevKit":/files/ruby_devkit-186-p279.msi para resolver exatamente isso. 
+
+Se as fontes C puderem ser compiladas por si só, o ambiente MingW que vem junto com o One-Click Installer deve apenas lhe mostrar: _"Building native extensions.  This could take a while..."_ Isso normalmente falharia com o instalador antigo, mas deve ter sucesso agora com a nova versão. Mas algumas gems ainda dependem de fontes externas (como sqlite3). Sei que isso é suportado também, mas por alguma razão eu não consegui fazer funcionar. Então, por enquanto, você pode instalar esse tipo de gem assim:
+
+<macro:code>
+gem install sqlite3-ruby --platform=mswin32
+gem install mysql --platform=mswin32
+gem install ruby-postgres --platform=mswin32
+gem install mongrel --platform=mswin32
+gem install thin --platform=mswin32
+gem install oniguruma ultraviolet --platform=mswin32
+gem install libxml-ruby --platform=mswin32
+gem install fxruby --platform=mswin32
+
+
+O outro grandalhão que é sempre chato de instalar e usar é o ImageMagick. Para Windows faça download disso. Depois do download, descomprima e manualmente instale o “ImageMagick-6.4.1-5-Q8-windows-dll.exe”. Finalmente, instale o arquivo gem manualmente:
+
+cd “c:\Documents and Settings\AkitaOnRails\My Documents\Downloads”
+gem install rmagick-2.5.0-x86-mswin32.gem
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Agora, vamos instalar mais algumas gems. Algumas delas compilarão extensões antivas e, graças à equipe do RubyInstaller, eles irão terminar com sucesso (como RedCloth). Não esqueça de adicionar também o Github como fonte de gems, então podemos instalar todas as gems que precisamos:
+
+<macro:code>
+gem source -a https://gems.github.com
+
+gem install rails
+gem install ruby-debug capistrano mongrel_service mongrel_cluster erubis 
+gem install rspec ZenTest webrat
+gem install image_science mini_magick
+gem install mechanize RedCloth radiant
+gem install sequel datamapper
+gem install fastercsv piston sashimi ruport
+gem install json newgem open4 rubigen ruby2ruby
+gem install sproutcore merb-more merb-core
+gem install sequel datamapper
+
+
+Finalmente, eu recomendo muito que instale o Windows Services for Unix. A Microsoft comprou isso da Interix faz um bom tempo e ele agora está meio congelado (provavelmente por ser um oponente direto ao seu Powershell). O pacote SFU permitirá que se use muitos comandos de Unix diretamente do console padrão do Windows. Então terá acesso a ferramentas úteis como grep, tail e assim por diante.
+O Luis me alertou que não se deve misturar o Ruby Installer com o ambiente Cygwin porque isso causará muitos problemas. O Cygwin mesmo já vem com um Ruby, mas saiba que neste momento é a versão 1.8.7 com bugs, então não a use neste momento, prefira o novo One-Click Installer.
+Para resumir, o ambiente ideal de desenvolvimento Ruby no Windows é:
+
+One-Click Ruby Installer 3.0
+e-TextEditor
+Windows Services for Unix
+Este tutorial, com as direções para a maioria dos gems que você precisa ;-)
+
+E já ia me esquecendo, não deixe de participar das listas de discussão, envie feedback e se for um desenvolvedor, não deixe de ajudar.
+Divirta-se!
+tags: obsolete windows english
+

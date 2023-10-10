@@ -1,0 +1,9 @@
+
+
+
+
+After a long gap I finally managed to contribute a bit to RubyLearning.org. I’ve written a 2 part article about Internationalization (i18n) in Brazilian Portuguese a few days ago. I’ve adapted it into English and you can read it at Satish’s blog.
+I’m showing snippets of code from a demonstration app and you can see the code at my Github repo and you can also see the app up and running here, thanks to Heroku’s free accounts.
+I hope you enjoy it!
+tags: learning rails tutorial i18n
+

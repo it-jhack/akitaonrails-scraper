@@ -1,0 +1,9 @@
+
+
+
+
+Charles Nutter é um cara que não dorme. Ele vai a eventos tanto da comunidade Java quanto Ruby, programa o JRuby em ritmo super-humano (ele e todo o Core Team, como Thomas Enebo e Ola Bini) e ainda tem tempo para blogar. Quero ser que nem ele quando crescer :-) E acabei de ver neste post dele que o Ruby já está no 9o lugar no índice TIOBE. Esse índice não é preciso, claro, tenta medir o nível interesse das linguagens de acordo com pesquisas na internet, etc. Mesmo assim é muito relevante que ele já tenha ultrapassado o Javascript e está concorrendo a ser linguagem de programação do ano pelo segundo ano seguido, junto com D e C#.
+Outra menções honrosas deviam incluir o LUA, uma linguagem de programação Brasileira, criada na PUC-Rio. Ela pulou do 48o par 16o lugar no TIOBE. Espero que isso continue. O LUA está integrado de forma às vezes anônima em diversas aplicações e jogos incluindo blockbusters como World of Warcraft e Far Cry.
+E falando especificamente de JRuby, neste outro post ele detalha um pouco mais sobre benchmarks. No caso, ele fala do Alioth Shootout onde o JRuby bate o Ruby 1.8.6 em 14 das 18 medições, sendo que esses 4 onde ele perde tem algumas ressalvas. Que diferença faz um ano! Ano passado eu não imaginava que eles passariam o MRI tão rápido.
+tags: obsolete jruby
+

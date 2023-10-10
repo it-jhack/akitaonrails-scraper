@@ -1,0 +1,72 @@
+
+If anyone is trying to install the ImageScience gem (sudo gem install image_science) for your Rails projects, and used MacPorts, you might be having strange problems. The usual command:
+sudo port install freeimage
+Will fail miserably. That’s because the newest FreeImage port, version 3.10.0, is broken. If you check it out at /opt/local/var/macports/distfiles/freeimage/FreeImage3100.zip, the checksums are invalid as the port command states. I tried to download directly from sourceforge.net. But this zip is corrupted. Can’t unzip it manually. Dunno why.
+
+
+Now, this was a big headache. The only option I could thought of was rolling back to a previous version, but I didn’t find any macport command to do that. I tried many things but what finally worked was this receipt to install an older version.
+
+bashmate /opt/local/etc/macports/sources.conf
+1
+2
+3
+4
+5
+6
+
+
+First of all, edit sources.conf. "mate", or course, is Textmate, use your editor of choice. Then your file has to have this shape:
+
+--- bash
+file:///Users/Shared/dports
+rsync://rsync.macports.org/release/ports/
+
+
+Now:
+1
+2
+3
+4
+5
+6
+7
+
+mkdir /Users/Shared/dports
+cd /Users/Shared/dports
+svn co --revision 33438 \ 
+ https://svn.macports.org/repository/macports/trunk/dports/graphics/freeimage \
+ graphics/freeimage
+portindex /Users/Shared/dports
+sudo port install freeimage @3.9.2
+
+
+Revision 33438 was when FreeImage 3.9.3 port was committed. You can browse the SVN revisions through this URL. That’s actually the way you bypass the standard procedure of always installing the newest packages. Usually that’s the desirable behavior, but sometimes we need to get older versions when the newest one screws up badly like FreeImage did.
+If the compilation fails, probably complaining about a missing stdlib.h that’s because you installed Xcode without the SDK for OS X 10.3.9. It is a hidden option in the Xcode installation. So, install it like this:
+
+Notice the “Customize” button. Now just choose the unchecked MacOS X 10.3.9 SDK option.
+If you take a look inside the DVD’s folders you will find the MacOSX10.3.9.pkg package. I wouldn’t install it directly though, because instead of putting it inside /Developer it will install in the / root.
+Another thing that did bite me: even after all this, the compilation still halted with this message:
+1
+2
+3
+4
+
+ld: library not found for -ldylib1.10.5.o
+collect2: ld returned 1 exit status
+make[1]: *** [libfreeimage-3.9.3.dylib-ppc] Error 1
+make: *** [all] Error 2
+
+
+Looking at the Apple Developer’s Forum I found out about this compiler flag: -mmacosx-version-min=10.4
+I don’t know how to globally set compiler flags so I just jury rigged into the FreeImage downloaded source and edited /opt/local/var/macports/build/_Users_Shared_dports_graphics_freeimage/work/freeimage/Makefile.osx and added it directly to the compiler:
+1
+2
+
+CPP_PPC = g++-4.0 -mmacosx-version-min=10.4 
+CPP_I386 = g++-4.0 -mmacosx-version-min=10.4 
+
+
+This did the trick! It finally built until the end and finished installing! Damn, that was hard. I just tested my Rails app that depends on ImageScience worked! Whow!
+Hope it helps. I don’t understand MacPorts good enough to figure out a better solution. And there’s a chance that it’s probably only me doing something very wrong. Who knows? Googling around didn’t yield anything else, so I think this is a very recent unnoticed bug.
+tags: obsolete english
+

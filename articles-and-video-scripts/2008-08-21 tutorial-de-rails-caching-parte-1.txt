@@ -1,0 +1,303 @@
+
+
+Em fevereiro deste ano, o Gregg Pollack – do podcast RailsEnvy – publicou uma série em 2 partes sobre o sistema básico de cache do Rails. Resolvi traduzir uma parte porque vi muito pouca gente falando sobre isso e é algo muito importante.
+Apesar do tutorial dele ser muito bom, não vou traduzí-lo ao pé-da-letra e sim adaptá-lo um pouco para torná-lo mais simples. Todo o código mostrado nesse artigo está disponível no Github
+Cache é importante e, no Rails, é razoavelmente simples para a maioria dos casos. Continue lendo!
+
+
+Entendam que existem diversas técnicas para aumentar performance. Uma coisa que não é difícil e todos deveriam implementar de imediato é Page Caching, no mínimo na sua página principal. Meu blog, por exemplo, na primeira requisição, o Rails é chamado para processar os posts mais recentes, listar os comentários, etc.
+Da segunda chamada em diante, vocês estão recebendo uma página estática que fica em public/index.html!! Essa página é servida diretamente pelo Apache, sem sequer tocar no Rails. Para todos os efeitos é um site estático. E ele permanece assim até que eu publique um novo post ou alguém coloque algum comentário. Então a página é apagada e a próxima requisição executa o Rails novamente, gerando um novo index.html estático.
+Esse é o padrão mais comum, aumenta sua performance algumas ordens de grandeza, e o mais importante: na maior parte dos casos é quase trivial de se implementar! Não é inteligente fazer o Rails – ou qualquer outra aplicação em qualquer outro framework web – regerar a mesma página o tempo todo, é um desperdício de recursos e sempre será muito mais lento do que servir diretamente uma página estática.
+Claro, muitas outras coisas podem tornar seu site lento: muitas imagens pesadas, muitos arquivos de stylesheet e javascript, design cheio de tabelas dentro de tabelas. Estamos falando apenas do HTML básico, mas já é um começo. E vamos lembrar: não se deve aplicar todos os truques possíveis que tenham ‘performance’ no título, porém existem meia-dúzia de boas práticas que podem ajudar sempre. Aliás, coloquem Page Caching apenas em algumas páginas, não em todas!
+Alguns critérios para Page Caching são:
+
+se a página tem a mesma ‘cara’ independente de quem está olhando
+se sua página está disponível ao público, sem autenticação (ou seja, ela não é personalizada por usuário)
+
+Configuração
+A primeira coisa a entender é que Ruby on Rails trabalha sempre com 3 ambientes: development, test e production. Inicialmente você está em development, e quando se coloca em produção precisa mudar manualmente para production.
+Em development, a cada requisição o Rails recarrega todas as classes do seu sistema todas as vezes, garantindo que você veja mudanças imediatas no browser enquanto desenvolve. Obviamente isso é lento, por isso no modo production isso é desligado, afinal você só precisa carregar suas classes uma vez.
+Muita gente comete o erro de não entender isso e colocar a aplicação em produção ainda no modo development, o que gera performance sofrível – e normalmente o codificador (não vou chamá-lo de ‘desenvolvedor’) culpa o Rails, culpa o provedor, culpa todo mundo menos a si próprio!
+Portanto, para testar caching em modo development, você primeiro precisa habilitá-lo (em production ele já é pré-habilitado). Procure pela linha a seguinte o arquivo config/environments/development.rb no seu projeto Rails:
+1
+
+config.action_controller.perform_caching = true
+
+
+Mudar essa configuração de false para true liga caching em development. Tome cuidado para não cair na armadilha de esquecer que isso está ligado, porque você verá que sua página não muda mesmo quando você altera os templates. Isso porque ele estará te servindo a página estática em vez da versão dinâmica!
+Page Caching
+Page Caching é o mecanismo MAIS RÁPIDO de caching no Rails, então use-o sempre que possível nas páginas mais acessadas do seu site. Eu recomendaria colocá-lo inicialmente apenas na página principal e nas que você sabe (via Urchin ou outro relatório) que são as mais acessadas.
+Digamos que temos uma página de blog que não muda muito (afinal você não publica posts todo minuto). O código no seu controller para a página inicial deve se parecer com algo assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+class PostsController < ApplicationController
+  # GET /posts
+  # GET /posts.xml
+  def index
+    @posts = Post.find(:all, :order => "created_on desc", :limit => 10)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @posts }
+    end
+  end
+  ...
+
+
+Como pode ver, nossa action Index procura os últimos 10 posts, que podemos mostrar no site. Se quiséssemos usar page caching para acelerar as coisas, poderíamos fazer o seguinte no controller do blog:
+1
+2
+3
+
+class PostsController < ApplicationController
+  caches_page :index
+  ...
+
+
+A diretiva “caches_page” diz à nossa aplicação que da próxima vez que nossa action index for requisitada, pegue o html resultante e o armazene num arquivo em cache.
+Se rodar esse código num Mongrel, da primeira vez que essa página for visitada seu /logs/development.log deve mostrar algo assim:
+
+Processing PostsController#index (for 127.0.0.1 at 2008-08-21 17:33:45) [GET]
+  Session ID: BAh…ewA=—388…f99
+  Parameters: {"action"=>"index", “controller”=>"posts"}
+  Post Load (0.000738)   SELECT * FROM “posts” ORDER BY created_at desc LIMIT 10
+Rendering template within layouts/posts
+Rendering posts/index
+Cached page: /posts.html (0.00047)
+Completed in 0.00891 (112 reqs/sec) | Rendering: 0.00272 (30%) | DB: 0.00074 (8%) | 200 OK [https://localhost/posts]
+
+Veja a linha onde ele diz “Cached page: /posts.html”. Isso lhe diz que a página foi carregada e o html resultante foi gravado num arquivo localizado em /posts.html. Se olhar esse arquivo encontrará html puro e nenhum código Ruby.
+As próximas requisições à mesma URL agora carregarão esse arquivo html em vez de recarregar a página. Como você pode imaginar, carregar uma página estática é muito mais rápido do que carregar dados o banco, processar um template que depois irá gerar o mesmo html. Será pelo menos uma ordem de grandeza mais veloz!
+Entretanto, é muito importante repetir que Carregar uma página .html do cache não chama mais o Rails! O que isso significa é que se existir algum conteúdo dinâmico que muda de usuário para usuário na página, ou a página é segura de alguma maneira, então você não deve usar Page Caching. Em vez disso você provavelmente precisará usar caching de action ou de fragmento, que será coberto nos próximos posts desta série.
+E se você disser em seu controller:
+
+rubycaches_page :show
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+Onde você imagina que a página de cache será armazenada quando você visita *"/posts/2"* para mostrar um post específico do blog?
+
+A resposta é */public/posts/2.html*
+
+Aqui vão mais exemplos de onde as páginas de cache são armazenadas:
+
+--- ruby
+https://localhost:3000/posts => /public/posts.html
+https://localhost:3000/posts/2 => /public/posts/2.html
+https://localhost:3000/posts/2/edit => /public/posts/2/edit.html
+https://localhost:3000/posts?page=2 => /public/posts.html
+
+
+Espere um minuto! note que o primeiro ítem acima e o último são a mesma página estática! Isso mesmo, Page Caching irá ignorar qualquer parâmetro adicional na sua URL.
+E se eu quiser usar Paginação?
+Excelente pergunta, e uma resposta mais interessante ainda. Para que o cache de página funcione precisamos formar um novo tipo de URL. Então, em vez de fazer link para “/posts?page=2”, que não funciona porque o sistema de cache ignora parâmetros adicionais, queremos fazer o link no estilo “/posts/page/2”. Mas em vez de 2 ser armazenado como params[:id], queremos que o 2 no fim da URL seja colocada em params[:page]
+Podemos fazer essa mudança de configuração em nosso /config/routes.rb
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+ActionController::Routing::Routes.draw do |map|
+  map.connect 'posts/page/:page',
+      :controller => 'posts',
+      :action => 'index',
+      :requirements => { :page => /\d+/},
+      :page => nil
+
+  map.resources :posts
+  ...
+
+
+Assumindo que você está utilizando Will Paginate, não é necessário mudar nada pois ele gerará os links de paginação corretamente no formato /posts/page/:page
+Feito isso as páginas estáticas de cache agora serão corretamente armazenadas como /public/posts/page/2.html.
+A moral da história é: se for usar Page Caching, garanta que parâmetros adicionais façam parte da URL, não depois da interrogação! Na realidade, em alguns casos isso não será possível (pois pode quebrar o estilo RESTful de programação), para isso talvez seja necessário utilizar Action Caching, que vamos falar mais em outro artigo.
+Limpando o Cache
+Você deve estar se perguntando “O que acontece se eu adicionar outro post no blog e então atualizar o browser em /posts nesse ponto?”
+Absolutamente NADA!!!
+Bem, não exatamente. Vamos acabar vendo o arquivo /public/posts/html do cache que foi gerado minutos atrás, mas ele não conterá o novo post.
+Para remover o arquivo do cache para que uma nova páginas estática possa ser gerada, precisamos expirar a página. Para expirar as páginas listadas anteriormente, simplesmente executaríamos:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+# Isso removera /posts.html
+expire_page(:controller => 'posts', :action => 'index')
+
+# Isso removera /posts/2.html
+expire_page(:controller => 'posts', :action => 'show', :id => 2)
+
+# Isso removera /posts/page/2.html e outras na mesma pasta
+cache_dir = ActionController::Base.page_cache_directory
+FileUtils.rm_r(Dir.glob("#{cache_dir}/posts/page/*")) rescue Errno::ENOENT
+
+
+Nós poderíamos adicionar isso a todos os lugares onde adicionássemos/editássemos/removêssemos um post, e copiar e colocar o trecho acima para expirar o cache, mas há uma maneira melhor!!
+Sweepers
+Sweepers são pedaços de código que automaticamente apagam caches velhos quando os dados no cache de página ficam velhos. Para fazer isso, os sweepers observam um ou mais de seus models. Quando um model é adicionado/atualizado/removido o sweeper é notificado e então roda aquelas linhas de expiração que listei acima.
+Sweepers podem ser criados no mesmo diretório de seus controllers, mas acho que é melhor que eles fiquem separados, o que você pode fazer adicionando a seguinte linha no seu /config/environment.rb:
+1
+2
+3
+4
+5
+
+Rails::Initializer.run do |config|
+  ...
+  config.load_paths += %W( #{RAILS_ROOT}/app/sweepers )
+  ...
+end
+
+
+(não se esqueça de reiniciar seu servidor depois de uma modificação de ambiente como essa.)
+Com esse código, podemos criar um diretório /app/sweepers e começar a criar sweepers. Então, vamos direto a um deles. /app/sweepers/post_sweeper.rb deve se parecer com isso:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+
+class PostSweeper < ActionController::Caching::Sweeper
+  observe Post # este sweeper observará o model Post
+  
+  # se o sweeper detectar que o um novo post foi criado
+  def after_create(post)
+    expire_cache_for(post)
+  end
+  
+  # se o sweeper detectar que o um post existente foi atualizado
+  def after_update(post)
+    expire_cache_for(post)
+  end
+  
+  # se o sweeper detectar que o um post existente foi apagado
+  def after_destroy(post)
+    expire_cache_for(post)
+  end
+  
+  private
+  def expire_cache_for(record)
+    # Isso removera /posts.html
+    expire_page(:controller => 'posts', :action => 'index')
+
+    # Isso removera /posts/2.html
+    expire_page(:controller => 'posts', :action => 'show', :id => record.id)
+    
+    # Isso removera /posts/page/2.html e outras na mesma pasta
+    cache_dir = ActionController::Base.page_cache_directory
+    logger.info "Expired pages: #{Dir.glob("#{cache_dir}/posts/page/*").map { |f| f.gsub(cache_dir, '') }.join(', ')}"
+    FileUtils.rm_r(Dir.glob("#{cache_dir}/posts/page/*")) rescue Errno::ENOENT
+  end
+end
+
+
+Nota: podemos substituir after_create e after_update por after_save apenas, se ambos forem fazer a mesma coisa.
+Então, precisamos dizer ao nosso controller para chamar o sweeper, dessa maneira:
+1
+2
+3
+4
+
+class PostsController < ApplicationController
+  caches_page :index, :show
+  cache_sweeper :post_sweeper, :only => [:create, :update, :destroy]
+  ...
+
+
+Se tentarmos criar um novo post, devemos ver o seguinte em nosso logs/development.log:
+1
+2
+3
+
+Expired page: /posts/page.html (0.00010)
+Expired page: /posts/33.html (0.00007)
+Expired pages: /posts/page/2.html, /posts/page/3.html, /posts/page/4.html
+
+
+Isso é nosso sweeper trabalhando!
+Note que existe um trecho de código ‘estranho’:
+1
+2
+3
+
+cache_dir = ActionController::Base.page_cache_directory
+logger.info "Expired pages: #{Dir.glob("#{cache_dir}/posts/page/*").map { |f| f.gsub(cache_dir, '') }.join(', ')}"
+FileUtils.rm_r(Dir.glob("#{cache_dir}/posts/page/*")) rescue Errno::ENOENT
+
+
+A primeira linha apenas pega a raíz do diretório de cache (que por padrão é o ‘public’ e eu aconselho não mexer nela a menos que você saiba o que está fazendo).
+A segunda linha é apenas para mostrar o que estamos expirando no log.
+Na terceira linha o importante a saber é que Dir.glob busca o conteúdo de um diretório e coloca os arquivos num array. Já FileUtils.rm_r recebe esses arquivos e os apaga, que é exatamente o que um expire_cache faz de qualquer jeito.
+Precisando de alguma coisa mais avançada?
+Page caching pode se tornar muito complexo em grandes websites. Aqui vão algumas notáveis soluções avançadas:
+Rick Olson (aka. Technoweenie) escreveu um Referenced Page Caching Plugin que usa uma tabela de banco de dados para registrar as páginas em cache. Veja os exemplos no readme.
+Max Dunn escreveu um ótimo artigo em Advanced Page Caching onde ele mostra como lidar com páginas de Wiki usando cookies para modificar dinamicamente páginas no cache baseados em seus papéis.
+Por último, parece não existir nenhum jeito bom de fazer cache de xml, até onde eu vi. Mike Zornek escreveu sobre esse problema e entendeu uma maneira de fazer isso. Manoel Lemos descobriu uma maneira de fazer isso com action caching, que vamos cobrir no próximo tutorial.
+Como testo meu page caching?
+Não existe nenhum jeito no próprio Rails para fazer isso. Por sorte Damien Merenne criou um swank plugin para testar page cache. Não deixe de ver!
+Conclusões
+Existem diversos detalhes a respeito de configuração Apache, mas contanto que você não mude os padrões de onde o Rails cria o cache, e se estiver usando Phusion Passenger, nada mais precisa ser feito.
+Como disse antes, não compensa fazer cache de todas as suas páginas. Também não compensa fazer page caching de páginas com muitos trechos muito dinâmicos, para isso outras técnicas podem ser mais interessantes.
+Normalmente a página mais visitada do seu site é sua página principal e, pelo menos ela, deve ser montada de forma a possibilitar a utilização de page caching.
+Espere por mais artigos sobre caching. E não deixe de baixar os códigos mostrados aqui no Github.
+tags: obsolete rails
+

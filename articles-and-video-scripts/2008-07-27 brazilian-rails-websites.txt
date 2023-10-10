@@ -1,0 +1,95 @@
+
+Leitores Brasileiros: cliquem aqui
+I’ve recently asked at the Rails-BR Group what are the Brazilian websites built with Ruby on Rails. So I compiled a list from the answers to help promote them and motivate others to follow. This should also help beginners to understand that there is no idea that can’t be implemented on Rails. The sky is the limit.
+This time I am focusing on websites only, maybe next time I’ll list tools, libraries, gems and plugins, for which I know there are many Brazilian ones.
+
+Brasigo – Recently released, questions and answers online, such as Yahoo! Answers
+BlogBlogs – The biggest blog indexer, such as Technorati
+TreinaTom – The most well known Brazilian e-Learning system
+just-remind.us – The virtual phonebook you can share
+Pagestacker – Your memory for the web, such as del.icio.us
+Ikwa – Professional networking community and services
+O Curioso – Retrieves messages from your fellows at Orkut
+beonthe.net – Create your online photo algums, such as Flickr
+RubyOnda – Rss agregator for the Rails community
+Codestacker – Code snippets sharing, such as Pastie.org
+OrangoTag – Mediatracker for TV shows afficionados
+Poxxa – Events website
+Pelotas Center – Official Shopping Center
+GoZub – “What are you doing now?”, such as Twitter
+moourl.com – make your URLs smaller, such as Tinyurl.com
+ViaRanking – Research for products, services and companies based on your location
+Sismiko – Parties and events website
+Mobbbi – Titles itself as “The Guide for Good Life” (careful, there are 3 "b"s)
+trimboo – BitTorrent search engine
+VoteBolsa – Online community to share information about the stock market
+Investidor Virtual – Investment community and simulator.
+BielBid – Online system for stock buyers and quotation requests
+MyGuestmap – Google Maps Guestmap Service
+spesa – Online personal budget manager
+EmailFax – Online service to send/receive faxes
+sua receita – Cooking recipes website
+diHITT – Popular news, Digg style
+Enterprysix – company simulator for administration courses, built for a college homework
+tjnet – Cellphone entertainment website with rings, wallpapers, etc
+Baú de Arquivos – Online file storage, so you can share and organize your files
+Mapia – Directory for bars, restaurants, hotels
+tecoteco.com.br – Flight prices research
+Peneirando.com – Community to find the best answer for a question with many options
+Meu Feirão!!! – Exchange and reselling of products
+
+Disclaimer: The links are in no particular order. This website is not responsible for the content or any kind of problem related to the listed websites. The purpose is to promote those sites.
+
+
+
+
+
+
+
+
+Sites Brasileiros on Rails
+Recentemente perguntei no Grupo Rails-BR quais são sites brasileiros feitos com Ruby on Rails. E das respostas compilei esta lista para ajudar a divulgar esses trabalhos e incentivar muitos mais. Além disso deve ajudar os iniciantes a terem idéias e entender que não há muito que não possa ser feito com Rails. O céu é o limite.
+Desta vez estou me concentrando apenas em websites, numa próxima vez vou tentar listas ferramentas, bibliotecas, gems e plugins, que eu sei que existem vários.
+
+Brasigo – Recém-lançado, pergunte e responda online, como o Yahoo! Answers
+BlogBlogs – O maior indexador brasileiro de blogs, como o Technorati
+TreinaTom – O mais conhecido sistema de e-Learning
+just-remind.us – Agenda pessoa compartilhável
+Pagestacker – Sua memória na internet, como o del.icio.us
+Ikwa – Canal de conteúdo, serviços e networking profissional
+O Curioso – Site que copia os recados de quem você escolhe no Orkut
+beonthe.net – Crie seus álbuns virtuais, como o Flickr
+RubyOnda – Agregador de Rss da comunidade Rails brasileira
+Codestacker – Site para compartilhar trechos de código, como o Pastie.org
+OrangoTag – Mediatracker para aficionados em séries
+Poxxa – Site de eventos
+Pelotas Center – Shopping Center Virtual
+GoZub – “O que você está fazendo agora?”, como Twitter
+moourl.com – Encurte suas URLs, como Tinyurl.com
+ViaRanking – Busque produtos, serviços e empresas na sua região, selecionados por critérios de qualidade
+Sismiko – Site de Eventos pelo Brasil
+Mobbbi – “O Guia da Boa Vida” (cuidado, tem 3 "b"s)
+trimboo – Search Engine de Torrents
+VoteBolsa – Comunidade para troca de informações sobre Ações
+Investidor Virtual – Comunidade de Investimento e simulação
+BielBid – Sistema para compradores gerenciarem seus pedidos de cotação de Ações
+MyGuestmap – Google Maps Guestmap Service
+spesa – Controle seu orçamento online
+EmailFax – Serviço de fax online para enviar e receber fax sem precisar de um aparelho de fax
+sua receita – Site de Receitas
+diHITT – Site de notícias populares, no estilo Digg
+Enterprysix – Projeto de Iniciação Científica da FIAP, simulador de empresas
+tjnet – Site de entretenimento para celular, com toques, wallpaper, etc.
+Baú de Arquivos – Armazenamento e compartilhamento online de arquivos
+Mapia – Guia de Bares, Restaurantes, Hotéis
+tecoteco.com.br – Pesquisa de preços de vôos
+Peneirando.com – Tenta achar a melhor opção dentre uma variedade, todas enviadas e votadas pela comunidade
+Meu Feirão!!! – Site de troca e venda de qualquer coisa
+
+Disclaimer: Estes links não estão em nenhuma ordem em particular. Este site não se responsabiliza pelo conteúdo ou qualquer tipo de problemas relacionados aos sites listados. O objetivo é apenas divulgação.
+
+
+
+
+tags: obsolete english
+

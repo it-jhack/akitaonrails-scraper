@@ -1,0 +1,10 @@
+
+Atualização 13-10-2015: como o rubyonbr não está mais ativo, agora só via Webarchive
+
+
+Acabou de ser publicado minha coluna de Novembro Desenvolvimento Sustentável com Rails no site RubyOnbr.
+Dessa vez dou uma rápida pincelada em assuntos de processos, metodologias, procedimento e ferramentas.
+Meu objetivo é apenas começar uma discussão que vem se arrastando desde Fred Brooks, nos anos 60, a Crise do Software da década de 70, até metodologias Ágeis de hoje.
+A conclusão é uma só: não importa a tecnologia, se é PHP, Java ou Rails. Projetos precisam de controle, nem que seja mínimo. Não existe Anarquia em software. Nem mesmo em projetos open source. Aliás, muitos se esquecem que esses projetos tem a figura dos Mantenedores, sejam eles David Hansson, Linus Torvalds, Andrew Morton dentre tantos.
+tags: rubyonbr
+

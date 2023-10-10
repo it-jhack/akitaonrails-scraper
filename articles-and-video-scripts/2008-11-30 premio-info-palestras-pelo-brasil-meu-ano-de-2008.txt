@@ -1,0 +1,89 @@
+
+Ufa, este ano foi corrido. Eu sempre fui um cara pacato. Por outro lado sempre detestei rotina, sempre detestei fazer apenas o que todo mundo faz. Já mudei de horizontes várias vezes. No fim dos anos 80 brinquei de DOS e sistemas locais. No começo dos anos 90 foram sistemas cliente-servidor. No meio dos anos 90 foi a era da multimídia, CD-ROMs, produtoras e agências de publicidade. No fim dos anos 90 foi a primeira onda da internet. No começo do século XXI veio o mundo corporativo, SAP, Java. 3 anos atrás começou minha jornada com Ruby on Rails, primeiro o livro, depois o blog, depois largar o mundo corporativo para ser freelancer de Rails. Este ano, Locaweb, Rails Summit.
+Em 2006, logo depois de ter aprendido Rails, era óbvio ver que valia a pena ir nessa direção. Porém, naquela época basicamente inexistia mercado para isso no Brasil. Algumas pessoas que começaram Rails antes de mim, que eu contatei, não pareciam muito animadas também. Eu tinha duas opções: buscar meu caminho fora do Brasil ou criar o mercado aqui. Obviamente, escolhi o caminho menos óbvio. Felizmente mais pessoas se juntaram e a comunidade Ruby cresceu. A melhor coisa desta comunidade é que ela é essencialmente descentralizada. Coisas centralizadas falham. Quando você tem uma liderança central, a comunidade sempre terá esse teto artificial. Num universo que forma redes de livre escala, com vários grandes hubs bem conectados, a comunidade se transforma numa teia robusta e resistente a falhas aleatórias (Barabási). É a ordem emergindo do caos. É como outras comunidades open source cresceram, é como a comunidade Ruby cresceu também.
+Antes de continuar, uma boa notícia! Semana que vem, dia 3 de dezembro, estarei representando o David Hansson para receber o Prêmio Info 2008 de desenvolvimento de software. Isso mesmo: vocês todos ganharam! O Ruby on Rails foi o escolhido este ano! Eu dei a notícia ao DHH e ele me autorizou a representá-lo. Esse é apenas mais um marco desta comunidade. Parabéns a todos!
+
+
+E quem ainda não comprou a revista Info Exame deste mês talvez não tenha visto, mas ela tem uma entrevista com o David Hansson também. Aliás, essa entrevista foi engraçada porque me deixou meio no sufoco. Quando conversei com o jornalista da Abril, a idéia era que essa entrevista fosse publicada na edição de Outubro, para que coincidisse com o Rails Summit. Porém, o DHH acabou ficando enrolado com outros compromissos, nos deixou no escuro por alguns dias, mas felizmente deu para retomar e pegar a edição de Novembro.
+
+Sexta-feira passada, dia 28 de Novembro, marcou também minha última palestra deste ano, no Encontro de TI, organizado pela Artecom. No total foram nada menos do que 13 (meu número da sorte) palestras, oficinas, mini-cursos de Ruby on Rails que dei este ano. Passei por cidades do interior de São Paulo, Porto Alegre, Santa Catarina, Ceará. Fora as viagens internacionais no papel de blogueiro de plantão na RailsConf de Portland e na QCon de São Francisco.
+17/04 – (PDF) Minha jornada começou no FISL deste ano. Eu ainda estava na Surgeworks. E nesse caso ainda tive problemas pois acabei voando de última hora, meu vôo atrasou e cheguei atrasado para minha palestra. Conseguimos uma sala no dia seguinte, mas não tinha sequer projetor. Leiam meu Diário de Bordo para ver como foi.
+26/04 – Minha segunda palestra do ano foi organizada pela Impacta, uma longa e produtiva manhã apresentando Ruby on Rails. Infelizmente não lembro onde coloquei os slides dessa palestra. Fico devendo!
+07/05 – Este episódio não foi nada relacionado a palestras, mas definitivamente relacionado a Rails. Vocês vão se lembrar da minha saga para conseguir um novo passaporte para conseguir viajar pra RailsConf. Graças ao Vinicius Teles, eu fiz uma jornada até Niterói para, literalmente, dar o Sangue pelo Rails. Leiam meu relato na Parte 1 e Parte 2
+27/05 – (Artigos) Rumo à RailsConf Portland! Foi minha primeira RailsConf e também a segunda vez indo aos EUA. Minha primeira vez foi Miami em 2000, portanto fazia muito tempo que não ia para lá (falei que eu era do tipo pacato). A RailsConf foi incrível, fiz muitos novos amigos, conheci muitas pessoas interessantes, o networking foi incrível. Leiam as Memórias desse evento e se ainda não ouviram, ouçam agora as diversas entrevistas que fiz com o pessoal por lá.
+09/06 – Mal retornei da RailsConf e já comecei na Locaweb como Gerente de Produtos Linux. Meu primeiro objetivo: implementar Ruby on Rails nas hospedagens compartilhadas. Meu segundo objetivo: organizar o primeiro grande evento de Ruby on Rails do Brasil. Nada fácil :-)
+03/07 – 22/07 – 05/08 – Muitas coisas acontecendo nesse mês de Julho na Locaweb. Primeiro lançamos os Novos Planos de Hospedagem. Também passamos a patrocinar o RubyLearning.org. E finalmente lançamos o Rails nas hospedagens. E o trabalho está só começando.
+05/07 – (Apostila/PDF) De volta à Impacta, desta vez para um Show Day – um dia inteiro de mini-curso sobre a Linguagem Ruby e um pouco de Rails. Foi um conteúdo bem pesado para apenas poucas horas para explicar. Espero que todos tenham entendido.
+22/08 – Primeiro Happy Hour de Railers de São Paulo :-) Juntamos uma grande galera no Bar do Juarez, na Vila Olímpia. Foi muito legal confratenizar com todo mundo. Em breve vamos ter mais!
+09/09 – (PDF) Nesta semana começou a verdadeira maratona de palestras: literalmente toda semana até o fim do ano com palestras! A primeira foi na faculdade Claretiano de Batatais. Desta vez eu resolvi modificar meu tema: em vez de falar exclusivamente de Ruby on Rails, resolvi falar de outro assunto que não deixa de ser relacionado, o Matando a Média. O professor Luciano primeiro viu uma palestra-screencast que eu tinha feito antes, a adaptação do Ryan Davis Machucando Código por Diversão e Lucro. Esse tema de “Matar a Média” seria constante em todas as minhas palestras daqui por diante. Os alunos de Batatais foram muito legais, depois eles vieram a São Paulo visitar os escritórios da Locaweb. E mais do que isso, montaram até seu próprio blog: o Batata On Rails.
+16/09 – (PDF) Agora a viagem seria para Ribeirão Preto, na USP, para um evento sobre software livre. Esta apresentação foi mais focada na tecnologia Ruby on Rails. Invariavelmente demonstrações ao vivo dão pau :-) Portanto a partir desta palestra passei a fazer screencasts das demonstrações. Em Ribeirão mostrei um demo de ActiveScaffold e de uma aplicação mínima de Rails para descrever suas principais características.
+27/09 – (PDF) Essa viagem foi longa: voar até Chapecó, depois ir de carro até Xanxerê, no oeste de Santa Catarina. Foi longa mas valeu a pena. A Unoesc organizou o evento Boot II, mais voltada para Java, mas eles foram muito gentis de me convidar para participar. Lá eu fiz uma apresentação mais longa, em primeiro lugar expliquei que, mesmo eu sendo um “Evangelizador”, eu não sou do tipo que tenta fazer o Rails parecer bom usando o artifício de fazer um Java parecer ruim. Muito pelo contrário, eu sou totalmente a favor de que um Programador acima da média é um poliglota. E por isso demonstrei um pouco de JRuby, primeiro manipulando objetos Swing de dentro do IRB e depois fazendo deployment de uma aplicação Rails com Glassfish.
+08/10 – (PDF) Em São Carlos, na semana seguinte a essa que eu fui, haveria um evento tradicional de tecnologia deles. Eu não poderia estar (na semana seguinte seria o Rails Summit), mas eles me convidaram para dar uma palestra mesmo assim. A sala de aula ficou cheia e novamente voltei aos pontos sobre como um programador deve ser acima da média. Acho isso muito importante para se dizer a estudantes. Hoje em dia falta motivação para os alunos fazerem coisas fora do comum, espero que eu tenha conseguido dar uma mãozinha.
+15/10 – 16/10 – (PDF) E no meio de tudo isso acima, eu ainda tinha que organizar a Rails Summit Latin America! O projeto desse evento começou exatamente no primeiro dia que comecei na Locaweb, em Junho. Foram menos de 4 meses para montar um evento para mais de 500 pessoas, a partir de Zero! Leiam a cobertura completa do evento nos artigos do meu blog. Em resumo: não preciso repetir que o evento superou todas as expectativas. Em particular, minha palestra foi introdutória, com o intuito de dar uma base para quem nunca tinha visto Ruby nem Rails. Nessa palestra eu mostrei coisas básicas da linguagem Ruby como metaprogramação e depois um demo simples de Rails, para explicar sua estrutura.
+23/10 – (PDF) Mal acabou o Summit, na semana seguinte dirigi para Rio Claro, para palestrar no evento Seccomp da Unesp. Seria mais como um workshop e, nesse caso, resolvi explicar a linguagem Ruby em muito mais detalhes antes de chegar no Rails. Acho que explicando dessa forma a ficha cai mais rápido. Quando se mostra Rails primeiro, a sensação de “magia negra” às vezes pode não ser legal sem entender como funciona. O dia estava bem quente, mas os alunos da Unesp me surpreenderam pelo esforço.
+25/10 – (PDF) Dois dias depois, mais uma palestra, desta vez no evento InterCon, da revista iMaster e organizada pelo meu grande amigo Luli Radfahrer. Claro que eu não iria recusar o convite. O evento foi montado para ser bem diferente e interativo. No caso, as palestras todas pareciam que estavam com atraso, alguns palestrantes que faltaram, no fim minha palestra passou das 14 para as 16 horas. Mas sem problemas, deu tempo de explicar tudo que eu queria sobre Ruby e Rails, fazer as demonstrações de costume. Foi bem legal.
+01/11 – (PDF) A Fratech lançou a franquia Brasileira do famoso site InfoQ e foi gentil em me convidar para ser editor de Ruby. Além de mim, mais dois amigos da Locaweb são editores, o Maurício de Diana (Agile) e o Carlos Mendonça (.Net). E a Locaweb é patrocinadora do lançamento também. Nesse sábado foi o evento de lançamento, que contou com a presença do fundador do site, o Floyd Marinescu, velho conhecido da época em que eu lia o TheServerSide.com. Foi um evento voltado mais para o lado Agile e por isso eu fiz uma palestra sem uma linha de código – aos moldes do que fiz na Claretiano – mas fazendo uma comparação que ainda não tinha visto ninguém fazer explicitamente: de que o melhor estudo de caso de metodologias Ágeis é um projeto open source. Vou falar mais sobre isso em outro artigo.
+14/11 – (PDF) Finalmente, uma chance de conhecer o Nordeste: o pessoal de Fortaleza organizou o Ceara On Rails. Foi um evento que aconteceu na noite de sexta-feira. Eu cheguei na quinta e pude conhecer um pouco da balada de Fortaleza, uma pena que não pude ficar mais, gostei bastante. Novamente, minha palestra foi sobre sair da média e como tecnologias dinâmicas como Rails aliadas à filosofia Ágil podem ajudar. Acho que isso deve ter feito muita gente pensar mais a respeito. Por outro lado, fiquei triste de ter que voltar já no sábado de madrugada, por mim teria ficado lá o fim de semana inteiro!
+15/11 – (Entrevistas) O motivo de ter que voltar tão corrido de Fortaleza é porque eu precisava embarcar de São Paulo para São Francisco, no mesmo dia! Basicamente voltei de Fortaleza para São Paulo na manhã de sábado e à tarde já estava voltando para Guarulhos para embarcar de novo! Foi uma correria e tanto. Ficamos a semana toda na grande cidade de São Francisco. Minha terceira vez nos EUA e a segunda no mesmo ano! Definitivamente eu “era” um cara pacato. A semana foi fantástica, eu praticamente não assisti nenhuma palestra mas aproveitei cada segundo para conhecer novas pessoas, entrevistar, fazer networking, sair com as pessoas. Foi uma semana bem atarefada. Por outro lado, meu cartão de crédito nunca mais será o mesmo …
+27/11 – (PDF) Esse evento eu realmente não sabia do que se tratava. Só no dia que eu entendi que foi um evento organizado de maneira interativa onde os palestrantes foram escolhidos por voto via internet. Fiquei contente de saber que fui escolhido para palestrar dessa forma. E como é o Sylvestre Mergulhão que fará a palestra de Rails no Rio, fico duplamente contente do Rails estar bem representado. A palestra foi, novamente, num formato mais informal de oficina, com as pessoas mais próximas. Desta vez, resolvi fazer algumas demonstrações ao vivo, porque de última hora vi que seria melhor mostrar o básico de Ruby antes. Como era de se esperar, ao vivo, sempre dá uns bugs na demonstração :-)
+Esse foi um breve resumo de algumas coisas que fiz este ano. Depois do festa da Info semana que vem, acho que volto ao ritmo “normal”, praticamente férias se considerar que eu quase não tive tempo para mais nada. Além de palestrar, além de blogar, além de gravar podcast toda semana, além de organizar eventos, eu ainda tenho que trabalhar também! Definitivamente, preciso dar um jeito de fazer um ‘git clone akita’.
+No total, acho que falei com mais de 1.500 pessoas pessoalmente! Acompanhem todas as palestras que dei, em PDF, no Slideshare
+Vídeos
+Os PDFs acima foram exportados a partir dos meus originais em Apple Keynote. Muitos deles tem vídeos, mas muitos são repetidos entre vários deles, portanto resolvi linkar todos de uma vez só para ficar mais fácil. Vou descrever mais ou menos do que se trata e vocês podem baixar quais quiserem. Os que assistiram minhas palestras ao vivo, recomendo baixar exatamente a apresentação que assistiram. O assunto deste ano foi basicamente o mesmo: “apresentar Ruby on Rails – a tecnologia e a filosofia”. Eu fiz variações do mesmo tema dependendo de qual evento eu ia.
+Os vídeos abaixo foram as apresentações mais detalhadas da linguagem Ruby que dei na Seccomp, de Rio Claro:
+
+0_IRB.mov
+1_basico.mov
+2_Tipos.mov
+3_Metodos.mov
+4_Classes.mov
+5_Objetos.mov
+6_Blocos.mov
+7_Builder.mov
+8_Require.mov
+
+Os vídeos abaixo foram apresentados no evento Boot II, de Xanxerê, sobre JRuby:
+
+glassfish_rails.mov
+jruby-swing.mov
+
+Este foi o vídeo enviado pelo pessoal do RailsEnvy para o Rails Summit, já com as legendas em português que eu editei:
+
+RailsSummit_Leg.mov
+
+Estes outros devem ser fáceis de entender apenas pelo nome:
+
+Intro_Rails.mov
+Intro_Ruby.mov
+locarails.mov
+ActiveResource.mov
+ActiveScaffold.mov
+Ruby_Basico.mov
+helloworld.mov
+
+Mensagem das Palestras
+Perdoem minha nostalgia, mas acho que depois de tudo isso, vale a pena retornar ao primeiro post que eu fiz quando meu blog ainda ficava no blogger.com. Escrevi isso no dia 26 de abril de 2006, às 1:53 da manhã:
+
+Acho que andamos um longo caminho até aqui :-) E de forma resumida, minhas palestras neste ano, todas tiveram basicamente os seguintes temas:
+
+Matando a Média. A maioria das pessoas apenas faz exatamente o que “todo mundo” faz. Por definição eles se colocam na “média”, ou seja, são medíocres. A mensagem é: saia da mediocridade. É a única forma de se proteger contra o futuro. Fazer o que todo mundo faz é exatamente como os lemmings: uns seguindo os outros penhasco abaixo.
+
+
+Open Source é importante. Uma dica às empresas: vocês querem programadores acima da média? Procure os mais ativos nas centenas de projetos open source. Um programador de projeto open source precisa ser bom. Precisa saber se comunicar. Não existe “carteirada”: certificação, cargo, poder aquisitivo, nada disso interessa: uma equipe open source prima pela meritocracia. Projetos open source são naturalmente projetos ágeis. Além disso, um programador que faz mais do que apenas seu trabalho rotineiro, está exposto a muito mais opções e idéias, é muito mais criativo.
+
+
+É impossível fazer projetos de verdadeiro Sucesso (com “S” maiúsculo) sem ter a cultura e a filosofia Ágil. Esqueçam também as metodologias de “caixinha” vendida por consultorias. Comece do começo: absorva o Manifesto Ágil antes de mais nada. Leia meu artigo sobre isso.
+
+
+Linguagens Dinâmicas estão crescendo. Não só Ruby, como outras linguagens dinâmicas estão ganhando cada vez mais espaço no mercado de aplicações. No nível de sistemas, linguagens como Java ainda serão usadas. Vale distinguir as duas coisas: para Web o mais importante não é performance bruta e sim Time-to-Market. Não adianta ser milissegundos mais rápido mas levar 6 meses a mais para ficar pronto. Na velocidade da internet, o importante é produtividade.
+
+
+Todos que repetem que “Rails não escala” são idiotas. Das duas uma: se realmente acredita nisso, é um programador sem nenhuma experiência de verdade. Se não acredita nisso e fala apenas por piada, é um cara sem noção nenhuma, pois a piada já veio, já passou e já não tem mais graça. Pendurem um salame no pescoço se querem chamar a atenção. A vocês, aqui vai dois slides que mostrei no Encontro de TI:
+
+
+
+Este ano, por coincidência, também achei meu lema impresso numa camiseta da TNG:
+
+O ano ainda não acabou! Vamos fechar com chave de ouro!
+tags: obsolete conference award
+

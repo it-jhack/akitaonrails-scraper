@@ -1,0 +1,356 @@
+
+Para quem não conhece, Charles Nutter é funcionário da Sun e criador do projeto JRuby para rodar sistemas escritos em Ruby (em particular, Rails) dentro de uma virtual machine Java. Os progressos no interpretador foram espetaculares e Charles tem algo a dizer em seu blog, Headius, a respeito de compiladores. Existem algumas boas surpresas mais para o fim do post, aguentem firme e leiam tudo.
+Fonte: Headius, Charles Nutter
+
+
+Os tempos estão mudando.
+Anteriormente postei sobre o trabalho do compilador do JRuby. Houve várias iterações no compilador, muita coisa ainda protótipo e nunca intencionado para ser completo, e algumas tentativas genuínas de evoluir em direção ao suporte total do Ruby. Entretanto acredito que nas últimas semanas cheguei a um design que vai nos levar ao final do jogo sobre um compilador JRuby.
+No último ano, enfatizamos estar corretos do que performance nove vezes em cada dez. Quando resolvemos focar na performance, foi somente para melhorar a velocidade do interpretador do JRuby, em tentativa de chegar próximo à performance do Ruby nessa área e porque sabíamos que o JRuby nunca escaparia completamente da interpretação. Ruby é dinâmico demais para fugir disso. Então, enquanto compatibilidade com Ruby 1.8.x continuou a melhorar a grandes passos, nossa performance era bem pobre em comparação.
+Do 0.9.0 ao 0.9.1, tivemos um claro aumento do dobro da performance. Nosso benchmark favorito – geração de RDoc – estava duas vezes mais rápido, e outros benchmarks mais simples como fib tiveram melhorias similares. 0.9.2 foi um lançamento mais apressado para o JavaPolis, mas tivemos um bom aumento de 1/4 a 1/3 mesmo assim, desde que o refatoramento em andamento removeu um grande pedaço de peso do núcleo do runtime do JRuby.
+Do 0.9.2 para o trunk atual, entretanto, foi uma coisa completamente diferente.
+A primeira grande mudança é que começamos a alterar seriamente a maneira como o JRuby faz despacho dinâmico de método. Eu fiz algumas pesquisas, li alguns papéis, fiz testes de conceitos e benchmarks de algumas opções. O que decidimos no momento é uma combinação de STI para as classes núcleo (STI fornece uma larga tabela mapeando métodos e classes para o código propriamente dito) e várias formas de inline caching para classes não-núcleo (basicamente, para classes Ruby puras; entretanto isso ainda não está pronto no trunk). STI fornece um caminho extremamente rápido para despacho daqueles métodos mais chamados, já que reduz as chamadas da maioria dos métodos núcleo a dois índices de array e um switch, uma melhoria enorme em relação à procura em hash e múltiplos layers de abstração e framing que tínhamos antes.
+Estamos continuando a expandir nosso uso de STI onde é aplicável, e logo começarei a explorar opções para inline caching em modo interpretado (polimórfico, provavelmente, mas preciso rodar alguns testes para ter os números corretos balanceados). Então despacho dinâmico rápido está em no caminho, e vai melhorar a performance geral.
+Então, há o trabalho sobre o compilador. Vocês não têm idéia como tem me irritado ouvir pessoas falando sobre JRuby ano passado e dizendo “é, mas ele não compila em bytecode Java”. Isso obviamente é puro FUD (em português claro, “bullshitagem”), mas além disso eles ignoram totalmente a complexidade do problema: nenhuma pessoa na Terra conseguiu compilar Ruby para uma máquina virtual de uso geral ainda. Então, reclamar sobre a falta do compilador é como reclamar que ainda não movemos montanhas. Honestamente pessoal, o que vocês esperavam?
+Claor, há o outro lado da moeda: compilar Ruby é um problema difícil, e eu gosto de problemas difíceis. Para mim é duplamente mais difícil, porque nunca escrevi um compilador antes. Mas ao diabo, antes de JRuby também nunca havia trabalhado em um interpretador ou implementação de linguagem antes, e parece que tenho ido bem. Então aí vai … Montanha Ruby, esperando para ser escalada. E escalar eu devo!
+O design atual do compilador vive em duas metades: a metade do AST andante; e a metade da geração de código. Escolhi dividir esses dois porque torna muitas coisas mais fáceis. Para começar, me permite abstrair toda a lógica de geração de bytecode atrás de uma interface simples, uma interface que apresenta operações coarse-grained como invokeDynamic() e retrieveLocalVariable(). A implementação final dessas operações então podem ser modificadas a gosto. Isso também vai nos permitir evoluir o AST independentemente do backend do compilador, até ao ponto de trocá-lo por um parser completamente diferente e representação de código em memória (como bytecodes YARV) sem estragar a evolução do backend gerador de código. Então essa divisão torna o trabalho do compilador à prova de futuro.
+O design atual também tem outra vantagem: nem todo Ruby precisa compilar para ser útil. Atualmente, enquanto o andador AST encontra nós, se encontrar um nó que não consegue lidar simplesmente levanta uma exceção. A compilação termina e o cliente do compilador pode lidar com o resultado como quiser. Isso leva a uma funcionalidade realmente poderosa do design: podemos instalar o compilador agora como um JIT (Just In-Time) e enquanto for evoluindo mais e mais código será otimizado automaticamente. Então, quando estivermos confiantes que um certo tipo de nó está compilando 100% correto, esse nó será elegível para compilação JIT. Como um exemplo, aqui vai a saída de uma instalação de gem com o compilador atual habilitado como um JIT (com meus logs no meio, naturalmente):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+
+compiled: TarHeader.empty?
+compiled: Entry.initialize
+compiled: Entry.full_name
+compiled: Entry.bytes_read
+compiled: Entry.close
+compiled: Entry.invalidate
+Successfully installed rake, version 0.7.1
+Installing ri documentation for rake-0.7.1...
+compiled: LeveledNotifier.notify?
+compiled: LeveledNotifier.<=>
+compiled: RubyLex.getc
+compiled: null.debug?
+compiled: BufferedReader.ungetc
+compiled: Token.set_text
+compiled: RubyLex.line_no
+compiled: RubyLex.char_no
+compiled: BufferedReader.column
+compiled: RubyToken.set_token_position
+compiled: Token.initialize
+compiled: RubyLex.get_read
+compiled: RubyLex.getc_of_rests
+compiled: BufferedReader.getc_already_read
+compiled: BufferedReader.peek
+compiled: RubyParser.peek_tk
+compiled: TokenStream.add_token
+compiled: TokenStream.pop_token
+compiled: CodeObject.initialize
+compiled: RubyParser.remove_token_listener
+compiled: Context.ongoing_visibility=
+compiled: PreProcess.initialize
+compiled: AttrSpan.[]
+compiled: null.wrap
+compiled: JavaProxy.to_java_object
+compiled: Lines.next
+compiled: Line.isBlank?
+compiled: Fragment.add_text
+compiled: Fragment.initialize
+compiled: ToFlow.convert_string
+compiled: LineCollection.add
+compiled: Entry_.path
+compiled: Entry_.directory?
+compiled: Entry_.dereference?
+compiled: AttrSpan.initialize
+compiled: Entry_.prefix
+compiled: Entry_.rel
+compiled: Entry_.remove
+compiled: Lines.rewind
+compiled: AnyMethod.<=>
+compiled: Description.serialize
+compiled: AttributeManager.change_attribute
+compiled: AttributeManager.attribute
+compiled: ToFlow.annotate
+compiled: NamedThing.initialize
+compiled: ClassModule.full_name
+compiled: Lines.initialize
+compiled: Lines.empty?
+compiled: LineCollection.normalize
+compiled: ToFlow.end_accepting
+compiled: Verbatim.add_text
+compiled: FalseClass.to_s
+compiled: TopLevel.full_name
+compiled: Attr.<=>
+Installing RDoc documentation for rake-0.7.1...
+compiled: Context.add_attribute
+compiled: Context.add_require
+compiled: Context.add_class
+compiled: AbstructNotifier.notify?
+compiled: Context.add_module
+compiled: LineReader.read
+compiled: null.instance
+compiled: HtmlMethod.path
+compiled: HtmlMethod.aref
+compiled: ContextUser.initialize
+compiled: HtmlClass.name
+compiled: TokenStream.token_stream
+compiled: LineReader.initialize
+compiled: TemplatePage.write_html_on
+compiled: Context.push
+compiled: Context.pop
+compiled: HtmlMethod.name
+compiled: Context.find_local_symbol
+compiled: SimpleMarkup.add_special
+compiled: TopLevel.find_module_named
+compiled: Context.find_enclosing_module_named
+compiled: HtmlMethod.<=>
+compiled: ToHtml.annotate
+compiled: HtmlMethod.visibility
+compiled: HtmlMethod.section
+compiled: HtmlMethod.document_self
+compiled: LineReader.dup
+compiled: Lines.unget
+compiled: ToHtml.accept_paragraph
+compiled: ContextUser.document_self
+compiled: ToHtml.accept_heading
+compiled: Heading.head_level
+compiled: ToHtml.accept_list_start
+compiled: ToHtml.accept_list_end
+compiled: ToHtml.accept_verbatim
+compiled: SimpleMarkup.initialize
+compiled: AttributeManager.initialize
+compiled: ToHtml.initialize
+compiled: ToHtml.end_accepting
+compiled: HtmlMethod.singleton
+compiled: Context.modules
+compiled: Context.classes
+compiled: ContextUser.build_include_list
+compiled: HtmlMethod.description
+compiled: HtmlMethod.parent_name
+compiled: HtmlMethod.aliases
+compiled: HtmlClass.parent_name
+compiled: ContextUser.as_href
+compiled: ContextUser.url
+compiled: ContextUser.aref_to
+compiled: HtmlFile.<=>
+compiled: HtmlClass.<=>
+
+
+Vocês podem ver pela saída que não somente os métodos do RubyGem estão sendo compilados, mas os métodos stdlib também e nossos próprios métodos de integração com Java. E isso com o compilador atual, que não suporta compilar defs, blocks, cases … de classes. Com sorte você pegou a idéia; essa implementação pedacinho por pedacinho do compilador nos permite crescer lentamente nossa habilidade de otimizar Ruby em bytecode Java.
+Então, quão bem ele performa? Muito bem, quando conseguimos compilar. Testemunhe os seguintes resultados para um simples algoritmo recursivo de fibonacci rodando sobre Ruby 1.8.5 e o JRuby do trunk com JIT habilitado.
+1
+2
+3
+4
+5
+6
+7
+
+$ ruby test/bench/bench_fib_recursive.rb
+12.760000   1.400000  14.160000 ( 14.718925)
+12.660000   1.490000  14.150000 ( 14.648681)
+$ JAVA_OPTS=-Djruby.jit.enabled=true jruby test/bench/bench_fib_recursive.rb
+compiled: Object.fib_ruby
+8.780000   0.000000   8.780000 (  8.780000)
+7.761000   0.000000   7.761000 (  7.761000)
+
+
+Sim, é perto de dobro da performance da implementação em C do Ruby. E isso é absolutamente real.
+Agora, usar JIT é muito bom, e certamente levou Java muito longe. O JIT HotSpot é um pedaço de trabalho inacreditável e qualquer aplicação que roda por um bom tempo garantidamente vai rodando melhor e melhor à medida que a otimização começa a ir mais fundo. Mas estamos falando de Ruby aqui, que começa à velocidade de um programa C e roda tão rápido quando roda imediatamente. Então JRuby precisa de uma maneira para competir com performance de execução imediata e a maneira mais direta de fazer isso é um compilador ahead-of-time (AoT, antes do tempo). Esse compilador também está disponível agora no trunk.
+O nome do comando é “jrubyc”, e ele faz exatamente o que você espera, dá saída de um arquivo Java .class para seu código Ruby. Entretanto o mapeamento de código Ruby para .class não é tão direto quanto se espera: um script Ruby pode conter muitas classes ou nenhuma classe, essas classes podem ser abertas e re-abertas pelo mesmo script ou outros scripts em tempo de execução. Então não existe maneira de mapear diretamente de uma classe Ruby para uma classe Java dadas as restrições do modelo de classes Java. Mas existe uma unidade muito menor de código que não muda com o tempo, apesar de ser chacoalhada a torto e a direito sem piedade: métodos.
+Ruby, no fim, é um misturado criativo e algumas vezes complicado de “objetos” de métodos, flutuando de classe para classe, de módulo para módulo, de namespace para namespace. Métodos podem ser renomeados, redefinidos, adicionados e removidos, mas nunca podem ser diretamente modificados. E então é aqui que encontramos nosso ítem imutável para compilar.
+O compilador do JRuby pega um script Ruby e gera os seguintes métodos Java deles: um método Java para a execução direta do script, incluindo o corpo da classe e "def"s e coisas do tipo (chamados “file” na classe Java eventual … obrigado Ola, pela idéia), e um método Java para cada corpo de método Ruby ou fechamentos dentro, nomeados de tal maneira que evite conflitos. Então o seguinte pedaço de código:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+require 'foo'
+
+def bar
+baz { puts "hello" }
+end
+
+def baz
+yield
+end
+
+
+Existirão quatro métodos Java gerados: um para a execução de cima a baixo do script, dois para os métodos bar e baz, e um para o fechamento contido dentro de bar. O arquivo da classe resultante vai armazená-los como métodos estáticos, então estão acessíveis de qualquer classe ou objeto quando necessários, e a execução de cima a baixo liga os dois métodos Ruby para seus nomes apropriados no espaço Ruby.
+Até que é simples, realmente!
+Então um exemplo do precioso, precioso compilador JRuby:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+
+$ cat fib_recursive.rb
+def fib_ruby(n)
+if n < 2
+n
+else
+fib_ruby(n - 2) + fib_ruby(n - 1)
+end
+end
+
+puts fib_ruby(34)
+$ jrubyc fib_recursive.rb
+$ ls fib_recursive.*
+fib_recursive.class  fib_recursive.rb
+$ time java -cp lib/jruby.jar:lib/asm-2.2.2.jar:. fib_recursive
+5702887
+
+real    0m8.126s
+user    0m7.632s
+sys     0m0.208s
+$ time ruby fib_recursive.rb
+5702887
+
+real    0m14.649s
+user    0m12.945s
+sys     0m1.480s
+
+
+Novamente, cerca de duas vezes mais rápido que Ruby 1.8.5 para este benchmark em particular.
+Agora, não quero que saiam por aí dizendo que JRuby tem um compilador perfeito que dobra a performance de suas aplicações Rails. Isso ainda não é verdade. O compilador atual cobre somente 30% das construções de código possíveis em Ruby, e os 70% restantes contém alguns dos maiores desafios como fechamentos e definições de classes. Certamente terá muitos bugs agora, e o JIT nem está habilitado por padrão, além disso tem minhas mensagens de logs feios no meio, para desencorajar qualquer uso em produção.
+Mas é muito real. JRuby tem um compilador parcial e em crescimento de Ruby para bytecode Java, agora.
+E caramba, olhe só a hora (23:28, 18/01/2007). Hoje à noite preciso terminar minha aplicação para visto para minha viagem à Índia, checar agendas e descrições de palestras e preparar alguns slides e anotações para apresentações nas semanas seguintes. Vocês verão mais sobre compilação Java e nosso desenvolvimento em suporte a bytecode YARV/Ruby 2.0 nos próximos meses … e podem esperar que o JavaOne será interessante para Ruby sobre JVM este ano ;)
+tags: obsolete jruby
+

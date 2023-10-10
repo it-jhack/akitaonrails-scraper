@@ -1,0 +1,11 @@
+
+
+
+
+Estou muito satisfeito por anunciar que está a caminho o primeiro livro de Ruby on Rails em português, no Brasil.
+O contrato foi assinado recentemente e o livro vem sendo escrito há algumas semanas. O status atual é de mais de 400 páginas com meta para 500 e deve estar pronto nos próximos dias. A editora Brasport estará distribuindo o livro algumas semanas depois.
+O título provisório é “Repensando a Web com Rails”, seu autor sou eu mesmo, Fabio Akita. Entrei em contato com a comunidade estrangeira e consegui falar com David Hansson, Yukihiro Matsumoto, Piers Harding e outros que prestaram apoio à publicação.
+Sugestões são bem vindas, bem como colaboração de quem puder ajudar.
+Aguardem.
+tags: obsolete my-book
+

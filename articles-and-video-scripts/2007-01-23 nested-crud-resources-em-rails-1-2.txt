@@ -1,0 +1,135 @@
+
+Fonte: Web 2.0 Technologies, por Andre
+A metodologia CRUD no Rails 1.2 é uma grande maneira de simplificar a estrutura de sua aplicação. Uma das primeiras coisas que você vai querer fazer é colocar um recurso dentro do outro (nesting_). Essa é a maneira RESTful de trabalhar com relacionamentos hasmany. As primeiras vezes que fiz isso, esqueci de alguns passos (particularmente mudar o caminho das URLs nos controllers). Então vou explicar os passos aqui – com sorte isso ajudará no processo de aprendizado de CRUD no Rails 1.2.
+
+
+1. Crie os scaffolds de recursos e migrations
+Não se preocupe, scaffold_resource não tem o mesmo estigma que o antigo scaffold tinha antigamente. Scaffold_resource é a maneira mais simples de ganhar controllers RESTful, e as actions/views que ele cria são ambos legítimos e úteis. Vamos passar pelo processo com post has_many :comments
+1
+2
+
+ruby script/generate scaffold_resource Post title:string body:text
+ruby script/generate scaffold_resource Comment body:text
+
+
+Para sua informação, gosto de criar os migrations primeiro, e somente usar scaffold_resource para gerar seja lá quais colunas que quero ver de antemão na interface. Sua preferência pode variar. Antes de rodar suas migrations, vá à migration comments e adicione a seguinte chave estrangeira ao posts_: t.column :postid, :integer.
+Configure relacionamentos nos models
+Nada fora do comum aqui:
+1
+2
+3
+4
+5
+6
+7
+
+class Post < ActiveRecord::Base
+  has_many :comments
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :post
+end
+
+
+Modifique routes.rb
+As chamadas ao gerador scaffold_resource criaram duas linhas no routes.rb. Você apenas precisa colocar uma dentro da outra assim:
+1
+2
+3
+
+map.resources :posts do |posts|
+  posts.resources :comments
+end
+
+
+… o que basicamente apenas diz que comments serão acessados no contexto particular de um post.
+4. Modifique o controller do recurso interno
+O controller para o recurso internalizado (comments) precisa de algumas mudanças para reforçar o fato de que será acessado dentro do contexto de um post:
+a) adicione um before_filter:
+1
+2
+3
+4
+5
+6
+
+before_filter(:get_post)
+. . . .
+private
+def get_post
+  @post = Post.find(params[:post_id])
+end
+
+
+b) emende as chamadas *_url nas actions create e update
+Procure nas actions create e update por chamadas comment_url. A chamada precisa que o container gere a URL apropriadamente. Em nosso caso, vai se parecer com isso:
+De:
+1
+
+format.html { redirect_to comment_url(@comment) }
+
+
+Para:
+1
+
+format.html { redirect_to comment_url(@post,@comment) }
+
+
+Você precisa modificar tanto a action create quanto update.
+c) coloque escopo no finders Comment (classe internalizada) para Post (classe container)
+Essa é uma medida de segurança – garante que o Comment ID passado ao controller realmente representa um comment que pertence ao Post em questão. É tudo parte de garantir que a classe internalizada é manipulada dentro do contexto da classe container. Em termos de código de controller, isso significa encontrar instâncias de comment.find e mudá-los para @post.comments.find. Não se esqueça do find :all na action index!
+5. Modifique as views
+A única coisa que precisa mudar são algumas chamadas *path – o mesmo tipo de atualização que já fez no controller. Em cada caso precisa adicionar a classe container antes da classe internalizada, para que o método possa gerar a URL apropriadamente. Por exemplo, no template_show.rhtml, o link no fim é modificado para ficar assim:
+De:
+1
+
+<%= link_to 'Show', comment_path(@comment) %>
+
+
+Para:
+1
+
+<%= link_to 'Show', comment_path(@post, @comment) %>
+
+
+Você precisa fazer mudanças em três arquivos para o recurso internalizado (comments, no nosso caso):
+
+edit.rhtml: a url para form_for, e o link_to ‘show’, no fim
+show.rhtml: o link_to ‘edit’, no fim
+index.rhtml: o link_to ‘edit’ e o link_to ‘destroy’
+
+6. Providenciar um link para o recurso internalizado
+Finalmente, vamos adicionar um link no views/posts/index.rhtml, para que possamos facilmente navegar aos comments associados com um post_: <%= link_to 'see comments', commentspath(post)%>
+Você Terminou!
+Isso é tudo que precisa fazer para ir em frente com seu CRUD scaffold e recursos internalizados. Com o básico de um recurso internalizado no lugar, você agora pode refatorar o scaffolding para construir a interface que precisa. Por exemplo, pode querer se livrar do views/comments/index.rhtml, e listar os comments na página de post. Aproveite o CRUD!
+Rodada Bônus: torne os finders do Controler Comments mais DRY
+Note que existem finders similares no @post.comments.find(params[:id]))  nas actions show, edit, update e delete do Comments. Você pode tornar isso mais DRY removendo-os e adicionando o finder em seu before_filter:
+1
+2
+3
+4
+5
+6
+7
+
+before_filter(:get_post)
+. . . .
+private
+def get_post
+  @post = Post.find(params[:post_id])
+  @comment = @post.comments.find(params[:id]) if params[:id]
+end
+
+
+Aprenda mais sobre REST
+
+ O keynote do DHH sobre REST (vire os slides enquanto for assistindo)
+ slides 
+ keynote
+
+ A segunda edição do Agile Web Development, da Pragmatic, cobre REST 
+ O screencast REST da Peepcode é excelente. Faça download do PDF cheatsheet também. 
+
+tags: obsolete rails restful
+

@@ -1,0 +1,615 @@
+
+
+Todos estamos fanáticos pelo Github, pelo menos muitos de nós da comunidade Ruby internacional. O Chris Wanstrath teve uma idéia brilhante ao ir pela direção de “social network de código”.
+Nem parece, mas já faz mais de 1 ano que venho evangelizando Git e fico muito contente que as pessoas inovadoras estão conseguindo resolver seus problemas com eficiência. Vejam uma retrospectiva dos artigos:
+
+22/09/07 – Jogar Pedra em Gato Morto: por que Subversion não presta
+22/09/07 – GIT: Muito Promissor
+26/10/07 – Aprenda GIT pelo PeepCode
+04/02/08 – Ruby on Git
+04/02/08 – AkitaOnRails on Mephisto 0.8 on Git
+12/02/08 – Git para Cientistas da Computação
+02/04/08 – Finalmente! Rails mudando de SVN para Git!!
+02/04/08 – Micro Tutorial de Git
+03/04/08 – Git com Sake
+21/04/08 – Chatting with Chris Wanstrath
+21/09/08 – Colaborando no Github
+
+Um artigo que estava faltando era sobre o excelente projeto open source Gitorious criado por Johan Sørensen. A grande vantagem? Você pode ter o seu próprio servidor privado de Git via Web. Se você já está convencido que Git é bom e que você deve usá-lo, pule diretamente para a seção Instalando o Gitorious
+
+
+Gitorious
+
+No mundo Git, os primeiros projetos de um repositório Web que conheço são o Gitweb e o Gitosis. Porém, o maior de todos hoje é sem dúvida o Github. Por ser uma startup, com patrocinadores e investimentos, com um business model de cloud computing (seu repositório privado no cloud, pago on demand), com certeza faz tudo evoluir muito mais rápido, principalmente com a visibilidade de hostear projetos grandes como o próprio Ruby on Rails, Merb e muitos outros.
+O Gitorious começou como um projeto open source, não é uma startup, mas graças à comunidade ele tem todas as principais funcionalidades que tornam o Github excelente. Muitas das mesmas características de social networking estão presentes. O primeiro commit do Gitorious que eu tenho registro é de 14 de agosto de 2007.
+O Linus Torvalds pode ser turrão, até meio grosseiro, mas é inegável: o cara é um gênio. Quero dizer, controladores de versão distribuídos existem vários hoje, incluindo o Mercurial, Darcs, Bazaar e outros. Porém, o Git evoluiu muito rápido, está em uso em um dos projetos de mais visibilidade hoje que é a kernel do próprio Linux, é muito rápido, é muito flexível e tem adições que o tornam especialmente útil como o git-svn, a grande catapulta do Git, que permite que você se comunique diretamente com um servidor Subversion não só para leitura como também para escrita! Ou seja, mesmo que sua empresa seja teimosa e insista em usar Subversion, você pode cloná-lo num repositório Git e trabalhar inteiramente dentro do ambiente Git, e a empresa nem precisa ficar sabendo!
+O Git foi criado como uma infra-estrutura: a idéia era que outras ferramentas fossem criadas sobre ela. O Linus entendeu que a maneira errada de se pensar em versionamento de código é indexar arquivos. Em vez disso, ele versiona objetos de conteúdo, independente do arquivo original. Mais do que isso, o Linus entendeu que simplesmente fazer branches é inútil se não for possível mesclá-los trivialmente, e é essa a parte do Git que mais gosto: ele leva em consideração a genealogia do conteúdo e inteligentemente consegue aplicar a cronologia das modificações para entender como mesclar tudo. Portanto, no Git, não só branches são triviais como todo o fluxo de trabalho lidando com mescla de inúmeros branches é trivial também.
+Mudança de Paradigma
+Eu comecei a utilizar Subversion em 2003, se não me engano naquela época ele ainda era meio Beta™. O TortoiseSVN tinha bugs com o Visual Studio da época (que não entendia diretórios que começavam com ponto), eu mesmo fiz o patch original que o tornava compatível com o VS.
+A ferramenta mais “madura” da época era o CVS. No Eclipse, o melhor plugin era do CVS, o plugin de Subversion ainda tinha bugs, não era bom como é hoje. Na época as pessoas diziam “para que usar esse tal de Subversion, já temos CVS.” Sim, já tínhamos um CVS que quebrava sem razão nenhuma, que não conseguia versionar operações como deleções e renomeamentos, que dava conflitos difíceis de resolver. Como o Linus diz, entre usar CVS e lidar manualmente com arquivos, era mais fácil versionar manualmente …
+As alternativas fechadas eram uma dor de cabeça sem tamanho. Quantas vezes – trabalhando numa startup com escritórios em zonas de horário diferentes (Brasil, EUA, Venezuela, Argentina), usando SourceSafe, alguém esquecia de destravar arquivos e depois eu não conseguia usá-los?
+SourceSafe, Rational ClearCase … produtos que deveríamos esquecer que algum dia foram criados, vergonhas para toda a comunidade de desenvolvimento de software.
+Por muito tempo o Subversion foi razoável. Ele também tinha sua dose de problemas, mas mesmo assim ainda era mais engolível do que CVS ou SourceSafe. As ferramentas amadureceram, o TortoiseSVN parou de deixar a máquina lenta como uma carroça, os plugins de Eclipse melhoraram, serviços como o Google Code apareceram, a comunidade cresceu.
+De volta a 2007, de repente o Git, já nos seus 3 anos de existência, começa a ganhar voz. Eu sei quando uma coisa é promissora quando eu vejo, e eu sou completamente avesso à zona de conforto. Mesmo estando confortável com Subversion, sempre podemos melhorar. Imediatamente parti para esse tal de Git.
+E eu já cheguei atrasado à festa, os inovadores já tinham entendido que o melhor estilo de desenvolvimento ágil de software tem que ser descentralizado, escapando radicalmente de anos de ditadura centralizada e burocrática. Seja Git, ou Mercurial, ou Bazaar, não importa, o importante é sair dos modelos tradicionais que tornam o desenvolvimento algo tão maçante e cansativo.
+A moral da história é: quando Subversion era novo, ninguém queria usar. Depois que os inovadores deram o primeiro passo ele cresceu e a “média” passou a usar em massa. Alguns anos depois agora o Git é novo, novamente a “média” não quer usar. É sempre assim … a “média” acha que as coisas caem do céu. Ainda bem que existem os inovadores.
+O problema da Centralização – Parte 1
+Você encontra um projeto open source, vê que está em Subversion e se anima: afinal basta fazer um “svn checkout” e pronto: a última revisão do código-fonte vai imediatamente para sua máquina. Então você começa a modificá-lo para colaborar, consertar bugs, documentar e tudo mais. Eis que você tenta fazer “svn commit” e recebe um erro: afinal você não tem permissão de escrita no servidor. (eu sei, é assim que ele funciona mesmo, estou apenas descrevendo um cenário).
+
+Mas você não desanima, continua desenvolvendo e cria um arquivo Diff (um arquivo que tem as diferenças entre a revisão que veio do servidor e suas modificações). Você empacota num Patch e envia ao autor do projeto. Depois de alguns dias de espera – afinal o mantenedor do projeto é atarefado – você recebe uma resposta dizendo que ele não poderá aceitar porque seu Patch conflita com a revisão mais atual do projeto.
+Claro, como você pôde ser tão burro? Então você faz um “svn update”, recebe as últimas atualizações. Acontecem alguns conflitos, alguns até óbvios – e você não entende como o sistema não conseguiu mesclar sozinho – mas você está determinado a colaborar! Então resolve os conflitos manualmente, gera um novo Patch e envia novamente ao mantenedor.
+Enquanto isso, todo o código que você fez continua fora do repositório. É bom fazer um backup manualmente, já que você não pode gravar no servidor. E ninguém mais pode colaborar nesse seu Patch pois ele ainda não existe no servidor. Você está isolado.
+Open Source deveria ser amigável, e não hostil dessa forma … você é um cara paciente.
+O problema da Centralização – Parte 2
+O gerente da sua empresa viu uma matéria na IT Magazine ou coisa assim: “Subversion é o cara forte, precisamos usar.” Você, como bom funcionário, implementa a vontade de seu chefe. Aliás, você e toda sua equipe.
+
+Por um tempo tudo acontece bem: todos que você permitiu tem permissão de escrever no servidor. Existe esse tal de “trunk”. O fluxo de trabalho é simples: “svn commit” constantes, “svn update” constantes. Enquanto cada um trabalha numa parte do projeto, tudo flui normalmente.
+Eis que o projeto começa a ter pessoas trabalhando nas mesmas partes do código. Você está desenvolvendo normalmente, de repente, um “svn update” apaga bagunça alguma coisa que você acabou de fazer. Pior: gerou uma dúzia de conflitos que agora você precisa resolver. Você quer bater na orelha do seu colega do lado: “como ele ousa, mexer na mesma parte do projeto que eu?”
+Mas você é um cara paciente. O projeto atrasa – afinal, todo projeto atrasa – mas vai para o ar. Seu chefe está feliz.
+Finalmente, você decide que é hora de refatorar alguns componentes do sistema. Graças ao Subversion você pode fazer commits no trunk. Mas você é um programador experiente, decide que é melhor criar um novo branch para que você não atrapalhe seus colegas. Primeiro problema: você não tem permissão para criar branches. Mas você é um cara paciente, faz reunião com o guardião das chaves do servidor e depois de se justificar, ele decide que você pode ganhar um novo branch a partir do último Tag estável.
+Eis que você passa alguns dias desenvolvendo no seu branch. Quando acaba, hora de mesclar as mudanças de volta no trunk. É bom reservar um dia inteiro, afinal, criar o novo branch foi fácil, mas mesclá-los será um trabalho hercúleo. Mas você é um cara paciente.
+O problema da Centralização – Parte 3
+O cenário começa parecido com o anterior: a moda do Subversion. Porém, agora você não tem tanta sorte: sua equipe é preguiçosa, não quer aprender as boas práticas, estão todos viciados num estilo de organização da empresa que privilegia a média, a especialização e não motiva a cultura de aprendizado e auto-evolução – garanto que sua empresa é exatamente assim, mesmo que digam que não.
+
+Como sempre, todos partem usando apenas o trunk. Tag? Ninguém ouviu falar. Branch? O que é isso, é de comer? No começo, tudo vai bem. Ocasionalmente um desenvolvedor pisa no calo do outro, um “svn update” e seu código vai ficando bagunçado, conflitos, mas novamente, você é um cara paciente.
+Finalmente, o projeto vai em produção. Vocês continuam desenvolvendo, refatoramentos, correções de bugs – que existem às dezenas. Você faz testes, mas sua equipe não entende o que realmente é Desenvolvimento Orientado a Testes. Demora muito ficar rodando testes o tempo todo, demora muito se comunicar o tempo todo com o servidor. Mas você é um cara paciente.
+Eis que seu chefe chega espumando do seu lado: a versão que vocês colocaram em produção alguns dias atrás está com um bug muito feio. Ele “educadamente” grita na sua orelha que quer a correção no ar na próxima meia-hora!
+Você pensa “vixe, mas nos últimos 4 dias fizemos dezenas de código novo ainda não testado.” Dada a urgência, você dá uma olhada no código. A correção do bug é meio complicada, consome meia-hora. Você decide subir tudo do jeito que está. Seu chefe fica contente.
+Mas a alegria dura pouco, pois uma hora depois ele volta espumando ainda mais. O código-novo tem ainda mais bugs do que antes e os clientes estão nervosos, seu chefe está nervoso, agora a diretoria toda está nervosa. Você vai ao Google e descobre que consegue dar um “svn checkout” da revisão de 4 dias atrás. Então você cria outro diretório, faz o checkout dessa revisão antiga, corrige o bug original, 2 horas depois você coloca no ar.
+Você tirou o chefe do pescoço mas agora você tem um problema: duas cópias do mesmo projeto, um recente e outro 4 dias antigos com uma correção que agora você precisa manualmente tentar mesclar no “trunk”. Você gasta mais algumas horas. Move arquivo para cá, edita arquivo para lá, no fim do dia você apela para os céus e reza para nada mais dar problema.
+Um dia comum na vida de um desenvolvedor comum. Mas você é paciente, afinal, você é pago para sofrer. Por que mudar?
+Git, a ferramenta para pessoas sem paciência
+Felizmente, você é um cara que não tem paciência. Você entende que as organizações departamentais, hierárquicas, burocráticas, são coisas do passado. Felizmente, neste cenário você está num mundo ideal onde sua empresa entende que a qualidade do funcionário é reflexo direto do tipo de organização e ambiente que ela adota. Faça de conta que estamos num mundo ideal.
+Sua equipe é inovadora, adora mudanças, está sempre preparada, bem informada. Você ouviram falar desse tal de Git que está tomando o mundo de assalto. Imediatamente todos baixam, vasculham o Google, absorvem todo tipo de tutorial, artigo, manual, listas de discussão. Vocês fazem provas de conceito, testam, experimentam. Dão tropeços aqui e ali mas vocês são bons: vocês entendem que tentativa e erro é uma virtude. Acertar de primeira é uma lenda e controle total é um mito. Enfim, vocês entendem exatamente o que a filosofia Ágil quer dizer: muito mais do que simples post-its na parede (nota do Akita: farei um outro artigo sobre como se tornar um Google mais tarde).
+Enfim, depois de pouco tempo vocês decidem sair do Subversion e migrar para Git. A primeira boa surpresa é que vocês descobrem esse tal de Git-svn. Isso torna converter seu repositório antigo para Git algo absolutamente simples.
+Alguém resolve iniciar um novo projeto em Git. Faz alguns códigos e então disponibiliza na área global que a empresa inteira tem acesso. Você vê aquele projeto, acha interessante. O que fazer agora? Seguir algum processo burocrático para pedir permissão de commit no servidor? Nada disso: você simplesmente dá “git clone” e clona o repositório da pessoa que iniciou o projeto. Seu amigos fazem o mesmo.
+Cada um de vocês desenvolve no seu próprio repositório, afinal cada clone de Git é idêntico ao original, incluindo aí todo o histórico desde o primeiro commit. Você decide que quer incluir um novo componente experimental, então imediatamente cria um novo branch e começa a desenvolver.
+Quando termina, dá “git pull” para puxar as últimas atualizações do repositório original. A partir disso mescla as mudanças com o seu branch experimental. Graças ao Git, desta vez a mesclagem foi até o fim rapidamente e sem nenhum conflito.
+Você finalmente termina seu novo componente, todo desenvolvido com cobertura de testes e tudo mais. Satisfeito, você pede para o autor do projeto puxar as novidades do seu repositório. O autor do projeto acha interessante, cria um novo branch para testar e puxa suas alterações para ele. Depois de testar, dar uma refinada, ele decide que a alteração é muito útil e, finalmente, mescla no branch principal dele.
+Ao mesmo tempo, dois desenvolvedores da sua equipe, trabalhando no mesmo projeto, têm uma idéia de mais um novo componente que será muito útil ao projeto. Eles resolvem gastar uns 2 dias trabalhando apenas entre eles. Portanto cada um deles adiciona o repositório do outro e ele conseguem imediatamente sincronizar seus códigos sem afetar o desenvolvimento do resto da equipe. Ao final dos dois dias, eles terminam o código e, novamente, pedem ao autor original para avaliar e incluir o código no repositório original. O autor roda os testes, avalia o código e, como já confia neles dois, imediatamente mescla o código deles ao branch principal dele.
+O desenvolvimento flui sem ninguém pisar no calo e ninguém, com raros conflitos e resoluções rápidas. Finalmente o projeto termina e o autor envia o código para o servidor de produção. Nesse meio tempo, você decide criar mais novos componentes ao projeto, por isso cria mais branches para isso. No dia seguinte, seu chefe avisa que alguma coisa deu errado em produção. E agora? Você está no meio de um desenvolvimento experimental, já mudou muito código … mas isso é uma preocupação do passado. Você simplesmente retorna ao branch original e instantaneamente seu código está idêntico ao de produção, enquanto seu código experimental está seguro em outros branches.
+Você cria mais um novo branch para começar a trabalhar na correção. Ao terminar já manda para produção. Tudo dá certo e todos ficam felizes. Todos? E o resto da equipe? Nada a temer, você simplesmente mescla o branch com a correção no seu branch principal e pede ao autor do projeto para puxar suas modificações no repositório dele, para que fique disponível a todos os outros. Com um único “git pull” o autor já puxa as alterações automaticamente. Nada de diffs, patches e nenhum outro processo manual.
+Mas e os branches experimentais nas quais estava trabalhando antes disso? Nada a temer, um simples “git rebase” mescla a correção de um branch no outro branch. Novamente, tudo automático e trivial.
+Eis mais um bom dia de trabalho de uma equipe verdadeiramente “ágil”, trabalhando sem burocracias, sem grandes conflitos. Um projeto que, olhado de fora, parece absolutamente fragmentado e caótico, mas que a todos os participantes, na realidade forma uma ordem e uma organização sem igual ao que tinham antes. Uma equipe orgânica, auto-organizada, com código orgânico e que naturalmente extraiu ordem a partir do caos. Como eu disse antes, um mundo “ideal”.
+Mundo Ideal?
+Todos esses cenários não são histórias hipotéticas, faz-de-conta: isso existe. Os cenários centralizados demonstram o que muitos sofrem hoje. Infelizmente a tolerância humana é elástica: as pessoas simplesmente se acostumam com burocracia, com dor de cabeça, com código ruim, com conflitos, com trabalho sendo refeito. Isso simplesmente se torna uma rotina, as pessoas se acostumam às coisas mal feitas e depois não conseguem mais mudar. Metade da culpa é da empresa, que não propicia um ambiente adequado de trabalho que motive mudanças. Metade da culpa é do funcionário, que se deixou levar pela rotina.
+Felizmente muitos de nós não nos acostumamos nunca. Só porque “todo mundo se acostuma” não quer dizer que você precisa se consolar também. O mundo ideal nunca esteve tão perto. A parte mais difícil é mudar a cultura do funcionário e a cultura da empresa. Mas em termos de ferramentas, a parte fácil, estamos bem servidos: o cenário de projetos open source melhorou muito com o Github e os cenários de projetos da sua empresa pode melhorar muito usando o Git e o Gitorious.
+
+Instalando o Gitorious
+Toda essa conversa foi apenas para chegarmos a este ponto: criar um servidor que organizará seus projetos internos privados em repositórios Git globais e abertos à empresa, num local de fácil acesso e burocracia zero. Um ambiente de estímulo à inovação e participação, em vez de um ambiente que cheira à hostilidade e repreensão.
+O primeiro passo é conseguir um servidor baseado em GNU/Linux: seja aquele micro esquecido no canto do escritório, seja uma virtual machine em Virtual Box, seja um servidor virtual na sua hospedagem (momento de propaganda: conheça os produtos de Cloud Server da Locaweb).
+Neste primeiro artigo vou falar de como instalar o Gitorious a partir de uma máquina vazia do CentOS 5. Para quem não sabe, o CentOS é a versão totalmente aberta do RedHat Enterprise Linux, um excelente sistema operacional. O CentOS utiliza a ferramenta Yum como gerenciador de pacotes. Para quem vem de Debian, é algo parecido com o apt-get. Para quem vem de BSD é algo parecido com o Ports.
+Se alguém sentiu falta de um tutorial para Ubuntu, Debian, BSD é uma boa hora para colaborar :-)
+Para começar vamos baixar a configuração do repositório do DAG, que tem mais pacotes do que os repositórios originais. Vou assumir que você está instalando tudo como root da sua máquina:
+
+wget https://dag.wieers.com/rpm/packages/rpmforge-release/rpmforge-release-0.3.6-1.el5.rf.i386.rpm
+rpm -Uvh rpmforge-release-0.3.6-1.el5.rf.i386.rpm
+1
+2
+3
+4
+
+
+Antes de mais nada, vamos atualizar todos os pacotes do sistema:
+
+<macro:code>yum -y upgrade
+
+Agora, hora de instalar os pacotes que vamos precisar:
+
+yum -y install git apg geoip httpd  mysql mysql-server mysql-devel sqlite sqlite-devel httpd-devel libjpeg libjpeg-devel ImageMagick ImageMagick-devel readline-devel curl-devel pcre pcre-devel zlib zlib-devel openssl openssl-devel libyaml libyaml-devel gcc gcc-c++ autoconf automake
+1
+2
+3
+4
+5
+6
+
+
+Depois de instalar o MySQL, precisamos configurar a senha do usuário *root* do banco de dados. No exemplo vou colocar a palavra 'root' como senha, mas mude como quiser:
+
+<macro:code>
+service mysqld start
+/usr/bin/mysqladmin -u root password 'root'        
+
+
+Este próximo passo eu ainda não tenho muita certeza, se alguém souber mais a respeito, aceito observações. Mas vamos fazer mesmo assim, só para garantir. Comece editando o arquivo /etc/profile e acrescente as seguintes linhas no final do arquivo (você vai usar o vim, ou use nano se preferir):
+
+export PATH=/opt/ruby-enterprise/bin:$PATH
+export LD_LIBRARY_PATH=“/usr/local/lib”
+export LDFLAGS=“-L/usr/local/lib -Wl,-rpath,/usr/local/lib”
+1
+2
+3
+4
+5
+6
+
+
+Depois, edite o arquivo */etc/ld.so.conf* e faça com que ele fique com o seguinte conteúdo:
+
+<macro:code>
+/usr/local/lib
+include ld.so.conf.d/*.conf
+
+
+Então, depois de salvar ambas as modificações, rode os seguintes comandos:
+
+source /etc/profile
+ldconfig
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+
+Algumas das dependências que vamos precisar e que não existem nos repositórios Yum que estamos usando incluem o Oniguruma (uma excelente engine de Regular Expressions), o Sphinx (o famoso search engine) e o ImageMagick (pense em um mini-Photoshop em linha de comando). Acho que todos que mexem com Linux já sabem como baixar um código-fonte, compilar e instalar, mas em todo caso siga o seguinte:
+
+<macro:code>
+wget https://www.geocities.jp/kosako3/oniguruma/archive/onig-5.9.1.tar.gz
+tar xvfz onig-5.9.1.tar.gz 
+cd onig-5.9.1
+./configure
+make
+make install
+cd ..
+
+https://www.sphinxsearch.com/downloads/sphinx-0.9.8.tar.gz
+tar xvfz sphinx-0.9.8.tar.gz
+cd sphinx-0.9.8
+./configure
+make
+make install
+cd ..
+
+wget ftp://ftp.imagemagick.net/pub/ImageMagick/ImageMagick-6.4.4-1.tar.gz
+tar xvfz ImageMagick-6.4.4-1.tar.gz
+cd ImageMagick-6.4.3 
+./configure
+make
+make install
+cd ..
+
+
+Hora de instalar o Ruby: eu poderia instalá-lo via Yum, porém, acho mais vantajoso instalar diretamente a versão Ruby Enterprise Edition, criado pela Phusion e que eu já descrevi anteriormente. Vamos baixar o código-fonte e compilar manualmente:
+
+wget https://rubyforge.org/frs/download.php/41040/ruby-enterprise-1.8.6-20080810.tar.gz
+tar xvfz ruby-enterprise-1.8.6-20080810.tar.gz 
+cd ruby-enterprise-1.8.6-20080810
+./installer
+1
+2
+3
+4
+5
+6
+
+
+Se você usar todas as opções padrão, ele instalará o Ruby a partir do diretório /opt. Apenas por conveniência (pela forma como configuramos o PATH nos passos anteriores) vamos criar um link-simbólico do diretório:
+
+<macro:code>
+cd /opt/
+ln -s ruby-enterprise ruby-enterprise-1.8.6-20080810
+
+
+O front-end Web do Gitorious é uma aplicação Rails e por isso vamos configurar o Apache para usar o bom e velho Phusion Passenger. Para isso vamos instalar a gem e executar o comando que configura o Apache:
+
+gem install passenger —no-rdoc —no-ri
+passenger-install-apache2-module
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+Ao final, edite o arquivo */etc/httpd/conf/httpd.conf* e lá no final acrescente o seguinte:
+
+<script src="https://gist.github.com/14294.js"></script>
+
+No ServerName, coloque o nome correto do seu domínio, o que você configurou em seu DNS. Para completar, vamos acrescentar mais algumas gems que o Gitorious precisa:
+
+<macro:code>
+gem install mime-types oniguruma textpow chronic BlueCloth ruby-yadis ruby-openid rmagick geoip ultrasphinx daemons geoip --no-rdoc --no-ri
+
+
+Finalmente, vamos baixar o Gitorious agora:
+
+cd /var/www
+git clone git://gitorious.org/gitorious/mainline.git gitorious
+ln -s /var/www/gitorious/script/gitorious /usr/local/bin/gitorious
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+
+O Gitorious é uma aplicação Rails que utiliza o Sphinx para a funcionalidade de pesquisa, banco de dados MySQL, tem um serviço especial chamado Git-Daemon, e depende do serviço de SSH para dar acesso aos usuários externos. Você certamente pode colocar os diretórios todos em outro lugar, mas se o fizer tome cuidado para adaptar todos os outros comandos e arquivos que estamos usando neste tutorial.
+
+Eu tive um pequeno probleminha na funcionalidade "Source Tree", onde via web você pode navegar pelo seu código. O problema é que nos links para os arquivos a última / estava sendo codificada. Por isso eu fiz uma pequena alteração no arquivo "app/views/trees/show.html.etc":https://gitorious.org/projects/gitorious/repos/akitaonrails-gitorious/commits/793c0f6cbea7db8150d4131c4958fba0b2d9265d. Clique no link para ver exatamente o ponto alterado caso precise.
+
+Como disse, o Gitorious depende de alguns serviços. O CentOS usa *init scripts* para controlar seus serviços, mas o Gitorious não vem com esses scripts, então precisamos criá-los. Vamos começar criando o */etc/init.d/git-ultrasphinx* com este conteúdo:
+
+<script src="https://gist.github.com/14049.js"></script>
+
+Agora, vamos criar o */etc/init.d/git-daemon* com o seguinte conteúdo:
+
+<script src="https://gist.github.com/14047.js"></script>
+
+Feito isso, precisamos acertar as permissões e configurar os serviços para que iniciem sozinhos caso a máquina seja reiniciada:
+
+<macro:code>
+chmod 755 /etc/init.d/git-ultrasphinx
+chmod 755 /etc/init.d/git-daemon
+chkconfig --add git-ultrasphinx
+chkconfig --add git-daemon
+chkconfig git-ultrasphinx on
+chkconfig git-daemon on
+chkconfig sendmail on
+chkconfig mysqld on
+chkconfig httpd on
+service sendmail start
+service mysqld start
+
+
+A partir de agora vem um ponto crucial: criar um usuário exclusivo para o Git. Tomem cuidado para não confundir quando estamos rodando como root ou como git. Prestem atenção quando eu usar o comando su – git para usar o git e quando eu der exit para voltar a root. Para não confundir talvez seja uma boa idéia abrir dois terminais, um em cada usuário. Estou assumindo que vocês estão seguindo este tutorial linearmente, sem interrupções, do começo ao fim. Vamos lá:
+
+adduser git
+chown -R git:git /var/www/gitorious
+su – git
+mkdir ~/.ssh
+touch ~/.ssh/authorized_keys
+chmod -R 600 ~/.ssh
+cd /var/www/gitorious
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+
+Agora, estamos como o usuário *git*. Primeiro, vamos configurar o Gitorious. Temos que editar dois arquivos, começando pelo */var/www/gitorious/config/database.yml*:
+
+<script src="https://gist.github.com/14290.js"></script>
+
+Se você criou outra senha para o usuário root do MySQL, troque no campo 'password' acima. O segundo arquivo é o */var/www/gitorious/config/gitorious.yml*:
+
+<script src="https://gist.github.com/14291.js"></script>
+
+Onde está localhost, cuidado, se o Apache do seu servidor responde na porta 80 a mais de um domínio, então coloque explicitamente o nome do domínio onde você configurou o projeto Gitorious. Também note o trecho acima onde está "frie...kceft". Você precisará trocar isso pelo resultado do seguinte comando:
+
+<macro:code>
+apg -m 64
+
+
+O comando apg lhe dará um string enorme. Tome cuidado porque ele retorna um string com várias quebras de linha. Garanta que você copie e cole no arquivo gitorious.yml tudo numa única linha. E no parâmetro “gitorious_host” coloque o nome do domínio que você configurou no seu DNS para esse servidor, por exemplo, “git.meu_servidor.com.br” ou algo parecido. Para efeito de exemplo deste tutorial, estarei usando simplesmente “servidor.local”. Temporariamente você pode associar o IP do servidor a esse nome editando o arquivo /etc/hosts tanto do seu servidor quando da sua máquina desktop (no Windows será o c:\windows\system32\drivers\etc\hosts).
+Feito isso, ainda como usuário Git, rode os seguintes comandos:
+
+cd /var/www/gitorious
+rake db:create:all
+rake db:migrate RAILS_ENV=production
+rake ultrasphinx:bootstrap RAILS_ENV=production
+1
+2
+3
+4
+
+
+Nas operações a partir da interface Web do Gitorious, toda vez que você associa uma chave SSH ao seu login (vamos falar disso mais adiante), ou quando se cria ou apaga um repositório Git, é necessário rodar um script que executa essa tarefa. Para que ele rode sem problemas, vamos colocá-lo no crontab do usuário git. Então, execute o seguinte comando:
+
+<macro:code>crontab -e
+
+Ele deve abrir o vi (não esqueça que para entrar em modo de edição precisa apertar a tecla “i” uma vez, daí para sair do modo de edição aperte “esc” e para salvar o arquivo digite “:x!”). Nesse arquivo coloque o seguinte conteúdo:
+Um último passo, que me deu dor de cabeça apesar de eu já ter configurado o /etc/profile é que precisei também editar – ainda como usuário git – o arquivo ~/.bashrc, então edite esse arquivo e adicione a seguinte linha ao final do arquivo:
+
+
+User specific aliases and functions
+export RUBY_HOME=/opt/ruby-enterprise
+export GEM_HOME=$RUBY_HOME/lib/ruby/gems/1.8/gems
+export PATH=$RUBY_HOME/bin:$PATH
+
+1
+2
+3
+4
+5
+6
+7
+
+
+Feito tudo isso, já podemos sair do usuário git e voltar como root para iniciarmos os serviços que configuramos anteriormente que ainda devem estar parados:
+
+<macro:code>
+exit
+service httpd start
+service git-daemon start
+
+
+Para ficar tudo redondo, recomendo configurar também o serviço de logrotate. Lembre-se que logs crescem e num belo dia alguma coisa pode parar de funcionar porque você negligenciou o gerenciamento desses arquivos. Esse serviço “rotacionará” os logs do Gitorious. Para isso crie o arquivo /etc/logrotate.d/gitorious e coloque o seguinte conteúdo:
+Apenas para garantir, vamos configurar a permissão desse arquivo:
+
+chmod 644 /etc/logrotate.d/gitorious
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Pronto, agora, se você entrar na URL https://servidor.local, o Passenger deve conseguir iniciar o Gitorious e você já está pronto para usá-lo!
+
+h2. Criando Chaves SSH
+
+
+
+Você já pode sair do servidor, a partir de agora estamos de volta ao desktop. Se você estiver num desktop CentOS, não se esqueça de instalar o Git nele também:
+
+<macro:code>yum -y install git git-svn
+
+Se está num desktop Debian ou Ubuntu, instale:
+apt-get install git-core git-svn
+1
+2
+3
+4
+
+
+Se está num Mac OS X, instale primeiro o "MacPorts" e a partir do terminal instale assim:
+
+<macro:code>port install git-core +svn
+
+Finalmente, se estiver num Windows instale a versão msysGit e siga este excelente tutorial para também criar a chave SSH corretamente. Esse tutorial usa o Github como exemplo, mas o passo é o mesmo para o Gitorious: criar um login e depois associar esse login a essa chave SSH.
+Se estiver tanto num desktop Linux quanto no Mac, você deve criar sua chave SSH da seguinte maneira:
+
+cd ~
+ssh-keygen -t rsa
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Fazendo isso verá algo parecido com isso:
+
+<macro:code>
+Generating public/private rsa key pair.
+Enter file in which to save the key (/Users/stevejobs/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /Users/stevejobs/.ssh/id_rsa.
+Your public key has been saved in /Users/stevejobs/.ssh/id_rsa.pub.
+
+
+Toda vez que ele pedir para você digitar alguma coisa (nas linhas que começam com “Enter”), use o padrão e apenas aperte a tecla “Return/Enter” em todas as perguntas, deixando-as vazias. Ao final, você terá os arquivos ~/.ssh/id_rsa (chave privada, proteja-a custe o que custar e nunca transporte para fora da sua máquina) e ~/.ssh/id_rsa.pub (chave pública, e é o conteúdo dela que associamos ao login). É uma boa idéia fazer um backup dessas duas chaves e mantê-las absolutamente protegidas.
+Finalmente, tanto no Github quanto no Gitorious, registre um novo Login. No caso do Gitorious, se estiver com o sendmail ativado ele deve enviar um e-mail de ativação, mas se quiser ativar manualmente, basta entrar via SSH como root no servidor que acabou de configurar e fazer o seguinte:
+
+su – git
+cd /var/www/gitorious
+./script/console production
+>> u = User.find_by_login(“seu_login”)
+>> u.activated_at = Time.now
+>> u.save
+>> exit
+exit
+exit
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+
+h2. Usando o Gitorious
+
+<p style="text-align: center; margin-top: 5px">!https://s3.amazonaws.com/akitaonrails/assets/2008/10/2/Picture_2.png!</p>
+
+Digamos que tudo deu certo de primeira (se não deu, não desanime, eu levei 3 dias para entender tudo, refiz os mesmos passos dezenas de vezes). Nesse caso você já conseguiu navegar pelo site, criar um Login, ativar e associar uma chave SSH. Não se esqueça que isso depende do script task_performer que está no seu crontab, rodando de 1 em um 1 minuto. Assim que se associa uma chave, assim que se cria um projeto, espere 1 minuto, recarregue a página e tudo deve ser criado automaticamente.
+
+Acredito que a interface do Gitorious seja bastante intuitiva para se entender rapidamente o que fazer, por isso não vou entrar em muitos detalhes.
+
+Basta criar um novo projeto, por exemplo, chamado "teste". Assim que o task_performer rodar, você terá um repositório vazio. Lembre-se que você não consegue fazer nem "git clone" e nem "git pull" a partir de um repositório vazio, portanto a primeira coisa a se fazer é criar um projeto local no seu desktop. Você pode tanto já ter um projeto, em Git, no seu desktop, ou criar um novo da seguinte forma (usaremos Rails como exemplo, claro):
+
+<macro:code>
+cd /tmp
+rails teste
+cd teste
+git init
+git add .
+git commit -a -m "initial commit"
+
+
+
+Para efeitos de exemplo, faça de conta que você criou um novo projeto e ganhou um “Push URL” (o endereço do servidor para onde você pode “empurrar/push” seu código). Podemos agora adicionar o repositório remoto ao nosso projeto local e enviar os dados para lá, assim:
+
+git remote add origin git@XXXCNN0005.locaweb.com.br:teste/mainline.git
+git push origin master
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+
+Claro, se você já tem um clone de um projeto Git (digamos, que você clonou a partir de um projeto no Github), em vez de "origin" dê outro nome qualquer para identificar nosso segundo repositório remoto em Gitorious. Os comandos acima 1) adicionam o repositório Gitorious; 2) enviam os dados a esse repositório.
+
+Agora, a partir da interface web do Gitorious, suponha que um *segundo usuário* se cadastrou, se ativou e adicionou sua própria chave pública (que é diferente da sua! *NUNCA* reuse a mesma chave pública SSH entre dois usuários diferentes. Cada qual precisa usar o ssh-keygen para gerar seu próprio par de chaves).
+
+<p style="text-align: center; margin-top: 5px">!https://s3.amazonaws.com/akitaonrails/assets/2008/10/2/Picture_5.png!</p>
+
+Então, esse segundo usuário pode navegar para dentro do projeto "teste" que criamos e pensar _"hm, projeto interessante, gostaria de colaborar mas não tenho paciência para ficar fazendo lobby para conseguir permissão de escrita."_ Graças ao Git e ao Gitorious, ele não precisa: na barra lateral vertical da direita, quando você navega ao repositório "mainline" (no Gitorious convencionou-se chamar o projeto original assim), encontrará a opção de *Clone repository*. Feito isso, você ganhará um clone completamente separado do primeiro. Quando você não tem permissão de commit, terá que se contentar com a URL read-only "Public clone url". Quando você é commiter, terá a "Push url". Ou seja, quando você faz clone do projeto original, o clone no seu espaço lhe dará o Push url para onde você pode registrar seus commits via "git push".
+
+Digamos que eu fiz um Clone do repositório-exemplo acima com um segundo usuário. Agora eu posso fazer clone desse projeto e trabalhar nele:
+
+<macro:code>
+git clone git@XXXCNN0005.locaweb.com.br:teste/stevejobs-teste.git
+cd stevejobs-teste
+## work
+git commit -a -m "bla bla"
+## work
+git add doc/INSTALLATION.txt
+git commit -a -m "bla bla bla"
+
+git push origin master
+
+
+Refira-se ao meu Micro-Tutorial de Git para saber mais sobre como usar Git. Enfim, digamos que esse segundo usuário terminou de codificar o que ele queria, daí finalizou enviando o código à área dele via “git push”. Agora, via interface web, a partir do repositório dele (ex. stevejobs-teste), na barra lateral vertical direita, existe uma opção “Request Merge”, literalmente, “Requisitar Mesclagem”. Você pode enviar essa requisição a qualquer que tenha feito um clone do original.
+Agora, o autor original do projeto receberá uma requisição de mesclagem (merge) e pode escolher usar ou não essa modificação. O Gitorious sugere este comando quando se vê a requisição:
+
+git pull git://XXXCNN0005.locaweb.com.br/teste/stevejobs-teste.git master
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+<p style="text-align: center; margin-top: 5px">!https://s3.amazonaws.com/akitaonrails/assets/2008/10/2/Picture_7.png!</p>
+
+Isso, claro para ser executado no seu desktop, dentro do seu projeto Git. Mas o que esse comando faz é mesclar diretamente no seu branch "master". Em vez disso, prefiro primeiro puxar as modificações em um outro branch e só se estiver tudo ok, fazer a mesclagem no "master", assim:
+
+<macro:code>
+git remote add stevejobs git://XXXCNN0005.locaweb.com.br/teste/stevejobs-teste.git
+git checkout master
+git checkout -b stevejobs/master
+git pull stevejobs master
+## testes, testes, testes ...
+git checkout master
+git merge stevejobs/master
+git branch -d stevejobs/master
+git remote rm stevejobs
+git push
+
+
+Explicando passo a passo:
+
+Adiciona-se a URL do clone do segundo usuário, no caso dando o nome arbitrário do próprio login do segundo usuário: “stevejobs” (eu sei, eu sei … :-)
+Garante que se está no “master”
+Cria-se um branch local separado para testar as modificações que vieram na Requisição de Mesclagem
+Puxa-se as modificações no novo branch
+teste, teste, teste, estando tudo ok:
+Retornamos ao branch master
+Fazemos a mesclagem a partir do branch onde estávamos testando
+Opcional: apagamos o branch onde estávamos testanto
+Opcional: apagamos a referência ao repositório clonado
+Envia-se as modificações aceitas de volta ao seu repositório original
+
+O Git por si só permite vários tipos diferentes de fluxos de trabalho. Desde tentando centralizar, até totalmente descentralizado. Vou ver se preparo um Screencast detalhando mais cenários. Mas apenas o que falei aqui já deve ajudar, pelo menos no principal. O mais importante: explore o Gitorious, vocês vão achar muitas funcionalidades incríveis.
+Conclusão
+Duas coisas que precisam ser feitas ainda:
+
+Registrar 2 domínios, por exemplo, “servidor.com.br” e “git.servidor.com.br”
+Configurar o Apache para que a URL “HTTP clone” ultrapasse o Rails completamente – e precisa fazer funcionar o clone via HTTP. Mas esse serviço não é essencial.
+Colocar o /var/www/gitorious/script/graph_generator no crontab. Eu ainda tive alguns probleminhas com FreeType que ainda não resolvi. Mas esse serviço não é essencial.
+
+O Git veio para ficar. Ainda existe muito que pode ser melhorado – como sempre, aliás, pois pessoas realmente Ágeis aceitam bem a mudança e evolução contínua. Com o Gitorious ganha-se um repositório Web aberto internamento dentro da empresa, onde todos tem a chance de colaborar e a empresa como um todo tem a chance de começar a entender os reais valores Ágeis, principalmente na parte de colaboração com código.
+Agradecimentos à equipe Linux da Locaweb com quem trabalho que me deram alguns dicas de CentOS que eu não sabia direito ;-)
+tags: obsolete git
+

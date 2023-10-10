@@ -1,0 +1,66 @@
+
+Muita gente está sofrendo um problema meio chato: para instalar o Rails 2.0 recomenda-se o seguinte:
+
+sudo gem update —system
+sudo gem install rails
+
+Note que a instalação de gems não requer mais o flag -y ou —include-dependencies. Isso é uma nova feature no 0.9.5. Porém, ao realizar o update da primeira linha, seu Rubygems será atualizado para a versão 0.9.5. Se você estiver em Windows é bem capaz que verá este erro:
+
+ERROR: While executing gem … (Zlib::BufError) buffer error
+
+
+
+Esse erro foi documentado pela primeira vez aqui e aqui
+O problema é que quem usa o Ruby one-click installer recebeu o Ruby 1.8.5 junto com o Rubygems 0.9.2. O Rails 2.0 requer pelo menos o 0.9.4 portanto todo mundo precisou fazer o update, e foi quando esses problemas apareceram.
+Além do erro acima, o Mongrel  também pára de funcionar. A recomendação para usuários Windows, se precisar do Rails 2.0, instale manualmente o Rubygems 0.9.4. Mas se você já instalou o 0.9.5 aqui vai a correção temporária:
+Baixe a versão 0.9.4 do Rubyforge. Descompacte e rode o seguinte:
+
+cd rubygems-0.9.4
+ruby setup.rb config
+ruby setup.rb install
+gem environment
+RubyGems Environment:
+- VERSION: 0.9.4 (0.9.4)
+- INSTALLATION DIRECTORY: c:/ruby/lib/ruby/gems/1.8
+- GEM PATH:
+- c:/ruby/lib/ruby/gems/1.8
+- REMOTE SOURCES:
+- https://gems.rubyforge.org
+gem update rails -y
+1
+2
+3
+4
+5
+6
+
+
+O que está acontecendo são gems sendo empacotadas com um defeito na sua especificação. Para quem faz gems, assumindo que é um gem pure-Ruby, garanta que exista a seguinte linha na spec:
+
+<macro:code>
+  specification = Gem::Specification.new do |s|
+    s.platform = Gem::Platform::RUBY
+
+
+Se não fizer isso, a plataforma é omitida e o gem não consegue ser instalada a partir de Rubygem 0.9.4. A lista mostrará algo assim:
+
+2. deep_test 1.0.3 ()
+3. deep_test 1.0.2 (ruby)
+4. deep_test 1.0.1 (ruby)
+1
+2
+3
+4
+5
+
+
+Daí o Rubygems tenta fazer o download com um hífen fora do lugar no final do nome do arquivo:
+
+<macro:code>
+https://gems.rubyforge.org/gems/deep_test-1.0.3-.gem
+
+
+Segundo o Dr. Nic isso foi corrigido nas gems do Rails a partir da revision 8438, portanto quando a versão 2.0.3 sair isso deve corrigir o problema.
+Esses problemas todos ao que parece acontecem apenas no Windows. Não vi relatos em Linux e no meu Mac também está tudo normal depois dos updates.
+tags: obsolete windows
+

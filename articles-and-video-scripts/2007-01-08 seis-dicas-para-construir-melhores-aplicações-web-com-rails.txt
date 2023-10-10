@@ -1,0 +1,65 @@
+
+Fonte: Labnotes
+Você vai deixar de lado um presente grátis?
+Com Rails 1.2 você pode facilmente responder à mesma requisição com tipos de conteúdo diferentes. Digamos que você tem uma action que mostra uma página HTML com todos os livros na categoria ‘Ruby’. Da mesma action, também pode retornar dados como XML ou JSON.
+Uma vez que se começa a adicionar saídas em XML ou JSON, se torna uma segunda natureza e mínimo esforço tirar APIs da sua aplicação web.
+Documentar APIs leva algum tempo, então aqui vai outra dica para tornar sua API melhor. Deixe as pessoas explorarem usando seus browsers.
+Digamos que você queira listar todos os livros de uma certa categoria. Use o browser para navegar para a página, agora adicione .xml ou .js ao final da URL. Você acabou de descobrir a URL, e pode usar o browser para visualizar a saída.
+E para atualizações, as URLs e parâmetros das requisições são as mesmas usadas no formulário HTML.
+Não consigo pensar numa maneira mais simples de contruir e aprender uma API.
+
+
+Sobrecarga de recursos e caching
+Seja cuidadoso ao sobrecarregar diferentes tipos de conteúdo na mesma URL.
+Digamos que o browser requisite a página completa HTML (ex. /books/list), e sua aplicação configure o tempo de expiração em 30 minutos. O usuário atualiza a página, o browser pergunta novamente, mas desta vez usando o cabeçalho Is-Modified-Since para requisitar a nova página somente se o conteúdo mudar. Obedientemente, sua aplicação checa por alguma modificação e, ou retorna uma nova página, ou diz ao browser para pegá-la do cache.
+Até aqui, tudo bem.
+Mas digamos que o browser está fazendo um XHLHttpRequest à essa mesma URL (ex. /books/list), então ele apenas precisa atualizar o conteúdo sem atualizar a página inteira. Você pode saber a diferença usando request.xhr?. Mas, ao menos com Firefox, você receberá a página do cache, e a atualização parcial vai quebrar na sua página, e ainda usando informação bloqueada para bootar.
+Como regra geral, sempre use sufixos para conteúdos diferentes. Se diferir por tipo, se .xml ou .js (ex. /books/list.xml). Ou use actions separadas, ex. ;feed para feed de Web (ex. /books/list;feed), e ;partial para atualização parcial (ex. /books/list;partial – com recursos RESTful, o ponto e vírgula é usado para distinguir uma visão diferente do mesmo recurso).
+DOM IDs
+Todos querem ser únicos.
+Se seu Javascript precisa identificar elementos na página, ex. para iluminar um elemento atualizado, ou reordenar ítens em uma lista, você precisa de IDs únicos. Isso facilmente enche sua view com concatenações demais.
+Um método mais fácil é adicionar um método typed_id a seus models e chamá-los de suas views. Você pode manter seus models DRY extendendo ActiveRecord::Base com este método:
+1
+2
+3
+
+def typed_id()
+  "#{self.class.name.demodulize.downcase}_#{self.id}"
+end
+
+
+Se eu tiver uma classe model Book e um livro com id 45, posso usar id=“<%= book.typed_id %>” para gerar id=“book-45”.
+URL slugs
+URLs amigáveis fazem usuários felizes.
+Eu gosto quando posso dizer sobre o que é uma URL apenas olhando para ela. Tenho que admitir, ocasionalmente checarei a barra de status do browser para a URL antes de clicar nela, para decidir se devo me incomodar. URLs amigáveis recebem mais cliques de mim.
+Uma URL como /book/ruby-in-practive é uma boa dica sobre o que está por baixo do link. Exceto quando ela quebra.
+Pontos – ao contrário de traços, barras e pontos de interrogação – não são codificadas na URL, e se elas aparecerem na URL causará confusão no Rails sobre tipos de sufixos.
+Espaços são codificados como sinais de adição (+), não exatamente um dos separadores mais amigáveis.
+E mais um truque para prestar atenção: URLs com texto não são sempre únicos. Um blog pode ter dois posts com o mesmo título, ou você pode decidir truncar um texto longo, e não pode mais distinguir as URLs.
+Eu uso a parte de texto da URL como um slug que segue o identificador de verdade. Isso também funciona bem com routes e filtros que esperam o ID como um número, enquanto fazem o parse da primeira parte do identificador e ignoram o texto que segue.
+Aqui vai um método que retorna uma URL amigável adicionando o título do livro:
+1
+2
+3
+
+def url_slug()
+  "#{id}-#{title.gsub(/./, '').gsub(/s+/, '-')}"
+end
+
+
+Então você pode criar o link com link_to book_url(book.url_slug) e procurar por ela com _Book.find(params[:id]).
+Seja liberal com suas URLs
+Bons nomes de domínio são difíceis de achar, mas URLs tem muitas então use-as liberalmente.
+De vez em quando eu acabo sobrecarregando muita coisa em uma URL. Normalmente na forma de parâmetros de pesquisa, e isso acontece porque estou adicionando uma funcionalidade sobre outra. Quando tento usá-la, se torna uma dor de cabeça descobrir qual mistura de parâmetros de pesquisa levam a qual resultado.
+Então agora eu pratico procurar por URLs fedidas que tentam fazer muitas coisas, e refatoro em URLs separadas. Elas são mais fáceis de documentar, testar e manter. E eu sei que nunca vou acabar ficando sem boas URLs.
+In-place que degrada
+AJAX não é desculpa para tornar browsers menos úteis.
+Se você usa Gmail, sabe do que estou falando. Você pode clicar em um e-mail e ele abre na mesma página, e você pode responder ou redirecionar sem nunca sair da mesma página. Há uma sensação de aplicação de desktop, e normalmente essa é uma Coisa Boa.
+Mas ocasionalmente, estou trabalhando em um longo e-mail, do tipo que poderia levar horas para completar, e eu quero checar meus e-mails em uma janela separada. Ou estou escrevendo um e-mail e copiando texto de outro.
+No Firefox, posso usar as teclas Shift e Ctrl para abrir links em janelas ou abas separadas, dependendo do tipo de trabalho que estou fazendo. Eu gosto de usar abas para ações relacionadas e janelas para tarefas separadas que demandam seu próprio espaço.
+De qualquer maneira, quando AJAX toma conta dos links, ele quebra essa funcionalidade. Agora há uma sensação de aplicação legada nisso, e não uma que você quer replicar.
+Eu passei sobre isso com facilidade. Eu escrevo actions que retornam um partial quando chamadas de XHR (chamada remota) e retornam o mesmo partial com layout se chamada para renderizar uma página completa. Dessa maneira posso usar a mesma action para edição in-place  para abrir janelas e abas separadas. (Mas tome cuidado com caching, veja acima).
+No event handler onclick, eu procuro por teclas modificadoras (Ctrl, alt, shift, etc). Se o usuário apertar uma tecla modificadora, deixo o browser cuidar do link. Se o usuário não pressionar uma tecla modificadora, deixo o AJAX fazer sua mágica in-place.
+É a técnica tradicional para criar Interfaces Gráficas que degradam, mas o resultado final é uma interface mais útil e poderosa.
+tags: obsolete rails
+

@@ -1,0 +1,89 @@
+
+Vocês devem ter notado que agora as tags de cada post estão listadas e são clicáveis, levando a uma listagem de todas as posts com a mesma tag. Essa funcionalidade já existia nos outros sistemas de blog que usei, mas desde que comecei o blog eu nunca gerenciei as tags corretamente. Só que hoje eu tenho mais de 860 artigos. Eu preciso olhar uma a uma e reeditar as tags. Mas o fluxo normal de:
+
+abre no admin a listagem de posts;
+navega pela lista paginada;
+encontra um post para editar, clica e abre outra página;
+edita as tags;
+salva, retorna pra listagem;
+
+São muitos passos nos admins antigos. Eu queria navegar pela listagem e editar as tags “in place”, mas sempre tive preguiça de implementar :-)
+
+
+Mas agora eu estou usando o ActiveAdmin, continuo usando a gem ActsAsTaggableOn que, por sua vez, expõe um atributo virtual chamado tag_list que retorna as tags na forma de uma string com palavras separadas por vírgulas e eu posso passar um string no mesmo formato para modificar as tags.
+Dada esta informação, encontrei esta a gem BestInPlace. Mais ainda, ela funciona no ActiveAdmin, e melhor ainda: de forma bem trivial.
+Passo a Passo
+Adicione ao seu Gemfile e rode bundle install depois:
+1
+
+gem "best_in_place"
+
+
+Dado que você já tem o ActiveAdmin, edite o seu app/assets/javascripts/active_admin.js para ficar assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+//= require jquery
+//= require jquery-ui
+//= require jquery.purr
+//= require best_in_place
+//= require active_admin/base
+
+$(document).ready(function() {
+  jQuery(".best_in_place").best_in_place();
+});
+
+
+Baixe o jquery.purr e copie o jquery.purr.js para a mesma pasta app/assets/javascripts. Não esqueça de alterar seu config/application.rb para declarar os JS e CSS do ActiveAdmin:
+1
+
+config.assets.precompile += %w(active_admin.js active_admin.css)
+
+
+Agora, no meu caso eu tenho o model Post registrado em app/assets/admin.rb modificando meu index para ficar assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+ActiveAdmin.register Post do
+  index do
+    column :title do |post|
+      link_to post.title, post.permalink
+    end
+    column :tag_list do |post|
+      best_in_place post, :tag_list, type: :input, path: [:admin, post]
+    end
+    column :published_at do |post|
+      I18n.l post.published_at, format: :short
+    end
+    default_actions
+  end
+  ...
+end
+
+
+O helper best_in_place funciona quase como qualquer outro Helper de Form do Rails: nome do model, nome do campo, tipo, path (lembrando que o Rails vai converter um Array como se fosse uma rota nomeada com namespace, no caso [:admin, post] se torna admin_post_path(post), isso é assim desde o Rails 2 se não me engano).
+E pronto! Reiniciando meu servidor, e presto!
+
+Agora fica o trabalho (muito trabalho!) de navegar pela listagem e ir atualizando as tags, mas com isso o trabalho será uma ordem de grandeza melhor!
+tags: learning rails tutorial activeadmin
+

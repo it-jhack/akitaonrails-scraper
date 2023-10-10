@@ -1,0 +1,13 @@
+
+Acabei de receber minha cópia da tradução da 2a edição do livro do Dave Thomas, Desenvolvimento Ágil com Rails
+
+Foi traduzido por Edson Furmankiewicz, publicado pela editora Artmed
+ e está disponível pelo site deles por R$ 90,00. Não sei quando estará disponível nas livrarias, mas pelo menos online já está lá.
+
+
+
+Este foi o livro que eu revisei no começo do ano e que finalmente está saindo agora. E já sei o que estão pensando: “mas esta é a 2a edição, fala do Rails 1.2, mas já estamos no Rails 2.1, e agora?” Não tem problema. Se você sabe inglês, dirija-se diretamente ao site da Pragmatic Programmers e compre a versão beta (sim, ainda não foi lançado) da 3a edição. Se precisa que seja em português, então compre esta edição traduzida. Eu alterei a prefácio do Dave e acrescentei basicamente o que já expliquei no meu artigo Você comprou um livro de Rails, e agora?
+
+Este é o famoso livro que todos os iniciantes de Rails devem ler. Parece que finalmente as coisas começam a andar por aqui :-) Quem sabe mais e mais livros venham para cá. E às outras editoras interessadas, que sigam o exemplo da Artmed: infelizmente traduções nunca saem corretamente, por isso é importantíssimo investir em revisão técnica adequada, caso contrário arrisca-se arruinar um excelente título. A Artmed reconheceu isso e deu a devida atenção a esta versão.
+tags: obsolete book
+

@@ -1,0 +1,16 @@
+
+Iniciamos a contagem regressiva para o evento, faltam apenas 10 dias até o maior evento de Ruby da América Latina. Inscreva-se agora mesmo pelo site. Marque os dias 29 e 30 de Agosto, no Teatro Frei Caneca em São Paulo, na sua agenda.
+Nas últimas Rubyconf eu fiz diversos vídeos caseiros com nada mais que meu iPhone de guerra e templates de iMovie. Este ano me coloquei o desafio de construir uma vinheta de abertura para o evento de maneira mais profissional. Eis o resultado:
+
+
+
+
+Quando soube que o Bob Wolheim tinha integrado a FLAG através da S-kull logo entrei em contato e ele me apresentou o excelente pessoal da The Kumite. Gostaria de poder mostrar os outros trabalhos deles mas o reel ainda não está no ar. Basta dizer que eles são reais profissionais do meio de produção de vídeos e computação gráfica tendo feito trabalhos pra Globo e comerciais pra marcas como Samsung. Se quiser vídeos de excepcional qualidade, fale com eles!
+Eles me mandaram este pequeno release de apresentação:
+
+The Kumite é um grupo de designers, diretores, produtores e artistas visuais unidos pela paixão em criar historias inspiradoras.
+The Kumite é parte da Flag, a holding criativa a que pertence agencias como CUBOCC e Pong Dinasty. FLAG é parte do Interpublic Group (NYSE: IPG)
+Se você tem interesse em trabalhar conosco, entre em contato através de hello@thekumite.org.
+
+tags: rubyconfbr2013
+

@@ -1,0 +1,18 @@
+
+
+
+
+
+O Carlos Eduardo da e-Genial Soluções Inteligentes, lançou um curso
+online de Flex + Ruby on Rails, onde ele ensina a criar aplicações RIA, unindo duas
+tecnologias novas, mas que já têm sua fatia no mercado.
+Objetivo:
+O curso tem por objetivo ensinar o caminho das pedras para desenvolver
+aplicações Ricas para a Internet com produtividade usando Flex + Ruby on Rails,
+bem como a criação de casos reais no desenvolvimento do dia a dia.
+O curso tem duração de 3 meses, sendo aulas teóricas e aulas interativas pelo
+Treina TOM, usando e abusando de recursos multimedia.
+Para saber mais detalhes sobre o curso acessem https://www.curso.egenial.com.br
+O Carlos Eduardo é um dos membros mais envolvidos na comunidade e não pára um segundo. Sua nova investida em Flex deve gerar bons frutos e agora ele quer dividir esse conhecimento. Todos que tem interesse no assunto de RIA devem dar uma olhada.
+tags: obsolete flash
+

@@ -1,0 +1,245 @@
+
+
+Depois de listar alguns dos Sites e Projetos Open Source brasileiros, finalmente é a vez dos blogs. Blogueiros: start your engines! Na lista Rails-br perguntei quem tem blogs e além disso aproveitei o trabalho do Paulo Lins, que publicou uma lista na Rubyonbr.
+Eu filtrei, usei o bom e velho Hpricot (alguns snippets aqui) para atualizar os títulos e feeds e para determinar qual está fora ou inválido. Totalizou 58 blogs com feeds.
+Abaixo segue uma lista e você ainda pode fazer download do arquivo OPML para ficar fácil importar no seu feed reader (como o Google Reader) favorito e ficar de olho na blogosfera brasileira de Rails.
+E não esqueçam de ajudar na divulgação do Rails Summit Latin America colocando os diversos banners e stickers no seu próprio blog! ;-)
+Vejam a lista:
+
+
+
+
+%w(Akita On Rails) * 2.0,
+Fabio Akita
+
+
+Nome do Jogo
+Carlos Brando
+
+
+Rails Girl – Rails for Newbies
+Amanda Varella
+
+
+Desenvolvimento Ágil
+Vinícius Teles
+
+
+HashCode
+Shairon Toledo
+
+
+hervalicio.us- software, peopleware, tupperware
+Herval Freire
+
+
+e-Genial Soluções Inteligentes
+Carlos Eduardo
+
+
+ruby on rails and some other stuffs… 
+Jony dos Santos Kostetzer  	
+
+
+Blog do Urubatan
+Rodrigo Urubatan
+
+
+Guilherme Garnier
+Guilherme Garnier
+
+
+development.log
+Julio Santos Monteiro
+
+
+Tino Gomes
+Celestino Gomes
+
+
+Journal  – Cafeína
+Caffo (Rodrigo Franco)
+
+
+Fabio Kung
+Fabio Kung
+
+
+mergulhaoinfo on rails
+Sylvestre Mergulhão
+
+
+railsbox :  Home
+Ozéias Sant’ana 
+
+
+Blog.Impact
+Davis Zanetti Cabral
+
+
+…Voorhees across the new future…
+Felipe Mathies
+
+
+George on Tech
+George Guimarães
+
+
+Wagner Andrade
+Wagner Andrade
+
+
+MouseOver Studio — /* TODO */
+Diego Carrion
+
+
+Helton Alponti
+Helton Alponti
+
+
+Pedro Pimentel
+Pedro Pimentel 
+
+
+.xX [_ Maxonrails _] Xx.
+Luiz Carvalho
+
+
+Bezelga on Rails
+Beselga
+
+
+devlog
+Walter Cruz
+
+
+FlavioGranero.com
+Flavio Granero
+
+
+xobi da web
+Leandro Heuert
+
+
+1up4Developers
+Roger Leite e Amigos
+
+
+Aguinelo Pedroso
+Aguinelo Pedroso
+
+
+Mergulhando no Caos
+Thiago Arrais
+
+
+nuxlli
+verton Ribeiro
+
+
+Por que não?
+Elomar Santos
+
+
+O Peczenyj
+Tiago Peczenyj
+
+
+Tudo que quero saber!
+Eduardo Fiorezi
+
+
+Ruby and Rails
+Marcos Ricardo
+
+
+Vinícius Ebersol—Blog on Rails
+Vinícius Ebersol
+
+
+:: 2web ::
+Vitor Pellegrino
+
+
+CODARE
+Codare
+
+
+FlavioGranero.com
+Flavio Maltempe
+
+
+Tecnologias Web
+Alex Garrafa
+
+
+Elvis Fernandes
+Elvis Fernandes
+
+
+Techguide
+Clovis
+
+
+Blog do Rafa
+Rafael Henrique
+
+
+SimpleCode » samirmamude.com
+Samir Mamude
+
+
+leonardofaria.net
+Leonardo Faria
+
+
+Sobre Trilhos
+Leonardo Almeida
+
+
+Fernando Quadro
+Fernando Quadro
+
+
+Roberto – techmobil.com.br
+Roberto Soares
+
+
+Carcara Weblog!
+Coutinho
+
+
+shadowmaru.org: vai tomar café
+Ricardo S Yasuda
+
+
+Superfície Reflexiva
+Ronaldo Ferraz
+
+
+Bastos — let’s code!
+Bastos
+
+
+Minerama — Garimpando rubis
+João  / Thiago Arrais
+
+
+Quero ser Ágil
+Rafael Mueller
+
+
+Eust?quio Rangel – Blog
+Eustáquio “TaQ” Rangel
+
+
+Simples Idéias. Por Nando Vieira.
+Nando Vieira
+
+
+Area Criações
+Daniel Lopes
+
+
+tags: obsolete english
+

@@ -1,0 +1,32 @@
+
+Hoje eu fiz minha declaração de imposto de renda pessoa física (atenção: acaba amanhã!!) Além disso ajudei meu pai a enviar a dele. Para isso o iChat no Leopard foi fundamental.
+
+
+
+Momento WTF!! (What The Fuck!!??)
+Para começar, os programas em Java da Receita Federal são um tributo de um produto com um bom objetivo mas com um péssimo acabamento. A parte mais difícil eles já fizeram: a coleta massiva de dados de todos os contribuintes do país, tudo online! Todas as dezenas de cálculos, condições e verificações.
+“Por quê”, pergunto, Por que eles não gastaram algumas poucas horinhas a mais para refinar um pouco mais o processo de instalação? Imagino que no Windows esteja tudo certo, porém no Mac é um exercício de frustração para os novatos – mas isso não é um elogio ao Windows, como vou explicar abaixo.
+Primeiro de tudo, o software vem em dois instaladores separados (vai entender para quê). Segundo, eles estão diretamente como um .command para download. Você manualmente precisa aplicar permissão de execução (chmod +x) neles.
+Daí, ele instala na pasta default de Applications, que fica na raíz do sistema. Daí eles tentam fazer exatamente aquilo que é proibido em qualquer aplicação Unix decente: escrever dados de usuário diretamente na pasta da aplicação em vez de na pasta do usuário (!)
+Óbvio: como no Windows tudo é escancarado por default, não faz diferença para um desenvolvedor preguiçoso simplesmente escrever arquivos dentro da pasta da aplicação no “Program Files”. Porém, o OS X é um sistema que, por default, deixa tudo trancado e apenas a pasta do próprio usuário aberto para escrita. Isso significa que qualquer desenvolvedor minimamente informado gravaria a declaração da pessoa na sua pasta ~/Library ou algo assim.
+Meu pai instalou conforme o default, preencheu a declaração e me ligou perguntando porque não conseguia salvar. O programa é tão mal feito que ele desabilita os botões de gravar mas deixa preencher mesmo assim, deixando o usuário fica num beco-sem-saída.
+
+iChat Screen Sharing
+Daí meu pai me ligou: “como que eu faço para gravar isso?”
+Bom, nesse ponto, o pobre do meu pai já havia tentado preencher e repreencher na porcaria do programa 7 vezes, tentando entender porque toda vez que ele fechava a declaração, TODA a informação se perdia.
+Foi que eu deduzi na hora:
+
+produto escrito no Brasil e, pior, dentro de instituições do governo, ou pior, por terceirizados pelo governo.
+poucos desenvolvedores daqui dão a devida atenção às boas regras de conduta e desconhecem sistemas mais avançados do que Windows.
+era óbvio que eles mandaram instalar onde não devia e agora não sabiam o que fazer.
+
+Estou sendo cruel? Nem um pouco. Um produto como o de declaração de imposto é prova viva de um software mal feito. Não me importa se “é melhor isso do que nada”. Me importa que se vão gastar meu dinheiro de contribuinte, que façam bem feito e não excluam os usuários: eu uso Mac e sou contribuinte, tenho todo o direito de ter um produto com a mesma qualidade. Se eu sou uma minoria que não merece um bom produto, pela recíproca também deveria ser isento de pagar imposto. Qualquer outra justificativa é mera desculpa, só me retornem quando o produto estiver funcionando direito, o que por si só não representa absolutamente nenhuma dificuldade para qualquer um equipado com um Tico e um Teco, se é que me entendem.
+Enfim, como ajudar meu pai? Se fosse numa situação normal, seria aquele martírio pelo telefone: “Pai, tá vendo aquele iconezinho no canto? Então, dá duplo clique … não pai, no outro ícone … então …”
+Felizmente, ano passado eu dei pra ele meu antigo Mac Mini G4 e, claro, no fim do ano eu instalei o Leopard lá e configurei uma conta de GTalk para o iChat dele, já imaginando que um dia iria precisar disso.
+
+Pois bem. O que eu fiz hoje foi abrir meu iChat, pedir para meu pai abrir o iChat dele e apertar um botão de confirmação que apareceu tocando do outro lado e boom! lá estava eu dentro do desktop do meu pai arrumando as coisas.
+Claro, claro, outros sistemas tem opções assim. Óbvio que isso não é novidade. Eu faço screen sharing em rede há mais de 10 anos, também, obrigado por me lembrar – posso continuar meu causo? Meu ponto é que o Leopard que deixei na casa do meu pai é uma instalação vanilla, padrãozona, sem um único tweak a não ser ter criado a conta de usuário dele e configurado o Mail.app e o iChat. Melhor, meu pai consegue usar sem precisar ficar me ligando o tempo todo já que praticamente tudo funciona de maneira simples.
+O mais engraçado foi quando eu abri a pasta de downloads da máquina dele: cheia de executáveis de Windows que ele provavelmente clicou numa página da web e ficou baixando :-) No Mac eles baixam e ficam inertes na pasta até eu apagar. Além de consumir alguns kilobytes, são completamente inofensivos.
+A parte boa foi que eu pude reinstalar a aplicação de declaração na pasta de usuário dele, daí eu ensinei como enviar a declaração pela internet e imprimir o recibo literalmente apontando na tela, que é um milhão de vezes mais simples do que ficar dizendo “pai, o quarto ítem do menu … não pai, o de baixo … não …”
+tags: obsolete mac
+

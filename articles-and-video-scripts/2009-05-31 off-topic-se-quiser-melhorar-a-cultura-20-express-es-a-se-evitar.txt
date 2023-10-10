@@ -1,0 +1,32 @@
+
+
+
+
+Do blog de Jason Yip
+Fonte: 40 anos, 20 milhões de idéias: The Toyota Suggestion System
+
+Todo mundo entende isso!
+Nunca fizemos isso antes, não vale a pena tentar.
+Eu tentei isso antes, e eu sei que não funciona.
+Isso não é atualizado o suficiente.
+Isso está dentro do orçamento?
+Tem planos demais sendo feitos — vou pensar na sua opinião quando tiver tempo
+Vamos falar disso outra hora.
+Vamos esperar mais um pouco e ver como as coisas ficam.
+Por que você quer mudar? As coisas não estão indo bem agora?
+Existem regras, então não é bom fazer as coisas desse jeito.
+Eu não acho que isso seja tecnicamente possível.
+Essa idéia está muito fora, o gerente nunca vai concordar.
+Essas coisas não se fazem nesta empresa!
+Isso pode funcionar em outros lugares, mas não aqui!
+O mundo real é mais complicado que isso.
+Você não entende realmente a situação, não é?
+Sua sugestão é boa, mas a empresa não pode bancá-la.
+Isso vai criar problemas mais para frente.
+Mesmo que eu te dê conselhos, ainda assim não vai dar.
+Que sugestão é essa? Não dá para torná-la um pouco melhor?
+
+AkitaOnRails: relembrei isso depois de ter conversado com o Juan Bernabó recentemente: “insanidade é querer resultados diferentes fazendo as mesmas coisas.”
+Ward Cunningham: Um amador diz “eu só faço as coisas do meu jeito.” Um profissional deve ser capaz de dizer “vamos tentar do seu jeito por um tempo e ver o que acontece.”
+tags: obsolete
+

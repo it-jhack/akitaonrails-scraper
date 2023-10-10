@@ -1,0 +1,11 @@
+
+
+
+
+The Brazilian community has been very busy lately. I just announced Carlos and Tapajós Rails 2.1 PDF
+But this is not the only book in town. As I said, Carlos has been leading the Why’s (Poignant) Guide to Ruby for some time now. I always say in all my presentations that “the best part of Ruby on Rails is the community” and this helds particularly true to our Brazilian community.
+As a small glimpse of what people are doing, take a look at what Bruno Pedroso, Renato Willi, Wesley Rocha, Júlia de Casto  was able to accomplish with the overly complicated and highly artistic Why’s comic stripes:
+  I think Why would be very proud of this.
+If there are other Brazilians that can translate from English to Portuguese, please enroll in this project.
+tags: obsolete why english
+

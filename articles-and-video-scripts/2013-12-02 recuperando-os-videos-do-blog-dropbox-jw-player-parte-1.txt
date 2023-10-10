@@ -1,0 +1,44 @@
+
+Hospedar vídeos para mostrar aqui no blog e para arquivar vídeos que usei em palestrar tem sido uma novela. Por volta de 2008, YouTube ainda não era tão dominante, ainda existia Google Videos, e alguns vídeos cheguei a colocar lá primeiro. No começo, se não em engano, YouTube ainda tinha limite para upload, políticas mais restritivas. Então pulei direto para o Vimeo. Por algum tempo ele serviu bem, mas um belo dia eles mudaram a politica e, sem aviso nenhum, cortaram minha conta e tuod que eu tinha nela. Aliás, muito péssimo esse jeito de tratar usuários. Tentei outras formas alternativas como Vevo, Rapidshare, mas nada satisfatório. A partir de 2010 mais ou menos migrei para o Blip.tv, para a conta paga. Imaginei que se eu pagasse estaria menos propenso a me cortarem como fez o Vimeo. Ledo engano, este ano eles mudaram as políticas deles, e me mandaram uma notificação do tipo "você tem até dia X para tirar tudo porque vamos fechar sua conta". Novamente, o que acontece com esses serviços? Péssimo serviço aos usuários é uma constante.
+Finalmente, depois de pensar a respeito, resolvi jogar tudo numa pasta de Dropbox da minha conta paga, e usar JW Player para fazer o embed. Depois de esperar um bocado para o upload de tudo terminar (3.78GB e 65 arquivos de vídeo), e mais algumas horas para vascular todos os meus posts e editar um a um para substituir os embeds antigos, acho que consegui atualizar praticamente tudo.
+São anos de posts, alguns deles já são sobre assuntos que hoje são obsoletos, mas mesmo assim atualizei para manter os registros históricos só que não vou listar neste post. E para quem estiver curioso em assistir os vídeos novamente, aqui vai uma listagem dos posts atualizados em ordem cronológica:
+
+
+
+
+Diário de Bordo do FISL 2009
+QCon 2008 - Leah Culver
+Ruby on Rails Ganhou o Prêmio Info 2008
+Locos x Rails - Wrap up
+RailsConf 2009 - Uncle Bob Martin
+RailsConf 2009 - Uncle Bob Martin - Professionalism
+RailsConf 2009 - Message from Bryan Liles (TATFT) to Brazil
+RailsConf 2009 - Message from Peter Cooper to Ruby Inside Brazil
+RailsConf 2009 - DHH, The Secret of Productivity
+RailsConf 2009 - Nihn Grosenbach Bui
+Screencast - Agilidade, Qualidade e Futuro
+Obediência à Autoridade
+Você não entende nada de Scrum
+Prêmio Info 2009 - Personalidade do Ano
+Lendo os Princípios Ágeis
+Jeff Patton e Megan Fox no mesmo Post
+Wake up Call
+Penn and Teller e Larry Flyng sobre Liberdade
+RailsConf 2010 - Video Entrevistas - Part 1
+RailsConf 2010 - Video Entrevistas - Part 2
+RailsConf 2010 - Video Entrevista - David Hansson
+RailsConf 2010 - Video Entrevista - Robert Martin
+Documentário - The iPod Revolution
+Tributo a Steve Jobs
+The Fountainhead - Defesa de Howard Roark
+Why, Ruby Dramas, and Dynamiting Courtland
+O Mundo Hoje é Muito Bom - Feliz 2013
+O que significa ser um Gerente?
+Minha Primeira Visita à Semco
+Previsivelmente Irracional
+Introdução à Agilidade
+
+No próximo post listarei os vídeos que não estão associados a nenhum post do blog.
+
+tags: obsolete blog
+

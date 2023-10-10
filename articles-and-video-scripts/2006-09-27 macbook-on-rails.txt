@@ -1,0 +1,45 @@
+
+Há alguns dias finalmente comprei o novo Macbook White 2.0Ghz Core Duo com 2Gb de RAM.
+É uma máquina fantástica que supera em muito meu notebook anterior, um velho Toshiba Sattelite P15 2.8Ghz Hyperthreading com 1.5Gb de RAM.
+“O que Macs tem a ver com um blog de Rails?” alguém poderia se perguntar. Tudo a ver. Vejam as fotos da RailsConf no post mais abaixo ou então no álbum do Flickr. Segundo alguns relatos, compareceram cerca de 500 pessoas e mais de 80% delas carregando Macbooks.
+E não é só na RailsConf. Quem foi à OSCON ou outros eventos Open Source deve ter visto a mesma coisa: a população de MacBooks crescendo dramaticamente dentro de todas as comunidades de desenvolvedores. O próprio David Heinemeir Hansson é um grande defensor de Macs e ele utiliza um Macbook tanto para fazer suas apresentações quanto para desenvolver o Rails.
+
+
+Eu sou fã de Macs há anos, antes ainda da série Mac OS X. Porém os preços eram proibitivos então tive que me virar com os PCzinhos mesmo. Este ano eu fiz a conversão: joguei fora meu desktop Athlon XP e coloquei um Mac Mini G4 1.5Ghz em seu lugar (minha mulher agradece) e alguns dias atrás completei essa conversão vendendo meu Toshiba e comprando o Macbook. É a primeira vez em mais de uma década e meia que não tenho nenhum PC em casa. E acreditem: não faz nenhuma falta.
+A estratégia genial de Steve Jobs de trocar os processadores G4 e G5 por Intel Core Duo (e recentemente o Core 2 Duo) foi o grande facilitador: eu rodo coisas exclusivas de Windows ainda, mas em ambiente virtualizado com o Parallels Desktop. Microsoft Project, Visio e outros programas que necessito no dia a dia rodam em velocidade muito parecida com o que eu rodava no meu Toshiba. Para coisas mais pesadas preciso cair no dual boot com o BootCamp da própria Apple. É o caso do SAP Enterprise Portal, um servidor J2EE que carrega mais de 1Gb de RAM logo no início, fora o Netweaver Studio que é um Eclipse extremamente pesado. A SAP tem prazer em tornar as coisas pesadas. É pedir demais de um ambiente virtualizado, mas no dual boot, usando os dois Cores, mais o HD Serial-ATA e os 2Mb de cache L2 a coisa voa, mais que dobra a performance do meu Toshiba antigo.
+O Macbook só difere da série Pro e dos iMac pela placa de vídeo: sim, a Intel GMA 950 com 64Mb de memória compartilhada é extremamente inferior às ATI Radeon X1600. Porém eu não sou de carregar jogos no meu note portanto não faz nenhuma falta. Já a falta de uma porta Express Card é um pouco lamentável, mas imagino que realmente não caberia. Fora isso o resto é o estado da arte:
+
+Intel Core Duo 2.0Ghz com 2Mb L2 (comparado ao meu antigo Pentium 4 HT 2.8Ghz com 512kb L2)
+Frontside BUS 667Mhz (com dois slots que, se tiverem dois pentes de memória iguais, ainda ativa o modo Dual Channel, onde os dois pentes podem ser acessados ao mesmo tempo)
+HD SATA de 60Gb (comparado ao meu antigo HD ATA de 60Gb, é 50% mais rápido, mesmo em 5400rpm)
+Motion sensor (que estaciona o HD em caso de queda, fora servir para brincadeiras como o Slapbook, iAlertU ou TheftSensor)
+Cabo de força Magsafe (que se conecta magneticamente e evita puxar o note em caso de tropeço)
+câmera embutida iSight (acreditem, o Photobooth é hilário)
+Touchpad que suporta scroll vertical e horizontal usando dois dedos
+Saída mini-DVI que garante saída digital caso você queira ligar a uma TV HDTV. Claro, precisa comprar adaptadores como mini-DVI para VGA ou mini-DVI para HDMI.
+Entrada e saída analógica e digital de áudio, permitindo ligar um cabo de fibra ótica caso se tenha um receiver, por exemplo, para assistir DVDs com som Dolby Digital 5.1.
+Embutido antenas de Bluetooth e Wi-fi (Airport)
+Porta Firewire 400 para ligar com HDs externos em alta velocidade
+Duas portas USB-2
+Controle remoto infravermelho que funciona perfeitamente bem com o FrontRow (um tipo de Media Center) e até mesmo com o Keynote (concorrente Apple do PowerPoint). Imagine fazer apresentações em uma tela HDTV com a saída digital mini-DVI e ainda controlando o notebook remotamente com esse controle (sim, sim, dá para fazer isso com PCs também, mas nesse caso não preciso comprar nada a mais: vem tudo no pacote Apple).
+
+Esqueçam as críticas:
+
+A tela de 13" não é pequeno. É mais do que adequado mesmo para mim que trabalho com o note mais de 10~12 horas por dias. A resolução de 1280×800 é perfeita.
+O teclado, que muitos se assustam por ser diferente, é altamente responsivo, mesmo para mim que tenho uma taxa de 400 tpm (toques por minuto).
+O note realmente esquenta bastante. O normal dele é operar acima de 70 graus, chegando facilmente perto dos 90 graus. Porém, não precisa achar que vai fritar um ovo como dizem. Não aconselho colocar no colo sem uma proteção, mas de calças eu uso normalmente por horas sentado no sofá sem desconforto.
+
+Agora o principal: neste exato momento (julho de 2006) algumas lojas nacionais estão vendendo esta criatura por um preço bastante acessível. Nas Lojas Americanas , por exemplo, é possível comprar a versão 1.83Ghz com combo DVD-ROM/CD-RW por apenas R$ 4.999,00 em 12x sem juros. Ou então e mesma versão que a minha: 2.0Ghz completa com DVD-RW, por apenas R$ 5.999,00 em 12x sem juros. Para ficar com 2Gb o preço do pente de 1Gb de memória de 667Mhz está por cerca de R$ 593,00 com nota fiscal e garantia na iUsers. Acreditem: eu não ganho nada para fazer essa propaganda, apenas me pareceu bom avisar a todos.
+Pesquisando no site nacional da Dell, por exemplo, configurei um notebook com características parecidas ao do Macbook 1.83Ghz. Mas isso sem coisas como a câmera iSight, motion sensor, Magsafe, claro. O preço foi para mais de R$ 8.000,00. Com isso dá para ver que os Macbook, com garantia, nota fiscal e tudo está por quase a metade do preço de um notebook PC equivalente.
+Isso tudo sem contar o sistema operacional Mac OS X Tiger 10.4.7. Nem preciso dizer que é incomparavelmente superior ao Windows XP ou mesmo o Windows 2003. Ele se equipara aos melhores Linux do mercado (SuSe, Ubuntu) mas é muito mais usável. Poderia passar o dia todo discutindo isso, conheço todos esses sistemas de cabo a cabo. Mesmo sendo fã do Eclipse, Visual Studio.NET ou do MonoDevelop, o XCode (que vem junto no DVD de instalação da Apple) está me ganhando muito facilmente. Minha próxima aquisição na Amazon serão livros de Objective-C (linguagem que também sou fã desde os tempos de NextStep).
+E no campo do Rails, o Mac já vem com o Ruby 1.8.2, mas é fácil instalar o Ruby 1.8.4, RubyGems e o novo Rails 1.1.4 (aliás, meu livro traz esse procedimento). Ou então baixar o Locomotive, que já vem como tudo. O editor de textos Textmate é a escolha de todo o time Rails do David. Sem contar que MySQL roda perfeitamente bem em Macs.
+Mesmo para meu dia a dia como programador Java (sim, ainda não pude largar o lado negro da força), o JDK 1.5 vem via Software Update da própria Apple e o novíssimo Eclipse 3.2 Callisto roda muito bem com todos os novos pacotes de plugins, incluindo o Web Tools e até o Subclipse.
+Pacotes como o Office.mac e Photoshop ainda rodam emulados sobre a camada Rosetta (que é totalmente transparente ao usuário) e posso dizer que ele roda perfeitamente bem. Outro dia mesmo abri mais de 70 documentos Word de uma só vez e ele foi bastante performático considerando que estava tudo sendo emulado. Mesmo o Photoshop (olhem minha nova foto no profile) está funcionando muito bem.
+Enfim, é a máquina perfeita para os desenvolvedores. Rails veio para tornar o ato de programar mais prazeroso e nada melhor do que fazer isso em um Mac: é basicamente um salto de qualidade de vida.
+Veja o exemplo de James Duncan Davidson, um velho conhecido de todo programador Java e Rails esclarecido: ex-funcionário Sun, criador do Tomcat e Ant e hoje um entusiasta, programador e escritor de livros e artigos de Objective-C e Rails.
+Lembrem-se TODO (sem exceções) bom programador conhece múltiplas linguagens, múltiplos sistemas operacionais e múltiplos hardwares. E estou falando de conhecer intimamente. Não existe plataforma ideal, existem programadores espertos.
+Estamos a poucos dias da WWDC, o evento para desenvolvedores Apple onde Steve Jobs provavelmente irá anunciar a nova versão do sistema operacional: Mac OS X 10.5 Leopard, que promete literalmente quebrar as pernas do famigerado Windows Vista. Isso sem contar a recém-lançada família Core 2 Duo com o Conroe. Imagine um chip dual core de 3.0Ghz com 4Mb de cache L2! Um Xeon! A versão Woodcrest via equipar os novos PowerMac, as torres, o único hardware da família Apple que ainda não pôde aposentar os excelentes quad-G5. Mas os quad-Xeon Woodcrest deve ser o processador a equipar essas workstations. E mais para o final do ano, ou no ano que vem, a série Macbook Pro talvez seja equipada pelo Core 2 Duo Merom.
+Com lucros recém anunciados para o Q3 (o último trimestre) de US$ 472 milhões, marketshare de notebooks subindo com mais de 1.3 milhões de notebook vendidos nesse período, eu diria que a Apple está indo de vento em popa.
+Só me resta agora comprar um iPod Video 30Gb ;-)
+tags: obsolete rails apple
+

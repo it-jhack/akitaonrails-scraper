@@ -1,0 +1,289 @@
+
+Depois de meses configurando e reconfigurando gems, .bash_profile, etc o ambiente tende a ficar bagunçado. Aproveitando o feriado, resolvi fazer uma limpeza. No meu caso, estou falando do Snow Leopard. Algumas das coisas devem funcionar em distros Linux, mas não é o foco.
+O que pretendo fazer é começar a usar o RVM para gerenciar diferentes instalações de Ruby no meu sistema.
+
+
+Limpando a Casa Antes
+Uma coisa que eu acabava fazendo era instalando gems diretamente no repositório do sistema, em /Library/Ruby/Gems/1.8. Isso acontece se você usa sudo para instalar as gems. No começo eu não achava ruim, hoje já acho que “suja” o sistema, então a primeira coisa que fiz foi zerar esse diretório. Felizmente o Snow vem com os frameworks em outro lugar e com a instalação padrão do Ruby também, então eu posso fazer:
+1
+2
+3
+4
+
+sudo rm -Rf /Library/Ruby/Gems/1.8/*
+sudo cp -R /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/gems/1.8/* /Library/Ruby/Gems/1.8/
+sudo chown -R root:admin /Library/Ruby/Gems/1.8/
+sudo chmod -R 775 /Library/Ruby/Gems/1.8/
+
+
+Não esquecer que muitas gems instalam executáveis em linha de comando que costumam ficar em “/usr/bin”. Eu fiz do jeito “português” mesmo: abri esse diretório no Finder (via Terminal, você pode fazer “open /usr/bin”), ordenei por ordem decrescente de data e apaguei todos os comandos mais recentes com nomes reconhecíveis.
+CUIDADO: Pule essa etapa se você não está acostumado a lidar com o sistema: não apague o que não conhece. Os comandos mais óbvios são coisas como ‘cucumber’, ‘passenger-*’, ‘rails’, ‘rspec’, ‘radiante’, ‘rcov’, etc. Dependendo das gems existirão inclusive arquivos “.rb”. Tudo que é “Alias”, obviamente, não toque!
+Eu ainda mantinha um Ruby Enterprise Edition (REE) instalado em “/opt/ruby-enterprise”, dentro dele o diretório de gems era um link simbólico para o repositório do sistema e no “~/.bash_profile” era ele quem estava no $PATH. Então também limpei tudo isso e joguei fora esse REE.
+Separadamente eu ainda tinha um JRuby instalado num diretório “~/Applications/jruby” e ele também tinha seu diretório interno de gems sendo um link simbólico para “~/Applications/jruby_gems” para evitar que a cada nova versão de JRuby eu precisasse instalar tudo de novo. Não apontei para o repositório do sistema porque o JRuby tem gems próprias para coisas como JDBC que prefiro manter separado. Na limpeza, já apaguei esses dois diretórios e os retirei do meu .bash_profile.
+E como se tudo isso não bastasse, eu ainda tinha um Ruby 1.9 instalado via MacPorts que, também nessa limpeza, já deinstalei. E eu não estou nem contando outras que eu uso muito pouco como MacRuby, Maglev e IronRuby, que estão no meu diretório ~/Applications.
+Apenas para garantir, apaguei o diretório “~/.gem” que estava no meu $HOME. Ele é criado quando se instala uma gem sem usar “sudo”. Mas como quero recomeçar, fiz:
+1
+
+rm -Rf ~/.gem
+
+
+Meu ~/.gemrc, que configura o comportamento do comando gem está assim hoje:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+:benchmark: false
+:verbose: true
+:update_sources: true
+gem: --no-ri --no-rdoc
+install: --env-shebang
+gemcutter_key: 66...cf
+:sources: 
+- https://gemcutter.org
+- https://gems.rubyforge.org/
+- https://gems.github.com/
+- https://gems.datamapper.org
+:backtrace: false
+:bulk_threshold: 1000
+update: --env-shebang
+
+
+No meu .bash_profile eu tinha variáveis de sistema como RUBY_HOME, GEM_HOME, GEM_PATH, que eu apaguei também.
+Pré-Requisitos
+Logo que você instala o Mac OS, nunca se esqueça de abrir o DVD e instalar o XCode que vem como pacote opcional. Todo o resto depende disso, pois o XCode contém todos os compiladores e bibliotecas que você vai precisar.
+Apesar das várias dores de cabeça, o MacPorts está melhorando e eu recomendo usá-lo para alguns componentes do sistema. Baixe e instale do site. Depois disso, para facilitar sua vida, talvez você aprecie usar o front-end Porticus.
+Muitos instalam o MySQL via MacPorts, mas particularmente esse eu prefiro baixar e instalar do DMG diretamente do site oficial. Já o PostgreSQL eu acabo instalando via MacPorts. Outros componentes que podem ser úteis são:
+1
+2
+3
+
+sudo port install ImageMagick, ctags, \
+   postgresql83, postgresql83-server, \
+   readline, sqlite3
+
+
+Ferramentas como Git, que tem dezenas de dependências, também prefiro instalar via DMG. No meu caso, como uso o Textmate, também configuro para o Git chamar o Textmate quando precisar editar coisas como mensagens de commit. Basta adicionar a seguinte linha no seu “~./bash_profile” :
+1
+
+export GIT_EDITOR="mate -w"
+
+
+A única gem que você vai precisar instalar no seu sistema principal é justamente do RVM:
+1
+2
+
+sudo gem install rvm
+rvm-install
+
+
+Feito isso, edite seu “~/.bash_profile” e no final adicione estas linhas:
+1
+2
+3
+
+if [[ -s $HOME/.rvm/scripts/rvm ]] ; then 
+        source $HOME/.rvm/scripts/rvm
+fi
+
+
+Além disso também acrescente o seguinte no mesmo arquivo:
+1
+
+export PS1='\w `~/.rvm/bin/rvm-prompt i v` `git branch 2> /dev/null | grep -e ^* | sed -E  s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\ /`\[\033[37m\]$\[\033[00m\] '
+
+
+Isso fará seu prompt na linha de comando mostrar qual versão do Ruby está ativo e, se estiver num projeto com Git, em qual branch você está. É bastante útil e vai economizar algumas dores de cabeça no futuro.
+Também não deixe criar o arquivo “~/.rvmrc” com o seguinte:
+1
+
+rvm_archflags="-Os -arch x86_64 -fno-common"
+
+
+Isso garantirá que extensões nativas sejam compiladas em 64-bits (considerando que você está no Snow Leopard).
+Instalando Rubies
+Agora é muito simples:
+1
+2
+3
+
+rvm install ree
+rvm install 1.9.1
+rvm install jruby
+
+
+Essas foram as distribuições que eu instalei no meu sistema. Ele vai baixar o código fonte, compilar e configurar corretamente. Ao final, podemos usar o comando “rvm list” e ele devolverá:
+1
+2
+3
+4
+5
+6
+7
+
+~ [ruby-1.9.1] $ rvm list
+
+   jruby-1.4.0 [x86_64-java]
+   ree-1.8.7-2009.10 [ x86_64 ]
+=> ruby-1.9.1-p376 [ x86_64 ]
+   (default) ree-1.8.7-2009.10 [ x86_64 ]
+   system [ x86_64 i386 ppc ]
+
+
+No meu exemplo, o Ruby Enterprise Edition (REE) está configurado como “default”, para selecionar outro como padrão, basta fazer:
+1
+
+rvm 1.9.1 --default
+
+
+Para trocar entre ambientes agora posso fazer assim:
+1
+2
+3
+
+rvm ree   # troca para ruby enterprise
+rvm 1.9.1 # troca para ruby 1.9.1
+rvm jruby # troca para jruby
+
+
+Se quero executar um comando em todos os ambientes ao mesmo tempo, por exemplo, instalar a mesma gem em todos os ambientes, posso fazer:
+1
+
+rvm gem install rails
+
+
+Isso vai instalar uma cópia do Rails em cada repositório gem de cada distribuição de Ruby. O grande truque é que o comando “rvm” reconfigura as variáveis de ambiente de tal forma que apenas o ambiente selecionado seja enxergado e os outros fiquem inacessíveis (fora do $PATH, etc). Portanto, quando se seleciona o JRuby, por exemplo, comandos como “irb”, “rake”, “gem” executarão dentro do ambiente do JRuby, sem desconfigurar o que está no REE ou no 1.9.1.
+No meu caso, eu selecionei um ambiente de cada vez e instalei todas as gems que eu tinha antes separadamente. Se quiserem uma cópia da lista de gems que usei, para o REE siga este link, para o Ruby 1.9.1 siga este link e para o JRuby siga este link.
+Uma coisa que deu bastante trabalho foi justamente compilar as listas anteriores para cada ambiente. Eu sempre perco essas listas e acabo refazendo do zero. Para evitar isso temos uma opção muito boa agora do Roger Leite :
+1
+2
+3
+4
+5
+6
+7
+
+rvm gem install rubygems_snapshot
+rvm jruby
+gem snapshot export ~/Documents/jruby-gems.yml
+rvm ree
+gem snapshot export ~/Documents/ree-gems.yml
+rvm 1.9.1
+gem snapshot export ~/Documents/1.9.1-gems.yml
+
+
+Isso gerará uma lista no formato YAML com todas as gems que tenho em cada ambiente do RVM. Da próxima vez que eu criar um novo ambiente, ou se eu quiser recriar o mesmo ambiente, basta fazer o seguinte:
+1
+2
+3
+4
+
+rvm install 1.9.2 # faça de conta que já existe o 1.9.2
+rvm 1.9.2
+gem install rubygems_snapshot
+gem snapshot import ~/Documents/1.9.1-gems.yml
+
+
+Pronto, esses seriam os passos caso amanhã saia a versão Ruby 1.9.2 (que até o momento da publicação deste post ainda não existe) e eu queira as mesmas gems que já existem no meu ambiente Ruby 1.9.1. Com pouco esforço, um novo ambiente está criado.
+Tudo isso torna mais simples testar ambientes menos estáveis, por exemplo:
+1
+2
+3
+
+rvm install 1.9.1-head # a versão em desenvolvimento do Ruby 1.9.2
+rvm install macruby # a versão 0.5 ou superior
+rvm install ironruby # não esqueça de instalar o Mono
+
+
+Obs: Assim como o Git, o Mono é outro componente que existe no MacPorts mas eu prefiro instalar o DMG.
+Textmate
+Ainda existem mais alguns detalhes. O Textmate, quando você está editando código Ruby, pode chamar o interpretador do sistema. Você pode fazê-lo chamar a versão “default” do RVM. Para isso será necessário hackear um pouco seu Textmate, conforme é explicado no FAQ.
+Primeiro, edite o arquivo “/Applications/TextMate.app/Contents/SharedSupport/Support/lib/tm/process.rb”
+Aproximadamente na linha 194, você encontrará isto:
+1
+
+exec(*cmd.compact)
+
+
+Substitua por isto:
+1
+
+exec("bash -lc '" + cmd.compact.join(" ") + "'")
+
+
+O próximo arquivo é este: “/Applications/TextMate.app/Contents/SharedSupport/Bundles/Ruby.tmbundle/Support/RubyMate/run_script.rb”
+Aproximadamente na linha 41, encontrará isto:
+1
+
+cmd = [ENV['TM_RUBY'] || 'ruby', '-KU', '-rcatch_exception']
+
+
+Em vez de substituir, você deve acrescentar uma nova linha antes, para ficar assim:
+1
+2
+
+ENV['TM_RUBY'] = nil if ENV['TM_RUBY'] == '/usr/bin/ruby'
+cmd = [ENV['TM_RUBY'] || 'ruby', '-KU', '-rcatch_exception']
+
+
+Agora você precisa gerar o script-wrapper que o Textmate vai precisar, assim:
+1
+
+rvm ree --symlink textmate
+
+
+Isso vai gerar um script em “/Users/[seuUsuario]/.rvm/bin/textmate_ruby”. E esta é exatamente a string que você precisa configurar no Textmate. Abra a janela de Preferences, tab Advanced e crie uma variáveis chamada “TM_RUBY”, caso ainda não exista, e coloque o caminho completo do script “textmate_ruby” como mostrei antes.
+Reinicie o Textmate se estiver aberto. Agora, ele executará o Ruby que o RVM tiver como “default”. Só para relembrar, quando quiser trocar o “default”, faça:
+1
+
+rvm jruby --default
+
+
+Phusion Passenger
+O Mac OS já vem com Apache 2 então você não precisa se preocupar. Agora, no meu caso, eu gostaria de instalar o Passenger usando o Ruby 1.9.1 para testar mais essa combinação. Portanto mudo para o ambiente correto:
+1
+2
+3
+
+rvm 1.9.1
+gem install passenger
+passenger-install-apache2-module
+
+
+Ele vai demorar um pouco para compilar o módulo e no final lhe dirá para configurar o Apache assim:
+1
+2
+3
+
+LoadModule passenger_module /Users/[seuUsuario]/.rvm/gems/ruby-1.9.1-p376/gems/passenger-2.2.8/ext/apache2/mod_passenger.so
+PassengerRoot /Users/[seuUsuario]/.rvm/gems/ruby-1.9.1-p376/gems/passenger-2.2.8
+PassengerRuby /Users/[seuUsuario]/.rvm/ruby-1.9.1-p376/bin/ruby
+
+
+Isso não vai funcionar. Para dar certo, a última linha precisa ser assim:
+1
+
+PassengerRuby /Users/[seuUsuario]/.rvm/bin/ruby-1.9.1-p376
+
+
+Se ainda não sabe onde colocar essa configuração, sugiro criar o arquivo “/etc/apache2/other/passenger.conf”. O Apache carregará esse arquivo automaticamente. Para reiniciar o Apache faça:
+1
+
+sudo apachectl restart
+
+
+E para facilitar o uso do Passenger, recomendo instalar o Passenger Preference Pane, daí basta abrir o System Configuration que você encontrará um ícone do Passenger. Aí é só arrastar a pasta da sua aplicação para ele, configurar seu /etc/hosts ou seu DNS local e tudo deve funcionar. Siga as instruções do site.
+Acho que isso é tudo por hoje. Ainda devo fazer alguns ajustes aqui e ali mas a fundação é essa. Sobre o RVM, não deixe de ler toda a sua documentação pois ele dá dezenas de opções muito legais e vale a pena conhecer todas.
+E você, tem alguma dica para melhorar ainda mais o ambiente? Não deixe de comentar a respeito.
+tags: obsolete
+

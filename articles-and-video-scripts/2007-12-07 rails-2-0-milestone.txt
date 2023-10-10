@@ -1,0 +1,11 @@
+
+
+
+
+
+Está com cara que hoje é o dia! Eu ainda não vi a tag rel_2-0-0 no Subversion. No trac parece que já está fechado! Se não me engano o David costuma postar esse tipo de coisa à noite (no nosso horário), foi assim com as Release Candidates e talvez seja assim hoje também. A menos que apareça algum show stopper, ele deve oficializar no blog oficial muito em breve!
+Update: eu disse :-) Só foi um pouco mais cedo do que eu esperava. Eu já estava testando os Release Candidates e estou achando as novidades sensacionais! Tanto em performance quanto Rest e outros “brindes”. Semana que vem trago novidades pra vocês.
+Estou postando aqui de Congonhas, indo para o Rio on Rails amanhã. Obviamente, o vôo está bem atrasado. Até que é divertido postar do iPhone. Minha apresentação será um pouco diferente do que eu havia planejado. Acho que quem comparecer vai gostar ;-)
+Update 8/12: Meu novo livro será sobre Rails 2.0 mas ainda estamos a alguns meses de lançá-lo. Enquanto isso, a Internet é seu amigo :-) Um dos primeiros lugares a olhar é a coleção de artigos do Ryan. O Rals 2.0 é muito bom e compensa gastar alguns dias explorando. Obviamente cuidado, alguns plugins podem quebrar e assim por diante.
+tags: obsolete rails
+

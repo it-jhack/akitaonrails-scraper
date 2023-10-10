@@ -1,0 +1,34 @@
+
+Update 10/01: José just released version 0.9.1 while I was uploading the video :-)
+
+José Valim is doing a great work in the soon to the released Rails 3.0. He surprised everybody with his Google Summer of Code project, rewriting the entire Generator code to use Thor and be more agnostic. Not only that he enhanced the ActionController with ways to make it leaner and cleaner.
+
+Much of this later work comes from an old Rails gem of his called Inherited Resources. It can be used right now in your Rails 2.3 projects and he just backported some of the Rails 3.0 features such as ActionController Responders and other goodies.
+In essence it feels a lot like James Golick resource_controller or Hampton Caitlin’s make_resourceful, Yet Another Thin Controller Plugin if you like. But José’s is definitely interesting.
+So, I decided to make a screencast showcasing some of its basic features. Bear in mind that this gem offers a lot more and I highly encourage you to read his Wiki page about it. There are dozens of options that you can leverage to make your projects even more maintainable and lean.
+
+
+Para utilizar os códigos que eu menciono no screencast, apenas comece assim:
+1
+2
+
+git clone git://github.com/akitaonrails/ryanb-15min-blog.git
+cd ryanb-15min-blog
+
+
+This video is divided in two parts, the first is  a simple conversion to use inherited_resources. To access this code do like this:
+1
+
+git checkout -b inherited_resources --track origin/inherited_resources
+
+
+This will bring the branch with the first part. To see the second part, with more goodies, do like this:
+1
+
+git checkout -b inherited_resources_complete --track origin/inherited_resources_complete
+
+
+Now you should have 3 branches: master with the original 15 min. blog, ‘inherited_resources’ with the first part and ‘inherited_resources_complete’ with the second part. Use the ‘git checkout [name of the branch]’ to switch back and forth between branches.
+José is also a speaker for Rails Summit Latin America 2009, the largest Rails conference in South America, and it’s gonna happen on October 13th and 14th, at São Paulo, Brazil. Help us promote it and be sure to attend! :-)
+tags: obsolete rails restful screencast english
+

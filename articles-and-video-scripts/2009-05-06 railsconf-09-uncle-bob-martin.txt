@@ -1,0 +1,12 @@
+
+
+
+
+Brasileiros: tradução mais abaixo
+Today we were very fortunate to have the ending keynote by Robert Martin himself (a.k.a. Uncle Bob), from Object mentor.
+I recorded most of the talk and I will publish them soon (and I still have lots of material that I was unable to compile just yet), but at the end of the talk I asked Bob to quickly give an advice to my fellow Brazilian programmers that were still unable to wrap their heads around TDD.
+
+Hoje tivemos a sorte de ter o keynote de encerramento do dia apresentado por ninguém menos que Robert Martin (também conhecido como Uncle Bob), da Object Mentor.
+Eu gravei boa parte e depois vou publicar (aliás, tenho muito material que ainda não tive tempo de compilar), mas no final eu pedi que ele rapidamente desse um conselho aos programadores Brasileiros que ainda não entenderam TDD.
+tags: railsconf2009 interview english
+

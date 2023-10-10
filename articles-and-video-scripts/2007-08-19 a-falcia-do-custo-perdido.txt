@@ -1,0 +1,21 @@
+
+Estou totalmente atolado de trabalho (são 2 da manhã de domingo)  mas este pequeno pensamento me chamou a atenção porque é simples e, mesmo assim, a maioria das pessoas ainda cai nessa. O post original é Custo Perdido para Arquitetos, mas eu acho que deveria ser Custo Perdido para Gerentes. Segue a traducão:
+Digamos que você comprou um ticket de cinema mas então percebe a partir de críticas da mídia que o filme é uma droga. Assumindo que você não tem nenhum amigo idiota que compraria seu ticket, você tem duas soluções:
+
+Já que você já pagou pelo ticket, talvez fosse bom sofrer o filme
+Jogar o ticket fora e fazer outra coisa
+
+
+
+E agora?
+A falácia do custo perdido é não perceber que em qualquer dos casos, você já pagou pelo ticket e portanto o custo perdido não é relevante de nenhuma maneira para uma tomada de decisão racional.
+Caso 1: Você sofre o custo do ticket + Você sofre pelo resto do filme
+Caso 2: Você apenas sofre o custo do ticket
+Portanto, racionalmente a opção 2 é melhor.
+Então, em vez de um ticket de cinema, digamos que é a licença de algum software enterprise … ou talvez algum hardware customizado.
+Será que existe alguma razão para considerar quanto foi pago pela licença ou hardware como tendo qualquer peso, por menor que seja, na decisão de qual é a melhor escolha arquitetural ou de projeto futuro?
+Bem, a menos que o sistema de gerenciamento em que você opera pune comportamento racional e recompensa comportamentos irracionais.
+Total bom senso. Economistas estão mais acostumados a estudar e catalogar comportamentos desse tipo. Recomendo ler sobre outros conceitos como o bom e velho Custo da Oportunidade. A Lei de Parkinson para mim é o corolário da Lei de Expansão dos Gases e que todo desenvolvedor (eu incluso) já sofreu.
+Ninguém pode acertar sempre, mas o exercício constante e diário de apenas pensar com lógica e ceticismo – em vez de andar sobre dogmas e preceitos – aumenta muito nossas chances. Talvez assim se assistirem Uma Mente Brilhante se lembrem um pouco mais do gênio por trás do Equilíbrio Nash do que apenas no melodrama.
+tags: off-topic management carreira
+

@@ -1,0 +1,10 @@
+
+
+
+
+Serviço de utilidade pública: tomem cuidado galera. Parece que meu livro “Repensando a Web com Rails” está sendo usado de pretexto para espalhar mais um viruszinho por e-mail, eu também recebi esse e-mail. Obviamente, como todo mundo já sabe, nunca baixe coisas de onde vocë não conhece, principalmente se estiver num Windows! Veja mais detalhes no post do Luis Carvalho
+Pelo que o Luis analisou, esse virus é fruto de alguém muito, muito, muito basicão. Altamente ingênuo, completamente mal feito, do tipo que não enganaria nem a minha avó (talvez a mãe dele). Literalmente fruto de um script-kid sem futuro, sem namorada, sem absolutamente nada de útil para fazer pois sua vida já não deve valer muita coisa mesmo, do tipo que devemos ridicularizar como passatempo de bar :-D
+Não é o “ponto fora da curva” é a “margem de erro” da população, que não deveria ter existido mas por um erro estatístico ainda está por aí. Anônimos como esse, por definição, devem ser ridicularizados porque são a definição do que é ser um galinha. Do tipo que se a gente fala um pouco mais alto, sai correndo chorar atrás da saia da mãezinha. – ah, agora me sinto melhor :-)
+Ah sim, existem dois motivos para alguém usar meu livro: para direcionar a comunidade Rails em específico (como se nós fôssemos ingênuos assim como ele), ou para tentar me provocar diretamente. Porém, do meu lado não cheira nem fede: como muitos de vocês sabem, eu não ganho nada pela venda desse livro. Foi um trabalho que fiz para ajudar a comunidade. Eu cedi os direitos autorais com o objetivo de baratear os custos ao leitor. Portanto, se o objetivo foi esse, o tiro saiu pela culatra.
+tags: obsolete my-book
+

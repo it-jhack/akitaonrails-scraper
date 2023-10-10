@@ -1,0 +1,220 @@
+
+Recentemente escrevi um artigo sobre como arrumei meu ambiente Ruby usando RVM. Desta vez quero falar sobre outros aplicativos open source como mysql, postgresql e mais.
+Infelizmente, um dos grandes pontos fracos do Mac é a ausência de uma ferramenta oficial e robusta de gerenciamento de pacotes para software open source, algo como o Yum (Fedora, CentOS) ou Apt (Debian, Ubuntu). No mundo Mac temos duas ferramentas mais conhecidas, o Fink e o Macports. O Fink é baseado no Apt e pacotes Deb, é o que tem a maior quantidade de pacotes (mais de 10k), mas na minha experiência ele costuma não ter pacotes atualizados com muita frequência. O Macports é meio semi-oficial e é inspirado no Ports do BSD, tem menos pacotes mas os principais parecem mais atualizados.
+O Fink instala seus pacotes normalmente no diretório /sw e o Macports no /opt/local. Uma coisa irritante sobre eles é que, como não são oficiais, eles criam um ambiente completamente separado. E o gerenciamento de dependência deles significa que, por exemplo, se um pacote depende do Python, ele não vai usar o Python já pré-instalado no sistema, mas vai instalar uma nova versão no diretório separado. Na maior parte do tempo eles até funcionam razoavelmente bem, até que alguma coisa começa a falhar e aí é um pesadelo. O Macports é o mais chato porque ele compila tudo a partir do código-fonte, incluindo todas as dependências, incluindo recompilar software que já existe no seu Mac.
+No caso do MacPorts, ele compila tudo a partir do código-fonte, incluindo diversas dependências que você já tem instalado no Mac. Portanto ele gasta muito tempo duplicando as coisas. Softwares como ImageMagick e Git demoram bastante tempo para instalar. Para atualizar pacotes então, sempre é uma caixa de surpresas.
+
+
+Homebrew
+Entra o Homebrew, uma nova ferramenta de instalação de software open source. Não é um gerenciador de pacotes, ele basicamente é uma automatização da boa e velha forma de baixar um tar.gz, rodar ./configure; make; make install.
+Parecido com o Macports, ele também baixa o código-fonte e compila tudo, porém ele tenta ser mais esperto. Para começar ele não tenta re-instalar coisas que seu Mac já tem, portanto sua gerência de dependências é bem mais simples.
+O arquivo README do projeto é completo o suficiente para te guiar, mas vou copiar algumas partes importantes. Para instalar é muito simples. Ele prefere que você use o próprio diretório /use/local que é onde um Unix POSIX espera que você instale. Uma coisa meio controversa é mudar as permissões desse diretório para seu usuário:
+1
+
+sudo chown -R `whoami` /usr/local
+
+
+Se você já tinha instalado o MySQL ou outro software manualmente via um instalador, faça:
+1
+
+sudo chown -R mysql:mysql /usr/local/mysql
+
+
+Agora instale o Homebrew assim:
+1
+
+curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C /usr/local
+
+
+Como disse antes, o Homebrew não tem “pacotes”, ele tem “Formulas”, que nada mais são do que simples scripts em Ruby dizendo de onde baixar o código fonte, quais opções de compilação usar e assim por diante.
+Como tudo é compilado, garanta que você tem o XCode instalado.
+Pronto, agora basta instalar os softwares que quer, por exemplo faça:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+brew install mysql
+brew install git
+brew install wget
+brew install mongodb
+brew install httperf
+brew install redis
+brew install riak
+brew install imagemagick
+brew install beanstalk
+brew install ctags
+brew install ghostscript
+
+
+Para saber quais fórmulas você já instalou na sua máquina, faça:
+1
+
+brew list
+
+
+Para saber quais fórmular estão disponíveis para instalar, faça:
+1
+
+brew search
+
+
+Uma instalação costuma acontecer mais ou menos assim:
+1
+2
+3
+4
+5
+6
+7
+8
+
+$ brew install freeimage
+==> Downloading https://downloads.sourceforge.net/project/freeimage/Source%20Distribution/3
+######################################################################## 100.0%
+==> Patching
+patching file Makefile.gnu
+==> gnumake -f Makefile.gnu
+==> gnumake -f Makefile.gnu install PREFIX=/usr/local/Cellar/freeimage/3130
+/usr/local/Cellar/freeimage/3130: 3 files, 8.2M, built in 79 seconds
+
+
+Note o diretório /usr/local/Cellar/freeimage/3130. Toda fórmula vai tentar instalar no diretório /usr/local/Cellar/[seu software]/[versao]. Então ele criará symbolic links em diretórios como /usr/bin, /usr/sbin, /usr/lib e assim por diante para que tudo funcione. Desta forma é fácil instalar uma nova versão em um novo sub-diretório e apenas refazer os symlinks. E isso também torna fácil apagar tudo se você quiser, basta fazer:
+1
+2
+3
+4
+
+cd /usr/local
+rm -rf Cellar
+brew prune
+rm -rf Library .git .gitignore bin/brew README.md
+
+
+Obs: A fórmula do Postgresql tem alguns bugs ainda não resolvidos na versão atual. Uma coisa que funcionou para mim foi editar o arquivo /usr/local/Library/Formulas/postgresql.rb e retirar a linha que tem —with-python, que é o causador dos problemas.
+Novas Fórmulas
+Diferente do Fink e Macports, o Homebrew não tem mais que algumas dúzias de fórmulas prontas. Para atualizar as definições de fórmulas faça:
+1
+
+brew update
+
+
+As fórmulas costumam ficar em /usr/local/Library/Formulas. Vamos criar uma nova fórmula para um software que ainda não tem uma definição. Normalmente você esbarra num post de blog com alguma instrução para instalar a partir do código fonte, algo no formato:
+1
+2
+3
+4
+5
+6
+
+wget https://.../foo.tar.gz
+tar xvfz foo.tar.gz
+cd foo
+./configure
+make
+sudo make install
+
+
+O que você fará é:
+1
+
+brew create https://.../foo.tar.gz
+
+
+Ele criará uma nova fórmula diretamente em /usr/local/Library/Formulas e vai abrir num editor de textos para você continuar a configurar o script. Por exemplo, digamos que queremos uma nova fórmula para instalar o Libiconv. A primeira coisa que vou fazer é baixar o código fonte e gerar o hash MD5 dele:
+1
+2
+3
+
+$ curl -O https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz
+$ md5 libiconv-1.13.1.tar.gz 
+MD5 (libiconv-1.13.1.tar.gz) = 7ab33ebd26687c744a37264a330bbe9a
+
+
+Agora, vamos gerar a Fórmula:
+1
+
+brew create https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz
+
+
+Ele vai gerar algo assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+require 'formula'
+
+class Libiconv <Formula
+  url 'https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz'
+  homepage ''
+  md5 ''
+
+# depends_on 'cmake'
+
+  def install
+    system "./configure", "--prefix=#{prefix}", "--disable-debug", "--disable-dependency-tracking"
+#   system "cmake . #{std_cmake_parameters}"
+    system "make install"
+  end
+end
+
+
+Agora preenchemos o campo ‘homepage’ com a URL do projeto, o campo ‘md5’ com o hash que geramos mais acima. Se existir outras fórmulas de que este software dependa, declaramos usando depends_on e no método install colocamos a rotina de instalação. O Homebrew já me dá algumas variáveis padrão como o prefix que já me dá o local correto de instalação. Agora, editamos este arquivo para ficar assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+require 'formula'
+
+class Libiconv <Formula
+  url 'https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz'
+  homepage 'https://www.gnu.org/software/libiconv/'
+  md5 '7ab33ebd26687c744a37264a330bbe9a'
+
+  def install
+    system "./configure", "--prefix=#{prefix}"
+    system "make"
+    system "make install"
+  end
+end
+
+
+Pronto, agora você por instalar esse pacote normalmente:
+1
+
+brew install libiconv
+
+
+Mais avançado do que isso, às vezes os softwares não foram preparados para instalar no Mac OS X e talvez seja preciso alterar seus arquivos antes de compilar. Para isso é necessário criar Patches e aplicá-los. Veja fórmulas como o /usr/local/Library/Formulas/xar.rb para entender como aplicar patches.
+Leia com atenção o arquivo README e também navegue pelas fórmulas em Library/Formulas para aprender como gerar suas próprias fórmulas. Faça um fork do projeto original no Github e comece a contribuir com novas fórmulas.
+tags: obsolete ruby
+

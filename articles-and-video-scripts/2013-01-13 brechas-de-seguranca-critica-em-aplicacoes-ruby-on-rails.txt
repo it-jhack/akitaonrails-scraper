@@ -1,0 +1,251 @@
+
+Atualização 30/01: Em sequência às brecha que publiquei anteriormente tivemos mais uma sequência, novamente envolvendo parsers, desta vez foi com o parser JSON padrão usado no Rails. A brecha foi identificada como CVE-2013-0333 e afeta as versões de Rails 2.3.x, 3.0.x mas felizmente não afeta as versões 3.1.x, 3.2.x ou se seu parser JSON for o yajl. De qualquer forma, se não puder atualizar a versão da gem do Rails, crie um arquivo como config/initializers/json_parser_replacement.rb e coloque este conteúdo:
+
+1
+
+ActiveSupport::JSON.backend = "JSONGem"
+
+
+Se estiver usando Ruby 1.8 lembre de instalar a gem 'json' ou a 'json_pure' e reinicie a aplicação. Esta brecha de segurança é altamente crítica, para se ter uma idéia, hoje (30/01) o site Rubygems.org, o repositório canônico de todas as gems que usamos foi comprometido por esta brecha. Eles estão auditando todas as gems para saber se alguma foi comprometida:
+TL;DR - Halt your deploys until give an all clear on @rubygems_status. We're double-checking all gems to ensure they have not been tampered.— Nick Quaranto (@qrush) January 30, 2013
+
+O Nick Quaranto e diversos voluntários que se reuniram via IRC no canal #rubygems e outros sub-canais fizeram uma grande intervenção e aproveitaram para modernizar a infraestrutura toda do rubygems.org, movendo dos servidores da Rackspace - possivelmente, embora improvavelmente, vítima de rootkit - para AWS, automatizando tudo com Chef. Acompanhem todo o histórico aqui.
+Esta semana (13/01) tivemos as maiores brechas de segurança da história do Ruby on Rails. Elas foram classificadas com os codinomes CVE-2013-0156 e CVE-2013-0155. Antes de ir mais longe, se você é responsável por uma aplicação Rails em produção e não sabia disso não perca tempo e faça o seguinte imediatamente:
+Crie um arquivo config/initializers/disable_parsers.rb com o conteúdo:
+Para aplicações Rails versões 3.2, 3.1, 3.0:
+
+1
+2
+3
+
+ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML) 
+ActiveSupport::XmlMini::PARSING.delete("symbol") 
+ActiveSupport::XmlMini::PARSING.delete("yaml")
+
+
+Para aplicações Rails versões 2.3:
+
+1
+2
+3
+
+ActionController::Base.param_parsers.delete(Mime::XML) 
+ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING.delete('symbol') 
+ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING.delete('yaml')
+
+
+Agora cheque seu arquivo Gemfile.lock, se encontrar a gem multi_xml em versão abaixo da 0.5.2 modifique seu arquivo Gemfile para ter a linha:
+
+1
+
+gem "multi_xml", "0.5.2"
+
+
+Execute bundle update multi_xml e recheque seu Gemfile.lock para ter certeza que ela tem somente esta versão. Caso alguma outra gem dependa exclusivamente de uma versão menor do que essa leia este Gist e crie o arquivo initializer que ele sugere para colocar na sua aplicação. Normalmente você não procura por essa gem explicitamente, mas se você usa o HttpParty, então ela virá como dependência.
+Não estou brincando, é sério: atualize imediatamente!!
+
+
+
+Entendendo a brecha de segurança
+Agora que você já atualizou suas aplicações e está em segurança, vamos entender mais sobre esse assunto.
+Em todos os casos o problema real não é no framework Ruby on Rails, mas sim nos parsers de XML (XmlMini) e YAML (Psych) e a forma como elas são utilizadas. O framework Rails, por causa de suas características de responder a rotas "REST" significa que ela aceita e produz estruturas serializadas em XML e YAML para servir como endpoints de APIs. É uma prática muito comum hoje em dia.
+Em particular, o parsing de XML vem habilitado por padrão (eis uma das brechas) e o parsing YAML é opcional (mas é possível embutir um objeto YAML dentro de um pacote XML e ter as duas desserializadas!). Para quem não sabe o que isso significa vamos dar um exemplo simples. Se abrirmos o rails console podemos fazer o seguinte:
+
+1
+2
+3
+4
+5
+
+:001 > { a: 1, b: "foo", c: true }.to_xml
+ => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <a type=\"integer\">1</a>\n  <b>foo</b>\n  <c type=\"boolean\">true</c>\n</hash>\n" 
+
+:002 > { a: 1, b: "foo", c: true }.to_yaml
+ => "---\n:a: 1\n:b: foo\n:c: true\n"
+
+
+Tecnicamente, isso é o processo que chamamos de "Marshalling", ou seja, transformar um objeto num formato string. Podemos gravar esses strings num arquivo (vide arquivos como config/database.yml), trafegar pela rede, ou persistir num banco de dados. A intenção é "congelar" o estado de um objeto num formato persistente, de tal forma que podemos desligar a máquina virtual e ao religá-la, podemos recuperar o estado do objeto no processo chamado de "Unmarshall":
+
+1
+2
+3
+4
+5
+
+:003 > Hash.from_xml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <a type=\"integer\">1</a>\n  <b>foo</b>\n  <c type=\"boolean\">true</c>\n</hash>\n")
+ => {"hash"=>{"a"=>1, "b"=>"foo", "c"=>true}} 
+
+:004 > YAML.load("---\n:a: 1\n:b: foo\n:c: true\n")
+ => {:a=>1, :b=>"foo", :c=>true}
+
+
+No exemplo acima estamos fazendo exatamente isso: unmarshall ou desserialização. É assim que podemos trafegar estruturas complexas, é assim que endpoints de APIs podem trocar informações.
+O problema é que formatos "ricos" como YAML permitem que quase qualquer coisa seja representada em formato texto e recuperada depois. Inclusive formatos binários e código executável (!) E é assim que nasce o problema.
+Como programadores, para variar, nós assumimos só o caso mais simples e mais direto: que as aplicações vão receber estrutura que contém tipos simples como números, strings, arrays com primitivas simples, do tipo que você encontrar num config/database.yml. Porém sabemos que existe uma relação inversa entre flexibilidade e facilidade com segurança. Quanto mais flexível for alguma coisa, menor será sua segurança.
+Adaptando um trecho do excelente artigo Rails' Remote Code Execution Vulnerability Explained temos este código:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+code  = "puts 'pwned'; exit 1"
+
+# Construct a YAML payload wrapped in XML
+payload = <<-PAYLOAD
+<fail type="yaml">
+        --- !ruby/object:ERB
+          template:
+            src: !binary |-
+              #{Base64.encode64(code)}
+</fail>
+PAYLOAD
+
+
+E esse código gera este YAML:
+
+1
+2
+3
+4
+5
+6
+
+<fail type="yaml">
+        --- !ruby/object:ERB
+          template:
+            src: !binary |-
+              cHV0cyAncHduZWQnOyBleGl0IDE=
+</fail>
+
+
+Estão entendendo? É possível passar código arbitrário serializado num string YAML. E é possível também embutir esse YAML dentro de um XML e o parser XML irá desserializar ambos.
+E isso não se trata de somente um SQL Injection. Sequer precisamos de um banco de dados. Os exploits que já estão à solta vão dar acesso a shell, à linha de comando, onde você pode executar qualquer coisa e tomar a máquina, incluindo tudo que estiver dentro dela, incluindo banco de dados, código-fonte, senhas e o que mais tiver nela. Por isso é crítico!
+Tudo isso não é tecnicamente um "bug", no sentido de um código tecnicamente quebrado. Ele é de fato um "bug de segurança", no sentido de permitir qualquer tipo de código de passar por ele sem uma checagem mais rígida. Porém nós programadores sempre pensamos no caminho mais curto primeiro e acabamos esquecendo de checagens como essa. Precisamos ser mais cuidadosos.
+Agora vem o problema: os programadores no Ruby on Rails também não sabiam disso e usaram os parsers "assumindo" que eles cuidavam disso (e por consequência nós também assumimos que estava tudo seguro). E aqui vem outra dica: muito cuidado com o que você confia. É impossível saber tudo, mas esse é um ponto importante porque estamos assumindo que o usuário irá passar um conteúdo a nossa aplicação, estamos delegando essa informação a uma biblioteca de terceiros, e estamos assumindo que essa biblioteca vai "saber o que fazer".
+Porém é questionável porque era permitido embutir um YAML dentro de um XML. Não sei de onde isso veio e qual foi a motivação, mas pelo menos estamos retirando essa anormalidade, como bem explica o artigo da Revision Zero.
+Sabendo essa única informação: o parser YAML permite desserializar objetos binários, que inclui código possivelmente executável, ainda não é tudo. Agora precisamos analizar o framework Ruby on Rails e ver se em algum momento ele permite executar esse código que pode vir no YAML. E de fato ele executa, e com isso temos uma porta escancarada.
+Exemplo do exploit você pode encontrar no excelente framework de testes de penetração Metasploit. Aliás, recomendo utilizar esse framework daqui pra frente em todas as suas aplicações para garantir que pelo menos as brechas já conhecidas sejam detectadas antes de você colocar sua aplicação em produção.
+Protocolo de Segurança
+Eu não sou um especialista em segurança, mas existem certas coisas que deveriam ser óbvias mas nem todos entendem.
+Primeiro, assinem a lista de segurança dos frameworks principais que você utiliza. Em particular para nós, assine a lista Ruby on Rails: Security e acompanhe o site RoR Security. Não precisa ser paranóico, não é toda brecha de segurança que é crítica.
+Assine também blogs como do próprio Metasploit. Quando você ler frases como:
+"... this is more than likely the worst security issue that the Rails platform has seen to date."
+Isso significa nível de criticidade altíssima, prioridade zero, alerta vermelho, acordar de madrugada e fazer a atualização imediatamente!!
+Foi exatamente o que eu fiz no momento em que li essa notícia (e já atrasado 4 horas desde o anúncio). Imediatamente o protocolo foi enviar emails para meus ex-clientes (porque eu não tenho mais acesso ao ambiente deles), atualizar todos os projetos em andamento na minha empresa, realizar o deployment de todas as aplicações que estavam instalados em produção.
+Isso é necessário porque estamos tentando evitar um Zero Day Attack. Esse problema estava ativo em todas as aplicações Ruby on Rails feitas nos últimos 4 anos pelo menos, era uma vulnerabilidade desconhecida publicamente, o que não significa que alguém já não sabia e já não estava explorando esse buraco.
+Quando um pesquisador sério descobre uma vulnerabilidade, ele não twita, ele não publica no Facebook, nem faz barulho no HackerNews. A ética diz que ele deve enviar aos canais oficiais de segurança (eu entendo que o melhor é avisar alguém do Rails Core diretamente, em privado). A partir do aviso privado, os responsáveis do canal devem tratar isso como prioridade absoluta porque tirando uma cortesia, o autor da descoberta não precisa esperar para publicar sobre a vulnerabilidade.
+Foi o problema recente da vulnerabilidade no sandbox de Applets do Java onde a vulnerabilidade não foi tratada como deveria.
+Em algum "momento", a vulnerabilidade é exposta em público, seja pelo próprio canal de segurança oficial (quando o Aaron publicou a descrição da vulnerabilidade e como consertá-la), ou seja por alguém que "vaza" a informação e ela se torna disponível.
+A partir de agora ela é Zero Day ou Zero Hour, enfim, a partir de agora você, suas aplicações, seus clientes estão todos expostos. Sua casa está sempre com a porta trancada, mas você sempre esquece a janela dos fundos aberta, mas ninguém sabe disso. A partir do momento em que essa informação vai a público, alguém pode ou não tirar proveito dela. Se você tiver senso de criticidade, vai largar tudo que está fazendo e ir correndo para trancá-la a tempo, certo?
+Não tente corrigir um problema e criar dois
+Seguindo a mesma metáfora, não adianta nada agora você pegar seu carro e sair acelerando e passando por todos os faróis vermelhos. Afinal sua casa vai continuar aberta e escancarada se por acaso você sofrer um acidente no meio do caminho. Agora você tem dois problemas.
+No caso do CVE-2013-0156 é o que poderia ter acontecido. Se você ler superficialmente vai ver que basta atualizar sua aplicação para as versões 3.2.11, 3.1.10, 3.0.19, 2.3.15.
+Excelente, basta atualizar seu Gemfile, executar bundle update rails e tudo está consertado. Errado.
+Por exemplo, se sua aplicação estava no Rails 3.2.10 e tivesse um código parecido com o abaixo, ela vai quebrar no 3.2.11:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+    $.ajax('/home/index', {
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({ post: { comments_attributes: [] }}),
+        error: function(response, status, jqxhr) { $("#response").html(response.responseText); },
+        success: function(response, status, jqxhr) { $("#response").html("Request successful"); }
+    });
+});
+
+
+Isso é um bug de regressão. Uma forma de corrigir é com este código (de acordo com este Gist):
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+class ApplicationController < ActionController::Base
+  before_filter :merge_json_params
+ 
+private
+ 
+  def merge_json_params
+    if request.format.json?
+      body = request.body.read
+      request.body.rewind
+      params.merge!(ActiveSupport::JSON.decode(body)) unless body == ""
+    end
+  end
+  
+end
+
+
+E não só esse, se você estava numa versão abaixo da 3.2.8 e resolveu atualizar direto pra 3.2.11 vai esbarrar com este outro bug. Leia mais sobre esse bug aqui. O que acontece é o seguinte, até a versão 3.2.8 esse código funciona:
+
+1
+2
+3
+4
+5
+6
+
+# 3.2.8
+p = Post.new
+p.category_id = [ 1, 2 ]
+p.category_id # => 1
+p.category_id = { 3 => 4 }
+p.category_id # => 1
+
+
+A partir da versão 3.2.9 ela vai soltar uma exceção NoMethodError:
+
+1
+2
+3
+4
+5
+
+# 3.2.9
+p = Post.new
+p.category_id = [ 1, 2 ]
+
+NoMethodError: undefined method `to_i' for [1, 2]:Array
+
+
+O recado é óbvio: nunca atualize para versões mais novas de gems cegamente. Então o que devemos fazer?
+EXECUTE SUA SUÍTE DE TESTES!!
+É a única forma de checar com algum nível de segurança que sua pressa em corrigir o buraco de segurança não vai causar mais problemas ainda. Isso obviamente depende da qualidade dos seus testes.
+Na dúvida, se nada estiver funcionando, no caso de um bug de criticidade altíssima como essa: desligue sua aplicação do ar. É melhor do que continuar exposto à vulnerabilidade e melhor do que introduzir bugs sérios que podem corromper os dados dos seus clientes. Suba uma página estática de manutenção, avise seus clientes, faça uma janela de manutenção. Só não se mantenha exposto.
+Quando eu comecei o processo de atualizar as aplicações da minha empresa eu tomava o cuidado de, no mínimo, atualizar as gems, depois rodar todas as specs e só depois fazer o deployment em produção. Em dois casos eu caí nos bugs acima. O fallback foi usar o que escrevi no começo do artigo: criar o initializer para desativar manualmente os parsings.
+O problema é que se você estava numa versão antiga como 3.2.6, existiram 5 versões a seguir adicionando novas funcionalidades. E novas funcionalidades são um pesadelo: significa instabilidade, código novo não testado.
+Sem testes é impossível saber se sua aplicação vai continuar funcionando ao atualizar qualquer uma das suas gems ou adicionar código novo. É uma bomba relógio esperando para estourar e em episódios raros de emergências críticas como essa é exatamente como morar num apartamento sem extintores de incêndio.
+"Ora, nunca vai pegar fogo aqui."
+Só que no raro dia em que isso acontecer, você vai pagar pela negligência.
+
+tags: obsolete rails
+

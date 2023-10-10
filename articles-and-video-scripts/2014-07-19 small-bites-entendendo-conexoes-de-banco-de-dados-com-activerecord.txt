@@ -1,0 +1,249 @@
+
+Neste small bite, começo repetindo a mesma coisa que os seguintes posts do próprio Heroku já explicam:
+
+Concurrency and Database Connections in Ruby with ActiveRecord
+Correctly Establishing Postgres Connections in Forked Environments
+
+Sugiro que vocês leiam os dois artigos acima com atenção, para aprender coisas como calcular quantidade de conexões que sua aplicação vai precisar, monitorar quantidade de conexões e muito mais. Em resumão, em todo projeto Rails, na dúvida, garanta que você tem o seguinte:
+
+
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+# crie o arquivo: config/initializers/database_connection.rb
+Rails.application.config.after_initialize do
+  ActiveRecord::Base.connection_pool.disconnect!
+
+  ActiveSupport.on_load(:active_record) do
+    config = ActiveRecord::Base.configurations[Rails.env] ||
+                Rails.application.config.database_configuration[Rails.env]
+    config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
+    config['pool']              = ENV['DB_POOL']      || ENV['MAX_THREADS'] || 5
+    ActiveRecord::Base.establish_connection(config)
+  end
+end
+
+
+Se estiver usando Unicorn:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+# crie arquivo: config/unicorn.rb
+before_fork do |server, worker|
+  # other settings
+  Signal.trap 'TERM' do
+    puts 'Unicorn master intercepting TERM and sending myself QUIT instead'
+    Process.kill 'QUIT', Process.pid
+  end
+
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.connection.disconnect!
+  end
+end
+
+after_fork do |server, worker|
+  # other settings
+  Signal.trap 'TERM' do
+    puts 'Unicorn worker intercepting TERM and doing nothing. Wait for master to sent QUIT'
+  end
+
+  if defined?(ActiveRecord::Base)
+    config = ActiveRecord::Base.configurations[Rails.env] ||
+                Rails.application.config.database_configuration[Rails.env]
+    config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
+    config['pool']            =   ENV['DB_POOL'] || 2
+    ActiveRecord::Base.establish_connection(config)
+  end
+end
+
+
+Se estiver usando Sidekiq:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+# crie arquivo: config/initializers/sidekiq.rb
+Sidekiq.configure_server do |config|
+  database_url = ENV['DATABASE_URL']
+  if defined?(ActiveRecord::Base)
+    config = ActiveRecord::Base.configurations[Rails.env] ||
+                Rails.application.config.database_configuration[Rails.env]
+    config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
+    config['pool']            =   ENV['DB_POOL'] || 2
+    ActiveRecord::Base.establish_connection(config)
+  end
+end
+
+
+Além do que tem nos artigos do Heroku (você já leu tudo, certo!?) vale entender alguns conceitos que muitos - principalmente iniciantes - podem achar estranhos.
+Ruby suporta multithread e o framework web Rails (a partir da versão 4) vem por default ligado para ser thread-safe.
+O que é um Connection Pool? A grosso modo, o conceito é que abrir e fechar conexões direto no banco de dados é uma operação "custosa" para se fazer o tempo todo, a cada query de cada requisição. Em vez disso, você deixa aberto um certo número num "pool" e recicla de lá. Em vez de "fechar" a conexão, devolve para o pool para que outra requisição possa reusar a mesma conexão. É um cache de conexões. Para quem vem do mundo Java, sabendo Hibernate, é o mesmo caso de se usar um C3P0, DBCP, BoneCP e outros.
+Tecnicamente, um único processo Ruby, rodando com Unicorn, precisa de 1 única conexão ao banco. O Pool é por processo. Com um servidor como Puma, que suporta threads, então cada 1 processo Ruby pode precisar de mais de uma conexão de banco e aí precisamos de um pool para minimizar a quantidade de conexões abertas. Isso é importante porque quanto mais conexões abertas no servidor, pior - e usando serviços pagos como Heroku Posgresql, cada plano tem um número limite de conexões. O mesmo vale pra workers de Sidekiq, daí a configuração acima.
+Quanto falamos em "throughput" web falamos de "quantidade de requisições por X" onde "X" é uma quantidade de tempo. Muitos ainda confundem "requisições por segundo" com "requisições simultâneas" e "usuários simultâneos". Usuários simultâneos fazem diversas requisições, mas elas não são todas simultâneas, cuidado com isso. Se uma requisição custa 300ms, então é possível fazer 3 requisições por segundo. Antes de cair numa fila, se temos 30 requisições por segundo, onde cada processo responde uma requisição a cada 300ms, precisamos uma capacidade teórica máxima de 10 processos. Obviamente, cada requisição tem tempos diferentes, mas isso é para dar uma idéia de ordem de grandeza.
+10 processos trabalhando simultaneamente, significam pelo menos 10 conexões abertas no banco de dados. Na configuração do Unicorn, limitamos quantos "unicorn workers" podem existir. Cada um deles é um fork a partir do unicorn master. Por isso o código acima tem eventos de before_fork e after_fork, porque ao fazer um fork os recursos de I/O precisam ser reinicializados, arquivos abertos, sockets.
+No caso de Puma, um mesmo processo pode executar requisições simultaneamente, concorrentemente, e cada thread precisa de sua própria conexão ao banco, daí voltamos ao pool de conexões. O Sidekiq também usa threads e precisa de um pool, novamente, daí o código acima configurando o tamanho do pool. Se estiver usando Puma, talvez seja necessário criar a seguinte configuração no arquivo config/initializers/database_connection.rb, em vez da que mostrei no começo:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+
+module Platform
+  module Database
+    def connect(size=35)
+      config = Rails.application.config.database_configuration[Rails.env]
+      config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
+      config['pool']              = ENV['DB_POOL']      || size
+      ActiveRecord::Base.establish_connection(config)
+    end
+
+    def disconnect
+      ActiveRecord::Base.connection_pool.disconnect!
+    end
+
+    def reconnect(size)
+      disconnect
+      connect(size)
+    end
+
+    module_function :disconnect, :connect, :reconnect
+  end
+end
+
+Rails.application.config.after_initialize do
+  Platform::Database.disconnect
+
+  ActiveSupport.on_load(:active_record) do
+    if Puma.respond_to?(:cli_config)
+      size = Puma.cli_config.options.fetch(:max_threads)
+      Platform::Database.reconnect(size)
+    else
+      Platform::Database.connect
+    end
+
+    Sidekiq.configure_server do |config|
+      size = Sidekiq.options[:concurrency]
+      Platform::Database.reconnect(size)
+    end
+  end
+end
+
+
+Fonte: Setting ActiveRecord's connection pool size on Heroku with Puma or Sidekiq
+No caso de uma aplicação Rails, a cada requisição o "correto" é abrir uma conexão e fechar ao terminar, e não deixar uma conexão aberta indefinidamente. No caso, pedir ao pool e devolver ao pool o quanto antes. Quem é de Java vai se lembrar que isso é o pattern de session-per-request ou a implementação do filtro OpenSessionInViewFilter do Hibernate. Demorou um pouco, mas o mundo Rails finalmente fez a mesma implementação como um Rack Middleware (que funciona como um Servlet Filter) chamado ConnectionManagement e cuja idéia o grande @tenderlove explica em seu post Connection Management in ActiveRecord.
+Finalmente, se você está trabalhando numa aplicação que tem literalmente, dezenas de dynos, precisando de potencialmente centenas de conexões simultâneas (estamos falando de aplicações transacionais - que não serve só conteúdo estático em cache), talvez seja necessário ir um passo além - explicado no artigo do Heroku linkado acima - usando PgBouncer, que serve para criar uma connection pool no nível do Postgresql. Em vez de controlar pool de conexões na camada de aplicação, fazemos a aplicação pedir conexões normalmente ao banco, mas o PgBouncer intercepta isso e controla o pool geral com o Posgresql por baixo.
+No Heroku, cada Dyno é configurado através de um buildpack, mas uma coisa que nem todos exploram é que é possível executar múltiplos buildpacks por dyno. Por exemplo, um buildpack de Ruby e de Node. Para isso existe o buildpack-multi que você configura assim:
+
+1
+
+heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+
+
+Agora você pode declarar um arquivo .buildpack no seu projeto onde lista quais buildpacks quer executar:
+
+1
+2
+3
+
+# .buildpack
+https://github.com/gregburek/heroku-buildpack-pgbouncer.git#v0.2.2
+https://github.com/heroku/heroku-buildpack-ruby.git
+
+
+E finalmente modifique o arquivo Procfile para que o Puma use o PgBouncer:
+
+1
+2
+
+# Procfile
+web: bin/start-pgbouncer-stunnel bundle exec puma -C config/puma.rb
+
+
+Agora temos uma aplicação que rodando com Puma (poderia ser Unicorn na frente, leia a documentação do buildpack-pgbouncer, mas Puma em particular demanda mais conexões, por isso o exemplo com ele) na frente de um pool geral na frente do Postgresql. Cuidado: Puma suporta aplicações feitas pra serem thread-safe mas rodar qualquer aplicação sobre Puma não garante que suas requisições serão executadas concorrentemente. Porém, se estiver usando JRuby, Puma definitivamente é a melhor alternativa para aumentar a concorrência por processo.
+Esse small bite não tem a intenção de ser um recurso completo sobre conexões de banco de dados, apenas arranhamos a superfície do que existe mas isso deve servir pra dar uma visão geral sobre alguns conceitos que não são apresentadas de maneira muito simples para quem está iniciando. Se tiverem mais assuntos complementares a estes, não deixem de comentar abaixo!
+
+tags: obsolete rails heroku
+

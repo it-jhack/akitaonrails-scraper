@@ -1,0 +1,19 @@
+
+Segundo pesquisa internacional recente do instituto Evans Data, que entrevistou 400 desenvolvedores, Ruby já é utilizado por mais de 15% de programadores brasileiro e cerca de 33% tem intenção de adotá-la até 2008.
+Dentre os países emergentes ainda estamos atrás da China, com 20% de utilização. Mas se essa tendência de crescimento se concretizar, até 2008 teremos proporcionalmente mais Rubystas até do que a China.
+O CEO da Evans Data, John Andrews, demonstra otimismo ao crescimento de Ruby no futuro. Pelo visto nossos esforços de vanguarda estão surtindo efeito e, em breve, poderemos finalmente responder àquela famigerada pergunta: “mas ninguém usa Ruby no Brasil”. Bom, agora, oficialmente, usamos!
+Parabéns a todos os early-adopters brasileiros!
+
+
+Fontes:
+
+Evans Data (registration required)
+CGIDir
+Tekrati
+IDG Now!
+ComputerWorld
+Nabble
+IT Web
+
+tags: obsolete pitch
+

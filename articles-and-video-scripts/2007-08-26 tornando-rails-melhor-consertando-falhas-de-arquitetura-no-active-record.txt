@@ -1,0 +1,130 @@
+
+Qualquer pessoa que já tenha se aventurado a escrever plugins ou simplesmente tentado extender Active Record para algum uso particular em um projeto já se deparou com algumas ‘esquisitices’ em sua arquitetura. Não há dúvida de que Active Record é um excelente framework.
+Criticá-lo não significa dizer que ele não presta, mas certamente alguns ‘ajustes’ seriam bem vindos. Este artigo de Charlie Sun em seu blog cfis mostra alguns dos pontos que eu também encontrei e falei no artigo sobre SQLite esta semana.
+Admitir erros não é um sinal de fraqueza, muito pelo contrário: é a única forma de atingir um estágio mais elevado de evolução. Active Record como um todo é uma excelente idéia, os desafios que ele enfrenta são bem conhecidos, mas ainda não existe uma única receita genérica adequada a todos os problemas. Diferentes nichos desejarão diferentes peculiaridades. Não é possível atender gregos e troianos, mas deixar a fundação levemente mais extensível já seria um grande passo.
+Segue a tradução:
+
+
+ActiveRecord é uma coisa engraçada. Por fora ele parece excelente – ele ordenadamente mapeia dados relacionais a objetos Ruby e nos dá uma API de fácil utilização através de seu domain specific language (DSL). Mas do lado de dentro, ele contém duas surpreendentes falhas de arquitetura que tornam difícil extender e negativamente impactam a performance.
+O Vietnam da Ciência da Computação
+Mapear objetos a dados relacionais acaba sendo bem complicado. Existem tantos sistemas falhos de mapeamento objeto-relacional que toda a área tem sido chamada de Vietnam da Ciência da Computação. O problema é que objetos e tabelas não mapeiam de maneira limpa entre si, e quanto mais se tentar automatizar o processo mais complexo seu código se torna, e cedo ou tarde seu sistema se torna difícil e lento de usar.
+A aproximação que eu acho que funciona melhor, e que Active Record segue, é manter as coisas relativamente simples. Um registro em uma tabela mapeia a um objeto, e qualquer tabela relacionada é mapeada a associações que contém um ou mais objetos (dependendo da relação se é uma-para-um ou um-para-muitos). E é isso, qualquer coisa além disso arrisca decair na lama de mapeamentos objeto-relacionais que falharam.
+Active Record tem pontos bônus porque ele torna simples definir tais mapeamentos atravéis de seu Domain Specific Language – os métodos familiares #has_one, #has_many, etc.
+Tropeçando em Colunas
+Mas por dentro de seu exterior, Active Record tem algumas falhas de arquitetura na maneira como lida com colunas (atributos).
+O primeiro problema é que Active Record tropeça na sua implementação de colunas. Ler e escrever dados de um banco de dados requer converter os dados da sua representação textual (dado pela API de cliente do banco de dados) para e de objetos Ruby. Vamos ver como Rails faz isso para Postgresql:
+Uma rápida olhada em alguns códigos mostra o problema:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+
+def translate_field_type(field_type)
+  case field_type
+    when /\[\]$/i  then 'string'
+    when /^timestamp/i    then 'datetime'
+    when /^real|^money/i  then 'float'
+    when /^interval/i     then 'string'
+    when /^(?:point|lseg|box|"?path"?|polygon|circle)/i  then 'string'
+    when /^bytea/i        then 'binary'
+    else field_type       # Pass through standard types.
+  end
+end
+
+def default_value(value)
+  # Boolean types
+  return "t" if value =~ /true/i
+  return "f" if value =~ /false/i
+
+  # Char/String/Bytea type values
+  return $1 if value =~ /^'(.*)'::(bpchar|text|character varying|bytea)$/
+
+  # Numeric values
+  return value if value =~ /^-?[0-9]+(\.[0-9]*)?/
+
+  # Fixed dates / times
+  return $1 if value =~ /^'(.+)'::(date|timestamp)/
+
+  # Anything else is blank, some user type, or some function
+  # and we can't know the value of that, so return nil.
+  return nil
+end
+
+
+
+Ter trechos de case muito grandes em linguagens orientadas-a-objeto é um claro sinal de que seu design está falho. O problema fundamental é que a implementação acima não é extensível – você não consegue facilmente adicionar seus próprios tipos de coluna.
+Você poderia argumentar que extensibilidade não era um objetivo do design do Active Record, mas isso seria tolo. Mesmo que você concordasse que Active Record deveria apenas suportar alguns tipos de dados limitados (o que eu não acho) ainda existem diferenças suficientes entre bancos de dados que o fato de ter um sistema extensível limparia a parte interna do Active Record e livraria de um monte do código grosseiro acima.
+E mais importante, isso permitiria usuários adicionar seus próprios tipos de dados. E isso é importante. Por exemplo, com MapBuzz nós precisamos suportar os tipos geométricos do Postgre e também gostaríamos de suportar os tipos de full text search (pesquisa em texto). Sobrescrever o Rails para suportá-los é um exercício de chatice já que ele requer sobrescrever vários métodos principais no adaptador do Postgresql.
+A maneira que isso deveria ter sido implementado é apresentando um objeto de Coluna. A API do objeto coluna seria simples – teria métodos de serializar e desserializar. Note que o Active Record já tem um objeto de coluna, mas sua implementação é bem esquisita. Por exemplo:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+def klass
+  case type
+    when :integer       then Fixnum
+    when :float         then Float
+    when :decimal       then BigDecimal
+    when :datetime      then Time
+    when :date          then Date
+    when :timestamp     then Time
+    when :time          then Time
+    when :text, :string then String
+    when :binary        then String
+    when :boolean       then Object
+  end
+end
+
+
+
+Este código está claramente tentando ser muito esperto. Keep it simple stupid! (Princípio KISS – Mantenha Simples, Estúpido!). Deveria existir um TimeColumn, FloatColumn, etc. Dessa maneira, o desenvolvedor poderia adicionar seu próprio tipo de coluna – então, para nós, um GeomColumn.
+Atributos
+O segundo problema, que é relacionado, é a maneira como valores de colunas são manipulados. Active Record grava dados lidos de um banco de dados em uma tabela Hash chamada attributes. Mas surpreendentemente, essa tabela hash também é usada para gravar objetos Ruby. Portanto os dados gravados na tabela hash pode tanto ser um objeto Ruby (em formato serializado) ou o texto retornado pelo banco de dados (desserializado).
+Esse é um design horrível por duas razões principais.
+Primeiro, significa que toda vez que um atributo é acessado, precisa existir código para checar se está em formato string ou não. Se estiver, o dado precisa ser convertido para Ruby, o que causa um baque na performance.
+Segundo, significa que Active Record não consegue rastrear qual atributo foi modificado e qual não foi. Isso é importante, porque significa que ele atualiza todas as colunas mesmo que apenas uma tenha sido modificada. Além de ser um baque em performance, signfica que ele pode corromper seu banco de dados se você não for cuidadoso. Isso acontece quando uma tabela contém tipos de colunas que o Active Record não está familiarizado – um bom exemplo seria um campo ts_vector no Postgresql. Active Record tentará atualizá-lo usando o valor errado embora a coluna não tenha nem sido modificada.
+Então qual a melhor solução? Uma solução pura orientada-a-objetos apresentaria um objeto Field (Campo), que teria quatro campos – o valor crú (do banco de dados), o valor serializado (objeto Ruby), uma referência ao objeto coluna que sabe como serializar/desserializer o campo e uma coluna que indica modificação.
+Mas isso é bem pesado já que você estaria introduzindo um objeto extra por campo por registro. Uma solução alternativa seria também introduzir três tabelas hash por registro – uma para os valores crús, um para os valores serializados e outro para um flag de modificação. Você também gostaria de registrar referência aos registro de colunas, mais provavelmente na própria classe (de forma que sua tabela seja chamada parents (pais), então gravar a informação da coluna na classe Parent).
+Consertando Active Record
+A boa notícia é que a equipe do Rails está olhando para esses problemas. Em particular, Michael Koziarski recentemente postou um patch que apresenta o conceito de tabelas hash separadas para armazenar valores serializados. Então fique de olho no patch, e ofereça seus comentários ao Michael!
+tags: obsolete rails
+

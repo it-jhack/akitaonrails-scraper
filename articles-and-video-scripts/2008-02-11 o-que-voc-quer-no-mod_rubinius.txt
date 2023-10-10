@@ -1,0 +1,8 @@
+
+
+
+
+Seguindo minha entrevista com Evan Phoenix, seu amigo na EngineYard, Ezra Zygmuntowics acabou de postar um call to arms para a abertura do projeto mod_rubinius.
+Eles contrataram o  Eero Saynatkari para trabalhar full-time nesse projeto e nesse ponto a arquitetura ainda está em aberto. A única certeza é que ele será baseado em Rack, agora se será um processo embedded no Apache, um process manager independente, eles ainda estão discutindo. É a hora dos experts darem sua opinião, o Ezra pede feedback sobre o assunto.
+tags: obsolete rubinius
+

@@ -1,0 +1,54 @@
+
+Existe uma escória na Internet e ela se chama Internet Explorer 6. Ela foi lançada em Agosto de 2001 e representa o aborto gerado pelo fim da Guerra dos Browsers, quando a Microsoft destruiu sem misericórdia a Netscape. A geração do IE 6 representa a Idade Média dos browsers.
+Felizmente hoje estamos no início da Renascença dos browsers, com Firefox dominando entre os alternativos, mas com um ecossistema saudável de opções como Safari, Opera, Google Chrome.
+Mesmo assim, o fantasma do IE 6 continua a nos assombrar. E o pior: ela se tornou tabu em muitas discussões. Todos sabemos que ela é tão nociva quanto a peste, mas também todos “sabemos” que devemos pagar nosso dízimo a ela, sem mais questões.
+
+
+O motivo disso se chama “Market Share” de visitação. Nesse tipo de gráfico, dependendo do tipo de site, podemos chegar a 30%, 40% de visitação sendo representado por usuários de IE 6.
+Por que? Por que tantos usuários ainda insistem em usar IE 6? Qualquer outro browser é melhor.
+Pior do que isso: por causa desse tipo de dado, milhares de web designers precisam penar para criar versões de CSS, HTML e Javascript específicos para tratar das centenas de bugs do IE 6. Isso sem contar as preocupações extras de vulnerabilidades de segurança. O simples fato de usar o IE 6 é uma ameaça. Imagino quanto deve ser o dinheiro sendo jogado no lixo somente para suportar essa peste.
+Estatística de Visitação: Fato ou Falácia?
+Vamos tentar analizar isso por outro espectro. A palavra “visitação” é muito superestimado. Isso é decorrência ainda da era da Web 1.0 onde qualquer um clicando 100 vezes na sua página significa 100 vezes mais valor.
+Dizer que 30% da visitação decorre de IE 6 pode não querer dizer muita coisa. Neste ponto cuidado, vou apenas especular, mas infelizmente não tenho nenhum estudo que comprove isso.
+A pergunta que se deve fazer é “O que leva uma pessoa a ainda estar utilizando IE 6?”
+Qualquer pessoa bem informada não usa mais IE 6, pelo menos não de livre e espontânea vontade. Isso é um fato. Ou seja, ninguém usa IE 6 porque “gosta”. Portanto, consideramos que toda pessoa em sã consciência não usa mais IE 6, isso é um fato.
+Para a maioria dos sites esse é exatamente o tipo de público que interessa ter e esses nós já estamos cobrindo.
+Das que usam IE 6 por obrigação temos as empresas. Muitas empresas, inclusive as que foram pioneiras no uso interno de tecnologias de Web, ficaram presas à legados da Microsoft. Empresas que acharam mais fácil fazer suas intranets com tecnologias falidas como ActiveX, ou que usaram DHTML específico de Internet Explorer, ou seja, intranets que dependem de tecnologia que a Microsoft não suporta mais.
+Não vou julgar os gerentes que uma década atrás decidiram apostar em tecnologias proprietárias – embora obviamente ruins – da Microsoft. O mundo corporativo nunca teve uma boa reputação em saber escolher suas tecnologias. Além do mais, em empresas cujo negócio não é informática, essas coisas são apenas considerados como custo perdido. Ninguém investe em um departamento que não gera receita, apenas custo. Ou seja, ninguém vai gastar mais dinheiro para substituir as aplicações velhas por novas. Portanto, nesse tipo de empresa as chances do IE 6 durar por um bom tempo ainda são grandes.
+
+Aqui cabe uma reflexão: para sites como o meu, onde só me interessam pessoas e empresas que efetivamente se importam com tecnologia, atender empresas cujo negócio não é tecnologia foge aos meus objetivos. Portanto, aqui também estou coberto.
+Existem pesquisas que mostram que o uso de IE 6 cai durante os fins de semana. Isso porque muita gente obrigada a usar IE 6 no trabalho, obviamente não usa em casa. Eu argumentaria inclusive que durante o dia elas fazem consultas, inclusive estão cientes que seu browser vai quebrar em muitos sites e quando chegam em casa usam um browser decente para fazer o que precisam, compras, posts e tudo mais. Nesse caso, também estamos cobrindo esse tipo de uso.
+Temos também os países de Terceiro Mundo que tem políticas fracas contra pirataria – incluindo um sistema tributário canibalista que inibe qualquer iniciativa não-pirata ou não-contrabando. O Brasil é um país dessa categoria, onde é ordens de grandeza mais simples agir fora da lei do que dentro dela. Eu diria que a grande maioria dos usuários de computador tem Windows pirata.
+E em tendo pirata, muitos que compraram seus PCs contrabandeados na era pré Windows XP SP2 ainda devem estar com IE 6. Como muitos tem medo do WGA e das travas de ativação, eles provavelmente procuram não atualizar muito.
+Falando em Terceiro Mundo isso também me lembra o mundo da Educação e outras instituições com menos recursos. Muitos deles usam computadores antigos, muitos deles sequer tem suporte de TI. Muitas das máquinas rodam exatamente como sempre rodaram nos últimos anos. Atualizar coisas não faz parte da rotina. Por isso muitos deles só rodam coisas bem antigas mesmo.
+Finalmente, temos os usuários domésticos que não entendem muito de informática. Seu pai, sua mãe, sua avó. Mas normalmente, as chances são de que algum parente costuma atualizar o micro de vez em quando.
+Se eu pulei alguma categoria importante, não deixe de comentar. Mas acho que isso cobre a maioria.
+Ou seja, todos eles geram tráfego. Muito desse tráfego é mero barulho: são procuras no Google que deram errado, links em outros sites que foram clicados por acidente. Eu diria que a maioria das visitações de uma homepage são puro barulho.
+O problema do Page View
+O número que a maioria dos sites não coleta – mas deveriam – é o de receita por click. Ou seja, em sites de serviços, e-commerces ou qualquer transação financeiramente relevante, aí sim deveriam coletar os dados dos usuários. Esses são os tipos que realmente importam.
+Aqui eu peço, se alguém tem um e-commerce, ou algum tipo de site financeiramente ativo, para postar nos comentários pelo menos a porcentagem de transações executadas via IE 6 (dica: vejam os page views de páginas internas de checkout que só são acessíveis depois da transação ser executada).
+Talvez não em todos, mas em muitos casos, eu argumentaria que os usuários realmente relevantes não usam IE 6. Ou seja, mesmo em sites cujos page views brutos mostram muito IE 6, onde realmente importa o IE 6 não é relevante, comprovando que isso não passa de barulho e, principalmente, que isso não é relevante.
+
+O problema da Indulgência
+Outro problema na realidade é o criado por nós mesmos: nós que estamos por trás da confecção de web sites e ainda colocamos suporte a IE 6.
+Não se trata apenas de sites pesados em termos de javascript como o Gmail, mas qualquer site que precisa ser reconfigurado, com CSS específico para consertar os bugs do IE 6.
+Toda vez que fazemos isso, damos um argumento a menos para o usuário de IE 6.
+Na realidade, existe uma categoria que eu não mencionei mais acima: o dos usuários que usam o IE 6 conscientemente. Eles são minoria, mas existem e, pior, ainda tem voz e argumentam a favor do IE 6!! Por incrível que pareça. E o principal argumento é: “a maioria dos sites ainda funciona muito bem no IE 6, então pra que diabos eu vou mudar!?”
+Eles tem razão! E esse tipo de gente, por ter voz ativa, ainda consegue influenciar alguns que tem dúvidas. Essa é a primeira categoria que deve ser calada. E a forma de fazer isso é: todo site que não dependa das categorias que mencionei acima, deveriam sumariamente cortar suporte a esse browser.
+Todo site que saiba que não tem muitos usuários de IE 6 já deveriam cortar sumariamente o acesso. Eu diria, se o IE 6 representa 20% ou menos dos seus page views gerais, cortem o acesso. Usem o site da campanha STOP IE 6 e baixem o arquivo StopIE6.js, coloquem em algum lugar do seu site a modifiquem o cabeçalho das suas páginas para ter este código:
+
+
+-
+Foi isso que fiz no meu blog. Isso bloqueará seu site totalmente. No meu caso, os acessos de IE 6 representavam menos de 5%. Portanto o bloqueio foi um no-brainer.
+Antes de mim, o Google fez a mesma coisa com o Gmail e a 37signals também. Claro, no caso do Google, o Gmail não é nem de longe o principal produto deles. Eu ficaria extremamente mais contente se a homepage do google.com fosse bloqueada, ou no mínimo se o Orkut fosse bloqueado contra o IE 6. Isso surtiria um efeito muito maior principalmente no Brasil.
+Mesmo se você tem restrições contra bloquear usuários – mesmo que eles não representem peanuts para seu negócio, apenas um fardo que representa um custo – pelo menos assuma sua responsabilidade na Internet e eduque seus usuários. Banners como este:
+
+Isso pode ser colocado em algum espaço no seu site. Se você por acaso é fã do Firefox, colabore um pouco em vez de só consumir. Vá no site Spread Firefox e coloque um dos banners de lá no seu site.
+Mas isso não precisa ser uma campanha pró-Firefox, no mínimo se o usuário sair do IE 6 e for para o IE 7 já é alguma coisa. Mas não se enganem, mesmo o IE 7 não é mais que um porco de batom. Se for possível migrar direto pro Firefox, Safari ou Chrome, façam!
+No mundo todo, parece que o IE 6 está em queda livre, segundo dados da Net Applications. O market share vêm caindo dramaticamente nos últimos tempos. Infelizmente no Brasil o cenário é diferente. Eu imagino que parte disso se deve à pirataria massiva que existe neste país e à cultura de não atualização dos sistemas internos de TI, uma cultura bem retrógrada à inovação em geral. É interessante ver como a grande maioria dos departamentos de TI são tão despreparados – para não dizer ignorantes. Enquanto consultor eu já conheci dezenas deles e posso dizer: todos eram excessivamente ruins, inclusive de empresas onde isso não deveria acontecer!!
+O ponto aqui é: o custo de manter websites constantemente adaptados para funcionar em IE 6 é como se tivéssemos que fazer uma versão DOS de cada programa Windows que fizéssemos. É retrabalho, é perda de tempo, e num mundo em crise, isso só faz sentido se for economicamente viável. Page view por si só não é um bom indicativo. Portanto, vamos ver se isso se traduz em dinheiro também. Caso contrário, apenas pare de dar suporte. Eventualmente, quando a maioria dos sites quebrar em IE 6, os usuários que sobrarem serão obrigados a mudar, compulsoriamente.
+
+Apenas como comentário, alguém notou que o antigo site Save the Developers agora está apontando para o site de IE 7 da Microsoft (que, aliás, quebra inteirinho no meu Safari?).
+
+tags: obsolete
+

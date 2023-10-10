@@ -1,0 +1,18 @@
+
+
+
+
+O primeiro contato de um novo Railer é através da funcionalidade de scaffold. Criando o projeto com o script "rails", depois criando os models com o gerador "script/generate model <model>", finalmente criamos as primeiras telas através do gerador "script/generate scaffold <model> <controller>".
+Nos screencasts disponíveis no site oficial do Rails, em diversos tutoriais espalhados pela internet e inclusive na apresentação da plataforma em meu livro, sempre o passo mais rápido é começar com scaffold.
+Esse recurso é uma faca de dois gumes: por um lado torna o primeiro contato algo mais prático e rápido. Por outro lado traz críticas mais incisivas como “então, Rails é apenas esse negócio de scaffold”.
+De fato, o scaffold de Rails não é sua funcionalidade mais elaborada. Existem diversos defeitos que já conhecemos: os controllers são gerados com métodos redundantes como "new" e "create", que poderiam ser um método só. Esse problema deve ser resolvido conforme expliquei alguns posts atrás sobre REST.
+Além disso, o principal problema são models que tem relacionamentos (has_many, belongs_to, etc.). Quando a tela de uma Ordem de Venda é gerada, ela não traz uma listagem de seus ítens, por exemplo. Um scaffold onde precisamos fazer isso manualmente o tempo todo não é mais prático e esse defeito aparece rápido.
+David é contra criar uma funcionalidade muito sofisticada, não é seu intuito que Rails se torne uma plataforma para scaffolds. A filosofia de Rails é ser uma plataforma de infraestrutura, por isso o apoio ao desenvolvimento de plugins e engines.
+É o contrário da filosofia de Adrian Holovaty e seu framework Django, feito em Python, e atualmente um dos principais concorrentes de Rails. Django foi feito principalmente para websites de conteúdo e sua principal funcionalidade é um sistema de administração de conteúdo que é criado automaticamente. Imagine um “Scaffold on Steroids”. Existe um longo debate entre o público Django contra Rails, Dynamic Generation contra Code Generation, Snakes vs Rubies. Este post é um exemplo dessa discussão direta que já aconteceu há algum tempo entre Adrian e David. Dica: Nenhum deles tem a resposta completa.
+A comunidade Rails não está parada e atualmente existem diversos scaffolds alternativos. O mais promissor deles é o Streamlined que traz muito das características do módulo administrativo do Django para Rails. Além deles, no próprio site do Streamlined temos um post com links para as principais alternativas como Rails autoDB, Administered Scaffold, AutoAdmin.
+Recentemente Justin Gehtland, do Streamlined, e Richard White, do plugin AjaxScaffold se uniram para juntar seus projetos e criar um plugin para Rails que compõe um grande e simples gerador scaffold que gera módulos muito mais úteis e totalmente Ajaxfied.
+Eu pessoalmente não tive muito tempo de testar o Streamlined. Testei o AjaxScaffold algum tempo atrás e fiquei muito contente com seus resultados. Assistam aos screencasts (1, 2, 3) do Streamlined para entender porque acho que esse novo plugin será muito importante para aumentar (ainda mais!) a produtividade com Rails.
+Quando a primeira versão de Streamlined+AjaxScaffold for lançada teremos a plataforma de desenvolvimento Web mais produtiva de todos os tempos. Os passos serão: criar o projeto Rails, criar seus models, fazer pequenas configurações no Streamlines e, como diria Steve Jobs, “boom”: teremos um módulo de administração completo e funcional.
+Recomendação: baixem e testem o Streamlined hoje. Farei o mesmo. Aposto como este se tornará um dos principais plugins que todo Railer deverá ter obrigatoriamente em sua caixa de plugins (junto com outros importantes como Globalize).
+tags: obsolete rails conference
+

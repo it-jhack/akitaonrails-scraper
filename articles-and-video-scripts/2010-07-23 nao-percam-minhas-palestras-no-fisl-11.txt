@@ -1,0 +1,17 @@
+
+
+
+
+Pessoal, por demora minha acabou não saindo a descrição das minhas palestras na programação impressa do FISL. As duas serão no sábado, dia 24 (amanhã!), a partir das 11hrs da manhã. Me ajudem a divulgar!
+A primeira será no auditório do Prédio 5 das 11h até as 13h. Lembrando que é um pouco afastado do prédio 41 principal então comecem a chegar cedo.
+
+Ecossistema Ruby on Rails – Ruby on Rails é muito mais do que apenas um mero framework web MVC. Esse é apenas a ponta do iceberg. A parte mais importante é o ecossistema que se formou à sua volta, trazendo soluções completas em diversas áreas como deployment, e filosofias de empreendedorismo e desenvolvimento ágil. Para ser Ruby on Rails não basta ser apenas um mero framework, isso é muito trivial, a realidade é conseguir criar um ecossistema dinâmico e inovador. É sobre isso que vamos discutir nessa introdução ao Ecossistema Ruby on Rails.
+
+A segunda será no auditório 41-C, no prédio principal, das 13h às 14h. Esta é no prédio principal e será logo em seguida da anterior, vou deixar um tempo para o pessoal poder se mover para o outro prédio. Outra coisa, logo em seguida da minha, na mesma sala 41-C será o mini-curso de Rails do Daniel V. Lopes, às 15h. Entre as duas haverá um slot vago e a organização permitiu que eu esticasse minha palestra para usar parte desse slot, dessa forma o pessoal já pode emendar as duas. Ou seja, será um hiper-combo de Ruby e Rails desde as 11h da manhã até as 17h!
+
+Dicas de Desenvolvimento Web com Ruby – Muitas vezes as aplicações Web são lentas, pesadas. Se o desenvolvedor não tem experiência, uma das primeiras coisas que lhe vêm à cabeça é: “simples, o problema é a linguagem, vamos reescrever em outra mais rápida que tudo se resolve”. E isso nunca é verdade. O maior problema da lentidão de sites e aplicações é o entendimento pobre da arquitetura Web e suas alternativas. Esta apresentação tem como objetivo dar uma pequena introdução a esse problema e algumas soluções muito simples usando Ruby e Rails. As técnicas e conceitos demonstrados não são exclusivas de Ruby e podem ser aproveitadas em qualquer outra plataforma Web.
+
+A minha primeira palestra é mais dedicada a quem está começando a tentar entender Ruby e Rails, mas mais do que código o importante é entender o contexto, a comunidade, as opções. Já a segunda é para quem é desenvolvedor. Esta é boa para quem ainda não começou para ver soluções práticas mas também para quem já está desenvolvendo e quer aprender novas técnicas. Ou seja, a primeira será mais conceitual, apresentando os conceitos importantes para começar bem com Ruby e Rails e a segunda será mais prática e técnica. Espero ver todos nas duas e também no mini-curso do Daniel em seguida :-)
+E mais uma vez, como a programação impressa está desatualizada, por favor ajudem a divulgar! Valeu!
+tags: obsolete conference
+

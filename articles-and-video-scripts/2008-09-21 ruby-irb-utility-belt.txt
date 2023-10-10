@@ -1,0 +1,37 @@
+
+
+
+
+
+Hoje eu resolvi adicionar algumas coisinhas ao projeto utility_belt, originalmente criado por Giles Bowkett.
+O objetivo dessa gem é incrementar o IRB com ferramentas úteis para trabalhar. Meus favoritos são a capacidade de ter histórico, de poder editar o histórico e também de poder usar vi ou Textmate para editar os códigos fora do IRB em vez de apenas pela linha de comando.
+Quando eu digo que não é necessário nenhuma grande IDE para programar Ruby é justamente porque temos IRB. Use e abuse dele. Para instalar a gem faça o seguinte:
+
+git clone git://github.com:akitaonrails/utility-belt.git
+cd utility-belt
+gem build utility_belt.gemspec
+sudo gem install utility_belt-1.0.10.gem
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Tanto faz usar o git ou baixar o arquivo .zip do Github. Uma vez instalado edite o arquivo .irbrc no seu diretório home (no mac seria /Users/seu_usuario/.irbrc) com o seguinte:
+
+--- ruby
+require 'rubygems'
+require 'utility_belt'
+UtilityBelt.equip(:all)
+UtilityBelt::Themes.background(:light)
+
+
+E para entender o que essa gem realmente faz, eu preparei um pequeno screencast com as principais funcionalidades. Dêem uma olhada:
+
+
+tags: obsolete ruby
+

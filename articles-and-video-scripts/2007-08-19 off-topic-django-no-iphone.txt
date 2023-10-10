@@ -1,0 +1,11 @@
+
+
+
+
+
+Continuando minha noite de trabalho … (afe, são quase 6:30 da manhã!!) … por coincidência, ontem mesmo dei uma palestra sobre rodar aplicações Rails encapsulado no desktop e vejo este post. Ao que parece fizeram uma aplicação Django rodar dentro do iPhone.
+Para quem não sabe (passou os últimos anos em Júpiter?), Django é um framework web para Python, nos moldes ágeis do Rails. Não é uma surpresa ver Django rodando no iPhone pelo simples fato que ele roda OS X (que é um derivado BSD Unix). Já haviam conseguido rodar SSH Client e outras aplicações no iPhone. Rodar um interpretador Python não é exatamente impossível.
+Uma das coisas que mencionei na minha palestra é o tamanho de uma aplicação somando o código-fonte, bibliotecas, interpretador, etc. No caso da solução do Slingshot, o pacote ficava com mais de 100Mb. Felizmente, o iPhone tem de 4 a 8Gb, logo tamanho não é problema.
+Como finalmente descobriram como desbloquear o SIM utilizando a receita do Turbo SIM, só me resta conseguir trazer um para fazer um app. Rails rodando no iPhone e com um bônus: com direito a sincronização bi-direcional de dados ;-)
+tags: obsolete django
+

@@ -1,0 +1,23 @@
+
+
+
+
+
+Pessoal, ontem a noite coloquei no ar a nova versão do Locarails. Acabei de blogar sobre suas funcionalidades no Blog de Produtos da Locaweb. Como ficou bem extenso não vou copiar aqui, dêem uma olhadinha por lá ;-) Mas na prática fiz um monkey-patch sobre o Capistrano 2.5.0 para consertar um bug que eles introduziram nessa versão e eu fiz o copy strategy realmente funcionar no Windows (adicionei a dependência ao archive-tar-minitar para não chamar o comando tar via linha de comando, que quebra no Windows).
+Para o Rubistas de plantão eu queria pedir algumas opiniões. Antes de mais nada, é a primeira vez que faço um programa em linha de comando (não-web) por isso ainda não sei se fiz da melhor maneira, estou aberto à sugestões. A segunda coisa é que ele usa o Capistrano por baixo. Agora, como fazer testes de um pacote desses? Ainda fiquei na dúvida porque existem alguns componentes a serem testados:
+
+A linha de comando propriamente dita. Talvez isso seja mais simples, validando as combinações padrão e se ele se comporta corretamente. Primeiro problema: algumas delas dão um exit e isso provavelmente pararia a suite de testes.
+
+
+Os templates gerados dependendo da estratégia escolhida (copy ou git). Isso poderia ser uma comparação simples sobre um arquivo estático pré-gerado
+
+
+A receita deploy.rb propriamente dita, se o capistrano vai funcionar corretamente. Mas para isso eu precisaria de uma conta limpa de SSH, o que seria inviável para outros programadores testarem. Como vocês lidam com testes em ambientes remotos? Apenas mock mesmo? Mas e a complexidade de mockar o comportamento do capistrano?
+
+
+As receitas auxiliares, como backup, restore, upload de chaves ssh, tail remoto de log. Como testar essas coisas?
+
+Normalmente fazemos testes de nossas aplicações em Rails, com as coisas locais, dados locais, fixtures locais, talvez algumas APIs REST remotas que fazemos mock. Mas e quando a complexidade da dependência externa é grande – nesse caso o Locarails é totalmente para gerar receitas de Capistrano.
+Se alguém tem idéias, não deixe de fazer um fork do meu projeto e já implementá-las. Estou aguardando pull requests ;-)
+tags: obsolete locaweb
+

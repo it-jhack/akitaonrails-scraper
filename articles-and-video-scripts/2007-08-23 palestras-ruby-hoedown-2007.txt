@@ -1,0 +1,9 @@
+
+
+
+
+Meu chefe, Carl Youngblood, tem uma empresa chamada Confreaks (Conference Freaks). A motivação é simples: existem diversas conferências de Ruby e Rails nos Estados Unidos e realmente é um desperdício que elas se limitem apenas àqueles que estiveram lá. Por isso eles criaram essa empresa para gravar todas essas palestras.
+O primeiro evento gravado foi o Ruby MountainWest. Alguns dias atrás aconteceu o Ruby Hoedown 2007, em North Carolina. Os vídeos já estão disponíveis e o formato deve agradar: da maneira como eles fizeram, vocês tem um vídeo super widescreen dividido em dois: na primeira metade é possível assistir os slides e na outra metade o palestrante.
+Eu ainda não tive tempo de assistir, mas grandes celebridades da comunidade Rails deram excelentes palestras. Pessoalmente muito me interessa ouvir Ezra falando sobre seu framework Merb, um potencial competidor do próprio Rails em nichos de alta performance. Também recomendo muito assistir à palestra de Marcel Molina Jr. sobre Beautiful Code.
+tags: obsolete conference
+

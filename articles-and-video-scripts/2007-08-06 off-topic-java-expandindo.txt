@@ -1,0 +1,11 @@
+
+
+
+
+Novamente, mais um artigo que não é diretamente relacionado a Ruby ou Rails. Acabei de ler este artigo no site SDA India. O caso é que alguém estava com problemas de escalabilidade com o "Drupal ":https://drupal.org/. Para quem não conhece, o Drupal é um excelente gerenciador de conteúdo escrito em PHP e utilizado em centenas de websites. Ando meio por fora de número mas deve ser tão famoso quanto Wordpress.
+Enfim, o problema em questão se revelou sendo que Drupal faz cache no banco de dados. E o problema é que isso gera um gargalo. A solução foi a seguinte: rodar Drupal em um container de servlet Java. Para quem não sabia, hoje existem implementações de PHP 5 em Java para rodar aplicações PHP como se fossem servlets. Em resumo, este caso utilizou o servidor Resin (da Caucho, semelhante ao mais famoso Tomcat, que é apenas um container de servlets) em conjunto com o Terracotta que é uma solução open source de clustering para Java.
+A chave foi o produto Quercus, também da Caucho, uma implementação 100% em Java do PHP 5. Esse produto possibilita criar métodos que podem ser chamados pelo PHP, em Java. Com isso ele criou métodos para substituir o sistema de cache do Drupal por Ehcache (um sistema de cache que é muito usado em conjunto com o outro produto famoso, o Hibernate) em cluster controlado pelo Terracotta. Agora o Drupal se tornou altamente escalável utilizando uma infra-estrutura 100% Java.
+Como disse antes, temos que separar Java – a linguagem -, de Java – a plataforma. Enquanto plataforma, a JVM é a melhor virtual machine disponível no mercado, com amplo suporte e centenas de soluções de estabilidade, segurança, robustez, escalabilidade, performance, etc. Rodar Drupal sobre um container de servlets, escalado graças a soluções provadas de caching e clustering é o estado-da-arte da integração que estamos buscando com outras soluções como Jython e JRuby.
+Num futuro próximo, é exatamente esse tipo de solução que poderemos ver com, por exemplo, Mephisto rodando sobre Java, Typo rodando sobre Java, Radiant rodando sobre Java e assim por diante. Mais gente precisa começar a experimentar, hackear.
+tags: obsolete java
+

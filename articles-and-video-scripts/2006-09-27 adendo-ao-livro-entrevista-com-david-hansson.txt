@@ -1,0 +1,13 @@
+
+
+
+
+Apenas para atualizar o status do andamento do livro, anuncio que a revisão do texto ainda está em andamento e a época de lançamento continua sendo aproximadamente no começo de setembro agora. Não temos uma data exata ainda. Para piorar o trabalho do revisor e da editora eu enviei hoje um novo material de última hora. Na realidade apenas mais 4 páginas.
+Há mais de um mês, quando ainda estava escrevendo o livro, enviei duas entrevistas a duas pessoas: a primeira foi para Yukihiro Matsumoto que prontamente me enviou sua resposta. Essa entrevista se transformou no capítulo-bônus 15. A segunda entrevista foi para David Heinemeir-Hansson, com quem já falei antes. Infelizmente ele me respondeu que estava muito ocupado com a RailsConf e outros compromissos e não teria tempo de responder imediatamente.
+Hoje pela manhã tive a feliz surpresa de ver que ele finalmente conseguiu arranjar um tempo e me enviou as respostas. Eu traduzi na hora seguinte e mandei o material ao editor. Ainda não sei se ele vai aceitar esse adendo de última hora, mas se aceitar se transformará no capítulo-bônus 16: “Uma conversa com David Heinemeir-Hansson”.
+Essas duas entrevistas tem um objetivo: o livro que escrevi não é apenas um texto cheio de procedimentos do tipo “digite isto, clique naquilo e puff! está pronto!” eu não gosto desse tipo de leitura. Em vez disso intercalei procedimentos com altas doses de conteúdo. Se o leitor tiver paciência terá uma imersão na cultura sobre o qual Rails foi criado. Não apenas os dogmas, mas as justificativas de porque as coisas são como são. As entrevistas de Matz e David ajudam a fechar essa visão.
+Essas duas participações, juntamente com as colaborações importantes de Zed Shaw (Mongrel) e Piers Harding (SAP plugin) e outros como Stefan Kaes, me ajudaram muito a conseguir formatar um livro que em alguns momentos pode parecer uma coletânea de artigos jornalísticos, e não apenas procedimentos técnicos. Espero que seja uma boa leitura.
+Para terem uma idéia, o livro em formato pequeno chegaria a mais de 700 páginas. Escolhemos paginar no formato grande, do tamanho de um caderno universitário, ainda assim deve ultrapassar as 500 páginas. Rails é simples o suficiente para que seus procedimentos coubessem em 200 ou 300 páginas.
+Com isso vocês podem imaginar como preenchi o resto.
+tags: obsolete my-book
+

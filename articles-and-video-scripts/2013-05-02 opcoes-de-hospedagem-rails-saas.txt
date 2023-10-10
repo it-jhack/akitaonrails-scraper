@@ -1,0 +1,37 @@
+
+Outra coisa que muita gente se confunde: "preciso do meu próprio servidor, instalado do zero, porque tenho vários serviços não-web que preciso instalar e manter na mão, como SOLR, postfix, etc"
+Não, a menos que você tenha uma operação grande, não precisa. Utilize os diversos Software as a Service (SaaS) que existem. Muitos deles oferecem planos gratuitos para pouca utilização - pois obviamente, se você vai utilizar bastante é porque sua aplicação fatura o suficiente pra pagar a infraestrutura, caso contrário porque investir nela?
+
+
+
+
+O fator "caro" ou "barato" não é o valor em dólares, é o que você espera da aplicação que está fazendo. Se for hobby, para estudo, você não precisa se preocupar pois não tem consumidores pagantes a quem tem que responder. Se a aplicação gera dinheiro, significa que tem consumidores pagantes, e se há pagantes a infraestrutura, sua manutenção e suporte são custos, e custos devem ser equacionados com o valor cobrado, senão não faz sentido. Se é uma operação real, o tempo gasto dando manutenção e suporte na infraestrutura e serviços próprios deveria estar sendo melhor gasto planejando funcionalidades que atraiam mais usuários pagantes. O seu valor hora deve ser maior que o valor hora de serviços mundanos de infraestrutura, se não for, o modelo de negócios está errado.
+Vejamos algumas opções de bons SaaS a considerar.
+Enviar emails
+Jamais configure um servidor de emails a menos que seja um especialista nisso. Muita gente contrata uma VPS, coloca uma aplicação que usa o sendmail da máquina e comeca a mandar email. Não sabe sequer o que é um DKIM ou SPF, muito menos que o IP da máquina vai cair numa blacklist de spam. Não vale a pena administrar múltiplos servidores, com múltiplos IPs, com múltiplas regras de filtros de envio. Use um serviço com o SendGrid. O plano básico de 40 mil créditos custa meros USD 9.95 por mês.
+Full Text Search
+Pra começar, "SELECT X FROM Y WHERE TEXTO LIKE '%XPTO%'", NÃO É SEARCH DECENTE. #prontofalei
+A comunidade Java já nos fez o favor de deixar um legado importante, o famoso Apache Lucene, um dos melhores engines de full text search. E sobre essa engine existem duas peças de infraestrutura excelente, o primeiro, mais antigo e portanto com um ecossistema maior é o bom e velho Apache SOLR, o mais recente é o Elasticsearch. Na prática, pra maioria das aplicações web, tanto faz qual vai escolher.
+Na dúvida, escolha utilizar o serviço Websolr. Por USD 20 por mês você pode subir até 250 mil documentos e ter até 2 índices gerenciados. Aplicativos médios provavelmente vão precisar chegar até o plano Platinum, de USD 100 por mês com 2 milhões de documentos e 10 índices.
+É um pouco salgado, mas se você precisa de search decente, precisa pelo menos de SOLR. Agora, instalar um SOLR não é complicado, assim como instalar um PostgreSQL também não é. Mas de novo, a menos que você seja um sysadmin experiente, não coloque dados de seu cliente onde ninguém vai estar gerenciando. Se você instalar, você vai ter que dar suporte e se responsabilizar por tempos de queda do serviço, escalar em múltiplos nós se precisar de mais performance, recuperar backups se alguma coisa quebrar.
+Mensagens Assíncronas
+Sim, é super-hipster (ou pelo menos foi, até o ano passado), implementar seu próprio servidor de Websockets com Node.JS. Na prática, em produção, em aplicativos sérios, não faça isso. Está repetitivo mas novamente: se não for um bom sysadmin ...
+Existem várias opções, dentre as que eu mais gosto está o Pusher. Um que está aparecendo mais agora é o PubNub. No caso do Pusher, USD 19 por mês para ter 100 conexões simultâneas é um bom número. No caso do PubNub, USD 15 por mês para até 100 conexões também, um pouco mais barato. A diferença é na escala, quanto mais cresce o Pusher parece ser melhor no custo/benefício.
+Para utilizar existem diversos clients pré-prontos para múltiplas linguagens, existe um client em javascript para os browsers, com diversos polyfills (WebSockets, Flash, Long polling, etc). Chega a ser trivial implementar. Não vale a pena fazer seu servidor de websockets do zero.
+Logging
+Colocar em produção não é só instalar e acabou. Logs devem ser analisados constantemente sempre que possível. Muita gente simplesmente apaga os logs ou os ignora completamente. Essa ferramenta já não é para iniciantes, sua aplicação precisa já estar no ar com um bom tráfego para fazer sentido pagar para usar.
+Um dos mais conhecidos e recomendados é o Papertrail, por USD 7 por mês você pode transferir até 1GB de logs. Outro que começou a ganhar mais tração é o Logentries. A vantagem do Logentries é que 1GB por mês é grátis, permitindo pesquisar só até a última semana de logs. Pra guardar por 1 mês, 1GB de logs, você começa pagando USD 5 por mês e o preço sobe segundo os fatores quantidade de GB tranferido x quantidade de GB armazenados por mês. Ou seja, o Logentries é um pouco mais barato que o Papertrail. Como ambos tem período de teste, use os dois para saber qual se adequa melhor ao que você quer.
+Eu particularmente não fiz nenhum uso avançado de logs ainda, então não tenho um preferido entre os dois.
+Monitoramento e Análise
+Este é um ponto que eu ainda não estou satisfeito. O melhor ainda é o New Relic só que ele é tão caro que eu não recomendo a menos que você tenha sobrando mesmo. Ele salta de USD 24 por mês por servidor para USD 124 por mês por servidor. Com 2 servidores ou dynos, você já paga nada menos que USD 248 por mês!! Nem recomendo o plano Standard porque ele é capado demais pra ser útil pra alguma coisa.
+Se for pra algo no nível do New Relic Standard, então é melhor usar serviços como o StatsMix, Hosted Graphite, Librato. Não tenho um favorito, então se alguém tiver boas experiências para compartilhar sobre isso, não deixe de comentar!
+Teste de Carga
+Quer saber quanto sua aplicação aguenta de tráfego antes de abrir o bico? Uma opção que eu conheço e gostei Blitz, por USD 40 você começa com 40 créditos, onde cada crédito equivale a 1 minuto e mil usuários. Então 40 créditos dá 10 mil usuários por 4 minutos. É um bom teste.
+Outros
+Existem diversos outros serviços que devem ser considerados. Nos artigos anteriores já disse que o Heroku tem serviço de PostgreSQL, que o AppFog também tem serviços de MySQL, que a Amazon com AWS tem o RDS (que suporta MySQL, Oracle e SQL Server).
+Para DNS existem dois muito bons hoje em dia que recomendo, o Zerigo que eu uso e outro que já me recomendaram muitas vezes que e o DNSimple.
+Outros mais comuns são de analytics como o Google Analytics mas hoje existem outros como o MixPanel para web e mobile, o KISSmetrics.
+Estes foram apenas alguns exemplos considerados bons de SaaS que você pode depender para ter Service Level Agreements (SLA) razoáveis, para que nenhum cliente precise te ligar de madrugada num domingo a noite porque seu servidor resolveu dar crash e você não tinha procedimentos de recuperação automáticos implementados.
+
+tags: obsolete hosting
+

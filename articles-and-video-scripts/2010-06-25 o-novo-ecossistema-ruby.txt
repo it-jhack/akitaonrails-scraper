@@ -1,0 +1,53 @@
+
+Um artigo que está na gaveta há algum tempo é sobre o ecossistema Ruby. Por sorte hoje o Paolo Perrotta, autor do livro Metaprogramming Ruby escreveu justamente um artigo relatando sobre isso. Portanto resolvi pegar os pontos do artigo dele e juntar mais alguns neste meu artigo. Vamos lá.
+
+
+
+Parece ontem que as equipes do Rails e do Merb anunciaram que iriam se unir. Em menos de 1 ano e meio, esses caras combinaram dois grandes frameworks em um melhor e mais limpo que algumas pessoas já estão usando em produção – neste momento está na versão 3.0 beta 4 e se aproximando rapidamente de um Release Candidate. Muitas outras empresas levariam múltiplos anos para conseguir atingir um objetivo ambicioso desses – se é que atingiriam.
+
+
+Qualquer framework web Ruby se vira muito bem com qualquer servidor web Ruby. Posso descer de um sistema de produção com balanceamento de carga para um Apache local ou um rápido servidor web dentro de um processo sem nem pestanejar. Posso adicionar componentes na cadeia HTTP num estalar de dedos. Graças à incrível simplicidade do Rack, levou menos de 1 ano para sair do Rack 1.0 para uma adoção em massa por todos os frameworks e servidores web escritos em Ruby. Como Sam Ruby diz, adoro quando um plano se concretiza.
+
+
+Em cerca de 1 ano, praticamente todo desenvolvimento relacionado a Ruby migrou para git e para o GitHub. O GitHub agora é o canivete-suíço para fazer o que quiser com qualquer código open source do mundo Ruby. Fazer fork e contribuir nunca foi tão fácil. A tecnologia por trás do repositório de bibliotecas levou tempo para se separar, experimentar e se juntar novamente, de tal forma que publicar um projeto para a comunidade agora se tornou tediosamente simples. A barreira para contribuir, juntar esforços ou separar esforços agora é o mais baixo possível no mundo Ruby.
+
+
+Nenhuma outra tecnologia oferece um número comparável de opções para se conectar a praticamente qualquer das coisas novas, de bancos de dados NoSQL a serviços de cloud. Por exemplo, para MongoDB temos o driver básico e os ORMs MongoMapper e MongoID. Para acessar o serviço Amazon AWS S3 tem também uma biblioteca para isso. E um bom exemplo de uso do NoSQL Redis é o sistema de filas Resque
+
+
+E quando todos esbarraram na lentidão das bibliotecas padrão de XML e YAML/JSON, a comunidade trouxe diversas respostas, melhorando em robustez e performance a cada dia. Graças a isso temos opções como Nokogiri e Psych. E falando em performance, não deixem de acompanhar os próximos capítulos da evolução do venerado EventMachine para criar servidores com alta concorrência.
+
+
+Agora existem 10 implementações diferentes de Ruby desde o Ruby MRI padrão até um Maglev ou IronRuby, indo de versões experimentais até os que já estão estáveis e prontos para enterprise. Posso ter todos eles ou mesmo múltiplas versões do mesmo interpretador, tudo em um único computador graças ao RVM. Posso instalar um novo Ruby, selecionar um deles como padrão, mudar de Ruby a qualquer momento – tudo com um simples comando. Posso mudar de Rubies automaticamente para cada diretório de projeto, e eu nem preciso me preocupar. Posso ter múltiplos conjuntos de gems (bibliotecas) para cada Ruby e mudar entre eles com um comando. Não consigo imaginar um ambiente de linguagens mais flexível e versátil.
+
+
+Eu posso declarar todas as bibliotecas que meu projeto precisa, instalar todos de uma vez, instruir o projeto para ignorar o que não está listado. Posso até mesmo usar o Bundler junto com o RVM para isolar cada projeto dentro de sua própria bolha de bibliotecas. O resultado é que praticamente dá para copiar-e-rodar uma instalação de desenvolvimento para produção. Ferramentas complexas de gerenciamento de bibliotecas de repente cheiram a naftalina.
+
+
+As bibliotecas Ruby populares, especialmente os add-ons de Rails e ferramentas de teste evoluem a um passo assustador. Projetos como Cucumber lançam versões de produção mais rápido do que você consegue puxar. Ainda assim, as ferramentas são muito estáveis e jogam bem juntas. Existem lições a serem aprendidas de um projeto que lança versões estáveis em ciclos curtos de poucos dias, mesmo passando por grandes refatorações, e ainda consegue não quebrar milhares de clientes.
+
+
+Eu posso misturar bibliotecas para conseguir meu ambiente ideal. As bibliotecas são construídas para trabalhar bem juntas por padrão. Por exemplo, Cucumber + Rspec + Webrat + Mechanize ou Cucumber + Rspec + Capybara + Culerity + Mechanize de forma que dá para testar interações simples de navegadores e mudar para um navegador real para testar Javascript. A comunidade está incansavelmente procurando maneiras de tornar nossas vidas mais simples.
+
+
+E quando todos achavam que para entrar no clube todos precisariam de Macs com Texmate, estamos vendo uma volta ao passado: muitos da comunidade investindo tempo em reaprender o poder do Vim. Com pacotes como este a vida ficará muito mais simples para quem é de Linux e até mesmo para usuários de Windows!
+
+
+O desenvolvimento de front-ends para aplicações Web nunca teve tantas opções. O Rails 3 agora é não-obstrutivo e abraça o poder do Javascript. Toolkits Javascript como o SproutCore se utilizam do Ruby para construir o projeto. HAML e SASS ajudam a criar HTML e CSS organizados e bem estruturados.
+
+
+Posso fazer deploy de uma aplicação Rails para um cloud com uma simples linha de comando. O servidor vai atualizar suas bibliotecas, acertar a configuração da minha aplicação em seu backend e geralmente fazer o possível para que minha aplicação simplesmente funcione.
+
+
+Falando em deploy, e mesmo se precisamos configurar nossos próprios servidores, existem sistemas que tornam isso bem mais sano indo de ferramentas simples como Capistrano e Inploy até sistemas mais complexos com Puppet ou Chef, para que ninguém mais precise ficar relembrando como editar arquivos de configuração hieroglifas em alguma distro estranha de Linux. Projetos como o Ruby Enterprise Edition e o Passenger facilitam ainda mais, com confiabilidade, performance e escalabilidade. E mais ainda: avaliar problemas na aplicação em produção com monitoração avançada é simples com serviços como New Relic RPM.
+
+
+Isso sem contar a atitude: quando o Google Summer of Code decepcionou ao não selecionar nenhum projeto este ano, frente aos 3 do ano passado, a comunidade se reuniu e criou algo quase 7 vezes melhor: o Ruby Summer of Code que conseguiu juntar USD 100 mil e vai patrocinar nada menos que 20 projetos.
+
+E mesmo assim, nada disso acima é revolucionário. No entanto, tudo isso somado, demonstra o poder da simplicidade, de testes, projetos abertos e experimentação incessante. De fato, acho que a comunidade de desenvolvimento em geral deveria dar uma olhada com atenção na comunidade Ruby para ganhar inspiração. Claro, você pode esperar por coisas melhores que podem aparecer em seu ambiente favorito – mas não importa quão bom forem esses esforços, você sempre estará alguns passos para trás. Se você gosta de estar onde as coisas realmente acontecem, atualmente não existe substituto para a comunidade Ruby.
+Em um mundo onde padrões podem levar anos para serem discutidos, aprovados, implementados e suportados, padrões Ruby como Rack pulam de concepção a suporte geral em alta velocidade. Toda vez que voltamos para dar uma olhada o Ecossistema Ruby parece ter se reinventado de muitas maneiras diferentes. Isso é inspecionar-e-adaptar levado às últimas consequências, e uma grande amostra do poder do design emergente em vez de big design up front.
+Avisos finais: como de costume, as últimas versões das coisas de Ruby não é para qualquer um. Em particular, usar Ruby no Windows ainda dá mais dores de cabeça do que se espera. Se você usa versões beta de todas as ferramentas, espere sua parte de obstáculos e mensagens de erro frustrantes. Ainda vai levar alguns meses até que Ruby 1.9, Rails 3, Bundler 1.0, RSpec 2, Cucumber 2, Heroku e todas as tecnologias relacionadas trabalhem juntas sem nenhum problema.
+Eu sei que eu estarei aguardando. Com um grande sorriso no meu rosto.
+Publicado por Paolo “Nusco” Perrotta. Traduzido e adaptado por Fabio Akita.
+tags: obsolete
+

@@ -1,0 +1,44 @@
+
+Esta semana houve um pequeno rebuliço por causa do lançamento de uma nova extension para Firefox, o Firesheep.
+
+Ah sim, e o código-fonte do Firesheep está disponível do Github bem como o download direto do XPI para instalar no Firefox.
+
+
+Da primeira vez que você ativa no Firefox, ele pede sua senha de administrador. Especulo que ele instala um backend que habilita modo promíscuo da sua placa de rede (por isso precisa de privilégios mais elevados), e no Windows precisa instalar o Winpcap que também serve pra isso.
+Em vez de simplesmente ignorar pacotes que não são destinados pra si, em modo promíscuo os pacotes são repassados pra a CPU, onde podem ser filtrados e processados. Eu não entendo muito bem tecnicamente o funcionamento desses routers wi-fi comuns, mas me parece que eles agem como hubs ou repeaters e não como bons switches. Ou seja, ele simplesmente faz broadcast dos pacotes para todas as portas. Nesse caso um computador conectado num desses routers tem como “enxergar” todo o tráfego de todos os outros computadores. E nesse caso, habilitando modo promíscuo no meu computador eu posso capturar, “snifar” qualquer pacote usando softwares como o bom o velho Ethereal
+Por isso mesmo é necessário ter cuidado ao se conectar em hotspots como os de aeroportos, Starbucks ou qualquer hotspot público pois eles provavelmente fazem broadcast aberto de todos os pacotes e qualquer um pode estar capturando.
+O Firesheep é um Ethereal mais simples que fica filtrando especificamente por pacotes de HTTP. E fazendo isso ele tem acesso a muita informação relevante, em particular, cookies de sessão.
+Relembrando o conceito, para iniciantes, o protocolo HTTP não tem nada para manter sessões persistentes. Cada chamada HTTP é como se fosse a primeira. Para conseguir rastrear a mesma pessoa dentro de uma sessão, usamos o artifício de enviar um cookie com um ID de sessão (bem como outros dados). Cookies são enviados no pacote de resposta HTTP e os navegadores, por padrão, reenviam esse cookie de volta na próxima requisição HTTP, fazendo com que esse cookie seja enviado e recebido continuamente em toda requisição e, portanto, mantendo uma “sessão” aberta.
+Pois bem, em modo promíscuo um computador pode escutar todos os pacotes trafegando. Como HTTP é trafegado em texto puro, significa que eu consigo ler esses cookies e com isso facilmente posso montar meu próprio pacote HTTP usando o cookie de outra pessoa, criando o cenário de Session Sidejacking.
+O Firesheep faz exatamente isso, só que apresenta numa interface gráfica tornando essa ação algo super trivial que qualquer criança consegue brincar. Basta ligar seu notebook no wifi de algum Starbucks e começar a escutar o tráfego da rede e, em segundos, você pode estar se logando em sites como Gmail, Orkut, Twitter, etc usando a identidade de outra pessoa.
+Esse problema não é novo, todo mundo já deveria conhecer e, obviamente, todo mundo já deveria estar tomando cuidado com isso. Porém, todos nós negligenciamos esse problema. Do lado do servidor, deveríamos estar fazendo nossas aplicações que trafegam dados importantes, como senhas, estarem sempre atrás de SSL.
+Na maioria dos casos, coisas como páginas de login e páginas administrativas, costumam já estar atrás de SSL. Porém, SSL é pesado, limita coisas como caching, então não usamos em todos os lugares. Daí, quando o usuário cai numa página do mesmo site que não está sobre SSL, o cookie pode “vazar”, e aí estará à mercê de sniffing.
+Uma das formas de dificultar esse problema é usar um segundo cookie seguro que só é trafegado dentro de conexões SSL. Ou seja, na resposta HTTP o cabeçalho de cookie viria mais ou menos assim:
+1
+
+Set-Cookie: somename=somevalue; path=/; secure
+
+
+Esse último secure no final faz com que os navegadores entendam que não devem enviar esse cookie numa conexão aberta. Daí o servidor pode checar a existência desse cookie e, caso ele seja inválido, a autenticação é terminada. É a técnica que tanto o Github quanto o Pivotal Tracker passaram a implementar.
+Do lado do cliente, do navegador, a melhor opção é simplesmente não usar nenhuma rede pública. Nunca confie em redes públicas. Nesta era, o mais simples e seguro é usar sua conexão 3G. Praticamente todo smartphone moderno pode funcionar com 3G e consegue compartilhar sua conexão com seu notebook. Eu venho fazendo isso há algum tempo com sucesso em diversas cidades do país.
+Se você não tem 3G, a outra solução é fechar um túnel seguro do seu note até um servidor que você confia. Por exemplo, se você tiver um servidor SSH seu, em algum lugar na internet, pode fechar um túnel seguro assim:
+1
+
+ssh -C2qTnN -D 8080 username@remote_machine.com
+
+
+Agora basta configurar seu navegador, cliente de e-mail, etc para usar um proxy SOCKS5 apontando pra sua própria máquina (localhost) na porta 8080 (você pode configurar qualquer outro número de porta). Isso fará todo o tráfego do seu navegador ser direcionado via esse túnel encriptado seguro. Dessa forma nem Firesheep, nem nenhum outro sniffer poderá ver seus pacotes.
+Uma forma mais “Rubista” é usando a solução SheepSafe criada pelo Nick Sieger. Faça assim:
+1
+2
+
+gem install sheepsafe
+sheepsafe install
+
+
+Siga as instruções da tela. Ele serve para facilitar criar um túnel via SSH para algum servidor que você já tenha (e todo bom desenvolvedor sempre tem 1 ou mais servidores SSH disponíveis, se não tem, trate de conseguir um). Leia a documentação do Nick para entender como funciona.
+Outra forma é usando uma VPN, como o que a sua empresa provavelmente tem. Existem dezenas de maneiras diferentes pra diversas plataformas para conseguir abrir um túnel seguro encriptado ponta-a-ponta para que seja possível usar redes públicas sem preocupação. Pesquise, google.
+Mas lembrando que esse problema não é novidade, ele simplesmente ficou mais fácil de ser explorado. E não é nenhuma ciência de foguete. Pensando em retrospectiva, eu até imaginava que ferramentas como esse Firesheep já existissem e fossem mais comuns, mas nunca me interessei o suficiente pra procurar.
+A regra básica se você é desenvolvedor de aplicações web é: se a informação for muito crítica, use 100% SSL (e 100% quer dizer 100%, não pode ter uma única URL fora disso caso contrário você tem uma brecha). E se você lida com dados muito importantes, garanta que tem um servidor de SSH ou VPN em algum lugar na internet para onde seja possível criar uma conexão segura. Dado a escolha entre Wi-Fi público e 3G, prefira 3G.
+tags: obsolete security
+

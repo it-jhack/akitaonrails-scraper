@@ -1,0 +1,10 @@
+
+
+
+
+Pessoal, marquem em suas agendas o próximo dia 13 de Julho, sexta-feira, 20:30. O Carlos Eduardo (da eGenial) me convidou para dar uma palestra online, via Treina Tom.
+O assunto é JRuby, provavelmente o desenvolvimento mais importante no mundo Ruby e Rails atualmente. Na minha opinião pode se tornar tão ou mais importante que o próprio futuro Ruby 2.0. Vocês podem ter uma amostra do assunto pela entrevista que fiz recentemente com Ola Bini, um dos desenvolvedores principais.
+Espero que todos possam comparecer. Mas se preparem cedo, a sala online será aberta às 20hs.
+Atualizado 13/07: Para entrar na sala cliquem neste link.
+tags: obsolete jruby
+

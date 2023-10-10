@@ -1,0 +1,46 @@
+
+Não, não, eu não fui pro Japão :-) Na realidade estava observando alguns sites japoneses de Ruby (eu assino o feed do Matz), mas em especial li o site do takahashi no Hatena. Nesse artigo ele fez um histórico dos acontecimentos cercando o Zed Rant e eis que vejo este trecho:
+
+
+
+「これは参考になる。」
+“AkitaOnRails no hito no hannou kiji. Korewa sankou ni naru.” (O artigo-resposta do AkitaOnRails. Isso será uma referência útil.)
+O Takahashi particularmente se interessou pela minha entrevista exclusiva com o Peter Cooper por causa da sua opinião sobre o episódio. Ele se surpreendeu um pouco pelo Peter ter apontado alguns defeitos do caboo.se também.
+Dalí esbarrei no diário do arton que traduziu o longo texto do Zed em japonês. Não vi tudo, mas do que li eu achei engraçado porque o texto em inglês tem um impacto escatológico muito grande que com certeza chocou muita gente. Mas traduzido em japonês perde metade desse impacto :-) Eu acho que não existem palavras e expressões em japonês que chegam à metade do nível de ofensa que é possível com gírias em inglês.
+
+Eu conversei com ele, e ele confirmou que é o arton autor e co-autor de diversos livros de Ruby, Rails, Java, etc. (Vejam na Amazon Japan) E ele também fez o Rjb – Ruby Java Bridge. Esse é um cara atarefado :-)
+
+秋田誠 (2008-01-06 01:21)
+これはすごいですね、すごくいい通訳です、おめでとうございます。私はakitaonrails.comからのブラジル人です。初めまして。やっぱりゼッドは言い過ぎたけれど、事実が言ってないことでもない。でも、あなた達日本人は今度の事情のことどう考えているか興味ありますね。
+
+
+_ arton (2008-01-06 12:56)
+はじめまして。どうもありがとうございます。 
+日本の代表的な反応としては、"Matz":https://www.rubyist.net/~matz/20080101.html#p03 や、"弾さん":https://blog.livedoor.jp/dankogai/archives/50978950.html 、"moroさん":https://d.hatena.ne.jp/moro/20080104/1199454315 のところでしょうか。2日目の内容に踏み込んだ反応はなかったように思います。
+
+
+_ 秋田誠 (2008-01-06 13:16)
+あの、私はあんまりあなた達の事は知らないのですみませんが、もしかしてartonさんてこういう人ですか？ Amazon
+
+
+_ arton (2008-01-06 13:44)
+そうです。あと、"こんな":https://rubyforge.org/projects/rjb/ のもあります。
+
+De qualquer forma, ele também achou interessante meus artigos e linkou para o site do Kimura, que tentou traduzir o que eu disse em japonês!
+
+Claro que foram pequenas referências e – infelizmente – sobre um assunto não muito agradável. Mesmo assim fiquei muito contente de ver que do outro lado do planeta alguém levou em consideração o que eu disse.
+Eu posso dizer algumas coisas sobre os japoneses. Uma delas é que, como no Brasil, a maioria dos japoneses não falam bem o inglês. Na realidade existe quase um segundo dialeto que mistura palavras em japonês e inglês. Um americano não conseguiria entender esse dialeto. Você precisa ser japonês e ter crescido no meio deles (ou lendo muito conteúdo japonês, como no meu caso). Tanto as traduções do arton quanto do kimura precisaram de alguns ajustes de outros colaboradores. Algumas palavras fogem completamente para eles. (Claro que, relativamente, eles falam muito melhor inglês do que nós.)
+Por exemplo, no Slashdot japonês algumas pessoas gastaram alguns comentários discutindo o que significa a palavra “ghetto”:
+
+Infelizmente eu não sei tanto japonês quanto gostaria, meu nível deve ser o de um pré-adolescente. Eu preciso usar muito o dicionário (Jisho) por causa dos kanjis mais difíceis. Para escrever é um pouco mais fácil graças aos teclados internacionais que facilitam encontrar o kanji certo. De qualquer forma, minha impressão é que a web japonesa é bem menos inflamada que a americana ou mesmo a nossa. Japoneses naturalmente são muito mais polidos e contidos.
+Basta comparar o Slashdot americano e o japonês. Não tem um único tópico no americano que não tenha pelo menos um comentário sarcástico ou cínico. É o contrário no japonês onde no máximo de uma piadinha leve. Tudo bem, eu não li tantos tópicos assim no japonês, por isso disse ‘primeira impressão’.
+Mesmo a repercussão do assunto Zed foi bem pequeno. No TechCrunch japonês sequer tem um único comentário até agora. O próprio Matz fez um comentário muito breve falando sobre o nível de palavrões do Zed, mas não repreende o que ele disse. E pelo comentário dele sobre consultorias, parece que elas são ruins no mundo todo mesmo.
+Matz: かなりキツい口調なので、読むのが辛いんだけど、 あまり知識(とか技術)がない人がなだれこんでくる弊害のようなものに 対する警鐘として読むと、価値を見いだすことができる、かなあ
+No blog do moro ele compartilha com a mesma opinião que a maioria de nós: que a forma com que o Zed apresentou o assunto foi deplorável. Mas é possível entender a situação dele, dados os argumentos.
+Moro: ただ、その尻馬に乗ってどうこうというテンションでもないので。ダメだと思うなら別のものに当たるなり自分でalternativeを作ればいいと思ってて、はじめからそうする予定だという人には賛同しか出来ないですよね。
+Já no blog do Dan Kogai tem uma análise um pouco engraçada. Talvez porque ele não tenha entendido o artigo todo. O título do post dele é “Open Source é um Gueto?”. Ele entendeu que o Zed ficou sem dinheiro e sem emprego por uma “síndrome de release de Open Source”, ou seja, por ele ser tão concentrado na evolução do Mongrel, ele perdeu o rumo e agora culpa isso por seus problemas. O Dan acha que é algo que pode acontecer a qualquer um e que seria legal se existisse um “Open Source Anônimos”. :-)
+Dan: そのうち Alcoholic Anonymous ならぬ Open Source Anonymous が出来るのだろうか。日本だと2chがその役割を一部果たしているのかも知れないけど。
+Enfim, está interessante acompanhar alguns assuntos nos sites japoneses. Infelizmente ainda tem muita coisa que eu não entendo, então gasto mais tempo do que gostaria lendo o dicionário. Por outro lado me ajuda a melhorar um pouquinho meu japonês enferrujado :-) Eu estava tentando aprender mandarim (todo mundo deveria tentar se importa-se com o futuro!), mas acho que vou voltar a melhorar meu japonês primeiro.
+日本人の誰かがもしこれを読んだら光栄でうす。こちらはただのブラジル人のレイルズブログです。よろしくたのみます。楽しんでください。
+tags: obsolete
+

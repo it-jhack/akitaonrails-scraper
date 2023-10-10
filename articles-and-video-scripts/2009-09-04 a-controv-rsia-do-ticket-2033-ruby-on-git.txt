@@ -1,0 +1,15 @@
+
+
+
+
+
+Nos últimos dias aconteceu uma pequena controvérsia na lista de discussão Ruby-Core, mais especificamente sobre o Ticket no Redmine oficial do Ruby, o Feature #2033 [ruby-core:25285].
+Esta é uma requisição do Run Paint Run Run assinalado diretamente ao Matz dizendo:
+
+Eu proponho formalmente que o desenvolvimento principal mude para Git.
+
+Obviamente, a comunidade Rails entrou em massa para apoiar essa proposta. Mas os core developers japoneses estão mais receosos em fazer a mudança. É assim: para quem é de fora o Git seria muito legal. Mas para a pequena equipe do core team que já está com o workflow de subversion azeitado, eles não vêem muitos benefícios para eles mesmos. Alguns dos pontos é que eles não gostaram da ferramenta msysGit ainda ser “preview”. A outra coisa é que o Matz não se sente confortável de usar um serviço comercial como o Github.
+Um meio termo que parece ter sido acertado é que por enquanto haverá um período de experiência. O trunk oficial continua sendo o do subversion, mas já havia um mirror desse repositório no Github, do Shyouhei Urabe. Esse mirror deve passar a ser mais usado. Para facilitar a experiência eles colocaram duas documentações para desenvolvedores, uma para committers e outra para não-committers.
+Algumas das vantagens mais óbvias para quem conhece Git é que bugs poderiam ser atacados em paralelo, em branches diferentes, desenvolvimentos experimentais também iriam para branches em paralelo, enfim, todo o paralelismo e distribuição que nós em Rails já conhecemos. Porém, politicamente falando, isso significa o Matz delegar parte do seu controle sobre o projeto, da mesma forma como o DHH fez com o Rails. E isso é algo que ele não deve escolher fazer muito rápido. Vamos ver como isso fica.
+tags: obsolete ruby git
+

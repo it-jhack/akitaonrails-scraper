@@ -1,0 +1,62 @@
+
+Novamente, o Twitter ficou um bom tempo fora do ar, deixando milhares de pessoas bastante irritadas, e com razão.
+Novamente, o TechCrunch e outros pundits começaram a rolar suas máquinas de FUD: “a culpa é do Rails: Rails não escala.” nhé, nhé, nhé.
+Antes de mais nada, os problemas do Twitter tem duas naturezas: ou acabou o dinheiro e, nesse caso, não há o que fazer; ou eles tem realmente problemas arquiteturais sérios que não tem a ver com Rails. Para começar eles já usam um mix de linguagens e tecnologias, PHP, Erlang, etc. Rails é apenas uma delas.
+Muitos acham que Twitter = website, e website = Rails, portanto Twitter = Rails. Isso está errado. Twitter é uma plataforma de mensageria. Para os javeiros, estamos falando de coisas como JMS, e não HTTP. Exemplo, um dos componentes dessa plataforma são servidores Jabber, para broadcast para clientes de instant messaging.
+Outro FUD grave: “Twitter é a maior aplicação Rails, que bela propaganda para o Rails …” Está também errado. Segundo esta compilação, baseada no Alexa, o topo da lista é o seguinte:
+
+Scribd (serviço de upload)
+Yellow Pages (as Páginas Amarelas!)
+Hulu (serviço de mídia da NBC)
+Penny Arcade (não tenho nem idéia do que seja :-)
+AboutUs (serviço de network de Wiki)
+Twitter (aqui está ele: 6o. lugar!!)
+
+Fora eles, pouco abaixo estão outros sites que muita gente usa ou já viu e nem sabe que é feito em Rails, como o SlideShare, Guitar Hero, Gravatar, Feed Digest. Portanto, não, o Twitter não é o mais usado, porém os pundits adoram, pois é uma boa desculpa para colocar as palavras “Rails” e “não escala” na mesma frase sem parecer muito cara de pau.
+Os problemas do Twitter são particulares do Twitter e de toda aplicação mal estruturada (seja tecnicamente e financeiramente). A lista que linkei acima tem apenas os Top 100. Na Working with Rails há uma lista muito maior, dentre elas 395 americanos e 30 brasileiros.
+O objetivo da TechCrunch: imprensa marrom. O objetivo dos pundits: aliviar a dor de cotovelo. Resumindo: invejinha barata (ou “de barata”).
+O blog Dare Obasanjo tem uma análise (especulativa) interessante que deve ajudar os iniciantes a entender os perigos de um conceito que parece tão simples quanto “followers” (seguidores).
+Segue a tradução:
+
+
+Alguns pensamentos nos problemas de disponibilidade do Twitter
+Como usuário regular do Twitter, já senti as ondas de frustração sobre mim nas últimas semanas enquanto o serviço caía o tempo todo. Isso me levou a ponderar o espaço do problema e deduzi que o serviço deve ter uma séria falha de arquitetura que não tem nada a ver com a razão normalmente jogada pelos pundits não-técnicos (ou seja, a culpa é do Ruby on Rails).
+Algumas das minhas suspeitas foram confirmadas por um post recente no blog de desenvolvimento do Twitter chamado Twittering about architecture, que contém o seguinte trecho:
+Twitter é, fundamentalmente, um sistema de mensagens. Twitter não foi arquitetado como um sistema de mensagens, entretanto. Sendo breve, Twitter foi construído com tecnologias e práticas que são mais apropriadas para um sistema de gerenciamento de conteúdo. Há um ano e meio tentamos fazer nosso sistema se comportar como um sistema de mensagens o máximo possível, mas isso introduziu uma enorme complexidade e imprevisibilidade. Quando estamos em modo de crise, adicionar mais instrumentação para nos ajudar na rede de interdependências em nossa arquitetura atual é o primeiro recurso. Isso é, claramente, não ideal.
+
+Nossa direção para frente é substituir nosso sistema existente, componente-por-componente, com partes desenhadas desde o começo para atender os requerimentos que surgiram com o crescimento do Twitter.
+Dado que o Twitter tem requerimentos únicos que colocariam à prova muitas aplicações padrão ou customizadas de mensagens, é chocante que ele não é nem mesmo arquitetado como um sistema de mensagens. Isso faz sentido se considerarmos o passado dos fundadores em ferramenta de blogs e sua intenção original do Twitter ser um “micro” serviço de blog.
+Se o Twitter fosse simplesmente um serviço de micro-publicação de conteúdo com notificações push por SMS e IM então a equipe não seria culpada de desenhá-la como um CMS. Nesse caso precisariam de 3 estruturas de dados:
+
+um lugar para persistir os tweets de cada usuário
+um cache dos tweets em memória para melhorar performance de leitura
+uma lista persistente de endpoints [de IM ou SMS] assinados para cada tweet de usuário e um serviço assíncrono (ex. um daemon) que publica para cada usuário com assinatura a cada post.
+
+Infelizmente, o Twitter não é somente uma ferramenta de blog que permite às pessoas assinar meus posts via SMS & IM em vez de apenas RSS. Ele também tem a noção de seguidores. É quando as coisas começam a ficar cabeludas. Isreal, da AssetBar, tem um grande post sobre isso entitulado Twitter-proxy: Algum interesse? onde ele escreveu:
+Considere o seguinte problema de mensagem:
+Nada é tão fácil quanto parece. Quando Robert Scoble escreve um simples “Estou saindo com …”, o Twitter tem cerca de 2 opções de como despachar essa mensagem:
+
+PUSH (empurrar) a mensagem à fila de cada um de seus 24.875 seguidores, ou
+Esperar pelos 24.875 seguidores fazer log in e PULL (puxar) a mensagem.
+
+O problema da opção 2 é que pessoas como Robert Scoble também seguem 21.146 pessoas. E é inaceitável para ele fazer login e ter que esperar o sistema abrir os registros de 21.146 pessoas (através de múltiplos shards de banco de dados), então ordenar os registros por data e finalmente renderizar os dados. Os usuários estariam odiando as ALTÍSSIMAS latências.
+Então, o modelo do Twitter quase certamente seria a opção 1. A mensagem do Robert é copiada (ou pré-carregada) para os 24.875 seguidores, de tal forma que quando o usuário abrir sua página/cliente, lá estará a mensagem de Scoble, esperando por ele. Os usuários adoram a velocidade, mas o Twitter está odiando as operações de escritas. Todas elas.
+Quantas operações?
+Um fator de multiplicação de 6.000 vezes:
+Você vê algum problema com este cenário?
+
+Scoble escreve alguma coisa – boom – 21.146 operações de escrita são disparadas. 1 para cada seguidor.
+
+
+Michael Arrington responde – boom – outras 17.918 escritas.
+
+
+Jason Calacanis adentra – boom – mais 25.972 escritas.
+
+Além das 65.036 escritas, há muita sobrecarga também. Você precisa atingir o banco de dados para descobrir quem são os 65.036 seguidores. Leitura, leitura, leitura. Então possivelmente atingir outro banco de dados para descobrir em qual shard eles vivem. Leitura, leitura, leitura. Então precisa fazer uma conexão e escrever nesse host de banco de dados, e em caso de sucesso, voltar e marcar as atualizações com sucesso. Dependendo dos detalhes do sistema de mensagens, toda a sobrecarga de procura e cálculo poderiam ser muito maiores do que 65.036 leituras + 65.036 escritas. Você não iria querer nem mesmo começar a pensar nos problemas de replicação (multiplique por um fator de 2 ou 3). E não se esqueça dos lockings também!
+E aqui vai o principal: esse gigantesco esforço de processamento & entrega uma combinação de 130 mil IOs de disco causados por apenas 3 usuários, enviando apenas uma, pequena, mensagem de 140 caracteres. Quão inocente isso parece.
+Não somente o post do Israel descreve bem o problema no modelo lógico da funcionalidade de “seguidores” do Twitter, parece que ele acertou nos detalhes da implementação, o que explicaria os problemas significativos que eles estão sofrendo com escala. O problema é que se você ingenuamente implementar um design que simplesmente reflete a descrição do problema então você cairá em um inferno de IO. Não importa se está usando Ruby on Rails, Cobol on Cogs, C++ ou Assembly escrito manualmente, a leitura & escrita irá matá-lo.
+Isso me leva ao meu novo mantra que roubei de Jim Gray via Pat Helland; DISCO É O NOVO TAPE.
+Além disso, o fato do pessoal do Twitter ter decidido não limitar os seguidores e os que você segue pode tê-los salvo dos tipos de flames que Robert Scoble enviou ao Facebook pelo limite de 5.000 amigos mas isso também significa que eles não somente tem que lidar com o suporte de usuários com milhares de seguidores, mas também usuários que seguem milhares de outros usuários [ambos casos que seriam otimizados de maneiras muito diferentes]. Claramente muita decisão de funcionalidade foi feita no produto sem pensar em qual seria o impacto de escalabilidade do sistema.
+tags: obsolete twitter
+

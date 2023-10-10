@@ -1,0 +1,62 @@
+
+Publiquei o último resumo de notícias no dia 17 de Janeiro. Hora de mais uma atualização e, como esperado, a quantidade de notícias subiu bastante! Temos muita coisa a rever aqui :-)
+Notícias do Brasil
+Primeiro, notícias brasileiras, e são várias!
+
+EVENTO: O Marcelo Castellani, Willian Mollinari e o pessoal do Guru-SP organizou um evento que contará com o apoio da Tempo Real Eventos. O evento Ruby on Rails no mundo Real 2009 acontecerá no dia 4 de Abril. Vários nomes interessantes estarão presentes, como o Carlos Brando, o Caffo e vários outros. Não deixem de participar.
+
+
+Esta semana o Carlos Brando anunciou uma grande boa surpresa: ele fez uma parceria com o Peter Cooper, do famoso site Ruby Inside e lançou a primeira franquia internacional, o Ruby Inside Brasil que trará as principais notícias do mundo Ruby, incluindo traduções do site oficial e também material original. Se você já não assinava o Ruby Inside em inglês, recomendo que assine este novo.
+
+
+
+
+O Júlio Monteiro e a A2C lançaram um novo serviço online, o Clube de Autores. A idéia é ser como o famoso Lulu. Para quem não conhece, digamos que você quer publicar um livro, mas não gosta da idéia de passar por toda a burocracia de editoras e tudo mais. Basta vender online, uma cópia digital. O Cluboe dos Autores é o intermediários que faz o serviço de hostear seu livro e tratar de toda a transação online e depois de pagar o autor do livro.
+
+
+E falando em livro, finalmente saiu um livro brasileiro decente de Ruby on Rails com conteúdo original! A façanha foi do grande Rodrigo Urubatan que escreveu o Desenvolvimento Fácil e Rápido de Aplicações Web, publicado pela Novatec. Antes desse, os únicos livros interessantes de Rails eram as traduções dos livros do Dave Thomas e do Obie Fernandez, mas de conteúdo original tinha o meu – super antigo, de 2006 – e finalmente este novo. Estou muito contente de ver mais livros saindo. Espero que outros se sigam. Eu ainda não li o livro, mas conhecendo o Urubatan, acho que posso recomendá-lo sem medo ;-)
+
+
+Meu xará Fabio Kung lançou uma extensão para Textmate para facilitar o refatoramento de Ruby. Se você é desenvolvedor, tem um Mac e gosta de Textmate, acho que o Rfactor é uma boa pedida. Eu mesmo ainda não usei muito, mas é uma ferramenta muito promissora.
+
+
+Finalmente, minha palestra do ano foi na Campus Party onde passei alguns dias varando a noite. Foi bem legal ver a platéia reunida para a primeira palestra, logo às 8 horas da madrugada :-) Valeu pessoal!
+
+Notícias Internacionais
+
+O grande Satish Talim continua com seus cursos gratuitos que já ensinaram Ruby para centenas de programadores por todo o mundo. Nos cursos dele, quase metade tem sido de brasileiros. O curso de Ruby do RubyLearning é patrocinado pela Locaweb. A próxima turma vai começar em 14 de março. Fora isso, o Satish está lançando também mais um curso gratuito, desta vez de Git e Github, que começa agora dia 21 de fevereiro.
+
+
+O Rails 2.3 Release Candidate 1 foi anunciado no começo do mês. Não deixe de acompanhar as novidades da primeira versão a ser lançada depois do anúncio de união entre os Core Teams de Rails e Merb pois já tem muito código do Yehuda Katz e outros Merbistas nessa versão. Para mim, particularmente gosto muito do sistema de template de projetos e da evolução do sistema de Engines.
+
+
+Depois do lançamento oficial do Ruby 1.9.1, versão estável, finalmente os Rubistas estão começando a atualizar seus códigos para ficar compatível. O pessoal da Phusion lançou rapidamente uma versão do Passenger que já é compatível também. Além disso, o pessoal da BrightBox lançou o site Is is Ruby 1.9, um website comunitário que deve ajudar as pessoas a descobrir se sua gem já é compatível ou não. No fundo ainda é meio uma roleta-russa, a diferença é que você poderá ver se alguém já teve sucesso ou fracasso usando a gem que você procura, mas pode dar um empurrão inicial.
+
+
+Falando em JRuby, estamos próximos do lançamento da versão 1.2 (a seguinte depois da 1.1.7). O Charles Nutter deve ser o desenvolvedor mais adrenado que eu já vi. O JRuby, segundo Charles, nunca teve mais que 2 desenvolvedores full time trabalhando nele. Até hoje a contagem de bugs já acumulou mais de 500 tickets. Então ele resolveu entrar em modo de manutenção e eliminou centenas deles. Vejam o relatório do que ele já ajustou até agora.
+
+
+O Ruby 1.8.6 passará a receber manutenção diretamente da Engine Yard, com Ezra Zygmuntowicz coordenando. Hoje a equipe Core Team do Ruby no Japão está mais focada na série 1.9. Porém a 1.8.6 ainda precisa evoluir pois muitos de nós ainda vão depender dele por muitos anos ainda. Hoje temos o seguinte problema: a versão de transição 1.8.7 não teve muitos adeptos por causa das quebras de compatibilidade. A versão 1.8.6 já tem pelo menos um fork, o Ruby Enterprise Edition da Phusion. Fora os clones como JRuby, Rubinius, Maglev, IronRuby, todos mais focados em compatibilidade com o 1.8.6. Esperamos que com o controle da manutenção nas mãos da EY, a versão 1.8.6 evolua bem mais rápido, que os bugs conhecidos sejam eliminados e que ele ganhe mais otimizações de performance.
+
+
+O Luis Lavena anunciou que o projeto One-Click Ruby Installer foi movido para o Github, finalmente. Quem quiser contribuir agora terá muito mais facilidade. Falando em Windows, o blogueiro William Green publicou mais um artigo sobre IIS, desta vez mostrando como rodar Rails 2.3, com IIS 7, com FastCGI. Eu já fiz cenários desse antes e descobri que rodar inicialmente não é difícil, mas manter o garoto de pé é o desafio. Pelo menos quando eu testei o FastCGI caía rapidamente depois de poucas centenas de requisições, o que o tornava inviável para uso em produção.
+
+
+O pessoal do RailsEnvy, o Gregg e o Jason, fizeram uma parceria com a New Relic lançando o RailsLab. A parceria envolve o lançamento de um total de 13 screencasts gratuitos numa séria chamada Scaling Rails. Para quem ainda está aprendendo a colocar suas aplicações Rails em produção da maneira correta vai aprender muito nessa série. Altamente recomendado e eu diria que qualquer desenvolvedor Rails que tem intenções de colocar um sistema em produção tem obrigação de saber no mínimo os assuntos cobertos nesses screencasts, portanto esta é uma ótima oportunidade para tirar o atraso.
+
+
+Como todos sabem, o Rails utiliza por padrão o ERB como engine de template para gerar as páginas HTML. Um projeto que eu sempre gostei foi o Erubis, que substitui o ERB padrão e adiciona mais performance. A versão mais recente, 2.6.4, suporta o Rails 2.2 e o 2.3. Vale a pena fazer testes com ele.
+
+
+O projeto Rubinius teve uma evolução importante recentemente. A grosso modo, eles conseguiram otimizar o Rubinius o suficiente para elevar a performance uma ordem a mais de grandeza. Isso incluiu algumas incompatibilidades, mas eles vão melhorar isso. Para quem não está acompanhando, esta é uma movimentação importante para tentar trazer mais tração a este projeto que andava meio apagado ultimamente. Leia estas duas entrevistas com o Brian Ford para entender melhor como isso funciona.
+
+
+Recentemente aconteceram duas discussões “filosóficas” interessantes. A mais recente foi a proposta do Obie Fernandez de criar um Rails Maturity Model (RMM), como eu já expliquei no artigo anterior. A discussão fugiu do ponto e quem não entendeu achou que se tratava de uma discussão a respeito de certificações e aí a discussão ficou sem sentido. O último post do blog do Obie deve ajudar a dar uma luz nisso. Outra discussão foi a partir do podcast do Joel Spolsky com o Jeff Atwood onde discutiu-se sobre testes serem superestimados e que em muitos casos podem mais prejudicar do que ajudar. O Robert Martin – Uncle Bob, o “pai” do Agile – entrou na briga. Virou uma briga entre gigantes que no final acho que acabaram se entendendo. A raíz de todos esses problemas? Eu já havia discutido sobre isso. Tudo pessoas que seguem o que ouvem sem pensar no que estão dizendo e prolongam uma discussão que já perdeu o sentido.
+
+
+Dentre algumas notícias menores, o Rails Guides recebeu uma cara nova; a comunidade Rails Activists começou a gerar alguns frutos como o novo Rails Wiki que tem o objetivo de organizar melhor as informações sobre Rails. Para quem está interessado em CouchDB, tem mais uma opção de ORM para testar, o CouchFoo, que tenta ser um ActiveRecord para CouchDB. Uma dica para quem está desenvolvendo blogs ou coisas parecidas que recebem comentários de usuários e quer evitar Spams, existem algumas técnicas que você pode usar. Para quem não sabe, a comunidade Rails já tem algumas ótimas alternativas de aplicações completas open source. Esta lista de 23 aplicações open source trás figuras conhecidas como o Mephisto, Radiant, Insoshi e muitos outros. Recentemente eu estava discutindo sobre classificadores Bayesianos e por acaso no mesmo dia publicaram um post sobre isso, achei interessante. A ELC tem um blog muito legal e de vez em quando saem uns artigos bem instrutivos, como este sobre o projeto Gazer, uma tentativa de ter Programação Orientada a Aspectos em Ruby. Na realidade, o Ruby em si já é tão flexível que você não precisa de nada externo para simular o comportamento de Aspectos, mas o Gazer tenta apenas organizar isso de forma que quem vem de linguagens como Java consiga encontrar seu vocabulário de AOP como “pointcuts”, “joint ponts”, etc :-)
+
+Finalmente, um pensamento para o mês: Desenvolvimento Ágil é mais sobre Cultura do que Processos. As discussões sobre RMM, sobre testes e tudo mais só me delatou uma coisa: as pessoas tem um nível muito baixo de cultura. Qualquer um com consciência do assunto, que tivesse lido a proposta inicial de RMM do Obie ou ouvido as críticas do Spolsky não teria iniciado o flame war que aconteceu.
+A parte lamentável é, de novo, o Cargo Culting, que acontece porque as pessoas levam as coisas ao pé-da-letra e não páram para avaliar o que estão fazendo, porque estão fazendo, qual o melhor balanço, custo-benefício, etc. Desenvolvedores experientes dificilmente caem nessa, quando o fazem é porque querem mesmo ser sarcásticos. Agilidade, por estar na moda, recebe muita atenção e normalmente de pessoas que não entendem o que é ser Ágil.
+tags: obsolete
+

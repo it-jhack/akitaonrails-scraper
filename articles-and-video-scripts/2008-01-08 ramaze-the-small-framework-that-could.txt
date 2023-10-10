@@ -1,0 +1,37 @@
+
+
+
+
+Não lembro onde foi que li sobre ele, se foi alguém no rails-br, algum e-mail. Enfim, sei que resolvi fuçar o Ramaze
+Todos sabemos que Rails não é o único framework web que existe em Ruby. Para os extremamente minimalistas, existe o Camping, de ninguém menos que why the lucky stiff. Temos o framework que mais diretamente tenta ser um alternativa melhor ao Rails, que é o Merb, de Ezra Zygmuntowicz. Também há algo um pouco diferente como o Nitro.
+Especificamente sobre ORM, estamos acostumados ao ActiveRecord, mas em Ruby temos outras alternativas como Og (usado pelo Nitro), e algo mais próximo para quem vem de ORMs como Hibernate, que é o DataMapper.
+Enfim, existem opções. Veja as que melhor se adequam e escolham suas misturas. Um dos mais novos candidatos é o Ramaze. Instalação?
+sudo gem install ramaze
+1
+2
+3
+4
+
+
+Começar um projeto?
+
+<macro:code>ramaze --create seu_projeto
+
+Por que eu usaria Ramaze? Bom, pelo menos o que eles clamam é o seguinte:
+
+Ser um framework leve (pelo menos por enquanto …)
+Arquitetura MVC
+Altamente modular (podemos escolher qual engine de template usar, qual ORM usar, etc)
+Já roda no Ruby 1.9 (para os corajosos)
+Mais rápido que Rails, thread-safe
+Mais fácil e rápido de aprender (pouca mágica)
+Documentação razoavelmente completa
+Poucos bugs documentados até o momento
+Desenvolvido desde o começo com BDD, tem mais de 90% de cobertura de testes
+Roda bem em Thin, Mongrel, Evented Mongrel, Swifiplied Mongrel, FastCGI, etc
+Em vez de Prototype/Scriptaculos no Rails, vem com JQuery
+
+E um plus: para quem já conhece Rails, aprender um framework como Ramaze e similares é um pulo. Isso pode ser muito útil principalmente para quem quer fazer algo muito rápido e minimalista e não precisa de todo o suporte do Rails. Ou precisa de uma sub-aplicação mais performática. Enfim, como melhor aproveitar só vamos saber quando aprendermos (perdemos oportunidades por limitar nossos conhecimentos). Aliás, eu não sabia, mas no site do Ramaze ele lista other frameworks e em Ruby existe uns 16 frameworks web, em diferentes estágios de maturação.
+O blockbuster ainda é Rails, mas é excelente ver que outros como Merb estão correndo rápido: isso obriga o Rails a evoluir também, ou ser deixado para trás. É a Evolução pela Concorrência como eu gosto de dizer. Nada mais saudável do que isso.
+tags: obsolete
+

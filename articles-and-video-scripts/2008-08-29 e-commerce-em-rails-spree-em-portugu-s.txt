@@ -1,0 +1,12 @@
+
+
+
+
+O Sean acabou anunciando antes da hora :-) Mas tudo bem, vamos lá: tudo começou porque o Gregg lançou o EnvyCasts para vender seus excelentes screencasts. Obviamente ele precisava de algum sistema de e-commerce para isso.
+Fazer um e-commerce do zero não se faz do dia para a noite. Daí entra o Spree, um projeto open source que implementa um e-commerce bem simples em Rails, mas que já deve servir para a maioria das pequenas lojas – não, não serve para ser a próxima Amazon :-)
+Ele se utiliza da gem ActiveMerchant para se comunicar com os gateways americanos de pagamentos.
+É aqui que eu entro: faltava uma aplicação como essa aqui no Brasil. Como ninguém fez, ontem de madrugada resolvi fazer a parte de localização que faltava para português. O resultado você pode ver no site de demonstração e clicar na nossa bandeira. A parte de localização tinha alguns defeitos, faltava separar strings, então eu dei um pequeno tapa em algumas áreas. O Sean já deu merge no projeto principal.
+Depois de ter olhado o código já vi várias partes que podem melhorar. Uma das coisas que fiz foi adicionar suporte a localização às extensions. O Spree pode ser extendido via essas extensions, então era importante que ela também fosse localizada. Outra coisa que se ninguém começar eu quero acrescentar é Page Caching, pelo menos às páginas públicas de produtos.
+Mas o projeto que quero tentar fazer é criar gateways para pagamentos em instituições financeiras do Brasil. A Locaweb tem suporte a isso e quero ver se consigo integrar. Se conseguir isso vai significar uma pequena loja feita em Rails que é viável para pequenos negócios e ainda extensível via Ruby. Só para garantir que eu não estou reinventando a roda, alguém já tentou fazer gateways desse tipo em ActiveMerchant? Se não, outra pergunta, alguém está a fim de ajudar nessa implementação? Só para terem uma idéia, dêem uma olhada nos exemplos em ASP e PHP  que tem na atual Loja de exemplo da Locaweb.
+tags: obsolete spree
+

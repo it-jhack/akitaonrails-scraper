@@ -1,0 +1,10 @@
+
+
+
+
+Acabei de ver no blog do Charles Nutter sobre o Oracle Mix. Provavelmente o primeiro website público de um grande nome colocado em produção usando JRuby. É uma ótima oportunidade para todos poderem ver que nível de performance o JRuby pode alcançar num site público.
+
+Este site foi desenvolvido em parceria entre a OracleApps e a ThoughtWorks. Está rodando sobre Oracle Application Server, Oracle Database, Oracle Internet Directory, Oracle SSO e JRuby on Rails.
+Um testemunho à produtividade do Rails: este website social foi desenvolvido em 5 semanas, em conjunto com a ThoughtWorks. Eles bem que podiam liberar quantas pessoas estava envolvidas no desenvolvimento e quais obstáculos foram enfrentados até chegar à produção. Em todo caso, mais um excelente case para a já enorme lista do Rails.
+tags: obsolete jruby
+

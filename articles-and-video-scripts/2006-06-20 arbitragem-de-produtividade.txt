@@ -1,0 +1,64 @@
+
+Nota do Akita: Este artigo foi traduzido do post de Obie Fernandez, de seu blog. Ele trabalha para a ThoughtWorks, a consultoria de Martin Fowler e sua visão de negócios sobre o conceito de “arbitragem de produtividade” pode ajudar alguns a entenderem melhor porque Ruby on Rails não é apenas mais um “brinquedo” de tecnologia.
+De acordo com o Wikipedia, arbitragem é:
+a prática de levar vantagem de um estado de desequilíbrio entre dois ou mais mercados: uma combinação de negócios compatíveis golpeados pela exploração do desequilíbrio, onde o lucro é a diferença entre os preços do mercado. Arbitragem Estatística é o desequilíbrio em valores esperados. Um cassino normalmente tem uma arbitragem estatísticas em cada jogo de azar jogado, mesmo que pudesse perder dinheiro em cada jogo".
+
+
+Nota do Akita: _essa tradução pode não ser muito boa, a definição da Wikipedia em português deve ajudar: Arbitragem, no contexto do Mercado Financeiro pode ser interpretada como a troca de uma moeda estrangeira por uma outra moeda estrangeira, ou como uma operação em que existe ganho sem que haja risco.
+Por exemplo , se compramos ienes com euros que temos em nossa carteira, temos uma operação de arbitragem no primeiro sentido. Se um amigo seu precisa de uma nota de 1 real trocada , e para isso ele pretende trocar uma nota de 5 reais , caso você possua quatro notas de 1 real e compre a nota de 5 reais de sua amigo por R$4 , esta é uma operacao de arbitragem no segundo sentido , tendo em vista que não há risco nesta operação e existe um ganho óbvio._
+Acredito que durante o curso dos próximos anos, o advento de Ruby on Rails e o aumento geral da aceitação de linguagens dinâmicas nas configurações corporativas, criem novas grandes oportunidades para consultorias focadas em entrega para lucrar com arbitragem de produtividade.
+Uma rápida procura no Google confirma que o termo nunca foi usado nesse contexto antes então, aqui vai minha definição:
+
+Arbitragem de Produtividade é uma estratégia da arbitragem estatística que traz novas tecnologias inovadoras para entregar soluções no preço do mercado, baseado na proposição de preço/valor histórico de tecnologias mais velhas e menos produtivas.
+
+
+Em termos de software, é a vantagem competitiva ganha entregando soluções a preço igual ou menor que do mercado, mas incorrendo em menor custo devido ao uso comercial adiantado de tecnologia mais recente e relativamente não-provada. Com o tempo, a expectativa de preço/valor do mercado realinha com a realidade para refletir o novo status quo, ao mesmo tempo diminuindo a oportunidade de lucratividade para arbitragem de produtividade até que a inovação cause mais uma vez um desequilíbrio de produtividade.
+
+Durante os as últimas décadas, melhorias no desenvolvimento de software como programação orientada a objetos e metodologias Ágeis causaram grandes oportunidades de arbitragem de produtividade, que eu e outros argumentariam que ainda existe. Vejo o surgimento de legítimos aceleradores de produtividade como frameworks Java mais leves (em contraste com J2EE) e ainda mais recentemente, o surgimento de Ruby on Rails, assim como contínuos eventos no mesmo ciclo de inovação.
+Querem um exemplo realista do que estou descrevendo? Duas respeitadas consultorias se encontram competindo cabeça-a-cabeça por um projeto: um típico aplicativo Web, do tipo que grandes corporações sempre pedem. Ambas as consultorias seguem práticas Ágeis. A entrega na data é crítica (como sempre), mas neste caso é particularmente importante. O cliente terá um severo prejuízo de regulamentação se o novo sistema não estiver implementado dentro de um ano.
+Os tomadores de decisão da Consultoria A propõe uma solução em Java pelo preço de um milhão de dólares, e estimam entregar tudo em 10 meses. Sua proposta tem preço competitivo e eles se sentem confiantes. Seu plano é alocar um time experiente usando uma plataforma madura (Java). Eles calculam, usando valores não exatos, que 6 recursos x US$ 97 de taxa/hora (já com custos embutidos) x 10 meses dão US$ 1 milhão, com uma margem de mais ou menos 25%. Uma margem maior seria melhor, mas de todo modo este negócio não é ruim.
+O pessoal da Consultoria B também tem grande experiência para construir o tipo de aplicativo Web necessário e enxergam uma potencial arbitragem de produtividade. Em vez de Java, eles se diferenciam com a solução Ruby on Rails. De forma até inocente, vão ainda abaixo do preço da competição propondo US$ 800 mil e prometendo entrega em 8 meses. De acordo com seus cálculos (e mais uma vez, com valores aproximados), 4 recursos x US$ 192 de taxa/hora x 8 meses é igual a US$ 800 mil. A taxa (US$ 192) representa uma margem muito maior, mesmo considerando que a Consultoria B paga seus consultores com salários mais altos.
+Adivinhem quem ganhou?
+Consultoria B ganhou! No momento da assinatura do contrato, o CIO do cliente disse que foi “óbvio” e lista as seguintes razões por ordem crescente de importância:
+
+Ele ouviu falar bem de Ruby on Rails
+      Analistas do Gartner e Forrester e mesmo membros de seu grupo pessoal estão histéricos sobre Ruby. Ele também testemunhou alguns de seus mais entusiasmados funcionários discutindo excitadamente sobre Ruby ao redor do bebedouro. Um pouco de navegação pessoal pela Web só serviu para aumentar a sua confiança. Não que ele entenda todos os detalhes técnicos, mas ele entende de simplicidade. Ao que parece, Ruby on Rails pode ser a próxima grande onda e todos estão dizendo que a simplicidade é parte considerável do sucesso de Rails. Isso faz muito sentido para ele. Ruby pode não ser um padrão corporativo (ainda), mas nem se compara com os insucessos de sua organização construindo aplicativos J2EE.
+
+
+O preço é correto
+      US$ 200 mil pode não ser grande coisa comparado ao montante total, mas é uma boa economia para seu orçamento anual (lembre-se, é um contrato de preço-fechado).
+
+
+Mitigação do risco de entrega
+      Nosso CIO tem anos de experiência e nunca conheceu um fornecedor entregar um projeto a tempo. Em um projeto que incorrerá em grandes consequências financeiras se levar mais de um ano para implementar, uma estimativa de 8 meses contra 10 praticamente fechou o acordo. Mesmo que a Consultoria B tenha errado a estimativa por 50%, ainda estará a tempo. Por outro lado, se a Consultoria A errar por 50% os prejuízos serão maiores do que o custo do projeto e ele gastará alguns meses navegando pelo LinkedIn, procurando emprego.
+
+
+Ele se sente bem com a decisão
+      O risco de atraso é muito, muito maior do que tentar com uma tecnologia relativamente não provada mas que o mundo todo parece estar chamando de sucessor do Java.
+
+Não tem certeza se acredita em mim, um fã de Java transformado em hiper-entusiasta de Ruby? Então considerem o seguinte par de pessoas da indústria com credenciais melhores do que as minhas: Stuart Halloway e Justin Gehtland da Relevance, LLC são respeitados tecnologistas de Java e .NET. Recentemente Stuart publicou informações muito interessantes sobre o crescimento de negócios de Ruby on Rails da Relevance:
+
+Nos últimos 18 meses, estivemos silenciosamento enviando propostas de projetos Web com ambos Java e Ruby on Rails. Nossos números, até agora, ficam mais ou menos assim:
+	
+Para aplicativos do tipo “ponto certo” doRails (CRUD + AJAX para Web) nossos preços tendem a ser 30-50% menos do que a mesma proposta implementada em Java.
+Para aplicativos que estão longe do “ponto certo” do Rails (alguém sabe quais são?), nossos preços tendem a ser apenas 10% menos do que o mesmo projeto em Java.
+Aplicativos são finalizados duas vezes mais rápidos em Rails.
+Quando os clientes querem a taxa/hora, nossa taxa para trabalhos Rails é um pouco maior do que de Java. Entretanto, como os aplicativos são finalizados de 30-50% mais rápidos, Ruby/Rails acaba entregando mais por dólar.
+
+E não estamos falando que as afirmações de dez vezes mais produtividade que os desenvolvedores Rails têm feito são falsas. Existem partes específicas do desenvolvimento que de fato são mais rápidas. Outras partes não, e 10%-50% acima é o que temos visto em projetos reais nos últimos 18 meses.
+
+Se você é uma daquelas pessoas que pensam que Ruby on Rails é apenas barulho, devia estar se dizendo “Aha! Eu sabia que as afirmações de 10x mais produtividade eram falsas!”.
+Não tão rápido, Thomas. Todas as pessoas de Rails com quem falei concordam que, como Stuart escreveu, apenas alguns aspectos do desenvolvimento Rails são 10x a 20x mais rápidos. De qualquer forma, mesmo que milhares de nós estejamos errados e as afirmações de produtividade tenham sido muito exageradas, ainda faz sentido escolher Ruby on Rails. Respondendo a uma torrente de críticas, Stuart seguiu um dia depois com informações adicionais (em itálico minhas palavras):
+Para aqueles que estão preocupados se estamos encorajando uma guerra de preços que é ruim para os desenvolvedores: nós nos pagamos (e aos nossos contratados) melhor por trabalho em Rails do que Java. Isso é bom para todos: Desenvolvedores tem mais diversão, fazem mais dinheiro, e os clientes ganham produtos melhores mais baratos e rápidos.
+Trazendo o ponto para casa, ele nos dá um grande exemplo de como tornar uma fraqueza legítima em força:
+Algumas pessoas pegaram meu número de “pior caso” (10% de vantagem para Ruby) e extrapolaram que Java poderia alcançar. Essa extrapolação vai na direção errada. A razão do meu número ser 10% e não 50% são dificuldades que de vez em quando aparecem devido à relativa imaturidade da Ruby/Rails. Por exemplo, digamos que propomos um projeto 20% mais barato com Rails. Mas esse preço inclui os custos escondidos de construir um driver de banco de dados e algum processamento especializado de XML que não existe para Ruby (mas sim para Java). Em um próximo projeto similar, seremos capazes de entregar com economia de 30% dos custos sobre a proposta Java, porque a solução vai existir para as duas plataformas. E lembrem-se, esses números vêm depois que pagamos mais aos desenvolvedores.
+Estou contente que Justin e Stuart estão aumentando a qualidade da discussão sobre Rails na corporação. Mesmo sendo nossos competidores, me sinto com vontade de saudá-los por discutir negócios tão candidamente.
+De volta à ThoughtWorks temos usado arbitragem de produtividade há anos, o que justifica porque foi tão natural para nós oficialmente irmos atrás de Ruby on Rails em Março de 2005. Asseguro a vocês que já estamos entregando valores fantásticos de negócio a nossos clientes usando Ruby on Rails e, mais recentemente, Django. Se estão interessados em como estamos usando Django, não deixem de ver nosso blog do projeto Greenpeace.
+Finalmente, se você é um desenvolvedor Java ou .NET experiente pronto para a mudança para linguagens dinâmicas e não se incomoda em viajar, encorajo considerar se juntar a nossa equipe. Certifique-se de informar seu recrutador que Obie lhe disse que 2006 está se moldando para ser um ano muito empolgante para linguagens dinâmicas na ThoughtWorks e você quer se juntar à ação enquanto ainda está quente.
+
+Bom Feriado a Todos!
+Obie Fernandez
+21 de dezembro de 2005
+
+tags: obsolete translation rails pitch
+

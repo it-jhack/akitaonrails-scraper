@@ -1,0 +1,35 @@
+
+
+
+
+Eu sei, eu sei, muita gente reclama de muitos sites falando o tempo todo sobre o mesmo assunto: Apple. Primeiro foi com o iPhone, agora com o Leopard. Ninguém aguenta mais ler sobre Apple :-) De qualquer forma também estou dentro do Hype, já que publico sobre Rails e não há nada com mais sinergia a Rails do que a Apple.
+Foi-se o paradigma de que um bom geek é aquele tipo gorducho, com as mãos meladas de hamburgers, rodeado de micros semi-montados, rodando Linux. Um bom geek de hoje é o oposto: é alguém com senso de estética, estilo, consistência, as marcas registradas da Apple
+Bom humor também faz parte, e veja o que o pessoal andou distribuindo pela internet: a imagem do ícone que representa um PC. E isso não é montagem photoshop nem nada. Realmente aparece assim toda vez que você dá Get Info no Finder sobre um sharing Windows:
+
+Não é relevante se essa tela hoje em dia é mais ou menos vista, ou quais as circunstâncias. Já é um ícone cultural. Todo mundo sabe o que é uma tela azul. Macs também tem kernel panics esporádicos (eu tive 1 em quase 2 anos de Mac).
+Enfim, o Mac representa uma longa história. Recomendo ler The Second Coming of Steve Jobs que acabei de ouvir em audiobook (aliás, recomendo muito usar a audible.com regularmente, meu próximo audiobook será Atlas Shrugged).
+Para entender porque o Mac OS X é como é, não basta ler reviews superficiais de um Wall Street Journal. Temos que recorrer a um grande reviewer técnico de outro grande site técnico. John Siracusa sempre foi um dos meus favoritos desde pelo menos 2000, que foi quando comecei acompanhar sua série sobre o OS X, na venerável Ars Technica. Ele começou explicando os nuts’n bolts do Developer Preview 2, pré 10.0.
+A Ars Technica lançou hoje o mais novo capítulo dessa série: Mac OS X 10.5 Leopard. É um review voltado a quem se interessa em conhecer a arquitetura do sistema. Ler os reviews em ordem cronológica é uma excelente forma de entender porque o Mac OS X é tão bom:
+
+DP2: A Preview
+Quartz and Aqua
+DP3
+DP4
+Q&A
+Public Beta
+Post Beta
+Metadata
+
+
+10.0 Cheetah
+10.1 Puma
+10.2 Jaguar
+10.3 Panther
+10.4 Tiger
+10.5 Leopard
+
+Ele repassa por todos os assuntos relevantes: a evolução do filesystem HFS+ até atingir paridade de funcionalidades com o do antigo BeOS, a evolução da kernel Mach, a transição do sub-sistema gráfico Quartz da CPU para a GPU, a criação dos frameworks “Core”, a inteligência e sinergia de recursos como Spotlight e Time Machine, a evolução da linguagem Objective-C.
+Como nota à parte, parece que alguns conseguiram rodar o Leopard em PCs normais. Não tenho a mínima idéia se funciona, se será estável, se não haverá problemas de compatibilidade. Se houver é o risco de quem quiser tentar. Eu definitivamente não vou me dar a esse trabalho.
+E para quem comprou Macs recentemente – a partir de Outubro – terá a chance de fazer a atualização a preços muito reduzidos, conforme informam no site oficial da Apple do Brasil.
+tags: obsolete apple
+

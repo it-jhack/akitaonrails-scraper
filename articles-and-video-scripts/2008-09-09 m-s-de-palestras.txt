@@ -1,0 +1,15 @@
+
+
+
+
+
+Este mês estarei toda semana numa palestra.
+
+9/9 – Centro Universitário Claretiano – Batatais/SP
+16/9 – USP Ribeirão Preto
+26/9 – Unoesc – Xanxerê/SC
+8/10 – USP São Carlos
+
+Amanhã parto para Batatais. O tema de amanhã será interessante, não inteiramente focado em Rails, pra variar. Uma dica, o que Albert-László Barabási, Chris Anderson e Benoit Mandelbrot tem em comum? ;-)
+tags: obsolete conference
+

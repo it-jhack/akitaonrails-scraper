@@ -1,0 +1,9 @@
+
+
+
+
+Não é de hoje que recomendo a excelente série de screencasts do PeepCode. Por míseros US$ 9 você compra um episódio que tem em média 1 hora.
+Desta vez a propaganda é porque Geoffrey colocou à venda em seu site, o screencast ensinando a usar GIT. Para quem não leu, eu falei sobre GIT aqui e aqui.
+GIT é um repositório descentralizado para versionamento de código-fonte. Um Subversion-anabolizado. E o screencast conta ainda com a participação técnica de Junio Hamano, o mantenedor do GIT. Portanto, como todos os outros screencasts, também vou comprar esse e recomendo a todos.
+tags: obsolete git
+

@@ -1,0 +1,106 @@
+
+De vez em quando nos deparamos com o cenário onde precisamos gerar um ID único não-sequencial (auto increment do banco de dados não serve). Pode ser para várias coisas, por exemplo, um link que você quer enviar por e-mail ao seu usuário que, quando ele clickar, vai levar diretamente a uma página customizada para mudar de senha sem que ele precise logar antes. Ou algo assim.
+Uma das diversas maneiras é usar um gerador de UUIDs ou “Universally Unique Identifier”, um número de 128-bits representado como uma string de 36 caracteres. Existem algumas bibliotecas para isso em Ruby, uma delas é o uuidtools, que você instala simplesmente assim:
+
+sudo gem install uuidtools
+
+Ele funciona muito bem, mas há alguns ‘poréns’, principalmente se estiver usando Windows. Veja aqui por que.
+
+
+Antes de mais nada, vamos entender como ele funciona. Na sua aplicação Rails, não se esqueça de dar require ‘uuidtools’ em algum lugar do config/environment.rb ou num arquivo de requirements dentro de config/initializers, no caso do Rails 2.0.
+Para usar na sua aplicação, basta chamar o seguinte:
+1
+2
+
+>> UUID.timestamp_create.to_s
+=> "76b69f2e-fbc1-11dc-882f-001ec20704ce"
+
+
+Cada vez que chamar o mesmo comando, ele irá gerar um novo número, quase totalmente garantido de nunca se repetir. Eu digo ‘quase’ porque na realidade existe sim chance de colisão, mas é muito pequeno. E se for armazenar isso num campo de um model ActiveRecord, não esqueça de usar ‘validates_uniqueness_of’
+Enfim, dentre as várias maneiras de se gerar UUIDs, um dos componentes normalmente usados para formar esse número é o MAC address da sua placa de rede. Por si só ela também é um número mais ou menos único. Portanto, o gerador precisa saber consultar esse número.
+Inúmeras bibliotecas fazem o mais simples: uma chamada de sistema ao comando ‘ifconfig’ do Unix ou ‘ipconfig’ no Windows. Daí analisa-se o retorno e consegue-se extrair o MAC address do texto.
+Agora começa o problema: ifconfig não é um padrão. Diferentes Unix/Linux podem chamá-lo com parâmetros diferentes. Pode existir configurações de sistema operacional que não devolvem o MAC address ou devolvem em saídas ligeiramente diferentes e, nesse caso, a regular expression que as bibliotecas usam podem falhar.
+No caso do Windows, como ele faz uma chamada a um programa externo, ipconfig, ele fica abrindo e fechando uma janela de command prompt. Isso pode ser bastante irritante.
+Por isso, eu pensei em outra solução: pular completamente a chamada ao comando externo. Para tanto, criei um arquivo lib/uuid_extension.rb com o seguinte conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+class UUID
+  class << self
+    # rename the old method
+    alias :old_mac_address :mac_address
+  end
+
+  def self.get_mac_address
+    UUID.mac_address
+  end
+  
+  # replace the old method for a static version
+  def self.mac_address
+    begin
+      SERVER_CONFIG['mac_address']
+    rescue
+      old_mac_address
+    end
+  end
+end
+
+
+O método UUID.mac_address é o que originalmente faz todas as chamadas externas. Via monkey-patching estou saltando completamente essa implementação e, em vez disso, lendo um valor estático no hash SERVER_CONFIG. E de onde vem esse hash? Isso é um arquivo de configuração chamado config/server.yml com o seguinte conteúdo:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+development:
+  server: http://localhost:3000
+  mac_address: 00:1e:c2:07:04:xx
+  
+test:
+  server: http://localhost:3000
+  mac_address: 00:1e:c2:07:04:xx
+
+production:
+  server: http://www.servidor.com
+  mac_address: 00:1e:c2:07:04:xx
+
+
+Para ler esse arquivo toda vez que o Rails inicia, criei um arquivo chamado config/initializers/server.rb com o seguinte:
+1
+2
+3
+
+# Load custom server configuration
+raw_config = File.read(RAILS_ROOT + "/config/server.yml") 
+SERVER_CONFIG = YAML.load(raw_config)[RAILS_ENV]
+
+
+Pronto, isso fecha as pontas. Agora, em vez do uuidtools chamar o ifconfig o tempo todo, ele vai ler de um Hash em memória com a configuração acima. Isso garante que ele sempre vai achar o Mac address que precisa independente de alguma peculiaridade no seu sistema operacional.
+O único cuidado é ter certeza de estar usando o Mac address correto da sua máquina. Isso é particularmente importante se você utilizar Capistrano para fazer deployment em mais de uma máquina. Nesse caso o ideal é que cada máquina tenha um server.yml local com o Mac address correto dela e a receita do Capistrano copie esse arquivo para dentro do projeto Rails que acabou de fazer deployment. O Mac address não deve ser repetido entre diferentes máquinas pois isso aumentaria o risco de colisões.
+Portanto, se alguém estiver tendo problemas com o UUIDtools, esse pequeno hack deve ajudar.
+tags: obsolete rails
+

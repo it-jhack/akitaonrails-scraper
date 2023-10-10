@@ -1,0 +1,19 @@
+
+
+
+
+O Michael (provavelmente o Koziarski) avisou hoje no Riding Rails que a equipe do ruby-security publicou uma recomendação sobre um bug de DoS afetando usuários de REXML. A maioria das aplicações Rails que recebem input de XML são afetados por essa vulnerabilidade e todos são fortemente recomendados a tomar os passos para mitigar esse problema.
+Para resumir:
+Rails 2.0.2 e anteriores
+
+Copie este arquivo de correção em RAILS_ROOT/lib
+Coloque a linha require ‘rexml-expansion-fix’ no seu config/environment.rb
+
+Rails 2.1.0 e Edge Rails
+
+Copie este arquivo de correção em ‘RAILS_ROOT/config/initializers’, isso fará com que esse arquivo seja carregado automaticamente.
+
+Lembrando que: RAILS_ROOT é o seu projeto Rails.
+Segundo o Michael essa correção será disponibilizada como gem nas próximas 24 horas para facilitar a distribuição, esse post será atualizado com instruções de upgrade nesse momento. Mesmo assim ainda será necessário fazer o require a partir do seu environment.rb. A gem pode ser reconstruída a partir dos código-fonte caso você tenha uma VPS ou máquina que você mesmo administre. Se estiver numa hospedagem compartilhada execute agora mesmo a correção acima e atualize sua aplicação em produção.
+tags: obsolete security
+

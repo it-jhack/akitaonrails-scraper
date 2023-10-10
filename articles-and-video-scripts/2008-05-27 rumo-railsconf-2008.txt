@@ -1,0 +1,34 @@
+
+
+
+
+Update 29/05: Já estou assistindo o primeiro tutorial na RailsConf! Já encontrei pessoas legais aqui. Acompanhem minhas fotos aqui
+Em algumas horas estarei embarcando rumo à Portland. Ainda estou preocupado, pois eu só considero algo como sucesso quando eu chego lá. Considerarei finalizado quando finalmente pisar os pés em Portland amanhã pela manhã. Quem acompanhou minha saga do passaporte sabe do que estou falando :-)
+Ruby on Rails se tornou um enorme sucesso! Tão grande que hoje em dia dá muita audiência falar mal dele! O TechCrunch praticamente já é Ph.D nisso. Frases niilistas como “The problems at Twitter are often attributed to their use of RubyOnRails” demonstram o escórnio que os ávidos por pageviews usam e atualmente com a intenção clara de ofender via sarcasmo.
+Porém, repetindo – pela enésima vez (sorry) – Kathy Sierra:
+
+How brave are you? How far will you go to avoid the Zone of Mediocrity? Until or unless you’re willing to risk passionate hate, you may never feel the love.
+
+E a comunidade Rails definitivamente não tem medo do ódio. Nesta RailsConf várias sessões irão tratar exclusivamente da pauta do momento: escalabilidade e F.U.D. (os sarcásticos aprenderam bem como discípulos de Steve Balmer). Quero tentar assistir às seguintes sessões:
+
+Multi-core Hysteria: FUD about CRUD? de Andrea O.K. Wright.
+
+
+Surviving the Big Rewrite: Moving YELLOWPAGES.COM to Rails onde John Straw contará como foi a recodificação de um dos maiores sites dos EUA para Rails.
+
+
+Scaling Rails será um painel com grandes nomes como Blaine Cook, Bradley Taylor, Kevin Lawyer, Ezra Zygmuntowicz e Jim Meyer.
+
+
+Dispelling the Myths About Rails Performance de Lewis Cime da New Relic.
+
+
+Scaling Ruby from the Inside Out do Ezra.
+
+
+mod_rails: Easy and Robust Deployment of Your Ruby on Rails Applications on Apache Webservers dos meus amigos da Phusion. Essa será MUITO legal!
+
+Fora esses painéis ainda quero tentar assistir os painéis sobre Rubinius e o MagLev para ver o grande Avi Bryant.
+Vários excelentes painéis e palestras, espero poder aprender muita coisa e, se tudo der certo, semana que vem trarei as novidades.
+tags: obsolete conference
+

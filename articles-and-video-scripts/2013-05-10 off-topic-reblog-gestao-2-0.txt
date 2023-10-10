@@ -1,0 +1,13 @@
+
+
+
+
+Alguns anos atrás escrevi diversos artigos num outro blog fora daqui entitulado "Gestão 2.0".
+Na época me faltou tempo para escrever lá então ele ficou parado. Como ficou parado todo esse tempo, decidi transferir os posts que eu mais gostei para cá para garantir que meus textos estão (quase) todos num lugar só. Atualmente estou colaborando como colunista na Startupi, então não deixe de visitar lá também.
+Separei uma dúzia de posts do Gestão 2.0 que já estão programados para aparecer na homepage e nos feeds toda sexta-feira perto das 20h. Quem assina meu feed vai recebê-los automaticamentte. Eles tem a tag Gestao20 e a primeira linha diz a data original de quando foram publicados. Como o @gabaiel já descobriu há um pequeno bug no meu blog que permite já ver todos esses posts programados.
+Daqui a 18min o @AkitaOnRails vai postar alguma coisa no blog dele... algo sobre traduções erradas (patterns, standards). Sou vidente!
+Fica como um easter egg para quem for curioso (ou não tiver paciência pra esperar) :-)
+O primeiro post já está no ar, chama-se A Língua Portuguesa-Brasileira é Péssima: Standard vs Pattern. Divirtam-se!
+
+tags: obsolete blog
+

@@ -1,0 +1,15 @@
+
+
+
+
+Ontem o Gregg Pollack me pediu para fazer um review do primeiro episódio da nova série de screencasts sobre Ruby on Rails que ele e o Jason Seifer estão fazendo. É o Envycasts
+Vocês conhecem o Gregg e o Jason dos vídeos humorísticos do RailsEnvy e do famoso podcast RailsEnvy Podcast
+
+“E qual a diferença desse para os famosos PeepCode, RailsCasts e agora os da Pragmatic Programmer?”
+Primeiro, o assunto é mais avançado – daí o título “Advanced” ActiveRecord. Segundo, o nível de produção é muito maior do que um screencast. Pense numa palestra virtual onde eles mesmos aparecem e dão as caras. Terceiro, eles usam o recurso do humor para não deixar a bola cair e o pessoal perder interesse no meio do caminho. Um problema com screencasts longos é que eles ficam cansativos. Eu assisti a série toda de Erlang da PragProg, por exemplo e, apesar do conteúdo ser muito bom, me peguei ‘pescando’ na frente do monitor várias vezes pela morosidade do narrador.
+Já o pessoal do EnvyCasts usa o bom e velho recurso de chroma-key para se sobreporem aos slides e, dessa forma, eles mesmos aparecerem na tela. Veja a imagem acima para entender o que quero dizer.
+Além disso, eles não ficaram no básico “use scaffold, rode migrate e boom!”_, eles falam de performance, algumas otimizações, recursos novos do 2.1 como namedscope, más-práticas. Realmente ajudará o pessoal que só seguiu os tutoriais básicos a complementar seus conhecimentos.
+Em quase 40 minutos de conteúdo, eles conseguem dar um bom overview sobre aspectos pouco comentados do ActiveRecord e isso é importante pois se fosse algo simples de apenas googlar o video já perderia metade do seu valor.
+Por US$ 9 é uma pechincha, altamente recomendado para Railers de qualquer nível, do iniciante ao avançado.
+tags: obsolete
+

@@ -1,0 +1,11 @@
+
+
+
+
+
+Post duplo hoje, acabei de falar do Fabio Kung e resolvi me adiantar. Enviei as mesmas perguntas ao Vinicius Manhães Teles, mas por coincidência, poucos dias atrás, ele fez um post altamente inspirador e que já responde a maior parte delas.
+
+O Vinicius é um cara fora da curva, um dos primeiros a entender a importância de metodologias Ágeis em projetos de software, a evangelizar XP, a começar a usar Ruby on Rails em seus projetos e finalmente agora, a criar excelentes produtos próprios.
+Portanto, recomendo muito que vocês leiam o post no blog dele: Receita do sucesso: fazer o que você ama para entender do que estou falando. E não deixem de conhecê-lo no Rails Summit
+tags: railssummit2008
+

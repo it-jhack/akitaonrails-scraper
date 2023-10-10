@@ -1,0 +1,23 @@
+
+
+
+
+For the longest time, since I migrated my blog from Mephisto to Enki, I lost a few of my interviews and didn’t notice it. Fortunately I had an old backup from where I could recover all of them, so if you missed some of the interviews, here they are again:
+
+Dr. Nic
+Geoffrey Grosenbach
+Chad Fowler
+David Black
+Ola Bini
+Carl Youngblood
+Jamis Buck
+John Lam
+Avi Bryant
+Avi Bryant
+Adrian Holovaty
+Peter Cooper
+Hal Fulton
+Evan Phoenix
+
+tags: interview english
+

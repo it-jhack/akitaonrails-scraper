@@ -1,0 +1,1306 @@
+
+
+for brazilians: click here.
+I am very happy to see that my Rails 2.0 Screencast was very well received. More than 1,500 unique visitors watched it. The idea was to showcase Rails 2.0 very fast, showing what is possible to do in less than 30 min.
+Now, I will break that video down into its main pieces and create the very first full featured step-by-step tutorial around Rails 2.0.
+Like any other tutorial, it doesn’t cover 100% of Rails 2.0, just some of its main features packed in a cohesive application. I recommend checking out Peepcode’s Rails2 PDF and Ryan Bates Railscasts.com for more details.
+This is a 2 part tutorial, for Part 2, click here. And for the full source codes of this tutorial, get it here.
+Let’s get started!
+
+
+Recognizing the Environment
+This tutorial is geared towards those who already have some knowledge of Rails 1.2. Please refer to the many great Rails tutorials around 1.2 available in the Internet world-wide.
+The first think you have to do is update your gems:
+
+sudo gem install rails —include-dependencies
+1
+2
+3
+4
+5
+
+
+You may probably need to update RubyGems as well:
+
+<macro:code>
+sudo gem update --system
+
+
+First things first. Let’s create a new Rails application:
+
+rails blog
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+
+
+This will create our usual Rails folder structure. The first thing to notice is the environment: we now have this main structure:
+
+* config/environment.rb
+* config/initializers/inflections.rb
+* config/initializers/mime_types.rb
+
+Everything that inside the config/initializers folder is loaded at the same time the original environment.rb is, and that's because when you're using several different plugins and gems in your project, the environment.rb file tends to become cluttered and difficult to maintain. Now we have an easy way to modularize our configuration.
+
+h2. Database
+
+The second thing that we have to do is configure our databases. This is done the same way as before at *config/database.yml*:
+
+--- ruby
+development:
+  adapter: mysql
+  encoding: utf8
+  database: blog_development
+  username: root
+  password: root
+  socket: /opt/local/var/run/mysql5/mysqld.sock
+
+test:
+  adapter: mysql
+  encoding: utf8
+  database: blog_test
+  username: root
+  password: root
+  socket: /opt/local/var/run/mysql5/mysqld.sock
+
+production:
+  adapter: mysql
+  encoding: utf8
+  database: blog_production
+  username: root
+  password: root
+  socket: /opt/local/var/run/mysql5/mysqld.sock
+
+
+Notice that now you have a ‘encoding’ options that’s set to UTF8 by default. The Rails app itself loads up with KCODE = true by default as well, meaning that it silently starts with Unicode support already, which is great. But that ‘encoding’ configuration has a new usage as well: everytime Rails connects to the database it will tell it to use this ‘encoding’ setting. Like issuing a ‘SET NAMES UTF8’.
+One trick that we can do to DRY up our database.yml is this:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+
+defaults: &defaults
+  adapter: mysql
+  encoding: utf8
+  username: root
+  password: root
+  socket: /opt/local/var/run/mysql5/mysqld.sock
+
+development:
+  database: blog_development
+  <<: *defaults
+
+test:
+  database: blog_test 
+  <<: *defaults
+
+production:
+  database: blog_production
+  <<: *defaults
+
+
+Much better. We have new Rake tasks as well. And some of them are related to the database:
+
+
+ db:charset                
+ Retrieves the charset for the current environment’s database
+
+
+ db:collation              
+ Retrieves the collation for the current environment’s database
+
+
+ db:create                 
+ Create the database defined in config/database.yml for the current RAILS_ENV
+
+
+ db:create:all             
+ Create all the local databases defined in config/database.yml
+
+
+ db:drop                   
+ Drops the database for the current RAILS_ENV
+
+
+ db:drop:all               
+ Drops all the local databases defined in config/database.yml
+
+
+ db:reset                  
+ Drops and recreates the database from db/schema.rb for the current environment.
+
+
+ db:rollback               
+ Rolls the schema back to the previous version. Specify the number of steps with STEP=n
+
+
+ db:version                
+ Retrieves the current schema version number
+
+
+We have a far better database administration support. In the older Rails now we would log into our databases admin consoles and create the database manually. Now, we can do simply:
+
+rake db:create:all
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+
+If we want to start from scratch, we can do db:drop:all. And in the middle of development we can do db:rollback to undo the latest migration file.
+
+h2. Sexyness
+
+With database set and ready to go, we can create our first Resource. Remember now that Rails 2.0 is RESTful by default (*for brazilians:* I am writing a separated RESTful Tutorial as well).
+
+<macro:code>
+./script/generate scaffold Post title:string body:text
+
+
+The only difference here is that the ‘scaffold’ behaves like the ‘scaffold_resource’ we had before, and the old non-RESTful scaffold is gone. You also don’t have the ActionController class method ‘scaffold’ that dynamically populated your empty controller with default actions. So, everything scaffold we do is RESTful now.
+It will create the usual suspects: Controller, Helper, Model, Migration, Unit Test, Functional Test.
+The main difference is in the Migration file:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+# db/migrate/001_create_posts.rb
+class CreatePosts < ActiveRecord::Migration
+  def self.up
+    create_table :posts do |t|
+      t.string :title
+      t.text :body
+
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :posts
+  end
+end
+
+
+This is called Sexy Migrations, first devised by “Err the Blog” as a plugin and it found its way into the Core. The best way to understand the different is to take a look at what this migration would look like in Rails 1.2:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+class CreatePosts < ActiveRecord::Migration
+  def self.up
+    create_table :posts do |t|
+      t.column :title, :string
+      t.column :body, :text
+      t.column :created_at, :datetime
+      t.column :updated_at, :datetime
+    end
+  end
+
+  def self.down
+    drop_table :posts
+  end
+end
+
+
+It gets rid of the ‘t.column’ repetition and now uses the format ‘t.[column_type] [column_name]’ and the automatic datetime columns are concentrated in a single ‘t.timestamps’ statement. It doesn’t chance any behavior, just makes the code ‘sexier’.
+Now, we run the migration like before:
+
+rake db:migrate
+1
+2
+3
+4
+5
+
+
+In the old days, if I wanted to rollback a migration change I had to do:
+
+<macro:code>
+rake db:migrate VERSION=xxx
+
+
+Where ‘xxx’ is the version where we wanted to go back to. Now we can simply issue:
+
+rake db:rollback
+1
+2
+3
+4
+5
+
+
+Much nicer and more elegant, that's for sure. All set, we can now start our server as before and take a look at the generated pages:
+
+<macro:code>
+./script/server
+
+
+
+It will load either Mongrel, Webrick or Lightpd at port 3000. We have the same root page as before, showing up the index.html page. One tidbit that I didn’t show at the screencast is this:
+1
+2
+3
+4
+5
+
+# config/routes.rb
+ActionController::Routing::Routes.draw do |map|
+  map.root :controller => 'posts'
+  map.resources :posts
+end
+
+
+There is a new ‘map.root’ statement which have the same effect as "map.connect ‘’, :controller => ’posts’. Just a small nicety that doesn’t do anything big but tries to make the routes file feel more polished. Once you set that, don’t forget to delete the public/index.html file. Not the root URL will always be pointed to the Posts controller.
+
+As you can see, everything feels the same as before. All the scaffold templates are the same. You can browse around, create new rows and so on.
+Nested Routes
+So, let’s create a companion Comment resource for the Post. That should complete our Blog’s resources:
+1
+2
+
+./script/generate scaffold Comment post:references body:text
+rake db:migrate
+
+
+Same thing here: scaffold the resource, configure the column names and datatypes in the command line and the migration file will be already set. Notice another small addition: the keyword ‘references’. As my friend Arthur reminded me, this makes migrations even sexier. To compare, this is the old way of doing the same thing:
+1
+
+./script/generate scaffold Comment post_id:integer body:text
+
+
+Foreign keys are just implementation details that don’t matter. Take a look at the new migration file for this:
+1
+2
+3
+4
+5
+6
+7
+8
+
+def self.up
+  create_table :comments do |t|
+    t.references :post
+    t.text :body
+
+    t.timestamps
+  end
+end
+
+
+Take a look here for details on this new ‘references’ keyword. So, running db:migrate creates the table in the database. Then, we configure the ActiveRecord models so they relate to each other like this:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+# app/models/post.rb
+class Post < ActiveRecord::Base
+  has_many :comments
+end
+
+# app/models/comment.rb
+class Comment < ActiveRecord::Base
+  belongs_to :post
+end
+
+
+Ok, nothing new here, we already know how to work with ActiveRecord associations. But we are also working with RESTful resources. In the new Rails way, we would like to have URLs like these:
+
+https://localhost:3000/posts/1/comments
+https://localhost:3000/posts/1/comments/new
+https://localhost:3000/posts/1/comments/3
+1
+2
+3
+4
+5
+6
+7
+
+
+Meaning: _'grab the comments from this particular post'_ The scaffold generator only made it ready to do URLs like these:
+
+<macro:code>
+https://localhost:3000/posts/1
+https://localhost:3000/comments/new
+https://localhost:3000/comments/3
+
+
+That’s because in the config/routes.rb we have:
+1
+2
+3
+4
+5
+6
+7
+
+# config/routes.rb
+ActionController::Routing::Routes.draw do |map|
+  map.resources :comments
+
+  map.root :controller => 'posts'
+  map.resources :posts
+end
+
+
+Let’s tweak it a bit. Just like in the models, we can create what’s called a Nested Route:
+1
+2
+3
+4
+5
+
+# config/routes.rb
+ActionController::Routing::Routes.draw do |map|
+  map.root :controller => 'posts'
+  map.resources :posts, :has_many => :comments
+end
+
+
+Just like that! Now we can do the nested URLs as showed above. The first thing to understand is that when I type in this URL:
+
+https://localhost:3000/posts/1/comments
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+Rails will parse it like this:
+
+* Load the CommentsController
+* Set params[:post_id] = 1
+* In this case, call the 'index' action
+
+We have to make the CommentsController prepared to be nested. So that's what we are going to change:
+
+--- ruby
+class CommentsController < ApplicationController
+  before_filter :load_post
+  ...
+  def load_post
+    @post = Post.find(params[:post_id])
+  end
+end
+
+
+This makes the @post already set for all the actions within the Comments controller. Now we have to make these changes:
+
+
+Before
+After
+
+
+Comment.find
+@post.comments.find
+
+
+Comment.new
+@post.comments.build
+
+
+redirect_to(@comment)
+redirect_to([@post, @comment])
+
+
+redirect_to(comments_url)
+redirect_to(post_comments_url(@post))
+
+
+That should make the Comments controller ready. Now let’s change the 4 views at app/views/comments. If you open up either new.html.erb or edit.html.erb you will notice the following new feature:
+1
+2
+3
+4
+
+# new edit.html.erb and new.html.erb
+form_for(@comment) do |f|
+  ...
+end
+
+
+That’s the new way of doing this old statement in Rails 1.2:
+1
+2
+3
+4
+
+# old new.rhtml
+form_for(:comment, :url => comments_url) do |f|
+  ...
+end
+
+
+
+1
+2
+3
+4
+5
+
+# old edit.rhtml
+form_for(:comment, :url => comment_url(@comment), 
+  :html => { :method => :put }) do |f|
+  ...
+end
+
+
+Notice how the same form_for statement suits both ‘new’ and ‘edit’ situations. That’s because Rails can infer what to do based on the Class name of the @comment model instance. But now, for the Nested Route, comments is dependent on the Post, so that’s what we have to do:
+1
+2
+3
+4
+
+# new edit.html.erb and new.html.erb
+form_for([@post, @comment]) do |f|
+ ...
+end
+
+
+Rails will try to be smart enough to understand that this array represents a Nested Route, will check routes.rb and figure out and this is the post_comment_url(@post, @comment) named route.
+Let’s explain named routes first. When we set a Resource Route in the routes.rb. We gain these named routes:
+
+
+route
+HTTP verb
+Controller Action
+
+
+comments
+GET
+index
+
+
+comments
+POST
+create
+
+
+comment(:id)
+GET
+show
+
+
+comment(:id)
+PUT
+update
+
+
+comment(:id)
+DELETE
+destroy
+
+
+new_comment
+GET
+new
+
+
+edit_comment(:id)
+GET
+edit
+
+
+“7 Actions to Rule them all …” :-)
+You can suffix them with both ‘path’ or ‘url’. The difference being:
+
+
+comments_url
+https://localhost:3000/comments
+
+
+comments_path
+/comments
+
+
+Finally, you can prefix them with ‘formatted’, giving you:
+
+
+formatted_comments_url(:atom)
+https://localhost:3000/comments.atom
+
+
+formatted_comment_path(@comment, :atom)
+/comments/1.atom
+
+
+Now, as Comments is nested within Post, we are obligated to add the prefix ‘post’. In Rails 1.2 this prefix was optional, it was able to tell the difference by the number or parameters passed to the named route helper, but this could lead to many ambiguities so it is now mandatory to have the prefix, like this:
+
+
+route
+HTTP verb
+URL
+
+
+post_comments(@post)
+GET
+/posts/:post_id/comments
+
+
+post_comments(@post)
+POST
+/posts/:post_id/comments
+
+
+post_comment(@post, :id)
+GET
+/posts/:post_id/comments/:id
+
+
+post_comment(@post, :id)
+PUT
+/posts/:post_id/comments/:id
+
+
+post_comment(@post, :id)
+DELETE
+/posts/:post_id/comments/:id
+
+
+new_post_comment(@post)
+GET
+/posts/:post_id/comments/new
+
+
+edit_post_comment(@post, :id)
+GET
+/posts/:post_id/comments/edit
+
+
+So, to summarize, we have to make the Comments views to behave like they are nested within a Post. So we have to change the named routes within from the default scaffold generated code to the nested form:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+<!-- app/views/comments/_comment.html.erb -->
+<% form_for([@post, @comment]) do |f| %>
+  <p>
+    <b>Body</b><br />
+    <%= f.text_area :body %>
+  </p>
+
+  <p>
+    <%= f.submit button_name %>
+  </p>
+<% end %>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+<!-- app/views/comments/edit.html.erb -->
+<h1>Editing comment</h1>
+
+<%= error_messages_for :comment %>
+
+<%= render :partial => @comment, 
+  :locals => { :button_name => "Update"} %>
+
+<%= link_to 'Show', [@post, @comment] %> |
+<%= link_to 'Back', post_comments_path(@post) %>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+<!-- app/views/comments/new.html.erb -->
+<h1>New comment</h1>
+
+<%= error_messages_for :comment %>
+
+<%= render :partial => @comment, 
+  :locals => { :button_name => "Create"} %>
+
+<%= link_to 'Back', post_comments_path(@post) %>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+<!-- app/views/comments/show.html.erb -->
+<p>
+  <b>Body:</b>
+  <%=h @comment.body %>
+</p>
+
+
+<%= link_to 'Edit', [:edit, @post, @comment] %> |
+<%= link_to 'Back', post_comments_path(@post) %>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+
+<!-- app/views/comments/index.html.erb -->
+<h1>Listing comments</h1>
+
+<table>
+  <tr>
+    <th>Post</th>
+    <th>Body</th>
+  </tr>
+
+<% for comment in @comments %>
+  <tr>
+    <td><%=h comment.post_id %></td>
+    <td><%=h comment.body %></td>
+    <td><%= link_to 'Show', [@post, comment] %></td>
+    <td><%= link_to 'Edit', [:edit, @post, comment] %></td>
+    <td><%= link_to 'Destroy', [@post, comment], 
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New comment', 
+  new_post_comment_path(@post) %>
+
+
+Some remarks:
+
+Notice that I created a partial to DRY up the new and edit forms. But pay attention that instead of :partial => ‘comment’, I did :partial => @comment. Then again it can infer the name of partial from the class name. If we passed a collection it would do the equivalent of the old ‘:partial, :collection’ statement.
+
+
+I can use both post_comment_path(post, @comment), or simply [post, @comment]
+
+
+Pay close attention to not forget any named route behind.
+
+Finally, it would be good to link the comments list to the post view. So let’s do it:
+1
+2
+3
+4
+
+<!-- app/views/posts/show.html.erb -->
+<%= link_to 'Comments', post_comments_path(@post) %>
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
+
+
+So, I just added a link there. Let’s see how it looks like:
+
+
+
+Completing the Views
+Ok, looks good, but that’s not how a Blog should behave! The Post’s show view should already have the Comments listing and New Comment Form as well! So let’s make some small adaptations. There’s nothing new here, just traditional Rails. Let’s start at the view:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+<!-- app/views/posts/show.html.erb -->
+<p>
+  <b>Title:</b>
+  <%=h @post.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @post.body %>
+</p>
+
+<!-- #1 -->
+<% unless @post.comments.empty? %>
+  <h3>Comments</h3>
+  <% @post.comments.each do |comment| %>
+  <p><%= h comment.body %></p>
+  <% end %>
+<% end %>
+
+<!-- #2 -->
+<h3>New Comment</h3>
+<%= render :partial => @comment = Comment.new, 
+         :locals => { :button_name => 'Create'}%>
+
+<%= link_to 'Comments', post_comments_path(@post) %>
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
+
+
+More remarks
+
+There is nothing new in the iterator, just listing all comments
+Again, we pass in the @comment variable to the partial statement
+
+One final adjustment: whenever we create a new post, we would like to return to the same Posts’ show view, so we change the CommentsController to behave like this:
+1
+2
+3
+4
+5
+
+# app/controllers/comments_controller.rb
+# old redirect:
+redirect_to([@post, @comment])
+# new redirect:
+redirect_to(@post)
+
+
+Namespaced Routes
+Ok, now we have a bare bone mini-blog that kind of mimics the classic blog from the ‘15 minute’ screencast David did in 2005. Now let’s go one step further: Posts should not be publicly available to anyone to edit, we need an Administration section in our website. Let’s create a new controller for that:
+
+./script/generate controller Admin::Posts
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Rails 2.0 now supports namespaces. This will create a sub-directory called app/controllers/admin.
+
+What we want to do is:
+
+# Create a new routes
+# Copy all actions from the old Posts controller to the new Admin::Posts
+# Copy the old posts views to app/views/admin* Leave the old Posts controller with only the 'index' and 'show' actions, this means deleting the new and edit views as well
+# Adapt the actions and views we just copied so it understands it is within the admin controller
+
+First things first, let's edit config/routes.rb again:
+
+--- ruby
+map.namespace :admin do |admin|
+  admin.resources :posts
+end
+
+
+In practice this means that we now have names routes for Posts with the prefix ‘admin’. This will disambiguate the old posts routes from the newest admin posts routes, like this:
+
+
+posts_path
+/posts
+
+
+post_path(@post)
+/posts/:post_id
+
+
+admin_posts_path
+/admin/posts
+
+
+admin_post_path(@post)
+/admin/posts/:post_id
+
+
+Now let’s copy the actions from the old Post controller and adapt the routes to fit the new namespace:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+
+# app/controllers/admin/posts_controller.rb
+...
+def create
+  # old:
+  format.html { redirect_to(@post) }
+  # new:
+  format.html { redirect_to([:admin, @post]) }
+end
+
+def update
+  # old:
+  format.html { redirect_to(@post) }
+  # new:
+  format.html { redirect_to([:admin, @post]) }
+end
+
+def destroy
+  # old:
+  format.html { redirect_to(posts_url) }
+  # new:
+  format.html { redirect_to(admin_posts_url) }
+end
+...
+
+
+Don’t forget to delete all the methods from the app/controllers/posts_controller.rb, leaving just the ‘index’ and ‘show’ methods.
+Now, let’s copy the views (assuming your shell is already in the project’s root folder):
+
+cp app/views/posts/*.erb app/views/admin/posts
+rm app/views/posts/new.html.erb
+rm app/views/posts/edit.html.erb
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+
+Now, let's edit the views from app/views/admin/posts:
+
+--- html
+<!-- app/views/admin/posts/edit.html.erb -->
+<h1>Editing post</h1>
+
+<%= error_messages_for :post %>
+
+<% form_for([:admin, @post]) do |f| %>
+ ...
+<% end %>
+
+<%= link_to 'Show', [:admin, @post] %> |
+<%= link_to 'Back', admin_posts_path %>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+<!-- app/views/admin/posts/new.html.erb -->
+<h1>New post</h1>
+
+<%= error_messages_for :post %>
+
+<% form_for([:admin, @post]) do |f| %>
+  ...
+<% end %>
+
+<%= link_to 'Back', admin_posts_path %>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+<!-- app/views/admin/posts/show.html.erb -->
+<p>
+  <b>Title:</b>
+  <%=h @post.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @post.body %>
+</p>
+
+<%= link_to 'Edit', edit_admin_post_path(@post) %> |
+<%= link_to 'Back', admin_posts_path %>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+<!-- app/views/admin/posts/index.html.erb -->
+...
+<% for post in @posts %>
+  <tr>
+    <td><%=h post.title %></td>
+    <td><%=h post.body %></td>
+    <td><%= link_to 'Show', [:admin, post] %></td>
+    <td><%= link_to 'Edit', edit_admin_post_path(post) %></td>
+    <td><%= link_to 'Destroy', [:admin, post], 
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New post', new_admin_post_path %>
+
+
+Almost done: if you test https://localhost:3000/admin/posts it should work properly now. But, it will look ugly, and that’s because we don’t have a global app layout. When we did the first scaffolds, Rails generated specific layouts for Post and Comment alone. So let’s delete them and create one that’s generic:
+
+cp app/views/layouts/posts.html.erb \
+app/views/layouts/application.html.erb
+rm app/views/layouts/posts.html.erb
+rm app/views/layouts/comments.html.erb
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Then let's just change the title of it:
+
+--- ruby
+<!-- app/views/layouts/application.html.erb -->
+...
+<title>My Great Blog</title>
+...
+
+
+It only remain the old ‘index’ and ‘show’ pages from the previous Posts controllers. They still have links to the methods we deleted, so let’s rip them off from those links:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+<!-- app/views/posts/index.html.erb -->
+<h1>My Great Blog</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Body</th>
+  </tr>
+
+<% for post in @posts %>
+  <tr>
+    <td><%=h post.title %></td>
+    <td><%=h post.body %></td>
+    <td><%= link_to 'Show', post %></td>
+  </tr>
+<% end %>
+</table>
+
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+
+<!-- app/views/posts/show.html.erb -->
+<p>
+  <b>Title:</b>
+  <%=h @post.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @post.body %>
+</p>
+
+<% unless @post.comments.empty? %>
+  <h3>Comments</h3>
+  <% @post.comments.each do |comment| %>
+  <p><%= h comment.body %></p>
+  <% end %>
+<% end %>
+
+<h3>New Comment</h3>
+
+<%= render :partial => @comment = Comment.new, 
+         :locals => { :button_name => 'Create'}%>
+
+<%= link_to 'Back', posts_path %>
+
+
+We can test everything from the browser, go in https://localhost:3000/admin/posts and see that everything is working properly now. But, we still have one thing missing: an administration section should not be publicly available. Right now you can just jump in and edit everything. We need authentication.
+HTTP Basic Authentication
+There are several ways of implementing authentication and authorization. One plugin that’s widely used for this is restful_authentication.
+But, we don’t want to make anything fancy here. And for that Rails 2.0 gives us a great way of authenticating. The idea is: let’s use what HTTP already gives us: HTTP Basic Authentication. The drawback being: you will definitely want to use SSL when going into production. But, of course, you would do it anyway. HTML Form authentication is not protected without SSL either.
+So, let’s edit our Admin::Posts controller to add authentication:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+# app/controllers/admin/posts.rb
+class Admin::PostsController < ApplicationController
+  before_filter :authenticate
+  ...
+  def authenticate
+    authenticate_or_request_with_http_basic do |name, pass|
+      #User.authenticate(name, pass)
+      name == 'akita' && pass == 'akita'      
+    end
+  end
+end
+
+
+You already know what ‘before_filter’ does: it runs the configured method before any action in the controller. If you set it in the ApplicationController class, then it runs before any action from any other controller. But we only want to protect Admin::Posts here.
+Then, we implement this method and the secret sauce is the ‘authenticate_or_request_with_http_basic’ method that let’s us configure a block. It gives us the username and password that the user typed in the browser. We would usually have a User model of some kind to authenticate this data, but for our very very simple example I am hard coding the checking, but you get the idea.
+
+tags: obsolete rails screencast english
+

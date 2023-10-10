@@ -1,0 +1,201 @@
+
+Aproveitando o artigo Usando associações de ActiveRecord incorretamente que acabei de publicar, vamos dar mais uma dica que mencionei na seção de Bônus: editar múltiplos objetos ActiveRecord num mesmo formulário.
+Muitas vezes você tem o cenário ontem possui um objeto Pai e múltiplos objetos Filhos no ActiveRecord, seriam formatos como Lista de Compras e produtos, Perguntas e Respostas, Projeto e Atividades. Se usar o scaffold normal do Rails vai acabar criando telas separadas para cada recurso. Mas e se quisermos editar os atributos do Pai e dos filhos tudo no mesmo formulário?
+O Rails possui um recurso chamado Nested Attributes onde você pode passar os atributos dos objetos filhos diretamente no objeto Pai. Parafraseando a documentação oficial poderíamos ter algo como:
+
+
+
+
+
+1
+2
+3
+4
+5
+
+class ShoppingList < ActiveRecord::Base
+  attr_accessible :description, :name, :total, :tax_rate, :shopping_items_attributes
+  has_many :shopping_items
+  accepts_nested_attributes_for :shopping_items, :reject_if => :all_blank, :allow_destroy => true
+end
+
+
+Se quiser baixar do meu projeto de exemplo, faça:
+
+1
+2
+
+git clone https://github.com/akitaonrails/shopping-list-demo.git
+cd shopping-list-demo
+
+
+Ou se já tinha baixado a partir do artigo anterior, faça:
+
+1
+2
+
+cd shopping-list-demo
+git checkout master
+
+
+E agora podemos fazer, no rails console:
+
+1
+2
+3
+4
+5
+6
+
+params = {:shopping_list=>{:name=>"Compras", :description=>"supermercado", :tax_rate=>"0.1", :shopping_items_attributes=>{:"0"=>{:name=>"Sabao", :quantity=>"5", :price=>"10.0"}, :"1"=>{:name=>"Pasta Dental", :quantity=>"3", :price=>"15.0"}}}}
+list = ShoppingList.create(params[:shopping_list])
+list.shopping_items.first.id
+#  => 3
+list.shopping_items.first.name
+#  => "Sabao"
+
+
+Essa é a infraestrutura básica #accepts_nested_attributes_for que permite a partir de um único formulário criar e modificar os objetos filhos (definidos no #has_many).
+A partir disso podemos criar o formulário e o código para permitir que o usuário edite todos os objetos juntos. O Ryan Bates fez um episódio do Railscasts chamado "Nested Model Form (revised)" e você vai notar que a coisa pode ficar bem confusa bem rápido.
+Cocoon
+Para facilitar, neste projeto de exemplo usamos a excelente gem Cocoon. No caso também colocamos o Simple Form e o Bootstrap.
+Assumindo que seu projeto já está criado com Rails 3.2.12, com Bootstrap instalado e configurado, com Simple Form instalado e configurado, com os models ShoppingList e ShoppingItem criados e configurados conforme meu projeto de exemplo, para colocar o Cocoon começamos editando a Gemfile:
+
+1
+2
+3
+4
+5
+6
+7
+
+# na Gemfile
+...
+gem 'jquery-rails'
+gem "twitter-bootstrap-rails"
+gem 'simple_form'
+gem 'cocoon'
+...
+
+
+Agora execute bundle install. Agora vamos editar o application.js:
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+// app/assets/javascripts/application.js
+...
+//= require jquery
+//= require jquery_ujs
+//= require twitter/bootstrap
+//= require cocoon
+//= require_tree .
+...
+
+
+Como já disse antes, garanta que o #has_many, #belongs_to, #accepts_nested_attributes_for e #attr_accessible de cada model esteja devidamente definido e configurado.
+Agora basta editar o app/views/shopping_lists/_form.html.erb do ShoppingList:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+
+<%= simple_form_for(@shopping_list) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :description, input_html: { rows: 2 } %>
+    <%= f.input :tax_rate %>
+  </div>
+
+  <h3>Items</h3>
+  <div id="shopping_items">
+    <%= f.simple_fields_for :shopping_items do |item| %>
+      <%= render "shopping_item_fields", :f => item %>
+    <% end %>
+  </div>
+
+  <div class="form-actions">
+    <%= link_to_add_association 'add item', f, :shopping_items, :class => "btn btn-default" %>
+    <%= f.button :submit %>
+  </div>
+<% end %>
+
+
+As duas partes importantes são o bloco #simple_fields_for (se estivesse usando Formtastic) seria #semantic_fields_for e se não estivesse usando nada senão Rails puro usaríamos apenas #fields_for mesmo.
+Ela renderiza uma partial que vamos ver a seguir e no final temos um link gerado pelo helper do Cocoon chamado link_to_add_association. O que é importante é não errar a nomenclatura da associação shopping_items.
+Já a partial app/views/shopping_lists/_shopping_item_fields.html.erb seria assim:
+
+1
+2
+3
+4
+5
+6
+
+<div class="nested-fields">
+  <%= f.input :name %>
+  <%= f.input :quantity %>
+  <%= f.input :price %>
+  <%= link_to_remove_association "remove item", f, :class => "btn btn-danger" %>
+</div>
+
+
+A parte importante nesse caso é não errar o link de remoção gerado pelo helper do Cocoon link_to_remove_association.
+Pronto. Isso é tudo que você precisa, o resto o Cocoon faz automaticamente pra você. Se fez tudo certo terá uma tela assim quando for criar um novo Shopping List:
+
+Note o botão de "add item" que foi gerado pelo helper link_to_add_association. Ao clicar nele, você vai ver o seguinte:
+
+E mesmo se estiver editando um Shopping List com Shopping Items que já existe, pode remover itens assim:
+
+E quando der submit poderá ver nos logs que as operações corretas foram executadas com sucesso:
+
+1
+2
+3
+4
+5
+6
+7
+8
+
+...
+ (0.1ms)  begin transaction
+ShoppingItem Load (1.1ms)  SELECT "shopping_items".* FROM "shopping_items" WHERE "shopping_items"."shopping_list_id" = 1 AND "shopping_items"."id" IN (1, 2)
+ShoppingItem Load (0.1ms)  SELECT "shopping_items".* FROM "shopping_items" WHERE "shopping_items"."shopping_list_id" = 1
+SQL (6.4ms)  DELETE FROM "shopping_items" WHERE "shopping_items"."id" = ?  [["id", 1]]
+SQL (0.0ms)  DELETE FROM "shopping_items" WHERE "shopping_items"."id" = ?  [["id", 2]]
+ (2.0ms)  commit transaction
+...
+
+
+Viram os "DELETE"s?
+Portanto, se tiver uma situação onde queira editar models estilo Pai e Filhos, não deixe de experimentar o Cocoon!
+
+tags: obsolete rails
+

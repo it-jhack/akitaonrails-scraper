@@ -1,0 +1,997 @@
+
+
+Rails 2.1 is right around the corner and now comes my update for “The First Full Rails 2.1 Tutorial”.
+I will take exactly from where we left off in the last tutorial, so if you still didn’t follow that tutorial I suggest you do it now or download the source code available now at Github. I have added a ‘for_2.0’ tag to denote the last tutorial and a new ‘for_2.1’ tag for the updates I am going to show you now at this new tutorial. You can either follow my previous tutorial to have everything running or you can skip it and just download the example from my Github page.
+So, I will consider you have the blog project in a ‘blog’ directory at your environment, and it doesn’t matter if you simply downloaded the zip file or cloned from my github tree.
+This is Part 1. You follow Part 2 from here
+
+
+Installing
+Before we start I recommend you do this:
+
+gem update —system
+1
+2
+3
+4
+5
+6
+
+
+Or, if you have RubyGems 0.8.4 or older, try this:
+
+<macro:code>
+gem install rubygems-update
+update_rubygems
+
+
+Then, to install Rails 2.1 (when it is released, of course) you do:
+
+gem install rails
+1
+2
+3
+4
+5
+
+
+Or, if you just want to freeze the gems inside your own project, you do:
+
+<macro:code>
+rake rails:freeze:gems
+
+
+Of course, you should run the rake task from inside your project’s directory. For our tutorial I am actually using Rails 2.1 Release Candidate 1 and I cloned it down from Github, directly from the Edge Rails trunk:
+
+cd blog
+git clone git://github.com/rails/rails.git vendor/rails
+1
+2
+3
+4
+5
+6
+7
+
+
+The line above assumes you know and have git properly installed in your system. But if you don't, just download the "tarball":https://github.com/rails/rails/tarball/master from the Gihub site and uncompress it in the vendor/rails folder.
+
+With that in mind, if you already have a Rails project in place - which is our 'blog' example - do not forget to update some Rails resources like that:
+
+<macro:code>
+rake rails:update
+
+
+Starting from Rails 2.1, the next time you have to upgrade the Rails gems (like when version 2.2 or else comes out in the future), this step will not be necessary as freezing the gems will automatically update the project’s resources for you.
+After that, the first thing you will want to do at the config/environment.rb file is update the Rails version:
+1
+
+RAILS_GEM_VERSION = '2.1'
+
+
+If you’re at Release Candidate 1 it should be ‘2.0.991’ instead. It won’t have any practical effect if you have already frozen the Rails gems, but if you installed it system wide, then it will matter. The version at vendor/rails has precedence over the system gems.
+Finally, add a new file called config/initializers/new_defaults.rb with the following:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+# These settins change the behavior of Rails 2 apps and will be defaults
+# for Rails 3. You can remove this initializer when Rails 3 is released.
+
+# Only save the attributes that have changed since the record was loaded.
+ActiveRecord::Base.partial_updates = true
+
+# Include ActiveRecord class name as root for JSON serialized output.
+ActiveRecord::Base.include_root_in_json = true
+
+# Use ISO 8601 format for JSON serialized times and dates
+ActiveSupport.use_standard_json_time_format = true
+
+# Don't escape HTML entities in JSON, leave that for the #json_escape helper
+# if you're including raw json in an HTML page.
+ActiveSupport.escape_html_entities_in_json = false
+
+
+Managing Required RubyGems
+The first thing you will find out at the new environment.rb file is the support for managing gems. As an example, let’s add the following code inside the Initializer block:
+1
+2
+3
+
+config.gem "haml", :version => "1.8"
+config.gem "launchy"
+config.gem "defunkt-github", :lib => 'github', :source => "https://gems.github.com"
+
+
+For now, forget what those gems are for and let’s see what we can do. From the command line, we can type in:
+
+rake gems
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+That's the result:
+
+<macro:code>
+Could not find RubyGem haml (= 1.8)
+Could not find RubyGem launchy (>= 0)
+Could not find RubyGem defunkt-github (>= 0)
+Could not find RubyGem haml (= 1.8)
+Could not find RubyGem launchy (>= 0)
+Could not find RubyGem defunkt-github (>= 0)
+Unable to instantiate observers, some gems that this application depends on are missing.  Run 'rake gems:install'
+[ ] haml = 1.8
+[ ] launchy 
+[ ] defunkt-github 
+
+I = Installed
+F = Frozen
+
+
+The best practice is: if your project depends on whatever gem, make sure you have it listed in the environment.rb file. I would recommend to freeze a fixed version number, to make sure you won’t be hurt when an strange bug arises after you update your system’s gems and one of the newest updated gems breaks your app. I’ve had it before and I think it is not bad to be safe here.
+The ‘config.gem’ method accepts the gem’s name and an options hash as the default parameters. Use :version to specify a version number matcher (you can use >, <, =, >=, <=). Or add :source to specify a non-standard gem repository location. And use :lib if its path can’t be inferred from the gem name.
+Going back to what we typed before, let’s dissect each line:
+1
+
+config.gem "haml", :version => "1.8"
+
+
+This is saying that our app requires the HAML gem, version 1.8 (by the way, mighty Hampton Caitlin just released HAML 2.0). That’s one example where we are freezing below the most current one.
+1
+2
+
+config.gem "launchy"
+config.gem "defunkt-github", :lib => 'github', :source => "https://gems.github.com"
+
+
+Usually, the ‘gem’ command will look for gems in the ‘official’ repository at gems.rubyforge.org. But now we have another place that’s becoming increasingly popular, which is Github. As the standard gem command don’t know about this repository, we have to specify it using the :source option.
+Another detail is that the name of the gem follow a different pattern at Github: “[name of the user]-[name of the gem]”, so the user defunkt (which is great Chris Wanstrath himself) has a gem named github-gem and the ‘require’ command should load the lib named ‘github’, without the ‘defunkt’ pre-pending it. The ‘launchy’ gem is there just because the ‘github-gem’ depends on it.
+We will not use any of those gems in our demo blog project, they’re there just to showcase this feature in Rails 2.1. Now that we have our gems specified, and the result showed that we don’t have them in our system, we can install them like this:
+
+sudo rake gems:install
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+
+If you're on Windows, always ignore when I type *sudo*, but in Unix systems (such as Linux and OS X) we probably won't be able to install over /usr/local or /opt without proper permissions, hence the 'sudo'. The results should be something like this (depending on whether or not you already had some of them installed):
+
+<macro:code>
+Could not find RubyGem haml (= 1.8)
+Could not find RubyGem launchy (>= 0)
+Could not find RubyGem defunkt-github (>= 0)
+Could not find RubyGem haml (= 1.8)
+Could not find RubyGem launchy (>= 0)
+Could not find RubyGem defunkt-github (>= 0)
+Unable to instantiate observers, some gems that this application depends on are missing.  Run 'rake gems:install'
+Bulk updating Gem source index for: https://gems.rubyforge.org/
+Successfully installed haml-1.8.0
+1 gem installed
+Installing ri documentation for haml-1.8.0...
+ERROR:  While generating documentation for haml-1.8.0
+... MESSAGE:   Unhandled special: Special: type=17, text="&lt;!-- This is the peanutbutterjelly element --&gt;"
+... RDOC args: --ri --op /opt/local/lib/ruby/gems/1.8/doc/haml-1.8.0/ri --title Haml --main README --exclude lib/haml/buffer.rb --line-numbers --inline-source --quiet lib VERSION MIT-LICENSE README
+(continuing with the rest of the installation)
+Installing RDoc documentation for haml-1.8.0...
+
+
+Warning: There’s one problem, though – at least in the Edge Rails trunk version: you will notice above that it installed only the first gem from our requirements list: the HAML one. But we have 2 other left to go. I don’t know if it will be fixed in the official 2.1, but for now, just redo the ‘gems:install’ rake task twice more to install the remaining ones.
+After we’ve installed all gems, running the ‘gems’ rake task should yield the following result:
+
+[I] haml = 1.8
+[I] launchy 
+[I] defunkt-github
+I = Installed
+F = Frozen
+1
+2
+3
+4
+5
+6
+7
+
+
+And another cool new feature is when you're trapped in a situation where you know you won't be able to install system wide gems. For instance if you have to deploy to a limited shared-hosting environment, or if your client disallows installing new software.
+
+Then you still have the option of 'vendorizing' a gem, meaning, make the required gem embedded into your project's structure, like this:
+
+<macro:code>
+rake gems:unpack:dependencies
+
+
+This will ‘unpack’ all the gems we need into our project’s structure, under vendor/gems. Like this:
+
+Unpacked gem: ‘/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/haml-1.8.0’
+Unpacked gem: ‘/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/launchy-0.3.2’
+Unpacked gem: ‘/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/defunkt-github-0.1.3’
+Unpacked gem: ‘/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/launchy-0.3.2’
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Running again the 'gems' task now shows this:
+
+<macro:code>
+[I] haml = 1.8
+[F] launchy 
+[F] defunkt-github 
+
+I = Installed
+F = Frozen
+
+
+Notice that most of the gems changed from the [I]nstalled status to [F]rozen. But, the HAML gems was copied but for some reason it still shows up as [I] instead of [F], probably a small bug in the Edge version. I would expect all gems to show as [F].
+Anyway. Let’s say we required another gem that by itself requires native compilation, for instance, RMagick, so let’s add another line in the environment.rb file:
+1
+2
+3
+
+...
+config.gem "rmagick", :lib => "RMagick2"
+...
+
+
+Particularly, we have to ‘know’ that the gem is named ‘rmagick’ but it is required as ‘RMagick2’. Always refer to the gem documentation to know what to do. Without the proper :lib options here we would have an exception saying it can’t find the ‘Rmagick2.so’ library.
+Now, we unpack them to our vendor folder using the same “gems:unpack:dependencies” command. After that, we can run the ‘build’ task like this:
+
+rake gems:install
+rake gems:unpack:dependencies
+rake gems:build
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+We install and unpack again (in case you still don't have Rmagick around), then we run the 'build' task. This is required in order to make any native compilations (if you're in OS X, you have to have XCode installed in order to have the compilers available. In Linux look for your distro's build-essencial pack):
+
+<macro:code>
+Built gem: '/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/defunkt-github-0.1.3'
+Built gem: '/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/haml-1.8.0'
+Built gem: '/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/launchy-0.3.2'
+Built gem: '/Users/akitaonrails/rails/sandbox/screencasts/blog/vendor/gems/rmagick-2.3.0'
+
+
+At least, that’s the theory. I still have to explore this feature a little bit more because I have no idea how it’ll actually work in production. The general concept seems to work fine. It should probably be useful in the “setup” phase of a Capistrano recipe when you’re configuring a new box. Then you can use the “gems:install” to install a system-wide version of the required gems. Or you can previously unpack them to your project and have a “gems:build” separated task afterwards, but the library would have to live in the user home directory instead of the system library folder.
+That’s the part I am still unaware if it works or now. Anyone have tried this? For more information, refer to RailsCasts and Ryan Daigle
+New Time Support – Up until Rails 2.0 (part 1)
+Disclaimer: don’t write/execute anything in this section. I will show code and such but just to explain my point. We will go back to the exercises in the following section. This is a long explanation on the details about Time operations up until Rails 2.0. I’ve seen that most beginners don’t understand this properly. If you already know this, jump to the next section.
+With all our required gems installed and out of the way, let’s dive into one of the aspects that interests me the most in this release: Time.
+Up until 2.0 we had a hard time dealing with Time. 2.1 doesn’t solve all problems, but makes things a whole lot more coherent at least. But there’s lots of room for future improvement.
+First and foremost, for the uninitiated, let’s understand what we had to do before. Ruby has 3 different classes to deal with Date and Time: the Date class, the Time class and the DateTime class (which extends the Date class). The faster being the Time class (because part of it is written in native C). “But”, the Time class can only deal with datetimes starting in the Unix Epoc (1970) while Date/DateTime can deal with more complex datetimes.
+So, you already have to choose wisely. Generally most people end up using Time for date-time combinations and Date for date-only information. “But” there is another problem some of us have to deal with: Localization.
+The first problem is if your application targets people in multiple time zones. You don’t have to go too far: in the same country, 2 states can easily live in different zones. Rails always bundled a TimeZone class out of the box that tried to deal with this problem. But in itself it has yet another problem, and I will come back to that. Then, the general recommended rule was for you to uncomment this line in the config/environment.rb file:
+1
+
+config.active_record.default_timezone = :utc
+
+
+After we do this, there is yet another “design pattern” we have to do: stick each user with its own TimeZone. In order to do that the most common thing is to add a ‘time_zone’ string field in the ‘User’ model. Then the user logs in and chooses his Time Zone in some sort of drop down list or what have you.
+That done, now it’s only a matter of adding an application level ‘around_filter’ to load that at each user’s request. In order to accomplish that you have to add this to your app/controllers/application.rb file:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+class ApplicationController < ActionController::Base
+  around_filter :set_timezone
+  
+  private
+  def set_timezone
+    begin
+      TzTime.zone = self.current_user.time_zone
+      yield
+    ensure
+      TzTime.reset!
+    end
+  end
+end
+
+
+“Aha!” I hear you. What the heck is this ‘TzTime’ thing? Well, as I explained before, Ruby has 3 built in Date/Time classes. In order for Rails to properly work with the user’s specific Time Zone you will need yet another Date/Time class named ‘TzTime’. It was introduced by Jamis Buck’s plugin TzTime. You get that installing his plugin in your Rails project like this:
+
+script/plugin install tztime
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+The problem is that Ruby's Time class uses the local machine's time zone. So, whenever you use 'Time.now' in order to create a Time instance, it will be relative to your machine's zone. The filter/hack we added overrides this behavior using this new singleton TzTime class that 'behaves' like a Time class but with its own built-in time zone support. 
+
+It has to be an 'around_filter' because we have to reset it after the request is processed to avoid any errors when another user comes in, for instance, without the user's time zone properly set. As we are changing the state of a singleton, every request will be under that unique context.
+
+To better understand this, let's open up the 'script/console' and run a few statements (but first, you'd have to install the TzTime plugin):
+
+<macro:code>
+>> Time.now
+=> Sun May 25 02:59:17 -0300 2008
+
+
+Notice that ‘Time.now’ uses my personal machine’s local time zone, which is GMT-3 (Brazil time). You can see this by the string representation of the Time instance with ‘-0300’.
+
+>> Time.utc(2008,5,25,3)
+=> Sun May 25 03:00:00 UTC 2008
+1
+2
+3
+4
+5
+6
+
+
+The Time singleton has a 'utc' method which gives back an instance in GMT-0 (Greenwich time).
+
+<macro:code>
+>> Time.local(2008,5,25,3)
+=> Sun May 25 03:00:00 -0300 2008
+
+
+The Time singleton also has a ‘local’ method to give back instances in the current time zone (-0300). Now let’s take a look at the difference of using TzTime, instead.
+
+>> TzTime.zone = TimeZone[‘Mountain Time (US & Canada)’]
+=> #<TimeZone:0×192155c @name=“Mountain Time (US & Canada)”, @tzinfo=nil, @utc_offset=-25200>
+>> TzTime.now
+=> 2008-05-25 00:01:39 MDT
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Notice that first we have to inform the TzTime singleton on which arbitrary Time Zone to operate on. In the above example it is being set to Mountain Time. You can see that TzTime's 'now' method correctly gives back the time in MDT.
+
+<macro:code>
+>> TzTime.zone.utc_to_local(Time.utc(2008,5,25,3))
+=> Sat May 24 21:00:00 UTC 2008
+>> TzTime.zone.local_to_utc(Time.utc(2008,5,25,3))
+=> Sun May 25 09:00:00 UTC 2008
+
+
+The useful thing about TzTime is that I can give in a Time instance and force it to the singleton’s time zone (MDT, in this case), regardless of the local machine’s time zone (utc_to_local) and, of course, I can do the opposite and force the Time instance to be used as local time – ‘local’ relative to MDT, in this case – and give back a UTC (GMT-0) Time (local_to_utc).
+The important thing to remember is: with all this done, whenever the user types in a Datetime information at the View (in his web browser), posts it back to the controller, then it passes this information to ActiveRecord. In the environment.rb file we’ve configured it to use the user’s time zone, set at the Application’s ‘around_filter’ block.
+So, ActiveRecord will consider that the given Datetime is in the local format and it first converts it to UTC. Only then it saves the record to the database. When it reads from there, it loads the UTC Datetime and converts it back to the local time (considering TzTime.zone is correcly set).
+This explanation is long but we are almost there. There is only one more thing:
+
+sudo gem install tzinfo
+script/plugin install tzinfo_timezone
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+
+A few paragraphs back I warned that Rails' built-in TimeZone class has a drawback: it supports different Time Zones but it doesn't support "Daylight Savings":https://en.wikipedia.org/wiki/Daylight_saving_time, or "DST". The problem with DST is that it can't be determined by any algorithm. That's because it is totally arbitrary to each country to decide whether or not they will participate in the DST policy of setting the clock one hour ahead or behind. Even if do, it is also totally arbitrary when this should happen each year. We know, approximately, when this happens, but we have to confirm every year.
+
+So, the only way for us to correctly consider DST is having a database that's constantly update. In the Ruby world, this is the role of the "TzInfo":https://tzinfo.rubyforge.org/ gem (do not confuse with "TzTime"!). TzInfo is updated following an international and readily available database of time zones and daylight savings. 
+
+Finally, the 'tzinfo_timezone' plugin monkey-patches Rails itself. It replaces the Rails' built-in TimeZone class with TzInfo's one. That way you automatically gain the DST part of the equation. 
+
+So, by now you already know how difficult it has been up until Rails 2.0 to deal with Time. And this is nothing new: it is non-trivial to come up with a lean and clean solution over Date and Time handling. Even in Java you have a separated 3rd party open source library called "JodaTime":https://joda-time.sourceforge.net/, instead of using just the bare bone built-in classes.
+
+<a name="new_time_support2"></a>
+
+h2. New Time Support - Rails 2.1 (part 2)
+
+*Disclaimer:* the previous section's codes and commands were not supposed to be executed. In this section we're back to the blog demo example, so you can now follow.
+
+Now, let's clean this up (if you've installed the plugins in the previous section) and open our way for the Rails 2.1 way of dealing with Time:
+
+<macro:code>
+rm -Rf vendor/plugins/tzinfo_timezone
+rm -Rf vendor/plugins/tztime
+
+
+The TzInfo gem was vendorized and is now bundled within the Rails gems, so you don’t have to install it manually like we did before. We also don’t need any of the old plugins and the TzTime class is not used anymore.
+So, think very carefully before upgrading: if you used the built-in ActiveRecord and the Application Controller design pattern, you probably don’t have to change anything. But if you were heavily using TzTime, you will have to test it throughly. Now, if you do have a complete and comprehensive Test Suite, this should not be such a big challenge, as tests should stop working and inform you what went wrong.
+What we do now at Rails 2.1 is, starting from the config/environment.rb:
+1
+
+config.time_zone = 'UTC'
+
+
+Notice that the configuration is leaner than before. Now, onto our app/controllers/application.rb, again. First delete the old ‘around_filter’ and let’s now use a simple ‘before_filter’:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+class ApplicationController < ActionController::Base
+  ....
+  before_filter :set_timezone
+
+  private
+  def set_timezone
+    # current_user.time_zone #=> 'London'
+    Time.zone = current_user.time_zone rescue nil
+  end
+end
+
+
+Again, we still need the User model (if you have any, we will get back to it) to have a ‘time_zone’ string field. The example considers that you are using the restful_authentication plugin (‘current_user’ is set by this plugin), or something similar for authentication.
+But this time we don’t see TzTime, we are setting the user’s zone in the Time singleton class itself. Actually in the ‘#zone’ singleton proxy. And we don’t have to access any array anymore, we just pass the time zone’s string representation. Now, what happened? To understand it, let’s again open ‘script/console’ and take a quick look:
+
+>> Time.zone = “Mountain Time (US & Canada)”
+=> “Mountain Time (US & Canada)”
+>> Time.now
+=> Sun May 25 03:24:34 -0300 2008
+>> Time.zone.now
+=> Sun, 25 May 2008 00:24:36 MDT -06:00
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+
+Now, this is interesting. The same way as before, we have to assign our desired time zone to the Time singleton. We just set to MDT again. We can still call 'Time.now' as we did before and its behavior didn't change, it still gives us back the time in my local GMT-3 instead of MDT. 
+
+But Rails 2.1 actually adds a useful 'zone' proxy-method, the same way the String singleton has a 'chars' proxy-method to proxy Unicode based operations. For the Time class, 'zone' proxies time zone based operations. So 'Time.zone.now' return the local time as MDT.
+
+<macro:code>
+>> Time.zone.local(2008,5,25,3)
+=> Sun, 25 May 2008 03:00:00 MDT -06:00
+>> Time.zone.parse('2008-5-25 3:00:00')
+=> Sun, 25 May 2008 03:00:00 MDT -06:00
+
+
+This proxy has many other useful helper methods, such as ‘local’, to build a local Time instance. And ‘parse’ which, obviously, parse a String into a local Time instance.
+
+>> Time.utc(2008,5,25,3).in_time_zone
+=> Sat, 24 May 2008 21:00:00 MDT -06:00
+>> Time.local(2008,5,25,3).in_time_zone
+=> Sun, 25 May 2008 00:00:00 MDT -06:00
+>> Time.utc(2008,5,25,3).in_time_zone(‘Brasilia’)
+=> Sun, 25 May 2008 00:00:00 ART -03:00
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+Finally, you've seen that we previously used 'TzTime.zone.utc_to_local' to convert UTC Time instances into local instances. Now the Time instance itself has an 'in_time_zone' method, converting it to the correct time zone stored in the 'zone' proxy. We can even pass a Time Zone parameter if we temporarily want to deviate from the globally set one. In this example, even though Time.zone was configure for MDT, I can still convert it into Brazil's time.
+
+For ActiveRecord, the behavior is, roughly, the same. Let's take a look, again, within script/console (considering you have at least one row in the posts table, if not, just create any arbitrary one):
+
+<macro:code>
+>> Post.find(:first).created_at_before_type_cast
+=> "2008-05-05 13:55:21"
+>> Post.find(:first).created_at
+=> Mon, 05 May 2008 07:55:21 MDT -06:00
+>> Post.find(:first).created_at.in_time_zone("Brasilia")
+=> Mon, 05 May 2008 10:55:21 ART -03:00
+
+
+ActiveRecord can recognize the “before_type_cast” message. In this particular example, it is showing 13:55hrs. But if we just fetch it as we normally do, it’s gonna convert to -6 hours, which is MDT, thus showing us 7:55hrs. And we saw previously that we can call ‘in_time_zone’ to convert this time into another time zone. Let’s look further:
+
+>> Post.find(:first).created_at.class
+=> ActiveSupport::TimeWithZone
+>> Post.find(:first).created_at.time_zone
+=> #<TimeZone:0×192155c @name=“Mountain Time (US & Canada)”, @tzinfo=#<TZInfo::DataTimezone: America/Denver>, utc_offset-25200
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+
+The other gotcha is that instead of returning an instance of the Time class, it is returning an instance of yet another new class that's introduced in Rails 2.1 called "TimeWithZone":https://caboo.se/doc/classes/ActiveSupport/TimeWithZone.html. TimeWithZone replaces the old Jamis' TzTime. For all intents and purposes, it 'acts' as a vanilla Time instance, but it has the user's time zone within it. That way we can make correct calculations with Time Zones. Remember 'duck typing'? Supposedly, we can use TimeWithZone instances exactly as Time instances, so whatever 3rd party library that accepts Time should also accept TimeWithZone.
+
+The recommendation is: *make sure your test suite is throughly developed, you're gonna need it!* If your test suite still works even after upgrading to Rails 2.1, you're in good shape. Otherwise the usual suspects will be TzTime operations spread around your code that you should now change for TimeWithZone and Time.zone operations. Make lots of tests!
+
+To finish this section on Time, it is important to say that Rails 2.1 comes with 3 new rake tasks to help us out a little bit, let's take a look:
+
+<macro:code>
+rake time:zones:all
+
+* UTC -11:00 *
+International Date Line West
+Midway Island
+Samoa
+...
+* UTC +13:00 *
+Nuku'alofa
+
+
+‘time:zones:all’ lists all time zones that the vendorized TzInfo gem supports. Then we have more:
+
+rake time:zones:local
+
+UTC -03:00 *
+Brasilia
+Buenos Aires
+Georgetown
+Greenland
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+
+'times:zones:local' shows the string names of the time zone our machine is currently set to. And then:
+
+<macro:code>
+rake time:zones:us   
+
+* UTC -10:00 *
+Hawaii
+...
+* UTC -05:00 *
+Eastern Time (US & Canada)
+Indiana (East)
+
+
+‘time:zones:us’ shows all USA time zones, which should be interesting only to those living in the USA, but kind of pointless for all of us living outside of it. But another interesting aspect is that we should be able to create Views where the user can change its own time zones (perhaps, saving it into a ‘time_zone’ string field in the User model). To accomplish that you can use this view helper:
+
+<%= f.time_zone_select :time_zone, TimeZone.us_zones %>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+
+
+This will create a drop down list with all TzInfo's available Time Zones. The second parameter ('TimeZone.us_zones', in this example) is a 'priority zone'. The purpose is to group the most relevant time zones at the top of the list. The TimeZone class already has a 'us_zones' array of TimeZone instances, but you can use any other group of TimeZones from your current location. 
+
+When the user chooses it, you should grab it and save somewhere (the User model, for instance). Then, at each request, when the users is signed on the system, the Application Controller's before_filter will set the singleton 'Time.zone', as we've seen before.
+
+And that's it for Time support. This opens up lots of possibilities and future enhancements, but for now it is good to know that all the mess of 1 separated gem, 2 different plugins and one incomplete Time-alternative class are gone for a more consistent and stand-alone approach. To know more watch "RailsCasts":https://railscasts.com/episodes/106, "Ryan Daigle":https://ryandaigle.com/articles/2008/1/25/what-s-new-in-edge-rails-easier-timezones and "Geoff Buesing":https://mad.ly/2008/04/09/rails-21-time-zone-support-an-overview/.
+
+h2. "Sexier" Migrations
+
+This is not the official name, but Migrations finally received some more love. At this day and age, with bigger projects being done, the original Migrations had to evolve. I faced this problem a while back and the solution I found that was most reasonable was Revolution Health's "Enhanced Migration":https://revolutiononrails.blogspot.com/2007/11/enhanced-migrations-v120.html. Several others attempted to solve this puzzle but this was still the least convoluted alternative.
+
+_"But, what's the issue?"_ you might ask. Well, let me describe a hypothetical scenario.
+
+* Developer A starts a new Rails projects and creates a few migrations. As you well known, they're gonna be incrementally labeled as 1, 2, etc. So he creates migrations up until 4 and then commits the source code back to the central repository (Subversion or what have you).
+* Developer B checks out the code and starts to collaborate on the project. He needs 2 new models so the 'script/generate migration' is going to create migrations 5 and 6. 
+* At the same time, Developer A keeps coding and he needs to create 3 other models. Remember that at this point in time, his machine only has migrations 1 up to 4, as Developer B still didn't commit his work. So, Developer A will generate migrations 5, 6, and 7.
+* Now Developer B is done his initial task and commits his work back to the repository.
+* Developer A updates from the repository and receives Developer's B migrations 5 and 6. Now Developer A has two migrations named '5' and two other migrations named '6'. When he runs 'rake db:migrate', Developer's B changes will never be executed because he is already at his own migration 7. 
+
+You have several variations to this scenario, but the bottom line is:
+
+* You have more than 1 person working in the same project
+* By the very nature of collaborative working, you will necessarily have several overlapping migrations that will either conflict or never run
+* Several kinds of nasty non-trivial problems will arise very fast and your productivity will fall down quickly.
+
+What did the guys at Revolution Health did? Instead of incremental integer numbers, they replaced it for *numerical timestamps*. So, an example of an 'enhanced' migration file would be named: "1203964042_Add_foo_column.rb".
+
+This avoids having conflicted identifiers but it didn't solve this scenario:
+
+* Developer A creates 2 migrations at 10AM, runs it and commits right away
+* Developer B updates from the repository, creates another 2 migrations at 11AM, runs it and commits right away
+* Developer A creates 2 migrations at 12PM, runs it. Only after that he remembers to update and then commit his work back.
+
+See the problem? Because the last 2 migrations Developer A created are more recent than Developer B, even after updating from the repository and running 'rake db:migrate', nothing will happen, because Developer B's migrations are in the past and Revolution Health's plugin only records the timestamp of the last migration file it executed. 
+
+So, even though you will avoid the conflicts, you will still have plenty of opportunities to lose migrations and have difficult to find problems later, like a missing column because its migration was never executed.
+
+In Rails 2.1 it registers the whole history of migrations (the old table schema_info was replaced by schema_migrations). In the same scenario as above, it would 'detect' that Developer B's migrations were never executed and then it will try to execute them, even though it is out of order. It works almost all the time because each developer's changes should not be dependent upon each other (unless Developer A's last migration was dropping a table that Developer B's migration tries to operate on, but this is a rare condition).
+
+*Detour:* Actually, this could be a good time to add Restful Authentication to our project. To accomplish that, we will use yet another new feature in Rails 2.1: install a plugin from a Git repository, like this:
+
+<macro:code>
+./script/plugin install git://github.com/technoweenie/restful-authentication.git
+
+
+Again it also assumes you have git properly installed. If you don’t just donwload the tarball and uncompress it at vendor/plugins/restful-authentication.
+Now, let’s configure it using all the default settings. For further information on Restful Authentication start at their official Github repository page. Now, let’s run its generator:
+
+mkdir lib
+./script/generate authenticated user sessions
+1
+2
+3
+4
+5
+6
+7
+
+
+Finally, just for completions sake, let's add the recommended routes at config/routes.rb:
+
+--- ruby
+map.signup '/signup', :controller => 'users', :action => 'new'
+map.login  '/login',  :controller => 'sessions', :action => 'new'
+map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+
+
+And let’s run the migration:
+
+rake db:migrate
+== 20080525080231 CreateUsers: migrating ==========
+- create_table(“users”, {:force=>true})
+   → 0.0565s
+- add_index(:users, :login, {:unique=>true})
+   → 0.0323s
+== 20080525080231 CreateUsers: migrated (0.0893s) =========
+1
+2
+3
+4
+5
+6
+7
+8
+
+
+Now let's start with another example just to exercise this concept. First of all, let's create a new migration:
+
+<macro:code>
+./script/generate migration AddTimeZoneToUser
+
+exists  db/migrate
+create  db/migrate/20080525080653_add_time_zone_to_user.rb
+
+
+Notice the “20080525080653” timestamp. Compared to the old Enhanced Migration plugin, this timestamp is encoded a little bit differently. I didn’t research the reason, but in Rails 2.1 it is a plain Datetime formatted as YYYYMMDDHHMMSS and in converted to UTC, to avoid having conflicts if the developer team is offshore outsourced in different places of the planet (this was actually my situation, back then).
+Then, we edit its content like this:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+class AddTimeZoneToUser < ActiveRecord::Migration
+  def self.up
+    change_table :users do |t|
+      t.string :time_zone
+      t.belongs_to :role
+    end
+  end
+
+  def self.down
+    change_table :users do |t|
+      t.remove :time_zone
+      t.remove_belongs_to :role
+    end    
+  end
+end
+
+
+Another handy new feature from Rails 2.1: change_table. It works almost like the create_table method, in which it accepts a block and inside that we define new columns. But this new method allows other operations as rename, remove, etc.
+The complete list is:
+
+t.column – the old style, non-“sexy” migration
+t.remove – remove a column
+t.index
+t.remove_index
+t.timestamps – adds both created_at and updated_at
+t.remove_timestamps – removes both created_at and updated_at
+t.change – change a column from one type to another
+t.change_default – change the default value of a column
+t.rename – rename a column
+t.references – adds a ‘foreign key’ column with the convention [table_name]_id
+t.remove_references – remove a ‘foreign key’
+t.belongs_to – alias to :references
+t.remove_belongs_to – alias to :remove_references
+t.string
+t.text
+t.integer
+t.float
+t.decimal
+t.datetime
+t.timestamp
+t.time
+t.date
+t.binary
+t.boolean
+
+Running the above migration should result in something such as:
+
+rake db:migrate
+== 20080525080653 AddTimeZoneToUser: migrating ========
+— change_table(:users)
+   → 0.1435s
+== 20080525080653 AddTimeZoneToUser: migrated (0.1437s) =======
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+
+Another new feature of Rails 2.1: if you have your config/database.yml properly configured (this is still the same thing as we always did since before Rails 1.0 came along), then we can execute *script/dbconsole*, which is new. It will open the console of the configured database (if it has one), so you don't have to open it manually passing redundant information as username and password. In this example (since the Rails 2.0 tutorial), we've been using MySQL, so it will try to call the 'mysql' command line, to open up its native console. From there we can do:
+
+<macro:code>
+mysql> select * from schema_migrations;
++----------------+
+| version        |
++----------------+
+| 1              | 
+| 2              | 
+| 20080525080231 | 
+| 20080525080653 | 
++----------------+
+4 rows in set (0.00 sec)
+
+
+We can also see that as we have this project since Rails 2.0, the first 2 migrations are using the old incremental integers and the last 2 are using timestamps. The first timestamp created at 08:02:31 and the second at 08:06:53. So, let’s now create another migration exacty in-between those two. Type ‘quit’ to leave the console if you need and type this in:
+
+./script/generate migration AddRoleTable
+exists  db/migrate
+create  db/migrate/20080525080830_add_role_table.rb
+1
+2
+3
+4
+5
+
+
+Actually, all the filenames listed here will be different than yours because they will have the exact timestamp of the time you executed script/generate. So expect to have different filenames. With that said, for this example to work we have to change the timestamp of this last migration to be slightly *before* the AddTimeZoneToUser one. Using the timestamps of the above examples, rename the filename, like this (take care with the timestamps generated in your system, do not copy & paste from here!):
+
+<macro:code>
+mv db/migrate/20080525080830_add_role_table.rb db/migrate/20080525080600_add_role_table.rb 
+
+
+Did you understand what we just did? We artificially pulled in back in time a few seconds, from 08:08:30 to 08:06:00. Then, we have to edit this file to change its content:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+
+class AddRoleTable < ActiveRecord::Migration
+  def self.up
+    create_table :roles, :force => true do |t|
+      t.string :name
+      t.belongs_to :user
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :roles
+  end
+end
+
+
+Now, run ‘rake db:migrate’ yet again:
+
+== 20080525080600 AddRoleTable: migrating =========
+— create_table(:roles, {:force=>true})
+   → 0.0412s
+== 20080525080600 AddRoleTable: migrated (0.0413s) ========
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+
+
+Surprisingly enough, it works! Let's have a look at script/dbconsole again:
+
+<macro:code>
+mysql> select * from schema_migrations;
++----------------+
+| version        |
++----------------+
+| 1              | 
+| 2              | 
+| 20080525080231 | 
+| 20080525080600 | 
+| 20080525080653 | 
++----------------+
+5 rows in set (0.00 sec)
+
+
+
+Notice the 08:06:00 that we just created cramped in-between the other two. That’s the situation when a second developer’s migration comes in from the repository and it is older than your local most recent one. Rails 2.1 will understand that it was skipped and needs to be executed, so it will try it out. This is gonna be a life saver for many teams and one less reason for stress and maintenance as it ‘just works’.
+Of course this is not a perfect solution. Many things can happen but you will probably have them under control:
+
+2 developers could, theoretically, create 2 migrations at the exactly same second of the day! It is almost impossible but it’s not zero. On the other hand, the odds are so low that we can probably ignore it unless we’re ultra paranoid freaks.
+Migrations should be independent. One has to be very careful so not step on each others toes. The most obvious example is deleting a table. Rails chose not to try to speculate or try to be too smart. You will need to intervene if such condition happens. But again, it is less likely to happen.
+
+To me, this is the second most important improvement (the first being the new Time support). That’s it for “Sexier” Migrations. Take a look at RailsCasts, Ryan Daigle.
+Keep reading into Part 2 of this tutorial.
+tags: obsolete rails tutorial english
+

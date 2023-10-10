@@ -1,0 +1,16 @@
+
+
+
+
+
+Isso já foi coberto pelo Engadget, o próprio Port25 e TechCrunch.
+O motivo da gritaria? Este anúncio da Microsoft entitulado “Microsoft Makes Strategic Changes in Technology and Business Practices to Expand Interoperability
+New interoperability principles and actions will increase openness of key products.”
+Como o TechCrunch disse, parece que Ray Ozzie – atual Chief Software Architect da Microsoft (e para quem não lembra, o criador do Lotus Notes) -, está fazendo valer um pouco da sua posição. A Microsoft vai liberar 30 mil páginas de documentação sobre o Windows com o intuito de aumentar a interoperabilidade com softwares de terceiros e a Web em geral. Isso além de mudanças em licenciamentos e a seguinte promessa:
+
+A Microsoft está dando um acordo de não processar desenvolvedores open source por desenvolvimento de distribuições não-comerciais de implementações desses protocolos. Esses desenvolvedores poderão usar a documentação de graça para desenvolver seus produtos. Empresas que queiram comercializar essas implementações poderão obter licença de patente da Microsoft assim como empreendimentos que obtenham essas implementações de distribuidores que não tenham tal licença de patente.
+
+Ainda pelo TechCrunch, a Microsoft vai atuar sobre os produtos Windows Vista (incluindo o .NET Framework), Windows Server 2008, SQL Server 2008, Office 2007, Exchange Server 2007 e Office Sharepoint Server 2007. A documentação liberada vai cobrir as APIs de todos esses produtos, mostrando como eles suportam padrões de indústria, criará novas APIs para o Office para tornar mais fácil criar plug-ins para Word, Excel e Powerpoint e lançará uma iniciativa chamada Open Source Interoperability para promover integração entre open source e produtos Microsoft.
+Ainda é cedo para dizer até onde vai o buraco do coelho, mas certamente não é um anúncio pequeno. Isso certamente ajuda projetos como Samba que há anos briga de gato e rato para implementar o protocolo SMB, deve ajudar Groupwares que até hoje tem problemas em integrar com Exchange. Desenvolvedores de mail clients como Thunderbird poderão ter mais integração em ambientes Exchange. Há bastante espaço para melhorias em diversas categorias de software que antes precisavam tomar cuidado para não esbarrar em problemas de patentes. Veremos até onde Ray consegue mudar o estigma anti-open source do Ballmer. Um bom primeiro passo.
+tags: obsolete microsoft
+

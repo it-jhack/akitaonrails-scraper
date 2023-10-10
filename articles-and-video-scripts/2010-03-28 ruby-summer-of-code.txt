@@ -1,0 +1,12 @@
+
+
+
+
+Ano passado tivemos 3 bons projetos de estudantes financiados pelo venerado Google Summer of Code. Graças a isso o Rails 3 saiu mais forte com contribuições como do José Valim (brasileiro que agora integra a equipe Rails Core) com os novos generators e Emilio Tagua que integrou o projeto Arel ao Rails.
+Este ano, vários projetos foram inscritos mas nenhum foi aprovado pelo Google, o que significa que este ano não haverá um único projeto de Ruby no Summer of Code do Google. Altamente questionável os critérios do Google sobre isso, principalmente considerando que outras plataformas tiveram múltiplos projetos aprovados.
+
+Porém, a comunidade Ruby não é do tipo de ficar parada, de braços cruzados, reclamando. Esta comunidade leva seus assuntos à sua própria maneira e, por isso, foi criado o Ruby Summer of Code, pela Ruby Central, Engine Yard e diversas empresas patrocinadoras como Pivotal Labs, 37signals, Phusion, ENTP, O’Reilly, The Frontier Group, Intridea, Braintree, Aptana, New Relic, Harvest e dezenas de contribuidores individuais.
+Em apenas 3 dias, essa organização foi capaz de levantar nada menos que US$ 100.000,00 para financiar os projetos de estudantes, garantindo pelo menos uns 20 projetos para o ecossistema Ruby. Muito melhor do que se tivesse sido feito pelo Google.
+Parabéns a todos que estão colaborando e boa sorte aos estudantes!
+tags: obsolete
+

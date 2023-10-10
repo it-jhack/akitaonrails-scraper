@@ -1,0 +1,93 @@
+
+Se ainda não leu, dê uma olhada sobre o que já postei como dicas de Heroku e minha opinião sobre o serviço.
+Recentemente tentei subir um projeto Rails 4 bem simples no Heroku e encontrei problemas logo na primeira tentativa de deploy. O problema é o seguinte: a forma mais aceita de configurar uma aplicação é usar variáveis de ambiente (veja projetos como o dotenv-rails). No primeiro deploy essas variáveis não estão disponíveis, em particular o DATABASE_URL. Na task assets:precompile não deveria haver nada na inicialização que dependesse de conexão ao banco, mas algumas gems ainda não estão corrigidas dessa forma, em particular duas com esse bug já conhecido são o active_admin e o acts-as-taggable-on.
+
+
+
+No final, a forma mais simples para resolver isso por enquanto é fazer o seguinte antes do primeiro deploy:
+
+1
+2
+
+heroku labs:enable user-env-compile
+heroku config:add DATABASE_URL=$(heroku config | awk '/HEROKU_POSTGRESQL.*:/ {print $2}')
+
+
+Leia a documentação dessa funcionalidade user-env-compile entendendo que ela não é a forma mais correta, é apenas um facilitador enquanto todas as gems não estão da forma correta.
+Rails 12 Factor
+Rapidamente para não esquecer, no caso de apps Rails 4 não deixe de acrescentar o seguinte na sua Gemfile:
+
+1
+
+gem 'rails_12factor', group: :production
+
+
+Em particular é importante para logging correto e servir assets estáticos, veja no Github deles para mais informações.
+Migração de MySQL para PostgreSQL
+Outro assunto que deve ser constante quando se considera mudar pra Heroku é ter que usar o Heroku Postgres (que é uma ótima opção). Mas muitos projetos, principalmente mais antigos, devem ter começado em MySQL.
+A primeira coisa a fazer é verificar se você tem muitos SQL exclusivos de MySQL, funções e coisas do tipo. Se você usar ActiveRecord Relations padrão, não deveria ter nenhum problema.
+O segundo problema é migrar os dados de um banco para o outro. Eu procurei várias opções mas a maioria é antiga e não funciona direito, a melhorzinha que achei foi uma task Rake. Ela tinha alguns probleminhas de usar API deprecada mas resolvi neste aqui:
+
+Basta alterar seu config/database.yml para ter o seguinte:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+development:
+  adapter: postgresql
+  database: legaltorrents_development
+  username: fred
+  password: password
+  host: localhost
+
+production:
+  adapter: mysql
+  database: legaltorrents_production
+  username: fred
+  password: password
+
+
+Coloca o script como lib/tasks/convert.rake e executa rake db:convert:prod2dev.
+Depois disso ainda precisa atualizar as sequences de primary key do PostgreSQL desta forma:
+
+1
+
+ALTER SEQUENCE users_id_seq restart with (select max(id)+1 from users) 
+
+
+Isso deve ser feito para cada tabela que você tem. Se precisar atualizar em produção no Heroku, execute heroku run rails console e execute assim:
+
+1
+
+ActiveRecord::Base.connection.execute("ALTER SEQUENCE users_id_seq restart with (select max(id)+1 from users) ")
+
+
+Não esqueça que você pode fazer dumps do banco de dados de produção, colocar num banco de dados local para testar e tudo mais e se quiser pode gerar um dump local e restaurar de novo no Heroku. Leia a documentação deles sobre PG Backups.
+Gerar um dump local é simples:
+
+1
+
+pg_dump -Fc --no-acl --no-owner -h localhost -U vagrant my_db > mydb.dump
+
+
+E restaurar um dump do Heroku no seu banco local também:
+
+1
+
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -U vagrant -d my_db b078.dump
+
+
+Isso deve resolver a maioria dos problemas.
+
+tags: learning rails heroku
+

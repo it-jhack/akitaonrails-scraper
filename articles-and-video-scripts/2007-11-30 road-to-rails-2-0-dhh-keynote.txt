@@ -1,0 +1,13 @@
+
+
+
+
+Rails 2.0 está a poucos dias de ser lançado oficialmente, estamos no Release Candidate 2 e durante a RailsConf Europe que aconteceu há algumas semanas, David Hansson demonstrou no palco algumas das novidades.
+
+As partes impagáveis são justamente durante o hands-on onde inúmeras vezes vemos a tela com erro :-) Nem mesmo DHH é imune a erros! Eu acho isso particularmente importante. Muitos desenvolvedores acham que não podem errar, que o código deve estar impecável antes de apertar o refresh no browser. Pelo contrário, no papel de artesão nós refinamos à medida que codificamos e isso significa cair continuamente em telas de erro. A diferença é que no Rails é muito fácil localizar um erro e eliminá-lo. Eu não gosto de ensair muito apresentações de código, prefiro mostrar o erro e mostrar como se encontra a solução desse erro. DHH também não está preocupado com isso, ele tem confiança que o que ele sabe sobre o Rails (por motivos óbvios …) dificilmente o fará ficar 10 min. coçando a cabeça na frente da platéia tentando descobrir o que está acontecendo.
+Recomendo que todos assistam.
+Ele começou mostrando como Rails já passou da infância e se estabeleceu. Também explicou sobre o novo processo para patches no repositório, o Report #12. Quem estiver interessado em colaborar com o Rails deve passar por esse processo.
+No hands-on ele demonstrou um pouco de Route Namespaces (agora ficou mais fácil criar sub-seções como Administração via RESTful), Sexy Migrations, nova convenção de partials para collections, nova sub-divisão das views entre Mime types e Renderers, o plugin atom_feed_helper. Uma das coisas que mais me interessa mas ele não mostra aqui são facilidades nas fixtures.
+Rails 2.0 não é sobre mais uma revolução mas sim sobre evoluções incrementais. A vantagem é que o que você sabe hoje continua funcionando. Recado principal: se ainda não aprendeu REST no Rails 1.2, já passou da hora de aprender. Fiquem de olho!
+tags: obsolete rails
+

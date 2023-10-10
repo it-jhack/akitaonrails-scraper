@@ -1,0 +1,25 @@
+
+Josh Susser escreve excelentes artigos em seu blog has_many: through (que literalmente quer dizer “tem muitos: através de” e ele tem acompanhado o lançamento do Rails 1.2 RC1 de perto. Este post é de 6 dias atrás mas mesmo assim vale a pena parafraseá-lo uma vez que ele vai além de dizer o que tem no 1.2, mas em como usá-lo e o que fazer com ele.
+
+
+Para aqueles não familiares com o termo release candidate (candidato a lançamento) é um estágio de desenvolvimento usado em práticas padrão de desenvolvimento de software. (Para aqueles que já conhecem o conceito, por favor perdoem esse momento de repetição enquanto explico a quem não sabe). O objetivo de um release candidate é deixar o código cozinhar um pouco sem fazer nenhuma mudança, dando à equipe de desenvolvimento uma chance para encontrar mais alguns bugs. Os desenvolvedores estão dizendo, “acreditamos que terminamos, mas vamos ter certeza que não tem nenhuma bomba que ainda não encontramos”. Por um lado é estar admitindo que a cobertura de testes está incompleta, mas o mundo não é perfeito, muito menos o suíte de testes de qualquer um.
+Quando bugs são encontrados em um release candidate, ou eles são postergados para um lançamento futuro ou corrigidos e incorporados em um novo release candidate. Bugs podem ser postergados se podem ser evitados com facilidade ou se as mudanças necessárias para corrigí-lo forem muito extensas. Esse processo continua até que a equipe de desenvolvimento decida que o código está estável o suficiente para lançar de verdade, ou todos são despedidos e substituídos por uma equipe de macacos bêbados que lançará qualquer coisa que a gerência lhes disser.
+OK, chega de repetição. Se quiser saber mais sobre práticas de desenvolvimento de software, compre um livro.
+Bom, mas e agora? Bem, temos um release candidate novinho em folha. Hora de encontrar alguns bugs! Podemos facilmente instalar os gems com uma linha:
+1
+
+gem install rails --source http://gems.rubyonrails.org --include-dependencies
+
+
+Ou podemos congelar um projeto Rails para o tag RC1 no subversion:
+1
+
+rake rails:freeze:edge TAG=rel_1-2-0_RC1
+
+
+Note que RC1 não é mesma coisa que o trunk Edge (a linha de desenvolvimento ativa). Algumas mudanças no trunk não estão no RC1. Também perceba que se congelar para o tag rel_1-2-0_RC1 do trunk, teremos que re-congelar para um novo tag quando a próxima RC estiver disponível.
+Uma vez com o RC1 em mãos configurado tanto como gems ou congelado em nosso projeto, rode seus testes. (Estamos assumindo que todos os nossos testes rodavam sem problemas no Rails 1.1.6). Então faça o que sempre faz para checar as partes do seu aplicativo que realmente não estão cobertos adequadamente com testes. Vamos lá, sabemos que tem alguma coisa assim. Talvez seja bom rodar por um ciclo de desenvolvimento também, brinque um pouco e veja como funciona.
+Mas o que fazer se os testes falharem ou se alguma outra coisa sair errado? Reporte o bug no trac do Rails e coloque “1.2regression” no campo de palavras-chave. Provavelmente será bom olhar o relatório primeiro para ver se alguém já não reportou o mesmo bug, e então somente adicionar um comentário se tivermos novas informações.
+Agora, este é o ponto principal e objetivo deste post … Quando criamos o ticket para reportar o erro, sempre que possível, inclua um caso de teste que falha. DHH disse isso no fim do seu anúncio mas é sempre bom repetir. Casos de teste são importantes para ajudar a corrigir um bug, mas também para criar um teste de regressão para ter certeza que o bug nunca mais vai acontecer. Incidentalmente, se seu caso de teste for incorporado na suíte de testes do Rails, você pode dizer que é um colaborador do Rails. Não acha um preço justo?
+tags: obsolete rails
+

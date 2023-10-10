@@ -1,0 +1,16 @@
+
+
+
+
+Fonte: k-dub – Almost Serious
+Tradução: acabei de rodar gem i rails -y --source https://gems.rubyonrails.org e recebi rails 1.2.0 em vez do 1.1.6.5848 que eu esperava.  Será que isso significa que o Rails 1.2 está empacotado e pronto para ir?
+Atualização: 16hs, Fonte: Kognitive Jelly"
+Bem, a última versão do Ruby on Rails finalmente foi lançada e as gemas foram empurradas para o rubyforge.org. Para aqueles que quiserem atualizar os gems rode:
+gem update rails ––include-dependencies
+Se tiver algum projeto corrente que está trabalhando, precisará atualizá-los. Rode isso a partir da raíz do seu projeto:
+rake rails:update
+Então mude seu arquivo config/environment.rb para que usar a versão 1.2 do Gem (a minha estava na linha 8):
+RAILS_GEM_VERSION = ‘1.2′
+Além disso, se estiver atualizando e tiver uma versão anterior do rails congelado (frozen) no seu diretório vendor, então precisará apagá-lo de lá (re-congelando o novo Rails se necessário).
+tags: obsolete rails
+

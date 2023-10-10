@@ -1,0 +1,9 @@
+
+
+
+
+Agradecimentos a todos que levantaram sábado cedo pela manhã para assistir minha palestra na Impacta. Foi bem legal, conseguimos lotar o auditório e espero que tenha sido proveitoso para todos.
+Como eu prometi, aqui está o link para os slides.
+Um ponto que eu achei interessante: eu havia preparado um pequeno demo (que infelizmente não tive tempo de terminar), usando o plugin brazilian_rails. Por acaso enquanto eu falava das convenções do Rails com plurais nos nomes de tabela, alguém já veio com a pergunta “e se eu usar palavras em português?”, excelente pergunta para o qual eu estava preparado com o plugin para demonstrar na hora que isso não é um problema :-)
+tags: obsolete conference presentation
+

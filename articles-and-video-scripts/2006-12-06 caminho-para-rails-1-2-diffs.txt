@@ -1,0 +1,31 @@
+
+Esse arquivo é para os exploradores. Coloquei no ar um Rar (arquivo compactado) chamado rails1.2rc1.diff.rar.
+Fiz o seguinte processo: configurei um repositório Subversion e importei todo o código-fonte do Rails 1.1.6. Em seguida fiz o commit e gravei por cima o código-fonte do Rails 1.2 RC1. Fiz o commit novamente. Em cima do log entre o working copy e a revisão anterior gerei um Excel e um arquivo Txt concentrando TODAS as modificações desde a 1.1.6 até a 1.2 RC1.
+
+
+Por exemplo, no Excel vemos que o arquivo “active_record/connection_adapters/firebird_adapter.rb” foi modificado. Digamos que estamos interessados na evolução do suporte a Firebird. Basta abrir o Txt e procurar por esse nome de arquivo. Veremos várias linhas com sinais de (-) e (+) que quer dizer linhas que foram retiradas e que foram acrescentadas, respectivamente. Vejamos um trecho pequeno:
++      def supports_migrations? # :nodoc:
++        true
++      end
++
++      def native_database_types # :nodoc:
++        {
++          :primary_key => “BIGINT NOT NULL PRIMARY KEY”,
++          :string      => { :name => “varchar”, :limit => 255 },
++          :text        => { :name => “blob sub_type text” },
++          :integer     => { :name => “bigint” },
++          :decimal     => { :name => “decimal” },
++          :numeric     => { :name => “numeric” },
++          :float       => { :name => “float” },
++          :datetime    => { :name => “timestamp” },
++          :timestamp   => { :name => “timestamp” },
++          :time        => { :name => “time” },
++          :date        => { :name => “date” },
++          :binary      => { :name => “blob sub_type 0” },
++          :boolean     => boolean_domain
++        }
++      end
+Podemos ver que o Firebird passou a ter suporte a Migration e que os tipos de dados foram especificados. E assim por diante, podemos buscar alguma funcionalidade que nos interessa e ver exatamente o que mudou. Qualquer dúvida, procure no Google sobre a sintaxe de arquivos Diff. Elas servem para transportar “deltas”, somente o que mudou entre duas versões do mesmo arquivo. Nesse caso, este Txt concentra tudo que mudou entre as duas versões de TODOS os arquivos do Rails.
+Eu disse isso no meu livro mas repito: o código-fonte do Rails é extremamente bem feito, razoavelmente bem documentado (via linhas de comentário) e bastante legível. Não custa tentar.
+tags: obsolete rails
+

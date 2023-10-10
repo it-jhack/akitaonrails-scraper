@@ -1,0 +1,18 @@
+
+Obs: for the Brazilian Portuguese version, click here.
+I still didn’t finish compiling all the videos or even writing the main article of the event, but I was getting anxious to publish this video with Robert Martin, that I was able to record in Baltimore. It is a 16 min long conversation about languages, career, certifications and Agile.
+
+
+
+
+On Thursday, 10th, last day of RailsConf, Robert Martin delivered the “Twenty-Five Zeros” opening keynote. You can watch it, in its entirety, below:
+
+In summary, he explains that since it was invented, computer hardware evolved by at least 25 orders of magnitude, while programming languages probably didn’t evolve at the same rate. Probably even not at all.
+“Ah, but today we have object orientation, we have closures, etc” As Bob Martin reminded us, we may have better and more convenient ways to organize code. But since Fortran, at its core, we still only do sequence, selection and iteration. Meaning, assignment, “if” conditions, “while” loops.
+Besides, he also reminds us how languages always live in cycles: they are born, have a crescendo, begin to stagnate and eventually die or stop growing. That’s why it is important for programmers to understand that they need to learn new languages all the time. He is learning Clojure which he recommends and I also think it is a great suggestion.
+In this interview we comment a little bit on this subject. But going deeper I was interested in hearing from him about the current state of growth of Agile methodologies, such as Scrum and the sudden interest in Certifications.
+Many may know Robert Martin as the author of the Clean Code book and he reveals that he is working on another book called “Clean Coder” – I don’t know if he was kidding, but this is a good theme: a programmer can’t be just an excellent programmer and bad in communication. There are many other important skills that build a complete professional.
+Finally, Bob is also known being one of the people that signed the Agile Manifesto and he tells us the story of how this came to be, how the meeting was organized, who participated and how they came up with the famous 4 values.
+All in all, many insights coming from a professional that has been in the field for more than 4 decades and has certainly experienced much more than any one of us.
+tags: railsconf2010 interview english
+

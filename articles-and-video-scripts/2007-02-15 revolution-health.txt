@@ -1,0 +1,10 @@
+
+
+
+
+Tradução/Fonte: Riding Rails
+Mais uma grande aplicação web desenvolvida com Rails. O ex-CEO da AOL, Steve Case apareceu recentemente no programa americano Good Morning America , do canal ABC para falar de seu novo empreendimento, Revolution Health, um novo website de saúde construído sobre Rails.
+A equipe do Revolution Health publicava seu progresso no blog Revolution On Rails. O site InfoQ conduziu uma entrevista com os desenvolvedores que discute, entre outras coisas, sua estratégia de PluGems (é um plugin! é um gem!!) para compartilhar código entre múltiplas aplicações que compõe o Revolution Health.
+Depois do Amazon UnSpur  esta é mais uma aplicação associada a um nome conhecido do mercado de Internet. Vale a pena conferir.
+tags: obsolete
+

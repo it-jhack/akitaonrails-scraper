@@ -1,0 +1,10 @@
+
+Atualização 13-10-2015: como o rubyonbr não está mais ativo, agora só via Webarchive
+
+
+O pessoal do Rubyonbr fez a gentileza de me conceder espaço para falar um pouco sobre mim e também sobre o livro. Espero que gostem da entrevista exclusiva que foi ao ar hoje.
+Outra novidade é que agora irei colaborar mais com a comunidade como colunista na Rubyonbr. Outra coluna que escrevi estreou mês passado no novo site Plugmasters, dêem uma olhada. Se tudo der certo estarei escrevendo colunas para esses dois canais de conhecimento. Não deixem de enviar sugestões e críticas. Todos sabem que os canais estão sempre abertos, inclusive via meu e-mail pessoal.
+E continuando na expectativa, nos próximos dias o livro “Repensando a Web com Rails” estará disponível nas livrarias. Quem quiser ainda tem chance de comprar com desconto diretamente pela pré-venda no site da Brasport.
+Além do mais, estão todos convidados para o evento de lançamento do livro dia 24 de outubro, na FNAC Paulista. Tragam seus amigos e colegas de trabalho, quem sabe ajuda a convencer seus chefes e clientes a apostar conosco na tecnologia Ruby on Rails?
+tags: rubyonbr
+

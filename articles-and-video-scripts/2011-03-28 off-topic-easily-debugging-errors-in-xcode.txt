@@ -1,0 +1,15 @@
+
+
+
+
+This little tip has saved me a few hours debugging errors and I wonder why Xcode doesn’t come with it pre-configured already (if it does, let me know). I found it in a Stackoverflow thread and I will just reproduce it here.
+In Xcode, go to “Run – Show – Breakpoints”. Then select the “Global Breakpoints” and add 2 breakpoints:
+
+“objc_exception_throw” for Location “libobjc.A.dylib”
+“-[NSException raise]” for Location “CoreFoundation”
+
+You should have it like this screenshot:
+
+Now everytime an unexpected crash happens, you can open the Console (at menu “Run – Console”) and type “bt” (I think it means “backtrace”) and it will show you the trace dump so you can pinpoint the exact file and line number where the crash took place and add safe guards to avoid that particular crash.
+tags: apple objective-c obsolete english
+

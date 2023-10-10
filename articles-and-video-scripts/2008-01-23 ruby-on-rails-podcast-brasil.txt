@@ -1,0 +1,11 @@
+
+
+
+
+O Julio Monteiro (eGenial) e o Carlos Brando (Surgeworks) tiveram uma ótima iniciativa: um podcast especializado em Ruby on Rails e tecnologias relacionadas. Agradeço o convite que me fizeram para participar e espero poder contribuir mais. O Julio é o responsável pelo website oficial de Ruby on Rails no Brasil (rubyonrails.com.br) e o podcast ficará hospedado lá (no rubyonrails.com.br/podcasts).
+
+Por enquanto ainda existe apenas uma página estática com o link mas o Julio está preparando um site dinâmico provavelmente nos moldes do Ruby on Rails Podcast oficial do Geoffrey Grosenbach, com feeds, comentários e tudo mais.
+Eu e o Carlos ainda estamos aprendendo os truques do podcast. A qualidade ainda não é a que queremos mas vamos melhorar. E nós dois somos ouvintes exigentes, estamos acostumados com os podcasts americanos, muitos dos quais tem a mesma qualidade de rádio profissional. Então somos nossos maiores críticos e prometemos evoluir com o tempo.
+Vejam mais detalhes do segundo episódio no blog do Carlos. Não deixem de enviar sugestões e críticas para melhorarmos cada vez mais.
+tags: obsolete
+

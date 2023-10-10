@@ -1,0 +1,10 @@
+
+
+
+
+Esta é uma notícia velha, mas útil e também um presente de Natal para usuários Windows, do Softies on Rails : Na InfoQ, Obie Fernandez escreveu sobre RubySSPI, um gem escrito por Justin Bailey que permite autenticação de proxy NTLM para Ruby no Windows.
+Em velhos empregos corporativos, eu não podia gem install rails. Não funcionava porque nossos PCs corporativos estavam sentados atrás de um servidor ISA. Em vez disso, eu tinha que fazer o download de cada gem (ActiveRecord, ActionPack, etc), separadamente, e instalar cada um sem saber suas dependências. Era um parto. Imagino que muitos de vocês que estão trabalhando em empresas com Microsoft estão passando pelos mesmos problemas. Como Obie aponta, esse é obviamente um grande fardo para as pessoas que estão tentando experimentar com, ou mais importante, vender Rails em seus trabalhos.
+A incapacidade de fazer gem install era uma grande barreira mental para adoção  em empresas pesadamente dependentes de Microsoft, onde tentei apresentar Ruby e Rails. Também era um grande parto (e constantemnete recorrente) quando comandos gem falhavam quando eu estava preso em um grande cliente com proxy/firewall ISA. O maior problema é que muitas vezes ninguém no cliente sabe qualquer coisa sobre proxy ISA e tentativas de entender “porque meu Ruby simplesmente não funciona” é encarado com confusão, se não com pura hostilidade.
+Agora você pode apenas fazer o download e instalar o gem RubySSPI e checar o Readme.txt para aprender como fazer isso funcionar.
+tags: obsolete windows
+

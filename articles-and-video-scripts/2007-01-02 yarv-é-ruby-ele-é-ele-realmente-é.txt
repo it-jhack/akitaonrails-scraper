@@ -1,0 +1,35 @@
+
+Para quem não conhece, o YARV (Yet Another Ruby Virtual machine), como o próprio nome diz, é uma máquina virtual para Ruby. Será a troca de rodar sobre um interpretador para rodar sobre uma máquina virtual, nos moldes de como o Java roda sobre a JVM. Mas somente isso não basta, o projeto YARV é sobre criar a mais rápida máquina virtual para Ruby. Teoricamente ela seria um dos pilares do Ruby versão 1.9.×. Cuidado, isso não quer dizer que o interpretador atual é ruim nem que a virtual machine sairá perfeita logo de início. É um passo evolutivo para o Ruby, muito tem que ser feito. _why relata que o sub-projeto Yarv foi mesclado na árvore de desenvolvimento da distribuição oficial do Ruby.
+
+
+Do RedHanded : Koichi terminou de fazer o commit do YARV no trunk do Ruby. Estamos no nosso caminho para Ruby 1.9.1. Grande trabalho, Ruby-Core!
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+ $ svn co https://svn.ruby-lang.org/repos/ruby/trunk ruby
+ $ autoreconf -ivf
+ $ ./configure --prefix=/opt/ruby-trunk
+ $ make
+ # make install-nodoc
+
+ $ export PATH=/opt/ruby-trunk/bin:$PATH
+ $ ruby -v
+ ruby 1.9.0 (2007-01-01 patchlevel 0) [i386-freebsd6.0]
+
+
+Oh, e se quiser instalar extensões, precisará descomentá-los em:
+1
+
+ext/Setup.
+
+
+Murphy fez alguns benchmarks informais que produziram um gráfico de velocidade do YARV. Tente este script aqui. (do [ruby-core:9825])
+tags: obsolete ruby
+

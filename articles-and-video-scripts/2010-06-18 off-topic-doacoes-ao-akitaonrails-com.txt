@@ -1,0 +1,42 @@
+
+
+
+
+Obs: Pouco a pouco estamos chegando lá :-)  Sempre que alguém fizer uma doação, vou atualizar a lista abaixo. Aliás, se alguma empresa estiver disposta a patrocinar este blog, não deixe de entrar em contato em fabioakita at gmail.
+Pessoal, há algumas semanas eu coloquei no ar algumas opções de doação – que vocês podem ver na barra lateral da direita, para o Paypal, Pagseguro e Moip. Desde o dia 21/05 recebi R$ 278.87 em doações. Isso ajuda nos custos do servidor na Linode (USD 19.95/mês) e do Blip.tv (USD 96/ano).
+Eu queria saber se os leitores deste blog valorizam este trabalho. Escrever tutoriais, editar entrevistas, fazer palestras, tudo isso consome bastante tempo. Gostaria de poder aumentar o ritmo de conteúdo mas infelizmente existe um limite financeiro pra isso.
+Se puderem contribuir para manter meus trabalhos de evangelização seria de grande ajuda.
+E antes de mais nada, um enorme Obrigado aos que fizeram doações até agora:
+
+Alan Rafael
+Neemias Malvares Teixeira
+Fabrizio Colombo
+Raphael William Costa
+Antélio Abe (assinatura mensal)
+Patricia Eiko de Campos
+Vandewilly Silva
+Alessandro Rodolpho Gonçalves
+Ismael Stahelin
+William de Melo Gueiros
+Maurício De Diana
+Julio Saito
+Nicolas Iensen
+Diego Rossini Vieira
+PowerTask
+David William
+Paulo Silveira/Caelum
+Fabio Adriano Nascimento
+Julio Santos Monteiro
+Rafael Rosa
+Junio Vitorino
+Henrique Tatsuyuki Soejima
+Fernando Campos
+Leandro Silva
+Alexandre Kenji
+Vitor Chaves de Souza
+
+A ajuda de vocês é importante e demonstra que valorizam meu trabalho, o que me deixa contente.
+Uma coisa que muitos não devem saber é que quase todas as dezenas de palestras que fiz nos últimos anos não foram remuneradas. No máximo o evento pagava pelo custo da viagem. E para montar uma palestra de qualidade leva muitos dias. O que ministrei na RailsConf este ano levou 3 semanas para fazer. Considero um trabalho importante porque leva o Rails e Agilidade a diversos públicos, desde estudantes até empresas que começam a utilizar.
+Espero poder contar com vocês.
+tags: obsolete
+

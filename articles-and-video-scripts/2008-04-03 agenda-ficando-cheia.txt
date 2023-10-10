@@ -1,0 +1,12 @@
+
+
+
+
+Update 13/03: Pessoal, mais um compromisso na agenda: dia 26 de abril, sexta-feira irei fazer uma palestra introdutória sobre Rails 2 na Impacta de São Paulo. Me disseram que as inscrições são abertas ao público também, então quem estiver interessado pode se inscrever no site deles. Espero vocês lá ;-)
+Galera, meio atrasado, mas anuncio que este ano vou palestrar na FISL’09! O assunto é “Deployment de Rails – os desafios de colocar aplicações em produção.” Para ser sincero ainda não sei muito bem sobre o que vou falar. Estou aberto a sugestões. Espero que os Railers possam participar. O Carlos Eduardo da e-Genial, o Julio Monteiro, do rubyonrails.com.br, e acho que o Vinicius da Improve IT também estarão lá. O Carlos conseguiu uma quiosque para juntar os railers. O FISL acontecerá de 17 a 19 de abril, em Porto Alegre, RS.
+
+A outra novidade é que este ano também vou participar da RailsConf’08 em Portland, Oregon, do dia 29 de Maio a 1o de Junho. Será minha primeira RailsConf, vai ser legal conhecer pessoalmente a galera que eu já conheci via internet apenas.
+
+Espero que o ano continue assim :-)
+tags: obsolete
+

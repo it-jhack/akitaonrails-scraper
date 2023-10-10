@@ -1,0 +1,148 @@
+
+Pessoal, hora de um mea culpa. Como muitos devem ter notado, todas as imagens que ilustram os posts deste blog são externas, ou seja, seus browsers carregam as imagens diretamente dos sites de origem, e não daqui.
+
+
+Motivo: pura preguiça. Toda vez que escrevo um artigo grande, gosto de ilustrar para criar um contexto e facilitar a leitura (quebrando um texto longo em blocos menores intercalados por imagens). Infelizmente não tenho o dom artístico do WhyTheLuckyStiff para desenhar minhas próprias ilustrações. Infelizmente também não tenho o dom fotográfico de James Duncan Davidson. E infelizmente também não tenho recur$o$ para comprar ilustrações comerciais.
+Solução barata: Google Images. Basicamente, eu procuro por imagens que satisfaçam o contexto do artigo e literalmente copio e colo a URL. Não tenho dinheiro, por favor não me processem :-)
+O erro: eu deveria baixar a imagem localmente, entrar no administrador do blog, subir a imagem lá e só então criar um link local do blog, com uma cópia da imagem.
+Por que isso é importante: porque significa que estou basicamente roubando banda de outros sites. Assim como eu, eles também pagam por banda portanto é claro que eu não deveria tirar banda deles. O problema é que eu simplesmente considerava isso um problema menor. Claro, isso porque meu blog não é exatamente uma AOL, com milhares de usuários acessando todo minuto. Mas para outros sites que tem muitos acessos, cada download conta.
+Muitos blogueiros revoltados – com razão – resolveram contra-atacar. Hoje no fim do dia, estava chatteando o Carlos Eduardo e eis que ele nota algo estranho em meu blog: uma imagem pornográfica (!) Isso mesmo, o dono do site da imagem que eu estava usando, trocou a imagem antiga por uma pornô.
+Objetivo óbvio: forçar quem estava usando aquela imagem (eu) de tirar o link do ar (foi o que fiz).  Só então me dei conta do problema.
+Solução óbvia: tirar todos os links de imagens externas e trocar por links internos no meu site.
+Problema: eu tenho – neste momento – 134 artigos no blog. Se eu entrar no administrador do Typo via Web, abrir artigo a artigo, copiar as imagens localmente, depois subir um a um pela página de upload, alterar – manualmente – o HTML de cada um dos artigos, vou gastar semanas. Exatamente o que chamamos de corno-job.
+Resolvi que de hoje não passaria com esse problema, mas também não quero varar a madrugada nisso. Hora de um pouco de dirty code. Abri o bom e velho ./script/console e coloquei o seguinte código (sem identação mesmo, é tudo dentro do console):
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+
+re = /!(http+[^\s]+)!/
+File.open("baixar", "w+") do |f|
+f << "#/bin/bash\n"
+Content.find(:all).each do |c|
+a = c.body.scan re
+if a 
+a.each do |s|
+f << "curl -O #{s}\n"
+end
+end
+if c.extended
+a = c.extended.scan re
+if a 
+a.each do |s|
+f << "curl -O #{s}\n"
+end
+end
+end
+end
+end
+
+
+Dêem uma olhada. Dá para melhorar muito esse código, mas a intenção é simples: navegar por todos os registros do banco do Typo, usando Regex, para procurar as URLs de imagens (truque: em Textile, toda imagem fica entre exclamações). Achando a URL, eu gravo em um arquivo concatenando com o comando do curl (downloader via linha de comando).
+Agora ficou fácil. Esse código Ruby me gerou um script bash para baixar cada um dos arquivos de imagens. No shell bash eu rodei o seguinte:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+
+chmod +x baixar
+mkdir images
+cd images
+../baixar
+
+(aqui ele demora um tempão 
+baixando cada uma das imagens)
+
+mv *.* ../public/files/
+cd ..
+rmdir images
+
+
+Considerando que estou na raíz da minha aplicação Rails (meu blog), criei um sub-diretório temporário, executei o script que acabei de gerar e o curl baixou todas as imagens que antes eu linkava de fora. Então movi para o diretório padrão de uploads do Typo, que fica no /public/files.
+Finalmente, preciso alterar todos os links de imagens de cada um dos artigos para não mais apontar para URLs externas mas sim para as cópias locais que acabei de fazer. Para isso, abri novamente o ./script/console e rodei o seguinte dirty code:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+re = /!(http+[^\s]+)!/
+re_file = /.+\/(.*[\.jpg|\.png|\.gif]+)/
+Content.find(:all).each do |c|
+a = c.body.scan re
+if a 
+a.each do |s|
+b = s[0].scan(re_file)
+if b
+subst = "/files/#{b[0]}"
+c.body.gsub!(s[0], subst)
+end
+end
+end
+if c.extended
+a = c.extended.scan re
+if a 
+a.each do |s|
+b = s[0].scan(re_file)
+if b
+subst = "/files/#{b[0]}"
+c.extended.gsub!(s[0], subst)
+end
+end
+end
+end
+c.save
+end
+
+
+Voilá! O código é muito parecido com o anterior, mas agora eu encontro a URL, separo o nome do arquivo da URL e troco por um caminho direto à cópia. Por exemplo, se encontrar https://www.site.externo.com.br/imagem.jpg, ele troca para /files/imagem.jpg. Esse script atualizou todos os artigos rapidamente.
+E esta foi minha sabatinada de hoje. A maioria – praticamente todas – as imagens que eu usava eram de sites estrangeiros, com raríssimas exceções nacionais.
+Mais uma vez peço desculpas a todos que que tiveram suas imagens linkadas e deixo aqui uma recomendação: não roubem banda! Se alguém faz a mesma coisa que eu, segue acima uma sugestão de automatizar a correção, dessa forma não há desculpas.
+Até mais.
+tags: obsolete
+

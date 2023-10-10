@@ -1,0 +1,61 @@
+
+Faz exatamente 1 mês desde a última compilação de notícias e dicas e como eu ando bem ocupado ultimamente, também ainda não conseguimos gravar o podcast deste ano – uma hora sai :-) Vamos recapitular 15 artigos que achei interessantes neste mês.
+
+
+
+
+CouchDB Load Balancing and Replication using HAProxy. – o desenvolvimento do CouchDB continua a todo vapor. Uma coisa que eu ainda não sabia era como configurar múltiplas instâncias para replicar dados entre si. Como o CouchDB é literalmente um servidor Web, ele pode ser balanceado por qualquer proxy reverso de HTTP usando coisas como HAProxy. Além disso, a replicação entre nodes pode ser iniciada com um simples comando via HTTP POST. Com esse básico dá para começar a entender como criar um farm de CouchDBs com alta disponibilidade.
+
+
+Git Ready – é um novo website com dicas sobre a utilização de Git. Excelente principalmente para quem está começando. Parece que ele está sendo atualizado com bastante frequência e o conteúdo é legal até para quem já usa Git no dia-a-dia. Tem coisas avançadas por exemplo como restaurar commits perdidos. Vale a pena colocar no seu leitor de rss. Falando em Git, para usuários de Windows, existem já vários projetos clones de TortoiseSVN surgindo, a maioria ainda em estágio inicial, mas esbarrei com o GitExtensions que parece mais completo e promissor para quem quiser testar.
+
+
+Rails tem named scopes faz algum tempo. Recentemente o pessoal da ENTP blogou sobre uma técnica para usar named_scopes como mais um substituto de fixtures. Hoje existem diversas outras como o famoso factory_girl. Vale a pena dar uma olhada nesta dica, talvez se encaixe em alguns projetos. E ainda sobre named_scopes existe um pequeno gotcha que descrito no blog Craz8, um pequeno truque de performance que pode ajudar também.
+
+
+RailsConf 2009 abriu as inscrições. Este ano o evento será em Las Vegas, do dia 4 a 7 de maio. Eu ainda não sei se vou, mas se você puder ir, vá: vale muito a pena! Mas este ano tem um pequeno twist: não haverá RailsConf Europe. Parece que o evento na Europe não rendeu tanto e por causa da crise financeira também acharam melhor pular este ano.
+
+
+Existe um novo projeto, que parece bastante promissor, chamado Rhodes, uma maneira de usar Ruby para desenvolver aplicações para iPhone. A parte interessante é que eles se preocuparam inclusive com uma pequena infraestrutura de sincronização de dados entre o iPhone e um servidor, coisa que é muito importante para coletores de dados. Este eu ainda não testei, mas está na minha lista com certeza.
+
+
+Como curiosidade para quem gosta de usabilidade, o Ryan, da 37signals, fez um post de blog criticando – de forma construtiva – sobre a interface de procura do Github. Em resposta a isso o Scott Chacon blogou sobre as modificações de design e o novo esquema de procura que eles implementaram. Ficou muito legal, tanto em tornar a visualização mais clara quanto em tornar a procura muito mais flexível e poderosa.
+
+
+O Rodrigo Urubatan escreveu um tutorial sobre o Profligacy uma biblioteca criada pelo próprio Zed Shaw para facilitar a criação de aplicações Java Swing utilizando a integração com JRuby. É uma forma interativa e muito mais simples para passar pela complexidade do Swing utilizando a flexibilidade do Ruby. Bastante recomendado para programadores Java.
+
+
+Faz algum tempo que o Charles Nutter blogou sobre FFI, uma maneira de criar extensões Ruby em C que é compatível com Ruby MRI, JRuby e Rubinius. Agora é a vez do Ilya Grigorik trazer mais uma explicação sobre como expôr funções de bibliotecas nativas para serem consumidas pelo Ruby. Para programadores com conhecimentos em C este é um bom caminho para trazer mais performance às suas aplicações Ruby utilizando bibliotecas pré-existentes em C.
+
+
+Há 2 semanas foi criado um novo grupo chamado Rails Activists, encabeçado pelo Gregg Pollack, Mike Gunderloy, Matt Aimonetti, Ryan Bates. É uma forma de tentar focar os esforços dos ativistas da comunidade. Estão acontecendo diversas discussões na mailing list sobre assuntos como renovar o Wiki do site oficial do Rails, criação de um kit de imprensa, e muito mais. Vale a pena ficar de olho, principalmente se você ajuda em alguma comunidade regional.
+
+
+Não poderia deixar de relembrar sobre o lançamento da versão 1.11.12 do Rspec. Ele permite construções ainda mais elegantes de testes como este:
+
+1
+2
+3
+
+describe Person do
+  it { should validate_presence_of(:email) }
+end
+
+
+
+O Robby Russell explicou uma dica legal para quem tinha dúvidas sobre como utilizar subdomínios como login para seu website. Por exemplo, se você tem um website de domínio “meusite.com”, você poderia fazer seu usuário acessar “akitaonrails.meusite.com” e a informação “akitaonrails” pode ser usado como login para a aplicação.
+
+
+Nem apenas de aplicações Rails vive o Ruby. Aliás, é possível criar daemons (serviços de sistema) de maneira muito simples também. Principalmente se utilizar o DaemonKit, que ajuda a gerar um esqueleto mínimo de projeto para criar um daemon em Ruby.
+
+
+Falando em geradores, existem vários para se criar Ruby Gems. Recentemente o Josh Nichols lançou mais um, o Jeweler, cujo objetivo é gerar um esqueleto mínimo de uma Gem e uma infraestrutura para facilitar sua manutenção. Alguns são completos demais (como o do Dr. Nic), alguns são espartanos. Ainda não testei este mas pode ser mais uma boa opção.
+
+
+Quem usa Net::HTTP para fazer buscar uma página na internet pode se beneficiar do fakeweb para criar os testes para a aplicação. Eu já tive que fazer isso manualmente uma vez, é simples mas tem alguns truques para conseguir esse efeito. O fakeweb torna essa tarefa mais fácil. Assim você pode “enganar” sua aplicação, capturar a chamada do Net::HTTP que seria feita a um site de verdade e lhe devolver um resultado estático que você já deixou previamente salvo com seus testes.
+
+
+Quem tem acompanhado o projeto Gitorious viu que o Johan adicionou uma funcionalidade de se ter Wikis para os projetos Git. Mas tem um extra: o Wiki é armazenado num projeto Git também! Isso é interessante porque uma das características de um Wiki é que ele trata documentos versionados, e o Git é exatamente isso: um sistema de arquivos versionados. Dêem uma olhada no código do Gitorious para entender como o Johan usou o projeto Grit para isso. Mas para um tutorial mais focado neste assunto leia este artigo do blog do Matthias Georgi que ensina os passos básicos para fazer um Wiki usando Grit com Git.
+
+tags: obsolete
+

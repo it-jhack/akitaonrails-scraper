@@ -1,0 +1,23 @@
+
+
+
+
+Yeah, me too :-)
+Problem is, it’s not exactly “trivial” to get yourself started with Rails 3, the Edge version, if you’re not used to build stuff from source. When Rails 3 gets released it will be the good’ol:
+1
+
+sudo gem install rails
+
+
+But for now, you will have to struggle a little bit … or not. If you want the very first first look into Rails 3, check out Dr. Nic’s Preview. I based some of this article on his initial exploration.
+More than that, I heavily relied on José Valim’s early work with the Third Rails project. It was an early demonstration of a Rails 3 project structure with custom generators support. It was a little bit outdated, so I decided to fork it and update it.
+More than that, I’ve added some more details and documented it in the README, which kind of became a live blog post describing what you can do right now with this project. Start playing with it right now:
+1
+
+git clone git://github.com/akitaonrails/third_rails.git
+
+
+As it’s a github project, you’re welcome to explore Rails 3 and add your findings there! A blog post would become outdated too fast, but maybe this Third Rails project can keep on going until Rails 3 is officially released and serve as an example project to showcase some of Rails 3 new features.
+Enjoy!
+tags: obsolete rails english
+

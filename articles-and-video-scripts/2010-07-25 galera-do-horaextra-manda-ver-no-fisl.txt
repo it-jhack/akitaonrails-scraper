@@ -1,0 +1,31 @@
+
+Porto Alegre estava com o clima frio, bem frio, mesmo assim nossos grandes amigos cariocas do #HoraExtra não deixaram de esquentar o show no #FISL. Coisas que só acontecem quando você está se divertindo: eles tiveram a idéia de, em vez de ficar assistindo palestras, por que não codificar? Codificar qualquer coisa sempre é exercício, e exercitar é essencial para não definhar.
+Eu não participei da codificação mas a idéia foi inspiradora porque me bateu uma grande nostalgia. Quando começamos a programar, começamos porque gostamos. Programar sempre foi algo divertido, descompromissado, desafiador, não importa se é útil, não importa se é bonito, não importa se é completo. Mas com o passar do tempo nós nos “profissionalizamos” e de repente programar passou a trazer várias preocupações: “mas tem utilidade?”, “mas pra fazer completo dá trabalho”, “mas tem que planejar antes”, “mas vai custar caro, ou demorar muito”. Vários “mas”, “mas”. E aí programar já não é mais divertido.
+
+Por isso essa idéia trouxe de volta um pouco desse espírito. Por que não escrever e publicar aplicativos pequenos, só pela diversão de fazer algum código? Foi assim que durante os 4 dias do #FISL eles publicaram nada menos do que 6 aplicativos, uma média de 1.5 aplicativos por dia! E para isso não foi preciso muita coisa: bastou juntar 3 ou 4 pessoas numa mesa, criar um repositório no Github e depois fazer deployment no Heroku, tudo hiper simples.
+
+
+
+A premissa é que as aplicações eram simples, faziam apenas uma coisa da forma mais simples possível. Na média não se levava muito mais do que 4 horas para fazer cada aplicação. Graças ao Heroku com literalmente um simples “git push heroku master” a aplicação ia pro ar, sem gastar horas de configuração e administração de um servidor. Ou seja, graças às ferramentas criadas pela comunidade Ruby on Rails, existe praticamente atrito zero para colocar uma aplicação no ar. Foi um grande showcase dessas ferramentas também.
+Eu não vou descrever o que cada aplicativo faz porque como eles são bem simples a própria descoberta faz parte da experiência, então apenas cliquem nas imagens para abrí-las:
+
+
+
+
+
+
+
+Os repositórios de cada projeto no Github são:
+
+Desoroscopo
+Banheiro
+DeRessaca (este é em Python!)
+Dojomap
+Bullshitômetro
+Descertificador
+
+Tanto no Github quanto no Heroku, se o projeto é open source e aberto, você não paga nada. Então, vejam o código desses projetos para começar e colaborem! Basta fazer um Fork, corrigir um erro de português aqui, acertar um CSS ali. Não existe contribuição pequena.
+Boa diversão!
+
+tags: obsolete
+

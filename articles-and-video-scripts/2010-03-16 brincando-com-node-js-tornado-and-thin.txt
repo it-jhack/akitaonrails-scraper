@@ -1,0 +1,239 @@
+
+O conhecimento mais trivial hoje em dia quando se fala em conexões e servidores é em 1 conexão por thread (Java, .NET) ou processo (Ruby, Python, Perl, etc). A forma de “escalar” isso é aumentar verticalmente a máquina (aumentando a capacidade possível de threads e processos), depois aumentar horizontalmente (colocando mais máquinas iguais às anteriores com um balanceador de carga na frente). Porém, em casos mais extremos isso já não é suficiente. O que fazer?
+Desde meu último artigo sobre o Cramp, ando interessado em Evented I/O, Reactors. Tenho que dizer que ainda sou um iniciante nesse assunto. Até por bobeira na verdade porque o assunto já caiu no meu colo algumas vezes pelo menos desde que o Java iniciou com New I/O ainda no Java 1.4, ou seja, desde 2002.
+Recapitulando (me corrijam se eu estiver errado). No mundo Unix/POSIX uma forma de fazer isso é usando select e pselect, que permite monitorar múltiplos descritores de arquivos, esperando até que um deles fique “pronto” para alguma operação de I/O. Outra forma é usando poll, que é similar mas até algum tempo atrás era menos portável que select, mas hoje parece ser mais usado.
+
+
+Apenas no mundo Linux existe o suporte a epoll, que surgiu mais ou menos entre 2003 e 2004 no kernel 2.6. No mundo BSD foi quando apareceu o suporte kqueue a partir da versão 4.10-RELEASE em 2004. BSD significa suporte a FreeBSD, OpenBSD, NetBSD e Darwin que é o core do Mac OS X. Já no mundo Windows existe o I/O Completion Port desde o Windows NT 3.5 de 1994, e a mesma tecnologia existe no Solaris 10.
+No meu entendimento parece que select e poll são razoavelmente portáveis, em Linux o ideal é escolher epoll porque ele lida melhor com uma quantidade muito grande de descritores de arquivos. Em BSD tem que ser kqueue. Em Windows e Solaris tem o IOCP embora em Solaris também tenha poll. Você pode ver uma comparação entre poll, epoll e select também. A partir do Java 1.6 Mustang, quando rodando em Linux 2.6, ele escolhe o epoll para o New I/O e fora do Linux, especulo (não achei referência), ele usa select.
+Estamos falando de I/O não-bloqueante, assíncrono ou orientado a eventos. Em vez de bloquear toda vez que se precisa de I/O, ou de ficar fazendo polling, perguntando ao sistema se pode continuar, você registra um callback que é chamado quando a operação é concluída, ou se registra para ser notificado quando um evento de conclusão é chamado.
+APIs
+Uma forma de abstrair select, poll, epoll, kqueue, iocp é usando a biblioteca libevent:
+
+A API libevent fornece um mecanismo para executar uma função callback quando um evento específico acontece em um descritor de arquivo ou depois de um timeout. libevent foi feita para substituir o loop de eventos encontrado em servidores de rede oriendados e eventos. Uma aplicação apenas precisa chamar event_dispatch() e então adicionar ou remover eventos dinamicamente sem ter que mudar o loop de eventos. O mecanismo interno de eventos é completamente independente da API de evento exposta, e uma simples atualização do libevent pode fornecer novas funcionalidades sem ter que redesenhar as aplicações. Como resultado, libevent permite o desenvolvimento de aplicações portáveis e fornece o mecanismo de notificação de eventos mais eficiente disponível no sistema operacional. libevent deve compilar em Linux, *BSD, Mac OS X, Solaris e Windows.
+
+Outra biblioteca de abstração é o libev:
+
+Um loop de evento cheio de funcionalidades e de alta performance (veja benchmark) que é inspirado no libevent, mas sem suas limitações e bugs.
+
+Parece que existe uma boa briga entre libev e libevent, tecnicamente parece que libev (de 2007) leve vantagem embora o libevent pareça mais maduro (de 2000). Se você é rubista e está interessado em usar o libev, veja o projeto Rev, que é basicamente um wrapper em Ruby para tornar fácil criar aplicações assíncronas usando uma biblioteca bem leve.
+No mundo Java, claro, temos a própria API do java.nio. Eu mesmo não sou um cara de C :-) Portanto para entender o modelo, para mim é mais fácil começar a entender a versão em Java como neste tutorial. Entendendo o NIO, entendemos Selectors, Event Loop, e no geral o funcionamento de select, poll, epoll.
+Cada um deles tem características diferentes, claro. Em vez de usar threads/processos para segurar várias operação bloqueantes, usamos selectores que se registram em múltiplos input streams (arquivos propriamente ditos, sockets, etc), que depois lhe diz se um deles sofreu atividade, ativando um evento, sem precisar usar mais recursos para isso. Pelo que entendi, diria que a caímos de uma complexidade O(n) para O(1), que é o desejável quando estamos falando de alta concorrência.
+High Level
+Agora que falamos do lado “baixo-nível”, como podemos tirar proveito disso? Daí o título do meu post. Temos diversas opções, dentre elas Node.js, para Javascript, que foi lançado recentemente, Twisted e Tornado no mundo Python, EventMachine no mundo Ruby, Grizzly e outros no mundo Java. Vamos um por um:
+
+Twisted é uma engine de rede escrita em Python, que suporta inúmeros protocolos (incluindo HTTP, NNTP, IMAP, SSH, IRC, FTP e mais). Ele contém um servidor Web, vários clientes de chat, servidores de mail e mais. Ele é composto de inúmeros sub-projetos listados aqui. Ele interfaceira com diversos reactors que você pode escolher. Ele tem uma extension em C para falar com epoll, usa o PyKQueue para falar com kqueue, o próprio python sabe falar com select e poll, e ele usa o toolkit Win32 do python para usar IOCP.
+
+
+Tornado é um servidor web não-bloqueante que é usado pelo FriendFeed. Parece que um dos objetivos era torná-lo mais simples de usar do que o Twisted. Por outro lado ele é bem mais simples justamente porque não implementa todos os protocolos que o Twisted suporta, apenas web. Da mesma forma, ele usa uma extension em C para falar diretamente com epoll se estiver em Linux 2.6, caso contrário ele volta a usar select apenas, portanto não tira total vantagem de plataformas como *BSD, Mac, Windows e Solaris.
+
+
+EventMachine é muito parecido com o Twisted, suporta dezenas de diferentes protocolos, mas é escrito em Ruby. É possível usá-lo com Ruby 1.8.x, Ruby 1.9.x e mesmo JRuby. Também como o Twisted ele serve como um toolkit de Evented I/O usando o pattern de Reactor. Ele implementa extensions em C também para conseguir falar com epoll em Linux ou kqueue em *BSD, caso contrário usa select. Por causa disso é bastante rápido e foi feito para tornar fácil criar aplicações assíncronas.
+
+Parece que os criadores do EventMachine não gostam muito da idéia de usar o libevent ou libev. Da mesma forma, não sei o motivo, nem o Twisted, nem o Tornado usam libevent ou libev também, preferindo usar diretamente os bindings para epoll, kqueue.
+
+Thin é o web server que vamos usar, ele é implementado usando EventMachine, mais o parser de HTTP do Mongrel, um melhores que existem porque foi criado com o uso do Ragel, por Zed Shaw. Finalmente, tem suporte a Rack, permitindo basicamente que qualquer framework Web moderno de Ruby, como Rails, Sinatra, Merb e outros, funcionem sem problemas. Nesse caso ele tem o mesmo objetivo que o Tornado, mas ao contrário dele, o Thin reusa o EventMachine por baixo em vez de duplicar o backend de reactors.
+
+
+Grizzly é irmão de outros como o Apache Mina, no sentido de também implementar o java.nio, criando um framework que permite criar servidores de rede que suporta inúmeros protocolos. Ele pode ser embutido dentro de outros web servers, como Jetty ou Glassfish. Leia a história dele nas palavras do autor, Jean-Francois Arcand. Como ele usa o java.nio, para ele é transparente o low-level. Se estiver usando Java 1.6 em Linux 2.6, ele usará epoll, caso contrário, se não me engano, será via select.
+
+
+Node.js é o novo concorrente nesse setor, escrito por Ryan Dahl. Ele junta o que temos de melhor hoje: inspirado nos conceitos de Deferreds do Twisted e EventMachine, utiliza o libev por baixo para implementar os reactors, e a linguagem escolhida para criar as aplicações é Javascript, rodando em cima da veloz engine V8 do Google, a mesma engine que equipa o browser Chrome, e outras tecnologias mais como libeio e udns. Ele é leve, enxuto e fácil de usar, roda em BSD, Linux, Mac mas ainda não suporta Windows. Aprenda mais lendo este blog post
+
+Nestes testes, não usarei o EventMachine direto, mas usarei apenas o Thin.
+A “Brincadeira”
+Ufa, tudo isso para finalmente chegar ao que coloquei no título: “Brincando …”. Meu intuito era realmente me exercitar um pouco nesses conceitos e tecnologias. O que vou fazer a seguir é nada mais, nada menos, do que uma série de “Hello World”. Isso me ajudaria a configurar meu ambiente para cada uma delas, e aprender a pelo menos começar a esquentar o motor.
+Além disso, a idéia é usar o bom e velho ApacheBench para fazer alguns benchmarks bem básicos, absolutamente não rigorosos, apenas para ter uma noção de velocidade. Como sempre, lembrem-se: “Existem mentiras, e existem estatísticas.”
+O comando que vou usar é:
+1
+
+ab -n 1000 -c 100 'https://127.0.0.1:3001/'
+
+
+Substituindo a porta e a URI adequadamente dependendo do backend que vou testar.
+Twisted
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+import time
+from twisted.internet import protocol, reactor
+
+class TimeProtocol(protocol.Protocol):
+    def connectionMade(self):
+        self.transport.write(
+            'Hello. The time is %s' % time.time())
+        self.transport.loseConnection()
+
+class TimeFactory(protocol.ServerFactory):
+    protocol = TimeProtocol
+
+reactor.listenTCP(3001, TimeFactory())
+reactor.run()
+
+
+Para executar, apenas rodo:
+1
+
+python helloworld.py
+
+
+Tomando cuidado: me disseram que o Python 2.6.1 que vem no Snow Leopard não é uma compilação muito boa. Eu usei o Homebrew para instalar a versão 2.6.4. Mesmo assim eu ainda tive muitos problemas com ele. Rodando o ApacheBench, sempre recebo resultados como este:
+1
+2
+3
+4
+5
+6
+
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, https://www.zeustech.net/
+Licensed to The Apache Software Foundation, https://www.apache.org/
+
+Benchmarking 127.0.0.1 (be patient)
+apr_socket_recv: Connection reset by peer (54)
+
+
+Se eu executar o ab diversas vezes, eventualmente ele consegue terminar o teste (e mesmo assim se eu diminuir o número de conexões concorrentes de 100 para 10). Mesmo usando httperf tive problemas parecidos. Achei que fosse só no Mac então subi um Ubuntu Hardy, instalei os pacotes padrão de python dele e tive resultados com erros similares. Como não sou proficiente de Python, fiquei num beco sem saída.
+No final até obtive alguns números, mas só depois de insistir muito e mesmo assim ainda não é consistente. Tenho certeza que tem algum truque que eu não estou sabendo.
+Tornado
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+import tornado.httpserver
+import tornado.ioloop
+import tornado.web
+import time
+
+class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write('Hello. The time is %s' % time.time())
+
+application = tornado.web.Application([
+    (r"/", MainHandler),
+])
+
+if __name__ == "__main__":
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+
+
+Para executar, apenas rodo:
+1
+
+python helloworld_tornado.py
+
+
+O Tornado se comportou muito melhor do que o Twisted. Não sei qual é a diferença apenas batendo o olho no código-fonte. Se alguém souber, não deixe de comentar.
+Thin
+1
+2
+3
+4
+5
+
+app = proc do |env|
+  [200, {"Content-Type" => "text/plain"}, ["Hello. The time is #{Time.now.to_i}"]]
+end
+
+run app
+
+
+Para executar:
+1
+
+thin start -R helloworld.ru
+
+
+Esta é a listagem canônica de um middleware mínimo de Rack. Se você é rubista, vale a pena entender como Rack funciona já que é a peça mais importante na integração de tecnologias web da comunidade Ruby hoje em dia. O Thin é um layer acima do EventMachine, portanto oferece um overhead extra. Eu testei com Ruby 1.8.7 (Enterprise Edition) e Ruby 1.9.1, ambos rodaram sem problemas.
+Grizzly
+Neste caso eu não codifiquei nada, apenas baixei diretamente os samples do próprio site dele, pois ele implementa um HelloWorld sobre HTTP. Baixe os da versão 2.0.0-M3 e execute assim:
+1
+
+java -server -cp grizzly-http-samples-2.0.0-M3.jar com.sun.grizzly.samples.gws.HelloWorld
+
+
+Neste caso, eu sei que a JVM tem um período de warm-up, ele precisa ser exercitado com algumas centenas de execuções para que o HotSpot tenha uma chance de fazer um profiling da execução e começar a se auto-otimizar. Portanto eu rodei o ab, algumas dezenas de vezes.
+Assim como no caso do Twisted, o Grizzly também deu trabalho ao ab, de vez em quando dando resultados como este:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, https://www.zeustech.net/
+Licensed to The Apache Software Foundation, https://www.apache.org/
+
+Benchmarking 127.0.0.1 (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+apr_socket_recv: Connection reset by peer (54)
+Total of 329 requests completed
+
+
+Novamente, não tenho idéia do que isso seja. Tentei pesquisar a respeito e não encontrei nada de relevante ainda. Mas ele deu menos erros que o Twisted e cheguei a resultados interessantes.
+Resultados
+Finalmente, vamos ao que todos estavam esperando: os resultados! Para cada um eu rodei algumas vezes em sequência, peguei 5 valores consecutivos, retirei os extremos, tirei a média e esse será o número.
+
+Twisted: 4398.17 req/s
+Tornado: 2498.16 req/s
+Thin (Ruby 1.8.7): 4619.13 req/s
+Thin (Ruby 1.9.1): 4777.00 req/s
+Grizzly: 3523.71 req/s
+Node.js: 6310.62 req/s
+
+Duas coisas me chamaram a atenção nesses testes:
+
+Por que o ApacheBench e Httperf tiveram problemas tanto com o Twisted quanto o Grizzly?
+O Tornado foi 2x pior que o Twisted. Eu imagino que é porque testei no Mac e o Twisted consegue usar kqueue mas o Tornado usa select.
+O Thin rodou muito bem, mesmo sendo um overhead sobre o EventMachine. E tanto em Ruby 1.8.7 quanto 1.9.1 o resultado foi muito próximo, mas isso deve ser porque o grosso roda sob extensions feita em C++.
+O Grizzly não rodou tão rápido, mas imagino que é o mesmo motivo do Tornado: uso de select (ou poll, não tenho certeza) em vez de kqueue no Mac. Em Linux provavelmente rodaria mais rápido com epoll.
+Node.js, foi o mais rápido de todos de longe, sendo 50% mais rápido que o Twisted/Thin e 2x mais rápido que o Grizzly e Tornado. O fato de usar libev significa que ele consegue tirar proveito do kqueue, e a engine V8 mostrou sua força em comparação a Python e Ruby. Realmente muito promissor.
+
+Refazendo os testes numa máquina virtual Ubuntu Hardy, via Parallels Desktop, usando apenas uma CPU do meu Macbook Pro, tive estes resultados:
+
+Tornado: 2479.67 req/s
+Thin (1.8.7): 3524.18 req/s
+Thin (1.9.1): 3692.49 req/s
+Node.js: 4654.39 req/s
+
+Hoje acho que já é suficiente. Mesmo o Node.js é o mais rápido, um dos fatores sendo o V8, mas os outros deixam de usar select/poll e passam a usar epoll. Na verdade, não sei o quanto o epoll é melhor ou não que o kqueue, nesse caso não sei se o Twisted e o EventMachine/Thin iriam variar muito – especialmente porque o Twisted continua odiando o ApacheBench mesmo no Ubuntu. O Tornado, por outro lado, mesmo usando epoll, não foi tão bem quanto eu achava que ele seria. Alguém de Python tem alguma dica?
+Como podemos ver, é bastante material para continuar estudando. Eu ainda estou apenas raspando o topo do iceberg desse assunto. Espero que se incentivem a ir atrás de mais. O futuro da web é resolver o problema de altíssima concorrência como foi explicado no famoso paper The C10K Problem (“O Problema das 10 mil Conexões Simultâneas”). E hoje em dia 10 mil conexões simultâneas é algo até comum para muitos websites famosos. Threads com I/O tradicional bloqueante não é solução (10 mil threads simultâneas custa muito caro).
+Para um mundo de HTML 5, com WebSocket, instant messengers via browser, streaming, e outros estilos de conexões abertas simultâneas, a solução só pode ser para o lado de Evented I/O. Já temos quase 10 anos de tecnologias como java.nio, epoll e outros em desenvolvimento e uso. É hora de tirar proveito de tudo isso.
+Se você já manja do assunto, não deixe de complementar e corrigir minhas informações desse artigo. Também estou curioso para saber mais :-)
+tags: obsolete node
+

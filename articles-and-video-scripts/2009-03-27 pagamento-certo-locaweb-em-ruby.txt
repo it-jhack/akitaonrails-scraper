@@ -1,0 +1,114 @@
+
+Desde o ano passado que eu queria fazer esse projetinho, mas acabei postergando e finalmente resolvi que já passou da hora de fazer isso. Uma das vantagens de estar aqui na Locaweb é que eu fui direto num dos desenvolvedores do serviço Pagamento Certo, coloquei meu notebook do lado, pareamos por 1 hora e meia e voilá, uma primeira versão saiu rapidamente.
+Depois de dar um acabamento, adicionar uma documentação, agora ela está disponível no Github, como código open source, e para instalar direto a gem basta fazer:
+1
+
+gem install akitaonrails-lw-pagto-certo --source=http://gems.github.com
+
+
+O Pagamento Certo disponibiliza um web service em SOAP, então a primeira coisa que fiz foi instalar o Soap4R. Ele vem com uma ferramenta wsdl2ruby, que lê o arquivo WSDL e gera os stubs e estrutura em Ruby. Feito isso, depois foi só uma questão de ajustes e acertar o fluxo.
+
+
+Assumindo que você já tem uma aplicação em Rails (digamos, um e-commerce), que já se cadastrou no serviço e ganhou sua chave de vendedor (um GUID), na parte de confirmação de pedido da sua aplicação, você implementa o seguinte:
+1
+2
+
+lw = LwPagtoCerto.new(:chave_vendedor => "XXXXXXXX-AAAA-BBBB-CCCC-ZZZZZZZZZZZZ",
+    :url_retorno => "https://meusite.dominio.com.br/checkout")
+
+
+Você cria uma instância da classe LwPagtoCerto passando sua chave de vendedor e uma URL de retorno. Essa é uma URL exposta e acessível na internet, da sua aplicação web, que aponta para uma página que receberá de volta o ID da transação. Na sua aplicação web você vai precisar implementar 2 pontas: uma página de saída, que redireciona ao site do Pagamento Certo e uma de retorno, para onde o Pagamento Certo irá redirecionar depois que o pagamento for efetuado. Essa URL é essa de retorno.
+Para redirecionar ao site do Pagamento Certo, você primeiro precisa criar a transaçao. Para isso você irá configurar os dados do comprador, o tipo de pagamento, os dados do pedido, incluindo os ítens, valores e endereços de cobrança e entrega. Veja no Github a descrição completa, mas um trecho disso seria assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+lw.comprador = {
+  :Nome        => "Fabio Akita",
+  :Email       => "fabio.akita@locaweb.com.br",
+  :Cpf         => "12312312300",
+  :Rg          => "123456780",
+  :Ddd         => "11",
+  :Telefone    => "12345678",
+  :TipoPessoa  => LwPagtoCerto::TIPO_PESSOA_FISICA
+}
+
+
+Campos como “ValorTotal” que precisam ser configurador na estrutura de Pedidos e Ítens devem ser formatados de uma forma especial. Por exemplo, se o valor total vendido foi de “R$ 120,35” o campo “ValorTotal” deve ser preenchido com o valor “12035”, ou seja, os dois últimos campos sempre são centavos. Então, “R$ 0,00” ficaria “000”, e assim por diante.
+Depois que você preencheu os dados necessário, agora inicia-se a primeira comunicação com os servidores do Pagamento Certo:
+1
+
+retorno = lw.inicia()
+
+
+Ao fazer isso, você deve checar que “retorno[:cod_retorno] == ‘0’”. Daí você vai redirecionar seu usuário ao site do Pagamento Certo com algo parecido com isto:
+1
+2
+3
+4
+5
+6
+7
+
+class CheckoutController < ApplicationController
+  def new
+     ...
+     redirect_to "https://www.pagamentocerto.com.br/pagamento/pagamento.aspx?tdi=#{retorno[:id_transacao]}"
+  end
+  ...
+end
+
+
+Neste ponto o usuário sai da sua aplicação e é redirecionado ao site do Pagamento Certo, que apresentará os dados da compra (que você preencheu na estrutura de Pedidos), pedirá confirmação e dará opção de trocar a forma de pagamento. Quando o usuário finalizar o pagamento, o Pagamento Certo redirecionará o usuário de volta ao seu site usando o :url_retorno que você informou logo no começo. Esse controller de retorno poderia ter algo parecido com isto:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+
+# config/routes.rb
+map.resource :checkout
+
+# app/controllers/checkout_controller
+class CheckoutController < ApplicationController
+  ...
+  def create
+    id_transacao = params[:tdi]
+    lw = LwPagtoCerto.new(:chave_vendedor => "XXXXXXXX-AAAA-BBBB-CCCC-ZZZZZZZZZZZZ")
+    retorno = lw.consulta(id_transacao)
+    if retorno[:cod_retorno] == "15"
+      flash[:success] = "Pagamento bem sucedido"
+    else
+      flash[:error] = retorno[:mensagem_retorno]
+    end
+    ...
+  end
+  ...
+end
+
+
+No próprio código eu coloquei o que significa cada código de retorno. No caso, acima, o “15” significa que o pagamento foi bem sucedido.
+O fluxo básico é mais ou menos este, agora você precisa adaptar sua aplicação para que tudo funcione sem problemas. A grande vantagem de usar serviços como Pagamento Certo é que a integração é muito simples e você não precisa se preocupar em negociar com administradoras de cartão de crédito, nem de desenvolver toda uma infra-estrutura para realizar os pagamentos. Você apenas diz o valor e o serviço faz o resto.
+A Gem que eu fiz ainda é simples, pode ser muito melhorada (principalmente em termos de teste). Espero que todos consigam usar e, mais importante, me enviem feedback com sugestões para melhoria.
+tags: obsolete locaweb
+

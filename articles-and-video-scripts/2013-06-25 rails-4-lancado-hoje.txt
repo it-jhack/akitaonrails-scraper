@@ -1,0 +1,46 @@
+
+Como já devem ter visto o Rails 4.0 foi finalmente lançado hoje depois de um longo período de desenvolvimento. Para se ter uma idéia o primeiro beta do 4.0 foi lançado em fevereiro deste ano e a série 3.2.0 (que atualmente está na 3.2.13), foi lançado em Janeiro do ano passado. Portanto estamos falando de um ano e meio entre duas séries estáveis.
+Antes de mais nada fica as mesmas recomendações de sempre:
+
+se você não sabe se deve usar o Rails 4, melhor permanecer na versão 3.2.13, mesmo para projeto novos. Isso porque muitas gems ainda não são compatíveis com a nova versão e deve levar alguns meses para que a maioria das principais gems se estabilizem.
+se estiver numa versão muito antiga de Rails, lembre-se que a série 2.3 está em fim de vida, ou seja não terá mais suporte sequer para atualizações de segurança então você deve migrar para as séries mais novas. Mas nunca pule direto pra 3.2.13, vá versão em versão como já expliquei neste outro post.
+quem está acostumado a lidar com cutting edge já pode ir e começar a colaborar para ajudar a encontrar os problemas de compatibilidade. Basicamente prepare-se para uma Gemfile cheia de apontamentos direto para o repositório git de cada gem.
+
+
+
+
+Em termos de novas funcionalidades, você pode usar muitas delas já na versão 3.2.13. Por exemplo, para ter Turbolinks faça o seguinte:
+
+1
+2
+3
+4
+5
+
+# na Gemfile
+gem 'turbolinks'
+
+# no app/assets/javascripts/application.js
+//= require turbolinks
+
+
+Para retirar Turbolinks de um projeto com Rails 4 basta fazer exatamente o oposto e retirar as mesmas linhas que são geradas automaticamente.
+Até o 3.2.13 estávamos acostumados a usar protected attributes, na versão 4.0 agora você tem strong parameters. São formas bem diferentes, em um você marca propriedades do model que são protegidas diretamente na declaração do model. Na segunda você não declara no model mas sim cria um método de ajuda no controller. Se você usar o Rails 4 pode usar a gem de strong_parameters para experimentar. Se está migrando para Rails 4 pode colocar o protected_attributes na Gemfile de volta para que seus models funcionem por enquanto.
+Quem usa cache de página ou de action e quer continuar usando até retirar esse código pode usar as gems actionpack-page_caching e actionpack-action_caching. A novidade do Rails 4 é o que chamamos de Russian Doll Caching Scheme ou Cache Digest que é um controle mais refinado para nested fragment caching usando digest keys. Assista este episódio do RailsCasts para entender mais.
+Falando em cache outra coisa que mudou foi o Asset Pipeline. Antes a rake task de precompilação era bem lenta, foi facilitada graças à gem turbo-sprockets-rails3 que deve ser usada em Rails 3.2 (e não mais na 4.0) e agora mudou novamente porque ela não gera mais as versões não-digest dos assets. Agora obrigatoriamente todo asset vem com os digests. Por exemplo, você vai encontrar arquivos como "public/assets/application-68fa4ee77b8ca3bdfb1ce073fc31c3c4.js" e não vai mais ter a versão "public/assets/application.js" disponível. Isso deve garantir que nenhuma parte do seu código usa assets errados. Outra vantagem é que a task assets:precompile está consideravelmente mais rápida.
+No Rails 3 ganhamos o novo formato de queries de ActiveRecord chamado de Arel. Se você já nasceu no mundo Rails 3 talvez nem reconheça o antigo formado de finders usado até o Rails 2. Durante toda a vida do Rails 3 a sintaxe de finders ainda funcionava mas no Rails 4 ela foi removida e se você ainda precisar muito delas enquanto termina de migrar para a sintaxe atual pode usar a gem activerecord-deprecated_finders. Mas obviamente livre-se da sintaxe antiga o quanto antes. Todos tiveram quase 3 anos desde o lançamento da série 3.0 em Agosto de 2010. Já era hora de nos livrarmos do jeito antigo.
+Finalmente, Ruby 1.8 não é mais suportado oficialmente. Você deve estar usando no mínimo Ruby 1.9.3 que é uma release muito estável ou mesmo Ruby 2.0 que também é uma release bem estável e bastante compatível com todas as gems que você vai precisar. A migração para Ruby 2.0 está bastante tranquila, e o Ruby 1.8 poderia ter sido deprecado já na época do lançamento do Rails 3.2. Mas agora na 4.0 não há outra escolha. E se você estava usando Ruby 1.8 por causa da economia de memória graças ao Ruby Enterprise Edition com Passenger, saiba que o Ruby 2.0 tem a mesma funcionalidade graças ao seu novo Bitmap GC. Existe muito material na internet sobre Ruby 2.0 e eu já havia feito uma apresentação a respeito em Abril deste ano:
+
+ 
+
+  O que tem de novo no Ruby 2.0?  from Fabio Akita 
+Essas são somente algumas das coisas grandes que mudaram. Leiam o Ruby on Rails 4.0 Release Notes para um resumo. Eu mesmo já fiz um apresentação que apresentei ano passado num encontro em Israel e vocês podem ver os slides aqui:
+
+ 
+
+  What's new in Rails 4  from Fabio Akita 
+O Ryan Bates, do RailsCasts fez um episódio chamado What's New in Rails 4 e outro chamado Upgrading to Rails 4. Se procurar no Google sobre Rails 4 ou separadamente sobre cada uma das mudanças que listei acima vai encontrar diversos artigos detalhando a respeito. Diversos livros e cursos online já foram atualizados para Rails 4 incluindo o do Mike e Nicole Clark da Pragmatic Programmers, o The Rails 4 Way do Obie Fernandes, na CodeSchool tem o Rails 4 Zombie Outlaws.
+Enfim, não falta material. No mais, testem a nova versão e ajudem as gems a se tornarem compatíveis. Criem issues ou mesmo mandem pull requests para cada projeto.
+
+tags: obsolete rails
+

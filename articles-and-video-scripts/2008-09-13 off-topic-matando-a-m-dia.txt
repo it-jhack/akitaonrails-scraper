@@ -1,0 +1,13 @@
+
+
+
+
+Uns dois posts atrás eu perguntei o que Barabási, Anderson, Mandelbrot (e eu esqueci de Nassim Taleb) tem em comum. Alguns responderam corretamente: redes de livre escala. Mas há muito mais. Estou há dias tentando achar tempo para compilar o assunto, mas achei mais fácil dar uma "introdução" por vídeo. É uma versão um pouco diferente do que apresentei esta semana na palestra na Claretiano.
+
+
+direct download
+No fundo é minha eterna briga contra o conceito de "média". Obviamente, não adianta quererem levar isso ao pé da letra, não adianta lutar contra isso, nem de tentar encontrar casos-exceção para contradizer o que estou mostrando. Os conceitos são um pouco abstratos, a matemática por trás (e por isso eu recomendo ler os livros) não é trivial, mas os resultados foram observados inúmeras vezes e demonstrados com dados empíricos.
+Infelizmente meu tom no video acabou ficando meio estilo "auto-ajuda", que é justamente uma categoria que eu não gosto, mas por enquanto vai assim mesmo. Assim que puder vou tentar explicar em mais detalhes o que significa "Gauss vs Pareto" ou "Gauss vs Mandelbrot". Se mais alguém já estudou o assunto, gostaria de ouvir o que acharam.
+
+tags: obsolete presentation
+

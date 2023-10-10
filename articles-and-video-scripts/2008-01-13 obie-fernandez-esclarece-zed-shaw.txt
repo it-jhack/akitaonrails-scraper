@@ -1,0 +1,13 @@
+
+
+
+
+Como vocês se lembram, uma das pessoas que o Zed diz ser um cara legal, no seu famoso artigo, é Obie Fernandez, escritor do melhor livro de Rails atualmente, o “The Rails Way”. E eles de fato são amigos. Obie finalmente escreveu sobre o assunto, e a parte mais esclarecedora é o final onde ele diz:
+
+O que me assustou sobre a reclamação do Zed não foi tanto o conteúdo, mas que ele tenha atingido tão alta circulação. Não era para tanta gente ter lido, e não acredito que ele tenha tido intenções destrutivas quando escreveu isso. Eu morei e trabalhei com Zed por cinco meses durante 2007, um tempo em que ele se tornou (e se mantém) como bom amigo. Eu juro a vocês que o Zed é um cara legal e amigável, em pessoa. (Sua persona online fora da linha, narcisista é outra história!) A reclamação estava cheia de toneladas de piadas internas e comentários que realmente somente fazendo sentido para outros Rubistas que já sabiam delas, coisas que parecem más, estúpidas ou malucas para todos os outros.
+
+
+Por exemplo, uma porcentagem significativa de leitores obviamente entenderam que o Zed está desempregado, morrendo de fome, e ficando maluco. Tudo isso não poderia estar mais longe da verdade. Zed está feliz e empregado por uma grande instituição financeira de renome em Nova Iorque, onde ele vai trabalhar todos os dias com uma bonita camisa branca e gravata, e lidera uma equipe de desenvolvimento de Rails (sim, Rails). Claro, nada disso é novidade para nós que realmente o conhecemos, mas o resto do mundo entendeu uma história totalmente diferente.
+
+tags: obsolete zed
+

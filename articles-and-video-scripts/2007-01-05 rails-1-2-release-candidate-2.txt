@@ -1,0 +1,10 @@
+
+
+
+
+Do Riding Rails : É isso ái. Estamos nos finalmentes de lançar a versão final do Rails 1.2. Mas antes de acender os fogos e estourar a champagne, vamos fazer mais um pequenino teste. Como colocar óculos de proteção no centro de Copenhagen no Ano Novo. Você sabe, apenas por precaução.
+Então, por favor, faça realmente um bom teste. Estamos procurando por problemas do tipo PAREM O BOTE e SEGUREM AS PRENSAS desta vez. Nada mais irá nos parar (mas por favor de qualquer forma relatem qualquer coisa que encontrar no caminho).
+Como lembrete de como instalar e o que é novidade, veja as anotações de lançamento do Release Candidate 1. Também fizemos uma série de artigos para Active Record, Action Pack e Active Support. Leia e segure a antecipação. A menos que apareça uma infestação de problemas, estamos esperando que a versão final aterrisse em algum momento na semana que vem.
+Yay, hurray!
+tags: obsolete rails
+

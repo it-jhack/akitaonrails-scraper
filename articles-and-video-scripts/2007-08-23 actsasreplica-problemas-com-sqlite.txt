@@ -1,0 +1,421 @@
+
+Recentemente estava fazendo mais testes com SQLite3. A idéia do meu plugin acts_as_replica é ter pelo menos duas aplicações rodando em paralelo: uma normal no servidor, com MySQL e tal. A outra rodando debaixo do Slingshot como uma aplicação desktop e tendo SQLite3 por trás dos panos. No meio dos meus testes, esbarrei em dois problemas que vou descrever aqui.
+
+
+O primeiro foi no Migration com SQLite. Descobri o porquê depois de alguns testes e leitura dos logs: o Adapter do SQLite define primary key como integer. Uma das premissas do meu plugin é que as tabelas sincronizáveis usem UUID (uma representação em varchar(36)).
+Na verdade o problema da primary key não é exclusiva do SQLite. Todos os adapters definem seus respectivos tipos de dados em um Hash com nomes comuns. Por exemplo, no adapter do Oracle temos este trecho:
+
+
+ruby" style="overflow: auto;
+def native_database_types #:nodoc:
+  {
+    :primary_key => “NUMBER NOT NULL PRIMARY KEY”,
+    :string      => { :name => “VARCHAR2”, :limit => 255 },
+    :text        => { :name => “CLOB” },
+    :integer     => { :name => “NUMBER”, :limit => 38 },
+    :float       => { :name => “NUMBER” },
+    :decimal     => { :name => “DECIMAL” },
+    :datetime    => { :name => “DATE” },
+    :timestamp   => { :name => “DATE” },
+    :time        => { :name => “DATE” },
+    :date        => { :name => “DATE” },
+    :binary      => { :name => “BLOB” },
+    :boolean     => { :name => “NUMBER”, :limit => 1 }
+  }
+end
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+
+</div>
+
+O problema, exclusivo do SQLite, acontece toda vez que uma migration roda para adicionar uma nova coluna (add_column). No SQLite. o 'ALTER TABLE' não é muito completo, então o migration faz o seguinte: cria uma tabela temporária com o mesmo schema, transfere os dados da tabela antiga, dá um drop na tabela antiga, cria a nova tabela com a coluna extra, retransfere os dados da tabela temporária e finalmente dá drop dessa tabela. 
+
+Em outros bancos isso não acontece porque é só usar o bom e velho 'ALTER TABLE XXX ADD COLUMN XXX'. Mas no caso do SQLite, ele precisa fazer um dump do schema para gerar a tabela temporária, e nesse processo, ele ignora que minha primary key é na realidade um String e cria outra como Integer, e a partir daí tudo começa a quebrar.
+
+Para corrigir isso, felizmente podemos fazer o que todo plugin para ActiveRecord faz: Mixins. Então, este foi o código que incorporei no ActsAsReplica para eliminar esse problema (o código é longo, é bom dar copy & paste em algum editor de texto para visualizar melhor):
+
+<div style="overflow: auto; width: 450px; height: 450px">
+--- ruby" style="overflow: auto;
+module ActiveRecord
+  # Fix for SQLite where the primary key type is incorrectly inferred to be
+  # always :integer. 
+  class SchemaDumper #:nodoc:
+    private
+    def table(table, stream)
+      columns = @connection.columns(table)
+      begin
+        tbl = StringIO.new
+
+        if @connection.respond_to?(:pk_and_sequence_for)
+          pk, pk_seq = @connection.pk_and_sequence_for(table)
+        end
+              
+        # (1)
+        if @connection.respond_to?(:primary_key)
+          pk = @connection.primary_key(table)
+        end
+        pk ||= 'id'
+
+        tbl.print "  create_table #{table.inspect}"
+        # only consider the column 'id' as primary key if it is the default Rails' integer
+        # (2)
+        if columns.detect { |c| c.name == pk and c.type == :integer }
+          if pk != 'id'
+            tbl.print %Q(, :primary_key => "#{pk}")
+          end
+        else
+          tbl.print ", :id => false"
+        end
+        tbl.print ", :force => true"
+        tbl.puts " do |t|"
+
+        column_specs = columns.map do |column|
+          raise StandardError, "Unknown type '#{column.sql_type}' for column '#{column.name}'" if @types[column.type].nil?
+          # only consider the column 'id' as primary key if it is the default Rails' integer
+          # (3)
+          next if column.name == pk and column.type == :integer
+          spec = {}
+          spec[:name]    = column.name.inspect
+          # (4)
+          spec[:type]    = column.name == pk ? "#{column.sql_type} PRIMARY KEY".inspect : column.type.inspect
+          spec[:limit]   = column.limit.inspect if column.limit != @types[column.type][:limit] && column.type != :decimal && column.name != pk
+          spec[:precision] = column.precision.inspect if !column.precision.nil?
+          spec[:scale] = column.scale.inspect if !column.scale.nil?
+          spec[:null]    = 'false' if !column.null
+          spec[:default] = default_string(column.default) if !column.default.nil?
+          (spec.keys - [:name, :type]).each{ |k| spec[k].insert(0, "#{k.inspect} => ")}
+          spec
+        end.compact
+        keys = [:name, :type, :limit, :precision, :scale, :default, :null] & column_specs.map{ |spec| spec.keys }.inject([]){ |a,b| a | b }
+        lengths = keys.map{ |key| column_specs.map{ |spec| spec[key] ? spec[key].length + 2 : 0 }.max }
+        format_string = lengths.map{ |len| "%-#{len}s" }.join("")
+        column_specs.each do |colspec|
+          values = keys.zip(lengths).map{ |key, len| colspec.key?(key) ? colspec[key] + ", " : " " * len }
+          tbl.print "    t.column "
+          tbl.print((format_string % values).gsub(/,\s*$/, ''))
+          tbl.puts
+        end
+
+        tbl.puts "  end"
+        tbl.puts
+      
+        indexes(table, tbl)
+
+        tbl.rewind
+        stream.print tbl.read
+      rescue => e
+        stream.puts "# Could not dump table #{table.inspect} because of following #{e.class}"
+        stream.puts "#   #{e.message}"
+        stream.puts
+      end
+    
+      stream
+    end
+  end
+
+  module ConnectionAdapters #:nodoc:
+    class TableDefinition
+      # (5) the sqlite adapter forces the type of the primary key to integer
+      # this fix makes it flexible
+      @@default_primary_key_type = :primary_key
+      cattr_accessor :default_primary_key_type
+
+      def primary_key(name)
+        column(name, default_primary_key_type)
+      end
+    end
+
+    class SQLiteAdapter
+      # (1) MIGRATION ISSUE
+      class << self
+        @@migration_vacuum = false
+        cattr_accessor :migration_vacuum
+      end
+    
+      # (2) MIGRATION ISSUE
+      def add_column(table_name, column_name, type, options = {}) #:nodoc:
+        super(table_name, column_name, type, options)        
+        # This is too slow to run on every run, so defer running it very late in the
+        # migration process
+        # See last paragraph on https://www.sqlite.org/lang_altertable.html
+        #execute "VACUUM"
+        ActiveRecord::ConnectionAdapters::SQLiteAdapter.migration_vacuum = true
+      end
+    
+      def copy_table(from, to, options = {}) #:nodoc:
+
+        # (6) this fix ensure that the correct primary key type is maintained
+        # between migration changes
+        pk = primary_key(from)
+        pk_col = columns(from).select {|c| c.name == pk }
+        pk_col = pk_col.first if pk_col && pk_col.size > 0
+    
+        # (7)
+        old_type = ActiveRecord::ConnectionAdapters::TableDefinition.default_primary_key_type
+        ActiveRecord::ConnectionAdapters::TableDefinition.default_primary_key_type = "#{pk_col.sql_type} PRIMARY KEY NOT NULL"
+        begin
+          create_table(to, options) do |@definition|
+            columns(from).each do |column|
+              column_name = options[:rename] ?
+                (options[:rename][column.name] ||
+                 options[:rename][column.name.to_sym] ||
+                 column.name) : column.name
+
+              @definition.column(column_name, column.type,
+                :limit => column.limit, :default => column.default,
+                :null => column.null)
+            end
+            @definition.primary_key(primary_key(from))
+            yield @definition if block_given?
+          end
+      
+        ensure
+          # (8)
+          ActiveRecord::ConnectionAdapters::TableDefinition.default_primary_key_type = old_type
+        end
+      
+        copy_table_indexes(from, to)
+        copy_table_contents(from, to,
+          @definition.columns.map {|column| column.name},
+          options[:rename] || {})
+      end
+    end
+  end
+
+  class Migration
+    class << self
+      alias :old_migrate :migrate
+      def migrate(direction)
+        old_migrate(direction)
+        # ensure that deferred vacuums run at the very end of each migration file
+        # could have deferred it to the very end of migration series but this could
+        # cause very nasty problem if the newly added columns are needed still inside
+        # one of the migration files before vacuuming
+
+        # (3) MIGRATION ISSUE
+        begin
+          execute('VACUUM') if direction == :up && Base.connection.adapter_name =~ /^SQLite/ && 
+            ActiveRecord::ConnectionAdapters::SQLiteAdapter.migration_vacuum
+        ensure
+          ActiveRecord::ConnectionAdapters::SQLiteAdapter.migration_vacuum = false
+        end
+      end
+    end
+  end
+end
+
+
+
+Vamos entender o que está acontecendo. Siga os comentários marcados como # (9) no código acima com a numeração abaixo:
+
+O SchemaDumper não utiliza o método #primary_key, que existe no sqlite_adapter, então eu acrescentei esse método para que ele consulte a coluna correta.
+Ele considera que se o nome de coluna :id existir, ele é uma primary key, então ele já assume que é uma primary key integer. Então eu coloquei uma checagem extra para realmente garantir que seja integer. Se for, então ele segue o curso normal, senão ele vai criar a coluna com o tipo correto.
+A mesma checagem aqui. Ele ignoraria se encontrasse uma coluna chamada :id, mas agora só vai ignorar se o tipo for integer.
+Aqui vem o pulo do gato, ele vai gerar a primary key com o tipo correto que foi lido do banco, se foi varchar, continuará sendo varchar.
+Na TableDefinition eu abro a possibilidade de sobrescrever o tipo padrão de primary key criando uma propriedade de classe para armazenar isso. Por padrão será o antigo :primary_key (que é um integer).
+Com os patches acima, agora eu posso consultar a coluna com tipo correto.
+Agora sim, usando a propriedade de classe criada antes, eu gravo o tipo atual de primary key e sobrescrevo com o tipo correto lido do banco.
+Depois de gerar o dump, eu volto para o tipo antigo que gravei antes para garantir que tudo continue rodando como de costume.
+
+Fora isso, vocês devem ter notado que eu marquei alguns trechos como # (1) MIGRATION ISSUE_. Este é outro problema que notei depois. Como estou usando uma massa de dados razoável (um arquivo SQLite de cerca de 50Mb), notei que toda vez que faço um addcolumn o processo dá uma pausa. Olhando os logs vi o porquê: VACUUM. Lendo o código fonte existe este trecho original:
+
+
+ruby" style="overflow: auto;
+def add_column(table_name, column_name, type, options = {}) #:nodoc:
+  super(table_name, column_name, type, options)
+
+See last paragraph on https://www.sqlite.org/lang_altertable.html
+  execute “VACUUM”
+end
+-
+
+
+Ele pede para ler o último parágrafo de uma URL. Traduzindo esse trecho temos: Depois do ADD COLUMN rodar no banco de dados, essa base não está legível pelo SQLite versão 3.1.3 e anteriores até que se rode o VACUUM. Esse comando basicamente lê o banco todo e reescreve, mais ou menos como um defragmentador simples. Portanto imagine esse processo rodando em uma migration com uma dúzia de add_column em uma base de mais de 50Mb.
+Para minimizar esse impacto decidi fazer uma modificação um pouco mais arriscada: retardar o VACUUM:
+
+Primeiro eu crio outra propriedade global como um flag para indicar se será necessário ou não rodar o VACUUM.
+Este é onde o código original roda o VACUUM. Eu comentei esse comando e em vez disso, eu ‘ligo’ o flag que criei antes.
+Finalmente, aqui é o final do arquivo de migration, então checo se o VACUUM precisa ser rodado.
+
+A vantagem: se o arquivo de migration tem dez add_column, agora ele só rodará o VACUUM uma única vez. A desvantagem: se no mesmo migration com add_column, você fizer operações com models ActiveRecord que usam essa coluna, haverá problemas pois essa nova coluna só estará visível depois do VACUUM. Portanto, é preciso avaliar antes de usar essa correção, ou criar um jeito melhor de identificar a necessidade de um VACUUM.
+Vale a pena fuçar o código-fonte das bibliotecas Ruby e Rails. Além de aprender várias coisas, você pode ajustar o código via mixins dentro do seu projeto, sem alterar o código original.
+Alguns podem se perguntar: isso quer dizer que existem bugs no Rails? Não necessariamente. Na proposta de Convention over Configuration e Opinionated Software, o Rails Core Team fez uma escolha consciente: toda primary key será tratada como integer auto-incrementável. Alguns poucos projetos precisam de algo diferente (como eu), então eu mesmo ajusto como quero. Já está funcionando e em breve vou comitar esses patches no meu plugin. Não sei se a forma como fiz é a mais adequada, estou aberto a sugestões ;-)
+Você não deve apenas usar cegamente as ferramentas, mas sim entender o que está acontecendo por baixo dos panos. É o que começa a diferenciar programadores casuais dos verdadeiros programadores. Curiosidade e vontade de fazer as coisas. Reclamação e braço cruzado esperando alguém resolver não leva ninguém a lugar algum.
+Coçar a própria coceira, é o primeiro passo para se tornar um bom Hacker.
+tags: obsolete rails
+

@@ -1,0 +1,54 @@
+
+Mais uma vez o Gmail perdeu os e-mails de muita gente por causa de um problema técnico. Rumores indicam que pelo menos 150 mil contas foram afetadas, muitos deles parece que estão sendo resolvidos mas alguns vão ficar a ver navios.
+O problema aqui é lembrar o seguinte: isso não é um problema exclusivo do Google, todo sistema está suscetível a problemas, não importa quanto cuidado os administradores de sistema tomem. A realidade é que software dá problema, hardware falha, e procedimentos sempre estão fadados a falhas humanas. Falha é inerente ao sistema. Mesmo um sistema de produção de altíssima qualidade Six Sigma, com 99.99966% de segurança, ainda significa 3.4 falhas por milhão.
+Parece pouco?
+Atualização: Parece que o Google conseguiu recuperar uma boa parte dos dados que perdeu.
+
+
+Coincidências e Milagres
+Deixe-me divagar um instante antes de voltar à parte técnica. Há um bom tempo atrás eu já escrevi sobre como somos Matematicamente Ignorantes. Tendemos a pensar em eventos raros justamente como coisas que “nunca” vão acontecer. Porém, notamos que elas acontecem mais do que parece normal, chamamos isso de “milagre”. O que esquecemos é que em estatística existe a situação da Lei dos Números Grandes onde eventos de baixa probabilidade de acontecer em amostras pequenas tem alta probabilidade de acontecer em amostras muito grandes.
+O exemplo citado deste artigo ilustra isso:
+Digamos que 1 milhão de pessoas tem câncer na América (é bem mais que isso), e somente 1/10 (um décimo) de 1% se recuperem expontaneamente (é mais que isso). 1 milhão x 0.001 = mil pessoas. Dessas mil pessoas, quais as chances de meia dúzia terem uma história narrativa interessante para se contar na televisão? Bem alta! Aqui vai um show que você nunca vai ver em qualquer série de televisão: “A seguir, examinamos o fato marcante que 99.99% das pessoas diagnosticadas com câncer incurável e que receberam rezas morreram de qualquer forma.”
+A Lei dos Números Grandes garante que milagres que só acontecem 1 em 1 milhão acontecem 295 307 vezes por dia na América. (A população dos EUA é de 307 milhões de pessoas).
+Agora considere: um Google possui centenas de milhões de usuários nos seus diversos sistemas. Milhões de mensagens enviadas por dia. Bilhões de requisições por dia. Milhares de máquinas espalhadas por todo o mundo. Bilhões de componentes eletrônicos funcionando diariamente para fazer tudo funcionar. Quais as chances de falhas acontecerem múltiplas vezes por dia no Google? Muito altas!
+Portanto considere que todo sistema extremamente grande, coisas como Google, Facebook, Twitter, Yahoo!, Microsoft, Amazon, etc enfrentam problemas de software, hardware, procedimentos e tudo mais, todos os dias, em diversos graus de criticidade e severidade. E não é por incompetência, falta de vontade ou qualquer coisa assim, é simplesmente uma briga constante contra seu próprio crescimento astronômico e a pressão da Lei dos Números Grandes.
+O que fazer?
+A resposta curta é, backup.
+O problema é como fazer backup. Para cada sistema operacional, para cada caso de uso específico, existem dezenas de combinações diferentes de soluções. Não vou nem tentar cobrir tudo isso, mas vou explicar como é o meu ambiente hoje em dia.
+Para começar, eu uso o Mac OS X. Todo bom sistema operacional hoje já vem com um sistema próprio de backup, basta usá-lo. Não é necessariamente o mais completo nem o melhor mas é conveniente. O OS X tem um sistema chamado Time Machine Eu comprei um Time Capsule que é nada mais do que um router wifi com dois HDs de 500Gb configurados em stripe.
+Essa configuração RAID-0 do Time Capsule me perturba. Dois HDs de 500Gb em stripe significa que ele age como se fosse um único HD de 1TB. Há ganho de performance porque são duas cabeças lendo e escrevendo em paralelo nos discos. Mas isso é irrelevante porque o acesso a ele é via Wifi, que é mais lento que o HD mais lento. E se um dos HDs der problema eu perco o conteúdo dos dois HDs (RAID-0 não tem tolerância a falhas). Por isso mesmo eu uso ele somente para backup do meu Macbook Pro e do meu Mac Mini de casa.
+Para storage de verdade eu uso um Drobo que é o equivalente a (mas não é) uma configuração RAID-5 que tem excelente tolerância a falhas. Nesse storage, inclusive, eu faço o backup do segundo HD do meu notebook (no Time Capsula não coube).
+Os backups podem ser razoavelmente “voláteis”, ou seja, dificilmente terei problemas simultaneamente no meu Macbook Pro e no meu Time Capsule no mesmo dia. É possível, mas difícil. Portanto, se o Time Capsule der problemas, eu posso refazer o backup. E para garantir, eu já testei o restore a partir do Time Capsule e posso dizer que tudo funcionou muito bem. Isso é importante: pouca gente testa o restore. Não adianta nada ter um backup que depois quando precisa você não consegue recuperar os dados.
+No caso eu monto um diretório do Drobo via AFP e faço um Rsync simples pra manter uma cópia. O problema no meu caso é que tenho dados demais: 240Gb no drive SSD principal e 500Gb no HD secundário de 5400rpm. E desse total de 740Gb, já estou consumindo mais de 400Gb. Para fazer o backup inicial de tudo isso primeiro precisei conectar via cabo ethernet na placa gigabit mesmo, senão via Wifi isso levaria uma semana. Agora só precisa fazer backup dos deltas, do que mudou, então via Wifi mesmo não é tão pesado, especialmente em 802.11n.
+Uma solução mais “barata” é simplesmente comprar um HD externo daqueles que ligam na USB e configurar o Time Machine para ele. Isso também funciona, só lembre que não adianta nada carregar junto com seu notebook esse HD. Se você tiver problemas do tipo ser roubado as duas coisas se perdem juntas. Uma das coisas importantes do backup é que o original e o backup devem ficar geograficamente separadas. Meu notebook eu carrego comigo, meu backup fica em casa. Claro, se tiver um incêndio na minha casa enquanto o notebook estiver lá, as duas coisas se perdem também.
+Outra coisa que eu faço: eu tenho uma conta paga de Mobile Me. Não é o melhor serviço do mundo mas acho conveniente porque meus Macs sincronizam com ele e ainda tem algumas facilidades como o Back to my Mac que permite abrir um túnel seguro entre meu Macbook Pro e meu Mac Mini em casa a partir de qualquer rede no meio do caminho.
+No meu Gmail eu configuro para que ele envie uma cópia de todo email que recebo para meu Mobile Me. Dessa forma o Mobile Me age como um backup ativo do meu Gmail. O Gmail é útil porque o filtro de Spam dele é um dos mais competentes, então sempre que preciso passar meu email para alguém, passo do Gmail.
+Eu não gosto de usar Webmail, prefiro configurar o Mobile Me via IMAP e tenho uma cópia de todos os meus emails no meu notebook. Por sua vez eu faço backup do notebook no Time Capsule então na prática tenho 4 cópias de todos os meus emails: 2 onlines, 1 offline no notebook e outro offline no Time Capsule.
+Além disso ainda uso o Dropbox para diversas pastas que quero mais redundância. Novamente, significa que parte do meu material tem 3 cópias: 1 no notebook, 1 no Time Capsule, 1 no Dropbox e, em alguns casos, também uma cópia manual de tempos em tempos no Drobo.
+Muitos tem recomendado fazer backup total na nuvem, em Dropbox, Amazon S3 ou outros serviços online. Eu não recomendo fazer isso a menos que você more na Coréia e tenha link de centenas de megabits livre. Imagine fazer restore de 400Gb de dados se por acaso você perder tudo. Não é conveniente. É uma ótima terceira ou quarta cópia para manter uma redundância maior, mas não deveria nunca ser seu backup primário.
+Mesmo meu blog, que tem poucos dados, eu deixo um cron fazendo dumps do mysql de tempos em tempos. E na minha casa tenho outro cron no meu Mac Mini que faz download desse dump. E tem outro cron que faz um Rsync para baixar imagens e outros assets que eu tenha colocado no ar. Dessa forma, se meu VPS resolver ter pane, rapidamente tenho como colocar no ar com todos os dados. Claro, o próprio VPS tem backup dele mesmo, mas ainda assim me sinto mais seguro tendo pelo menos uma terceira cópia num ambiente offline que eu controlo.
+Fotos que estão no Facebook estão no meu iPhoto no notebook e também no Time Capsule. A mesma coisa para vídeos que coloquei no YouTube ou Blip.tv e apresentações que esão no Slideshare. Sempre há pelo menos 2 cópias de tudo além da cópia online.
+Mesmo assim ainda tem diversos conteúdos que não tenho cópia, por exemplo meus artigos favoritados no Instapaper, meus feeds no Google Reader. Coisas como Tweets, mensagens no Wall do Facebook, e outras coisas de redes sociais são descartáveis então não me preocuparia se amanhã perdesse tudo. O mais importante já está em backup.
+Toda vez que faço alguma operação mais “drástica” como quando atualizei meu sistema operacional do OS X Tiger para o Leopard, ou do Leopard para o Snow Leopard, eu sempre conecto um outro HD externo vazio, uso o SuperDuper para fazer uma cópia bootável exata do HD e só então realizo a operação. Mais de uma vez eu já precisei dar restore do SuperDuper e funcionou perfeitamente.
+
+Aliás, o SuperDuper funciona perfeitamente também quando faço upgrade de HD. Eu transfiro tudo do meu HD velho para o novo, depois basta trocar o HD da máquina e quando faço boot tudo está exatamente como era antes.
+Desde que comecei a usar Mac OS X em tempo integral a partir de 2006, acho que só precisei fazer uma reinstalação do zero uma ou duas vezes e isso por erro humano. Reinstalações são processos demorados demais. Para instalar tudo que eu tenho e deixar na mesma configuração que estou usando, levaria tranquilamente 2 dias inteiros de trabalho. É tempo demais para perder com uma coisa trivial dessas.
+O importante a lembrar é:
+
+os backups são feitos frequentementes? (no nosso uso pessoal, pelo menos 1 vez ao dia)
+você tem cópias separadas geograficamente? (em casa, pelo menos, longe do seu escritório ou local de trabalho)
+fazer um restore total é conveniente e rápido? (na nuvem, nunca será rápido o suficiente)
+se você tem storage, ele tem redundância e tolerância a falhas? (a maioria dos HDs externos não tem, e muita gente guarda dados lá sem backup)
+
+Na ponta do lápis, essa configuração me custa o seguinte:
+
+Time Capsule – USD 300
+Drobo – USD 500
+HDs do Drobo – aproximadamente USD 360 (2 de 1TB e 1 de 2TB)
+Mobile Me – USD 99 por ano
+Dropbox – USD 99 por ano
+
+Antes que me perguntem, os equipamentos comprei quando estive nos Estados Unidos ou amigo meu que trouxe para mim. No Brasil, pode multiplicar o preço por dois por causa dos abusivos e criminosos impostos de importação.
+É caro, mas paga minha paz de consciência. Posso dormir sabendo que no dia seguinte, a menos que estejamos enfrentando um Apocalipse, dificilmente todas as cópias dos meus dados sofrerão perda ao mesmo tempo. O Google pode cair, a Apple pode cair, mas espero que os dois não caiam ao mesmo tempo.
+tags: obsolete mac
+

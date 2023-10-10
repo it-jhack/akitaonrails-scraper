@@ -1,0 +1,318 @@
+
+Depois do Google I/O 2014 apresentando a nova linguagem de interface unificada "Material Design" espero que desenvolvedores de Android implementem em seus aplicativos o quanto antes. Acredito que o Android L será uma excelente nova versão, seguindo de onde o Holo no KitKat ficou.
+Em paralelo, o Google implementou a mesma UI para aplicações Web com o Polymer, usando a nova possível tendência de Web Components. Aprenda sobre custom elements, shadow DOM, HTML imports, web animations.
+Depois do Google I/O imagino que muitos vão querer fazer pelo menos aplicações web mobile parecidas com o Topeka - aliás, Topeka pode ser o novo "Hello World" de aplicações web responsivas.
+O Polymer usa muitas funcionalidades novas que apenas os Chrome e Firefox mais recentes realmente implementam, o resto vai polyfills. Mesmo assim a compatibilidade ainda não é 100%, especialmente para Internet Explorer, obviamente, e Safari, surpreendentemente (que é mais relevante pois não só deixa OS X um nível pra trás, mas pode dificultar Web Components em dispositivos iOS por enquanto).
+Isso tudo dito, imagino que muitos queiram integrar esse novo tipo de interface em sua aplicações Rails. Uma coisa que de cara me deixou um pouco nervoso é o fato de que cada Web Component é um trecho de HTML, e cada um deles tem seus próprios imports de CSS, Javascript. Em Web, isso é horrível pois significa que se você tem 10 web components, cada um com 2 CSSs cada, só isso já significa 10 + 10 * 2 = 30 requisições para puxar assets.
+
+
+
+Estamos já acostumados a concatenar, minificar, criar nomes CDN-friendly para assets em um único arquivo com objetivo de diminuir drasticamente esse overhead, para isso serve nosso bom e velho Asset Pipeline. Mas como funciona isso com Polymer no Rails?
+Solução: iniciando com emcee
+TL;DR: O emcee "quase" resolve todos os problemas em usar Web Components, mas falta um pequeno aspecto que vou descrever no fim do artigo.
+Entra a gem Emcee. Para usá-lo é simples, apenas adicione na sua Gemfile, rode bundle install e execute o generator para criar o boilerplate:
+
+1
+2
+
+# coloque no seu Gemfile e execute bundle install
+gem 'emcee', github: 'ahuth/emcee'
+
+
+Estamos puxando direto do master do Github porque pelo a versão publicada na época deste artigo está com um bug no gerador, mas o master funciona. E como Web Components ainda está em evolução, esse procedimento deve evoluir ainda, então preste atenção à documentação no README do Emcee antes de usar.
+
+1
+
+rails generate emcee:install
+
+
+Agora você pode usar Bower para instalar components em 'vendor/assets/components'
+Em todo projeto você precisa pelo menos começar instalando o próprio Polymer e os polyfills:
+
+1
+2
+
+bower install Polymer/polymer
+bower install Polymer/platform
+
+
+Agora adicione em 'app/assets/components/application.html':
+
+1
+
+*= require polymer/polymer
+
+
+E adicione o polyfill em 'app/assets/javascripts/application.js':
+
+1
+
+require platform/platform
+
+
+Prototipando com Polymer
+Para rapidamente desenhar um protótipo de layout, você pode usar a ferramenta open source Designer:
+
+Veja o tutorial do Google I/O para começar a se aquecer no Designer. Ela é uma IDE WYSIWYG onde você pode simplesmente arrastar os componentes num canvas e customizar como quiser. A vantagem é poder ver o que está fazendo já que ainda é tudo muito novo. E no final você pode salvar o que fizer na sua conta Github e ele vai lhe dar o código-fonte para servir de base. Ela estará disponível como um Gist, como no meu exemplo:
+
+Veja a imagem acima, vamos parte por parte. O bloco "A" mostra quais web components do Polymer estamos usando. No nosso projeto precisamos instalar cada um usando o Bower. Lembre-se se usar o namespace "Polymer" antes, desta forma:
+
+1
+2
+3
+4
+5
+6
+
+bower install Polymer/core-drawer-panel
+bower install Polymer/core-menu
+bower install Polymer/core-item
+bower install Polymer/core-icon-button
+bower install Polymer/core-toolbar
+bower install Polymer/core-scroll-header-panel
+
+
+Agora vamos inserir as dependência de componentes em 'app/assets/components/application.html':
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+<!--
+ *= require polymer/polymer
+ *= require core-drawer-panel/core-drawer-panel
+ *= require core-menu/core-menu
+ *= require core-item/core-item
+ *= require core-icon-button/core-icon-button
+ *= require core-toolbar/core-toolbar
+ *= require core-scroll-header-panel/core-scroll-header-panel
+-->
+
+
+Veja que existe um bloco colapsado de stylesheets. No meu exemplo de Rails criei um controller básico chamado "Post" com uma única action para "index", somente para ter um ponto de partida. E o stylesheet pode ser colocado no padrão 'app/assets/stylesheets/post.css.sass':
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+
+// Place all the styles related to the Post controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+:host {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+#core_drawer_panel {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+#section {
+  box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
+  background-color: rgb(250, 250, 250);
+}
+#section1 {
+  height: 100%;
+  box-sizing: border-box;
+  background-color: rgb(221, 221, 221);
+}
+#core_scroll_header_panel {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+#core_toolbar {
+  color: rgb(241, 241, 241);
+  fill: rgb(241, 241, 241);
+  background-color: rgb(66, 133, 244);
+}
+#section2 {
+  height: 5000px;
+  background: linear-gradient(rgb(214, 227, 231), rgb(173, 216, 230));
+}
+#core_menu {
+  font-size: 16px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+
+Finalmente, o bloco C é o miolo de componentes. O designer, por padrão, define um custom-element e um template, a intenção é que tudo que você desenhar no Designer será por padrão um novo web component inteiro. Mas não precisamos fazer isso, podemos pegar somente o miolo e colocar em 'app/views/post/index.html.erb' assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+
+<core-drawer-panel id="core_drawer_panel">
+  <section id="section" drawer>
+    <core-menu selected="0" selectedindex="0" id="core_menu">
+      <core-submenu active label="Topics" icon="settings" id="core_submenu">
+        <core-item label="Topic 1" id="core_item" horizontal center layout></core-item>
+        <core-item label="Topic 2" id="core_item1" horizontal center layout></core-item>
+      </core-submenu>
+      <core-submenu label="Favorites" icon="settings" id="core_submenu1">
+        <core-item label="Favorite 1" id="core_item2" horizontal center layout></core-item>
+        <core-item label="Favorite 2" id="core_item3" horizontal center layout></core-item>
+        <core-item label="Favorite 3" id="core_item4" horizontal center layout></core-item>
+      </core-submenu>
+    </core-menu>
+  </section>
+  <section id="section1" main>
+    <core-scroll-header-panel condenses headerheight="192" condensedheaderheight="64" id="core_scroll_header_panel">
+      <core-toolbar id="core_toolbar" class="tall">
+        <core-icon-button icon="arrow-back" id="core_icon_button"></core-icon-button>
+        <div id="div" flex></div>
+        <core-icon-button icon="search" id="core_icon_button1"></core-icon-button>
+        <core-icon-button icon="more-vert" id="core_icon_button2"></core-icon-button>
+        <div id="div1" class="bottom indent">AkitaOnRails.com</div>
+      </core-toolbar>
+      <section id="section2" content></section>
+    </core-scroll-header-panel>
+  </section>
+</core-drawer-panel>
+
+
+Só para garantir, veja se seu 'app/views/layouts/application.html.erb' está assim:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+<head>
+  <title>PolymerTest</title>
+  <meta name="viewport" 
+    content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= html_import_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+
+
+Isso deve ser suficiente. Se subir seu servidor de desenvolvimento com "bundle exec rails s" e abrir o "localhost:3000/post/index" no seu browser, teremos algo parecido com o que vimos no Designer:
+
+Se abrirmos o código-fonte deste HTML veremos todos os components expandidos, como com qualquer outro asset:
+
+Você pode ver isso rodando no Heroku em https://polymer-demo.herokuapp.com/.
+Problema Temporário: HTML Compressor
+Havia um problema na versão de quando este artigo foi escrito onde os ícones em SVG como a lupa de pesquisa não apareciam em produção. Conversando com o autor do projeto Emcee, o @ahuth. Citando o que ele respondeu no meu issue no Github, quando o HTML compressor encontra esta linha no core-iconset-svg:
+
+1
+
+var svg = document.createElementNS('https://www.w3.org/2000/svg', 'svg');
+
+
+Ele acaba removendo tudo após o "https://" e nos deixa com este javascript quebrado:
+
+1
+
+var svg = document.createElementNS('http:
+
+
+O @ahuth resolveu esse problema num branch do Emcee, portanto, se tiver o mesmo problema em produção, use esta versão no seu 'Gemfile':
+
+1
+
+gem 'emcee', github: "ahuth/emcee", branch: "fix-compressor-removing-urls"
+
+
+Isso deve resolver! E não deixe de seguir esta thread sobre paths de assets que pode ser relevante em alguns componentes.
+O código de exemplo deste artigo está no meu Github. Quando problemas como o caso dos ícones SVG do core-icons não estarem aparecendo no core-icon-button forem resolvidos a combinação Emcee+Bower-Rails pode ser a solução canônica para usar Polymer completo no Rails.
+
+tags: obsolete rails javascript front-end
+

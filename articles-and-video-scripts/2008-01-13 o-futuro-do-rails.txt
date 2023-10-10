@@ -1,0 +1,11 @@
+
+
+
+
+Este começo de ano está agitado. Primeiro foi o Nuclear Zed que levantou muitas questões sobre o futuro do Rails e continuidade do Mongrel.
+Mas agora uma boa notícia: não é de hoje que sabemos que o hosting Engine Yard tem investido muito em Ruby e Rails (ao contrário da chorona Dreamhost que só sabe reclamar).
+Primeiro Ezra, da Engine Yard, resolveu criar o mini-framework Merb, depois eles contrataram o autor do excelente Rubinius, Evan Phoenix.
+Agora, acabaram de anunciar que buscaram investimento de fora e conseguiram com a Benchmark Capital US$ 3.5 milhões. O objetivo deles: criar o melhor conjunto de tecnologias para Ruby e Ruby on Rails. Já que o Ruby atual não tem a performance que gostariam, em vez de ficar reclamando, lá estão eles fazendo a própria implementação – Rubinius – que promete ser a melhor de todas. Em vez de ficar reclamando que não tem recursos para investir em novas soluções, lá estão eles conseguindo investimento.
+A Engine Yard atualmente deve ser o proponente mais importante no mundo Ruby on Rails. Quando tivermos um Rubinius – multi VM – com Rails rodando sobre ele sem nenhum problema de compatibilidade, teremos provavelmente uma das melhores plataformas de implantação Web.
+tags: obsolete
+

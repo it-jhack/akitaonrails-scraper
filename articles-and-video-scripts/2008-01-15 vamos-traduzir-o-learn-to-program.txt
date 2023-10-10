@@ -1,0 +1,35 @@
+
+
+
+
+Update 26/01: Parabéns ao Júlio Monteiro, ele fez alguns ajustes ao tutorial, colocou um logo em português e gerou uma versão em "PDF":https://www.monteiro.eti.br/2008/01/26/aprenda-a-programar-pdf-disponivel-e-pequenas-atualizacoes/#comment-112 para quem quiser baixar para ler depois. Altamente recomendado.
+Update 23/01: Pessoal, mil perdões pela demora. A culpa é minha. A partir do dia que primeiro anunciei esse projeto, em cerca de 4 ou 5 dias já estava tudo traduzido e revisado, mas só fui fechar o pacote hoje. Agradecimentos ao Júlio Monteiro por preparar o site oficial.
+Agora vocês podem ler o "Aprenda a Programar":https://aprendaaprogramar.rubyonrails.pro.br/ online. O tutorial inteiro do Chris Pine, destinado a todos os iniciantes não só em Ruby como em programação em geral. E para quem quiser "fuçar" mais, baixem o código do livro, que eu converti numa aplicação Rails (leia detalhes abaixo).
+Aproveitem!! E agradeçam à comunidade, este é mais um trabalho da comunidade para a comunidade.
+Update 15/01: Todos os capítulos estão traduzidos! Faltam apenas 3 capítulos para revisar, mesmo assim acho que já é seguro qualquer um baixar. Uma das coisas que eu fiz foi modificar o código original - que era apenas um handler CGI - para uma aplicação Rails simples (sem banco de dados). Primeiro, baixem o código do repositório público:
+
+1
+
+git clone https://github.com/akitaonrails/learn_to_program_pt_br
+
+
+Feito isso, agora é simples:
+
+1
+
+ruby script/server -e production
+
+
+Pronto, apenas aponte para https://localhost:3000 e vocês terão um livro-online interativo totalmente escrito em Ruby e colaborativamente traduzido para Português. Os colaboradores estão ativamente revisando o código ainda. Todo ele está em um repositório no -OpenSVN- Github então vocês já podem ser beneficiar de nosso trabalho agora mesmo. Ah sim, é necessário que vocês tenham o Rails 2.0.2 instalado para executar o livro.
+O próximo passo: nos ajudem a divulgar este código. Vocês podem usar principalmente como material para ensinar novos programadores, principalmente aqueles que ainda não tem experiência com nenhuma outra linguagem de programação. Quando toda a revisão terminar, colocarei uma versão estática online. Mas o OpenSVN e o Google Groups continuarão online. Obrigado a todos!!
+Update 10/01: Galera, só para atualizá-los que este projeto está de vento em popa. Temos muito mais colaboradores desta vez do que na época do Getting Real, e para um livro muito menor. Então talvez teremos a tradução pronta muito rápido. Só para ter uma idéia temos 23 voluntários neste momento. E se minhas contas não estão erradas, 8 módulos (de 15) já estão traduzidos! Vocês podem acompanhar por esta planilha.
+
+Muitos que já são programadores em outras linguagens estão aprendendo Ruby e Rails. Para eles existem muitas boas referências como "The Ruby Way" ou "The Rails Way" e outros. Mas são livros voltados a quem já tem alguma experiência e que sabem inglês.
+Mas existem outros livros para iniciantes. Minha última entrevista foi com "Peter Cooper":/2008/1/9/conversando-com-peter-cooper, o autor do livro "Beginning Ruby", justamente para quem está iniciando em Ruby. Deve ser o melhor agora em sua categoria, mesmo assim está somente em inglês.
+Mas existe uma categoria ainda mais inicial: um livro para quem tem pouquíssima ou quase nenhuma experiência com programação em geral. Para eles qualquer linguagem representa uma grande barreira, mesmo sendo Ruby. E acho que não há nenhum material mais simples para iniciantes assim do que o livro Learn to Program, de Chris Pine. O livro em papel pode ser comprado (impresso ou PDF) pela The Pragmatic Programmer.
+Comprei esse livro há alguns meses na esperança de que minha esposa pudesse usá-lo para aprender alguma coisa, mas primeiro preciso convencê-la a tentar :-) Enfim, acredito que esse livro possa ser valioso para os iniciantes brasileiros.
+Como a tradução comunitária do livro Getting Real foi um sucesso. Imaginei que poderíamos repetir o esforço. O livro de Chris é bem menor que o Getting Real, portanto o esforço será muito menor.
+Hoje pela manhã conversei com o Chris Pine e obtive sua autorização para este projeto. A idéia é outro projeto sem fins lucrativos, feito pela comunidade para a comunidade. Então, este post é mais um Call to Arms que faço à comunidade para disponibilizarmos este material para a comunidade brasileira de Ruby. O que acham? Os interessados, por favor me enviem e-mail.
+
+tags: obsolete book
+

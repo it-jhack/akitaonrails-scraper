@@ -1,0 +1,10 @@
+
+
+
+
+Como DHH nos lembra, parece que faz mais tempo, mas Ruby on Rails está entre nós há 3 anos apenas. Nesse meio tempo ele já tomou a internet de assalto tendo um dos crescimentos em termos de comunidade mais acelerada dos últimos tempos. Como um dos comentaristas aqui mencionou, uma procura por Ruby on Rails no Google retorna quase 3 milhões de ítens e uma procura na Amazon retorna quase 50 livros.
+
+Mais importante, Rails trouxe à tona noções como estética, prazer e não apenas carreira e performance crua. Muitos não-iniciados pensam em Rails ainda como uma “revolução técnica”, mas nada poderia ser mais longe da verdade. Rails trouxe muitos de nós às raízes, quando programar era simplesmente divertido e não apenas uma rotina maçante de trabalho.
+Parabéns a Ruby on Rails, a todos os Railers que contribuíram para criar essa comunidade e esperamos que isso cresça mais ainda!
+tags: obsolete rails
+

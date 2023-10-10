@@ -1,0 +1,39 @@
+
+Hoje à tarde tive uma das primeiras quedas do meu site por acesso concorrente. Não sei precisamente porque caiu, mas acho que tenho uma idéia. Para quem é curioso sobre infraestrutura, talvez fique interessado.
+Para quem não sabe, desde fevereiro ou março eu mudei meu blog pra Linode. Contratei o menor slice deles, um de 512MB de RAM. Pra um blog deveria ser mais do que suficiente. Ele dificilmente consumia mais do que 450MB de RAM. Em termos de processamento também nunca foi pesado.
+Porém hoje de manhã eu twitei sobre o RubyConf Latin America. Poucos minutos (ou segundos?) depois meu site estava devolvendo erros 502 bad gateway pra muita gente. Eu mesmo estava sofrendo lentidão para logar via SSH nele. Então, o que aconteceu?
+
+
+Minha suspeita é meu uso de ETAGs, como eu comentei em um artigo anterior. A idéia do ETAG é que se os dados da página não mudaram, eu não preciso renderizar um novo HTML e reenviar para o usuário. Eu envio de volta um cabeçalho 304 Not Modified e isso economiza muito processamento. O problema é que para gerar a hash do ETAG de qualquer forma eu preciso fazer um roundtrip pro MySQL, para checar o timestamp no campo “updated_at” dos posts e aí gerar o hash. Ao ter muito acesso simultaneamente eu acho que começou a dar pico no uso de memória. Pra ter uma idéia meu swap estava zerado de espaço, causando thrashing. Esse era o resultado do comando “free” naquele momento:
+1
+2
+3
+4
+
+             total       used       free     shared    buffers     cached
+Mem:        368844     363404       5440          0        264       7484
+-/+ buffers/cache:     355656      13188
+Swap:       524280     524256         24
+
+
+Para piorar, swap em ambiente virtual não é a mesma coisa que swap em disco físico real, tem muito mais contenção de I/O. Isso tornou as respostas lentas a um ponto insuportável. Entendido isso o que eu fiz foi dar um upgrade no meu slice e migrei minha máquina virtual da Linode para uma com 768MB de RAM e configurei um swap de 1GB. Imediatamente após o reboot tudo voltou ao normal. Agora o resultado do comando “free” está assim:
+1
+2
+3
+4
+5
+
+
+             total       used       free     shared    buffers     cached
+Mem:        786636     725100      61536          0      18360     460804
+-/+ buffers/cache:     245936     540700
+Swap:      1048568          4    1048564
+
+
+O tempo de resposta do meu servidor estava batendo médias de 5 seg a mais para cada requisição. Agora voltou ao normal de 40ms. Ou seja, no momento da lentidão o tempo de resposta tinha subido pra mais de 125 vezes! O problema nem era tanto CPU ou mesmo tráfego, mas quantidade de operações de I/O,  contenção e thrashing, causado, provavelmente por falta de RAM/swap.
+Claro, eu não gosto de otimização prematura, mas foi um caso de trocar o cert o pelo duvidoso. No meu caso, de um site de conteúdo, eu tinha implementado um processo de Cache Estático, ou seja, toda requisição na primeira vez renderizava o HTML e guardava localmente como um arquivo estático. Daí na segunda requisição ela nem precisava tocar na aplicação Rails, pois o NginX poderia devolver diretamente o arquivo HTML. Isso teria segurado esse pico de hoje com tranquilidade, mas como eu estou usando ETAGs, há um processamento sendo passado pro Rails, mesmo que mínimo, a cada requisição, gerando a contenção. Talvez seja o caso de eu voltar a usar cache estático pra evitar esse problema.
+Atualmente meu blog é uma versão (bem) modificada do Enki que é uma engine de blog minimalista. Eu mexi bastante nele, acrescentando coisas como suporte a cache estático (que dá um certo trabalho de manutenção, ao contrário de ETAG), inclusive retirando o código que dá suporte a comentários já que passei a usar o Disqus. No servidor eu uso um Ubuntu Server com o MySQL padrão que ele instala, mais firewall interno com iptables, e o Rails roda com Phusion Passenger (óbvio!) junto com o NginX como servidor Web. Normalmente tem só 1 ou 2 processos de Passenger rodando por trás, consumindo uns 88MB de RAM cada.
+Como sempre, o que não escala não é o Rails e nem a aplicação, mas a arquitetura por trás. Para 99% do tempo um slicezinho mínimo da Linode é mais do que suficiente. Mas para aquele menos de 1% onde estoura um pico de acesso, ele pode engargalar. Recomendação: sempre ter recursos sobrando. Mesmo assim nunca dá para prever de quanto será o pico. Uma das grandes vantagens dos serviços de hospedagens como o da Linode (que é excelente, aliás) é a possibilidade de migração rápida. Ele levou menos de 15 minutos para migrar meu slice da máquina de 512RAM para de 768MB de RAM. Essa é a grande vantagem de se rodar em ambientes virtualizados. 10 anos atrás, ou mais, eu precisaria encomendar uma nova máquina física, passar por um processo de migração possivelmente manual (naquela época) e isso poderia levar pelo menos 1 dia inteiro. Agora, basta entrar no painel de administração e clicar um botão, literalmente.
+A única coisa triste foi meu uptime de uns 4 meses (desde que contratei o serviço) ter zerado :-)
+tags: obsolete rubyconfbr2010
+

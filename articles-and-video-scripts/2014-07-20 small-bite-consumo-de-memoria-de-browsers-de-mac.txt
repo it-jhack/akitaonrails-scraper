@@ -1,0 +1,35 @@
+
+Ontem vi um tweet do @fnando falando de Firefox. Particularmente fiquei curioso sobre ele porque faz muito tempo que eu só uso primariamente o Safari e para algumas coisas uso Chrome (coisas de Google, como Hangout, principalmente, mas sem nenhum motivo particular pra isso).
+Tipicamente, tenho cerca de 40 abas abertas no Safari. Vou lendo, salvando (se for interessante, no Pocket, ou tweetando ou compartilhando em algum lugar), e fechando. Daí, navegando no Feedly diariamente, acabo abrindo mais e com isso fica essa média de 40 a 50 abas abertas todos os dias. É de fato um fardo que meu Mac precisa lidar diariamente.
+Sei que existem algumas coisas que provavelmente só vão funcionar direito no Chrome (coisas experimentais como WebRTC que o Google vai empurrando). O Safari teoricamente deveria ser o que está mais pra trás em termos de funcionalidades, mas das 40 abas que abri iguais nos 3, todos renderizaram os conteúdos sem nenhum problema.
+Do ponto de vista de navegação, as abas do Chrome continuam sendo as piores. Odeio o fato dele ir comprimindo a aba até ficar só o favicon e não ter por padrão uma lista das páginas abertas. O Safari e o Firefox tem abas muito mais úteis (e é uma das razões de porque eu abro muitas abas no Safari e não no Chrome). Uma curiosidade é que mudar de abas com shortcut (Cmd+]) é mais rápido no Firefox, em segundo no Safari e bem em terceiro no Chrome. Se eu deixar o shortcut apertado pra ele mudar de abas bem rápido, o Firefox mostra o conteúdo rapidamente. O Safari dá um ligeiro "flick", uma piscada em branco antes de dar refresh e o Chrome praticamente não mostra conteúdo algum, não dá tempo de dar refresh antes de mudar de aba de novo. Achei isso interessante, pessoalmente o Firefox pareceu visivelmente mais responsivo do que os outros.
+
+
+
+Uma coisa que não testei é resistência a crash do Firefox. No caso do Safari e do Chrome, se uma página se comporta mal, ele vai fechar somente aquela aba sem quebrar os demais porque ambos moveram para o modelo de conteúdo separado em processos independentes. O Chrome é o mais isolado de todos, na minha contagem ele abriu nada menos do que 59 processos. O Safari não abre um processo por aba, ele é menos granulado, e abriu 28 processos - particularmente separando 6 processos só para Flash e QTKit (que são os candidatos a crash sempre). Já o Firefox continua no modelo de multi-threads e todas as abas abrem dentro do mesmo processo, por isso ele só tem 1 único processo e um outro separado para Flash.
+Imagino que é por isso que o Firefox continua conseguindo ser mais responsivo para mudar de abas (porque não tem overhead de comunicação interprocesso) e também porque ele é consideravelmente mais econômico que os outros. Então vamos ao consumo de memória (lembrando, todos com as mesmas 40 abas):
+
+Safari 7.0.5 (28 processos): 1.74 GB
+Chrome 35.0  (59 processos): 1.70 GB
+Firefox 30.0 (1 processo):   0.88 GB
+
+
+Se quiserem ver em detalhes, além do screenshot acima (clique para versão maior), baixe também uma planilha Excel onde eu listei os processos, consumos e o cálculo total de cada um.
+Ou seja, o Firefox consegue consumir 50% menos memória abrindo exatamente o mesmo conteúdo. Chrome e Safari ficam empatados. Um comportamento interessante do Firefox é que ele vai internamente tentando sempre economizar mais memória. Ao navegar por todas as abas, ele chega a mostrar consumo de mais de 900 MB, mas se deixar quieto por alguns instantes ele começa a decair até 800 MB ou um pouco menos.
+Partindo disso minha conclusão é que vou experimentar o Firefox no lugar do Safari como meu navegador padrão. As perguntas que restam são:
+
+Meu Mac tem uptime longo (por exemplo, desde meu último boot foram 19 dias já), será que ele não vai demonstrar leaks de memória com o tempo?
+Se um site que abrir tiver um daqueles javascripts mal feitos ou Flash e der crash, ele vai conseguir isolar o problema ou vai derrubar o browser todo? E se derrubar, não lembro se ele vai reabrir com todas as abas (vou procurar extensions pra isso)
+Ainda existe alguma incompatibilidade com os padrões que vão impedir a renderização correta de algum site que abriria normalmente no Safari ou Chrome? (acho que não)
+
+Para quem é desenvolvedor front-end, lembrar que os 3 browsers tem renderizações ligeiramente diferentes. Eu notei em particular, o anti-aliasing dos tipos no Firefox parece mais "grosso". O Chrome e o Safari "parecem" mais próximos, provavelmente por ambos usarem WebKit por baixo (embora o Safari use diretamente renderização via Core Image e outros frameworks Cocoa), já o Gecko do Firefox pode realmente da resultados bem diferentes, especialmente no que diz respeito aos tipos. Veja as diferenças do mesmo trecho de Facebook nos 3 navegadores:
+No Firefox:
+
+No Chrome:
+
+No Safari:
+
+O que vocês acham? Quem usa Firefox hoje em dia, quais são as principais dicas de uso e plugins? Não deixem de comentar.
+
+tags: obsolete mac
+

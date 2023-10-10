@@ -1,0 +1,17 @@
+
+Caramba, hoje saíram várias coisas novas. Não tenho tempo hoje para falar individualmente de cada uma então farei um breve resumo do que é interessante.
+Primeiro, mais um excelente podcast acabou de ser lançado. Sempre é bom ouvir os think-tanks e a Thoughtworks lançou o primeiro episódio com ninguém menos que Martin Fowler e sua equipe Dr. Rebecca Parsons, Neal Ford e Jay Fields. O tema deste episódio é DSLs e eu realmente não consigo imaginar uma equipe melhor para falar do assunto.
+ 
+
+
+Em fevereiro deste ano, Antonio Cangiano lançou um artigo comparando a performance das diversas implementações de Ruby da época neste artigo. Ruby ainda era considerado lento e nenhuma das implementações era particularmente rápida. Desde então todas evoluíram muito rápido. Os novos resultados impressionam. YARV saiu na frente sendo mais de 3 vezes mais rápido do que o MRI 1.8, liderando a corrida de performance. Rubinius chegou a ser melhor que o MRI em 16 testes. O JRuby é o único que rodou todos os testes o que era de se esperar pois foi o que mais investiu em compatibilidade com o MRI e ainda assim em fevereiro ele era mais lento que o MRI e agora é mais rápido. Definitivamente vale a pena conferir.
+
+Não é segredo que eu adoro meu iPhone :-) Definitivamente uma obra de arte. E pelo visto não sou apenas eu que penso assim já que quase 1% dos browsers usados na internet já é o Safari no iPhone/iPod Touch! Isso responde por quase o dobro de todos os modelos de Windows Mobile que existem! E, claro, nós Railers sempre queremos estar na dianteira e porque não criar nossas aplicações Rails para já responder ao iPhone e lhe dar uma interface otimizada? É o que o Slash Dot Dash propõe nesse artigo para detectar o browser do iPhone e direcionar um layout customizado. Este artigo no RailsSpikes do mês passado também dá dicas sobre sub-domínios e iPhones.
+“Qual IDE eu devo usar para desenvolver Rails?” É uma das perguntas que mais ouço. Tecnicamente, qualquer editor de texto serve. Está num Mac? Compre o TextMate. Mesmo assim, ainda há os que precisam da ajuda de uma IDE completa e nesse sentido talvez o NetBeans 6.0 possa ajudar. Ele ficou em beta por bastante tempo e Tor Norbye definitivamente poliu muita coisa. Acabou de sair a versão 6.0 final, talvez vocês queiram experimentar. Que tal alguém escrever um review?
+Rails 2.0 está para sair, deve ser nos próximos dias! Quem está interessado em ver algumas das novidades, deve acompanhar o bom e velho Railscasts.com. Ryan Bates lançou 3 episódios, o primeiro sobre simplificar Views, novidades nas fixtures e HTTP Basic Authentication
+Esta dica é velha mas se ainda estão falando disso é porque ainda tem gente que não sabe. Um risco de segurança que deve ser considerado: mass-assignment. Leiam e protejam suas aplicações!
+Faz algum tempo que não ouço falar do ActiveScaffold o plugin que tenta acelerar a criação de formulários Ajax. Mas eles acabaram de lançar a versão 1.1.0 Release Candidate 1. Colaboradores: iniciem seus testes!
+Finalmente, a BBC anunciou o lançamento de um novo projeto Perl on Rails. Porém há mais a ser dito sobre isso. Leiam este artigo: me faz ficar contente de não trabalhar mais para corporações idiotas. É impressionante como essas empresas conseguem fazer tanta porcaria ao mesmo tempo e isso vale para muitas empresas aqui no Brasil também onde já vi bizarrices parecidas.
+E, claro, normalmente eu não discuto política, mas é sempre bom ver um idiota sendo contrariado :-)
+tags: obsolete
+

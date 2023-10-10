@@ -1,0 +1,28 @@
+
+
+
+
+Já está circulando na internet – principalmente por causa do Zed Effect – a possível nova infraestrutura que poderá substituir o Mongrel. É o Thin baseado no mesmo excelente parser do Mongrel (ignorem os palavrões, Zed desenvolveu de longe uma das melhores bibliotecas do mundo Ruby), a camada de I/O Event Machine e o Rack.
+sudo gem install thin
+1
+2
+3
+4
+
+
+Acabei de testar em uma aplicação complexa em Rails que tenho e - surpresa - funcionou sem nenhum problema. Mas o autor do artigo acima deixa bem claro: isso ainda é *alpha* você definitivamente *não* deve colocar isso em produção ainda a menos que goste de viver perigosamente.
+
+<macro:code>thin start
+
+Apenas isso é suficiente para iniciar o Thin a partir da raíz do seu aplicativo Rails. E funciona. Para testar é uma boa. Se você tem tempo para fazer profiling, rodar suites de testes de segurança, etc é uma boa hora para colaborar.
+
+Notem como a performance escala de maneira estável quando se aumenta a carga, o que não acontece com o Mongrel atual.
+E parece que depois do Linus Torvalds ter chamado todos nós de idiotas por usar Subversion, muitas pessoas prestaram atenção e começaram a usar Git como eu já falei ano passado. O projeto Rubinius é todo dentro de Git e o Thin também.
+Para fazer o checkout do Thin – tendo o Git instalado como explica neste artigo – basta fazer o seguinte:
+git clone https://code.macournoyer.com/git/thin.git—-
+
+Eu venho usando Git há algum tempo também, para desenvolver meu plugin Acts As Replica (ainda é bastante ‘alpha’ também, ganhando novas features o tempo todo e implorando por uma refatoração e uma suite de testes mais completa). O que mais gosto no Git é o git-svn, que permite que meu código fique todo no Subversion do Google mas eu possa desenvolver internamente num repositório Git. A integração é perfeita e ainda não tive problemas com isso. Uma boa alternativa para transitar entre svn e git. E para quem usa Piston, já existe também o Giston. 
+
+2008, começando um ano novo com coisas novas a aprender.
+tags: obsolete
+

@@ -1,0 +1,301 @@
+
+Atualização Jul/2016: As recomendações mudaram. Leiam este post mas usem o que explico no post mais recente [Updating my Old Posts on Uploads](http://www.akitaonrails.com/2016/07/28/updating-my-old-posts-on-uploads).
+Atualização (26/03/2014): Este artigo está desatualizado. Veja a versão mais nova
+No artigo anterior respondi a primeira parte deste e-mail que perguntava sobre como iniciar com Rails. Agora é a segunda parte.
+Olá, sou um adepto recente do Ruby on Rails, gostaria de saber qual o melhor meio de aprender a desenvolver com o mesmo, se existe um esquema didático eficiente e bem explicativo…!? 
+
+Estou com dificuldades em fazer upload de arquivos em Ruby para um servidor cloud. Seria possivel você enviar ou postar algo de tal teor? ficaria muito grato.
+
+
+Fazer upload de arquivos não é complicado. Se quiser fazer tudo manualmente basta lembrar que o formulário HTML precisa ter a opção de multipart habilitado:
+1
+2
+3
+4
+
+<% form_for :user, @user, :url => user_path, :html => { :multipart => true } do |form| %>
+  <%= form.file_field :avatar %>
+  <%= form.submit %>
+<% end %>
+
+
+O exemplo acima é um formulário para um model “User” com um campo de arquivo chamado “avatar”. Ele vai gerar um HTML assim:
+1
+2
+3
+4
+
+<form action="/users" class="new_user" enctype="multipart/form-data" id="new_user" method="post"><div style="margin:0;padding:0;display:inline"><input name="authenticity_token" type="hidden" value="sz00w4kW/+QBTjreuI/RyTR3Plo7yI1jhLkuQtE6NwE=" /></div>        
+  <input id="user_avatar" name="user[avatar]" size="30" type="file" />
+  <input id="user_submit" name="commit" type="submit" value="Create User" />
+</form>
+
+
+O importante é o enctype=“multipart/form-data”. Como adendo, garanta que você entende para que serve o campo “authenticity_token”. Muitos ainda se confundem com isso. Por padrão o Ruby on Rails tenta se proteger contra Cross Site Request Forgery (CSRF) um tipo de ataque muito comum. Para isso, em todo formulário HTML ele gera um “token”. Toda vez que um formulário é enviado ao servidor, o Controller vai checar se veio esse token e se ele é válido. Um script de fora não saberá gerar o token, portanto, evitando que formulários de fora do seu site possam enviar dados ao seu aplicativo. O problema é quando você quer enviar seu formulário manualmente. Daí você precisa também enviar esse token. Nesse caso você precisa usar alguns truques, como este com jQuery.
+Isso dito, quando o formulário do exemplo enviar o arquivo ao controller, nós vamos recebê-lo normalmente em:
+1
+
+params[:user][:avatar]
+
+
+Será um “blob” que eu posso manipular com a classe File normalmente. Basta salvá-lo em algum lugar e gravar seu nome no banco ou coisa parecida. Esse objeto recebido inclusive tem um método original_filename para que você possa construir um novo nome. Um código hiper simples para salvar o arquivo no controller ou no model seria assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+# cria o caminho físico do arquivo
+path = File.join(Rails.root, 
+  "public/images", 
+  params[:user][:avatar].original_filename)
+
+# escreve o arquivo no local designado
+File.open(path, "wb") do |f| 
+  f.write(params[:user][:avatar].read)
+end
+
+
+Mas esse é o jeito manual. Existem formas mais interessantes de lidar com isso. Lembrando que na história do Ruby on Rails, upload já foi motivo de muitos problemas. Dois, na verdade, eram os piores:
+
+Se você envia um arquivo muito grande e o servidor for “ingênuo”, o que ele vai fazer é carregar todos os bits desse arquivo em memória no hash “params”. Se você enviar um arquivo de 200Mb, de repente seu processo Ruby vai engordar. E sabemos que quando o Ruby aloca memória do sistema, mesmo internamente o garbage collector liberando espaço, ele não devolve esse espaço ao sistema, ou seja, muito em breve vai estourar por falta de memória. Isso já foi resolvido e tirando o Webrick, todos os servidores web de Ruby já mandam direto pra arquivos em vez de manter em memória, isso vale pro Mongrel, Thin, Passenger.
+Outro problema pior é que um arquivo muito grande vai demorar minutos para terminar de transmitir via internet. E enquanto isso a conexão entre o browser e o servidor vai segurar o processo Ruby e nenhuma outra requisição vai conseguir processar. O paliativo é subir múltiplos processos Ruby, mas você sempre vai estar limitado ao número de processos Ruby. Se subir 10 processos e vierem 10 uploads simultâneos, novamente as próximas requisições vão ter que esperar um bom tempo. Soluções como o Phusion Passenger são mais inteligentes: ele vai cuidar dos uploads e só ocupar o processo Ruby quando a transmissão acabar, já passando o arquivo completo. Dessa forma outras requisições não vão bloquear.
+
+Várias pessoas já criaram soluções para upload. Alguns dos mais antigos eram o acts_as_attachment e o attachment_fu. Mas já são obsoletos. Provavelmente o mais usado atualmente é o Paperclip, da Thoughtbot. Mas outra alternativa mais flexível é o CarrierWave, do Jonas Nicklas.
+Recomendação: leia a documentação principal de cada um deles no Github e também explore seus códigos fonte. O que vou mostrar agora é apenas o caso mais simples.
+Processamento de Imagens
+Ambos Paperclip e CarrierWave foram pensados para o caso de uso de processamento de imagens. Eles podem ser usados normalmente para qualquer tipo de arquivo mas são particularmente úteis quando você quer redimensionar as imagens que são enviadas, por exemplo, para o caso de uma foto para um perfil de usuário.
+No mundo Ruby, a biblioteca nativa que praticamente todos usam por baixo é o bom e velho ImageMagick. Ele é bem antigo, bem maduro, conhecido desde os primórdios do Perl, PHP. Por isso ele também é grande e complexo. Para instalar no Mac você tem algumas opções. Se estiver usando MacPorts :
+1
+
+sudo port install ImageMagick
+
+
+Minha recomendação, no entanto, é usar o HomeBrew :
+1
+
+brew install imagemagick
+
+
+Num Ubuntu ou outra distribuição de Linux, use o gerenciador de pacotes padrão de cada um deles, por exemplo:
+1
+
+sudo apt-get install imagemagick
+
+
+Agora, para usar o ImageMagick, você precisa de uma biblioteca Ruby que se conecte com ele. Existem 3 que são suportados hoje: o RMagick, Mini Magick e Image Science. Para instalá-los basta fazer:
+1
+2
+3
+
+gem install RMagick 
+gem install mini_magick 
+gem install image_science
+
+
+Se não me engano, o Paperclip não usa nenhum deles. Já no CarrierWave você escolhe qual quer usar.
+Paperclip
+Para instalar basta puxar a gem:
+1
+
+gem install paperclip
+
+
+No projeto Rails (2.3.x) declaramos a dependência no arquivo config/environment.rb:
+1
+
+config.gem 'paperclip'
+
+
+Agora digamos que a intenção é usar um model que você já tem chamado “User”, e justamente você quer que seu usuário possa associar uma foto ao seu perfil, um “avatar”. Então usamos o generator do Paperclip.
+1
+
+./script/generate paperclip User avatar
+
+
+Ele vai criar o arquivo de migração que adicionará as colunas que ele precisa na tabela ‘users’, portanto rode rake db:migrate para ter essas colunas. Agora você precisa configurar o model “User” para que ele saiba o que é um “avatar” :
+1
+2
+3
+4
+5
+
+class User < ActiveRecord::Base
+  has_attached_file :avatar, :styles => { 
+    :medium => "300x300>", 
+    :thumb => "100x100>" }
+end
+
+
+Toda vez que você subir um arquivo de imagens e salvar no model User, o Paperclip irá gerar versões de tamanhos diferentes.
+O formulário HTML é a mesma coisa que mostramos antes:
+1
+2
+3
+4
+
+<% form_for :user, @user, :url => user_path, :html => { :multipart => true } do |form| %>
+  <%= form.file_field :avatar %>
+  <%= form.submit %>
+<% end %>
+
+
+E no controller, na action create provavelmente você terá algo assim:
+1
+
+User.create(params[:user])
+
+
+Pronto, ao salvar a imagem será redimensionada e colocada em pastas padrão. Para colocar o link delas em outra página HTML use algo assim no seu template:
+1
+2
+3
+
+<%= image_tag @user.avatar.url %>
+<%= image_tag @user.avatar.url(:medium) %>
+<%= image_tag @user.avatar.url(:thumb) %>
+
+
+Existem muitas outras opções como alterar onde as imagens serão salvas. Esta é a opção para quem quer algo simples, basicamente subir um arquivo qualquer ou uma imagem que precisa de pré-processamento.
+Mas um detalhe: processar imagens é algo considerado “pesado”, especialmente se seu site for primariamente para isso (um mini-Flickr ou Picasa). Nesse caso o processo Ruby vai ficar “preso” até as imagens serem geradas, o que não é bom para escalabilidade. O ideal é que o processo Ruby terceirize o processamento para uma fila que, em pano de fundo, fará o trabalho mais pesado.
+Pensando nisso, em conjunto com a gem do Paperclip recomendo instalar e configurar o Delayed Paperclip. Em vez de processar a imagem no momento em que o model é gravado, ele irá enviar uma ordem a uma fila. A fila, nesse caso, pode ser tanto o projeto Delayed Job. Mas melhor ainda, eu recomendo usar a opção que envia para a fila Resque que é uma alternativa mais recente e mais refinada. Qualquer um dos dois serve: o importante é que o processamento não se torne gargalo na sua aplicação Web.
+Outro projeto que pode interessar é o dm-paperclip. Você deve ter notado que o Paperclip se “anexa” a um model ActiveRecord. Mas se você quiser usar DataMapper, que é outro ORM de Ruby, use este outro projeto para permitir isso.
+No site da própria Thoughtbot, autora desta gem, tem uma página com algumas dicas, que podem ser úteis. Confira.
+Outra coisa interessante é que o Paperclip suporta gravar arquivos no sistema de arquivos local ou enviar para a Amazon S3 para armazenamento em Cloud. Leia na própria documentação do Paperclip como fazer isso. E falando em S3, se quiser enviar o mesmo arquivo para múltiplos buckets, use este truque.
+A Rackspace é outra opção à Amazon, e eles tem até uma aplicação Rails de demonstração para explicar como configurar o Paperclip para enviar os arquivos para eles.
+CarrierWave
+Para instalar, é o de sempre:
+1
+
+gem install carrierwave
+
+
+E para colocar na sua aplicação, coloque a dependência no config/environment.rb:
+1
+
+config.gem "carrierwave"
+
+
+A primeira diferença entre é que no CarrierWave o objeto de upload não fica atrelado ao model. Em vez disso ele tem um model próprio. Para criar um faça assim:
+1
+
+./script/generate uploader Avatar
+
+
+Ele vai criar um arquivo em app/uploaders/avatar_uploader.rb com o seguinte conteúdo:
+1
+2
+3
+
+class AvatarUploader < CarrierWave::Uploader::Base
+  storage :file
+end
+
+
+A configuração do uploader fica separado nesse model. Como podem ver, por padrão ele vai armazenar o arquivo em disco, mas daqui você pode mudar para mandar para a Amazon S3 ou mesmo para o Grid FS de um Mongo DB, por exemplo.
+Agora, você pode atrelar esse uploader em qualquer model de qualquer ORM. Por exemplo, se quisermos que o model “User”, configurado com ActiveRecord, tenha um avatar, a primeira coisa a fazer é criar uma migration e adicionar uma única coluna:
+1
+
+add_column :user, :avatar, :string
+
+
+Agora configuramos o model assim:
+1
+2
+3
+
+class User
+  mount_uploader :avatar, AvatarUploader
+end
+
+
+Feito isso, dado que estamos usando ainda o mesmo tipo de formulário HTML que já mostramos duas vezes anteriormente, no controller não precisa mudar nada e a action de “create” pode ficar assim:
+1
+
+User.create(params[:user])
+
+
+O CarrierWave é bem customizável e, novamente, recomendo ler com atenção à documentação no site do Github. Ele vai explicar como criar versões, como mandar para o S3, como mandar para o GridFS, como mudar o diretório de uploads, etc. Por exemplo, se quisermos fazer a mesma coisa que no exemplo do Paperclip e redimensionar uma imagem, fazemos assim:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+class AvatarUploader < CarrierWave::Uploader::Base
+  include CarrierWave::RMagick
+
+  process :resize_to_fill => [200, 200]
+  process :convert => 'png'
+
+  def filename
+    super + '.png'
+  end
+end
+
+
+Note que ele inclui um módulo para RMagick, mas como disse antes há módulos para Image Science e Mini Magick.
+E mais um bônus: o CarrierWave é compatível com o Paperclip. Então se você está migrando do Paperclip, pode fazer o seguinte:
+1
+2
+3
+
+class AvatarUploader < CarrierWave::Uploader::Base
+  include CarrierWave::Compatibility::Paperclip
+end
+
+
+E no model User precisa fazer assim:
+1
+2
+3
+
+class User < ActiveRecord::Base
+  mount_uploader :avatar, AvatarUploader, :mount_on => :avatar_file_name
+end
+
+
+Desta forma o CarrierWave vai usar a coluna que o Paperclip colocou na sua tabela ‘users’ bem como o diretório padrão onde ele manda as imagens redimensionadas.
+Aliás, a Rackspace, que mencionei na seção anterior também tem uma aplicação de demonstração com o CarrierWave. Dê uma olhada para estudar o uso.
+Da forma como está evoluindo, não acho difícil imaginar que o CarrierWave se torne a opção favorita da comunidade. O Paperclip fez um bom trabalho, o attachment_fu antes dele também, mas as coisas na comunidade Rails funcionam desta forma: se há uma forma melhor, nós adotamos. De todas as opções o CarrierWave foi o que eu tive menos contato, mas logo de cara já gostei muito dele.
+Uma opção que em breve talvez possa ser mais comum é usar o MongoDB. Para quem não sabe, o Mongo é um dos bancos de dados não-relacional, NoSQL, que a comunidade Rails está adotando com mais velocidade. Uma das funcionalidades que ele trás é o GridFS. É uma forma de você ter um sistema de arquivos distribuído. Pense nisso como seu próprio Amazon S3 particular. Ele permite que você vá adicionando novos servidores para servir seus arquivos se sua aplicação começar a crescer bastante. Para uma introdução de como configurar o MongoDB com MongoMapper (um ORM de Rails para Mongo escrito pelo John Nunemaker), configurar o Grid FS, com autenticação via a gem Devise (da Plataforma Tec) mais o CarrierWave no Mac OS X, leia o tutorial @matsimitsu no blog do Jeff Kreeftmeijer.
+E um segundo bônus é que tanto o Paperclip quanto o CarrierWave já estão prontos para serem usados com Rails 3 (que ainda está em Beta 4).
+Devolvendo os Arquivos
+Até agora falamos de receber os arquivos que o usuário envia à sua aplicação. Da forma padrão, se ela for armazenada localmente ou remotamente num S3, o ideal é que o link que leva a esse arquivo seja servido pelo seu servidor web e não pela aplicação Rails. Por padrão, todo arquivo que você colocar no diretório “public” será servido pelo Apache ou Nginx, por exemplo, se estiver usando Phusion Passenger. Se não, você precisa configurar uma regra de Rewrite para que o Apache pegue o arquivo direto, sem passar pelo Rails. No caso do S3 você também deve usar a URL que leva direto ao arquivo no S3.
+O problema é se você precisa processar alguma coisa antes de devolver a URL. Por exemplo, precisa checar alguma autorização do usuário ou coisa parecida. Se você usar o método send_data da forma ingênua, você vai pendurar seu processo Ruby até que o download termine, o que é muito ruim. O ideal é fazer o Rails pedir ao Apache ou Nginx para que ele tome conta disso, liberando o processo Ruby para atender outras requisições.
+A forma de fazer isso é, na action, depois de checar a autenticação e tudo mais, configurar um hash de opções, assim:
+1
+
+send_file_options = { :type => File.mime_type?(path) }
+
+
+Depois configurar o seguinte para Apache:
+1
+
+send_file_options[:x_sendfile] = true
+
+
+Ou o seguinte para Nginx:
+1
+
+head(:x_accel_redirect => path.gsub(Rails.root, ''), :content_type => send_file_options[:type])
+
+
+E só então usar o método send_file para devolver o arquivo:
+1
+
+send_file(path, send_file_options)
+
+
+Outra forma é usar o Amazon S3 que tem opções para autenticação e configuração de ACLs (Access Control List), permitindo inclusive URLs assinadas e coisas do tipo. Este artigo do site TheWebFellas tem mais detalhes de como fazer isso com Paperclip.
+tags: obsolete rails
+

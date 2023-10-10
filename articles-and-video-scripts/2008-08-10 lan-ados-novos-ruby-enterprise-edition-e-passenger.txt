@@ -1,0 +1,13 @@
+
+
+
+
+Eu estava conversando com o Hongli Lai sobre isso esse fim de semana, e ele publicou hoje como tinha me dito: um novo Ruby Enterprise Edition
+Vocês vão se lembrar que quando surgiu a primeira leva de vulnerabilidades recentes, tivemos o seguinte problema: se você atualizasse para o patchlevel com as correções, corria o risco de ter suas aplicações quebrando, pois esse patchlevel não era 100% compatível com o 1.8.6-p114 que estávamos acostumados.
+O que aconteceu foi que cada distro teve que fazer o backport apenas das correções de segurança de volta para o patchlevel 114. A Phusion™ foi uma das que fizeram o fork e o backport. Agora, foi descoberta mais uma vulnerabilidade, conforme reportado pelo Peter Cooper.
+A correção está no patchlevel oficial 286 (ou patchlevel 70, no caso do 1.8.7). Será que vamos ter o mesmo problema? Foi o que indaguei com o Hongli e pelo visto ele também ficou curioso.
+Ele testou o patchlevel 286 contra várias suítes de teste, incluindo a do RubySpec e deles próprio, e a conclusão foi que o patchlevel 286, ao contrário do desastrado 114, está sim estável. Portanto as distros podem retornar a acompanhar o branch oficial a partir desse patchlevel sem problemas. A Phusion™ fez isso e já lançou o Enterprise Editon baseado nesse branch.
+Eu estou, inclusive, usando o Enterprise Edition como meu Ruby padrão no meu Mac e até agora tudo funcionou muito bem.
+Fora isso, semana passada a Phusion™ tinha lançado o Passenger™ 2.0.3. Tem pequenas correções de bugs e algumas pequenas otimizações. Claro, a Locaweb já está instalando essas novas atualizações em todas as suas máquinas ;-)
+tags: obsolete passenger
+
